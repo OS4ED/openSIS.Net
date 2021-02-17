@@ -68,7 +68,7 @@
             </div>
         </mat-card>
     </div>
-    <div class="lg:w-9/12 lg:pl-4">
+    <div class="lg:w-9/12 lg:pl-4" *ngIf="effortCategoriesList.length > 0">
         <mat-card class="w-full p-0" fxFlex="auto">
             <div class="h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between items-center pt-3">
@@ -81,7 +81,7 @@
                             matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                        <button color="primary" [disabled]="effortCategoriesList==null" class="ml-4" fxFlex="none" mat-raised-button type="button"
                             (click)='goToAddEffortItem()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
@@ -97,7 +97,7 @@
             [cdkDropListData]="effortItemList" (cdkDropListDropped)="dropEffortItem($event)" matSort>
         
                 <ng-container matColumnDef="order">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header width="50"></th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>&nbsp;</th>
                     <td mat-cell *matCellDef="let element" >
                         <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
                     </td>
@@ -111,7 +111,7 @@
                 </ng-container>
         
                 <ng-container matColumnDef="action">
-                    <mat-header-cell *matHeaderCellDef width="150">{{'action'|translate}}</mat-header-cell>
+                    <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let element">
                         <a (click)="goToEditEffortItem(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>

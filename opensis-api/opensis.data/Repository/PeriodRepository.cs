@@ -46,6 +46,7 @@ namespace opensis.data.Repository
                     this.context?.Block.Add(blockAddViewModel.block);
                     this.context?.SaveChanges();
                     blockAddViewModel._failure = false;
+                    blockAddViewModel._message = "Block Added Successfully";
                 }
                 else
                 {
@@ -130,7 +131,7 @@ namespace opensis.data.Repository
                         this.context?.Block.Remove(blockDelete);
                         this.context?.SaveChanges();
                         blockAddViewModel._failure = false;
-                        blockAddViewModel._message = "Deleted Successfully";
+                        blockAddViewModel._message = "Block Deleted Successfully";
                     }
                 }
                 else
@@ -182,6 +183,7 @@ namespace opensis.data.Repository
                     this.context?.BlockPeriod.Add(blockPeriodAddViewModel.blockPeriod);
                     this.context?.SaveChanges();
                     blockPeriodAddViewModel._failure = false;
+                    blockPeriodAddViewModel._message = "Period Added Successfully";
                 }
                 else
                 {
@@ -221,7 +223,7 @@ namespace opensis.data.Repository
                         this.context.Entry(blockPeriodUpdate).CurrentValues.SetValues(blockPeriodAddViewModel.blockPeriod);
                         this.context?.SaveChanges();
                         blockPeriodAddViewModel._failure = false;
-                        blockPeriodAddViewModel._message = "Block-Period Updated Successfully";                        
+                        blockPeriodAddViewModel._message = "Period Updated Successfully";                        
                     }
                     else
                     {
@@ -259,7 +261,7 @@ namespace opensis.data.Repository
                     this.context?.BlockPeriod.Remove(blockPeriodDelete);
                     this.context?.SaveChanges();
                     blockPeriodAddViewModel._failure = false;
-                    blockPeriodAddViewModel._message = "Deleted Successfully";
+                    blockPeriodAddViewModel._message = "Period Deleted Successfully";
                 }
                 else
                 {

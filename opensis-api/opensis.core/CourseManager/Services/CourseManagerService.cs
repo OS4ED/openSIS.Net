@@ -382,6 +382,34 @@ namespace opensis.core.CourseManager.Services
             }
             return courseSectionView;
         }
+
+        /// <summary>
+        /// Update Course Section
+        /// </summary>
+        /// <param name="courseSectionAddViewModel"></param>
+        /// <returns></returns>
+        public CourseSectionAddViewModel UpdateCourseSection(CourseSectionAddViewModel courseSectionAddViewModel)
+        {
+            CourseSectionAddViewModel courseSectionUpdate = new CourseSectionAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName, courseSectionAddViewModel._token))
+                {
+                    courseSectionUpdate = this.courseManagerRepository.UpdateCourseSection(courseSectionAddViewModel);
+                }
+                else
+                {
+                    courseSectionUpdate._failure = true;
+                    courseSectionUpdate._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseSectionUpdate._failure = true;
+                courseSectionUpdate._message = es.Message;
+            }
+            return courseSectionUpdate;
+        }
     }
 }
  

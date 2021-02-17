@@ -1,5 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto" *ngIf="addStandard; else addNewCourseTitle"><a routerLink="" (click)="closeStandardsSelection()" class="text-primary cursor-pointer"><mat-icon [icIcon]="icBack" matTooltip="Back to Previous" class="mr-3 align-middle"></mat-icon></a>{{'addStandardTo'|translate}} <span class="text-green font-bold">{{addCourseModel.course.courseTitle}}</span></h2>
+    <h2 class="headline m-0" fxFlex="auto" *ngIf="addStandard; else addNewCourseTitle">
+        <a routerLink="" (click)="closeStandardsSelection()" class="text-primary cursor-pointer"><mat-icon [icIcon]="icBack" matTooltip="Back to Previous" class="mr-3 align-middle"></mat-icon></a>{{'addStandardTo'|translate}} <span class="text-green font-bold">{{addCourseModel.course.courseTitle}}</span></h2>
     <ng-template #addNewCourseTitle><h2 class="headline m-0" fxFlex="auto">{{courseModalTitle | translate}}</h2></ng-template>
         <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
             <mat-icon [icIcon]="icClose"></mat-icon>
@@ -51,9 +52,11 @@
                         </mat-error>
                     </mat-form-field>
                 </li>
-                <button  (click) = "filterSchoolSpecificStandardsList()" color="primary" class="align-top mt-1" mat-raised-button type="button">
+                <li>
+                    <button  (click) = "filterSchoolSpecificStandardsList()" color="primary" class="align-top w-full py-1" mat-raised-button type="button">
                     {{'filterResult'|translate}}
                 </button>
+                </li>
             </ul>
         </form>
         <hr/>
@@ -118,7 +121,7 @@
       
     </mat-dialog-content>
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
-        <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+        <button mat-button  type="button" (click)="closeStandardsSelection()">{{'cancel' | translate}}</button>
         <button color="primary" mat-raised-button type="submit" (click) = "goToCourse()">{{'addStandards' | translate}}</button>
     </mat-dialog-actions>
 </div>
@@ -152,23 +155,23 @@
                 </mat-form-field>
             </li>
             <li class="mb-3">
-                <mat-form-field *ngIf="addProgramMode === false; else addProgram" class="w-full mb-1" appearance="outline" color="primary">
+                <mat-form-field id="program" class="w-full mb-1" appearance="outline" color="primary">
                     <mat-label>{{'program' | translate}}</mat-label>
                     <mat-select  [(ngModel)]="addCourseModel.course.courseProgram" name="courseProgram">
                         <mat-option value=""></mat-option>
                         <mat-option *ngFor="let program of programList" [value]='program.programName'>{{program.programName}}</mat-option>
                     </mat-select>                                   
                 </mat-form-field>
-                <ng-template #addProgram>
-                    <mat-form-field  class="w-full mb-1" appearance="outline" color="primary">
-                        <mat-label>{{'program' | translate}}</mat-label>
-                        <input  [(ngModel)]="addCourseModel.course.courseProgram" name="courseProgram" cdkFocusInitial matInput>                                
-                    </mat-form-field>                    
-                </ng-template>   
+                
+                <mat-form-field id="program1" class="w-full mb-1 hidden" appearance="outline" color="primary">
+                    <mat-label>{{'program' | translate}}</mat-label>
+                    <input [(ngModel)]="addCourseModel.course.courseProgram" name="courseProgram" id="courseProgram" matInput>                                
+                </mat-form-field>                    
+              
                 <a class="cursor-pointer text-blue" *ngIf="addProgramMode === false" (click)="saveProgram()"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewProgram' | translate}}</a>
             </li>
             <li class="mb-3">
-                <mat-form-field *ngIf="addSubjectMode === false; else addSubject" class="w-full mb-1" appearance="outline" color="primary">
+                <mat-form-field id="subject" class="w-full mb-1" appearance="outline" color="primary">
                     <mat-label>{{'subject' | translate}}</mat-label>
                     <mat-select   #courseSubject="ngModel" [(ngModel)]="addCourseModel.course.courseSubject" name="courseSubject" required>
                         <mat-option value=""></mat-option>
@@ -177,14 +180,14 @@
                     <mat-error *ngIf="courseSubject.errors?.required">
                         {{'courseSubjectIsRequired'|translate}}</mat-error>               
                 </mat-form-field>
-                <ng-template #addSubject>
-                    <mat-form-field  class="w-full mb-1" appearance="outline" color="primary">
+                
+                    <mat-form-field  id="subject1" class="w-full mb-1 hidden" appearance="outline" color="primary">
                         <mat-label>{{'subject' | translate}}</mat-label>
-                        <input  #courseSubject="ngModel" [(ngModel)]="addCourseModel.course.courseSubject"  name="courseSubject" cdkFocusInitial matInput required> 
+                        <input  #courseSubject="ngModel" id="subjectFocus" [(ngModel)]="addCourseModel.course.courseSubject"  name="courseSubject" cdkFocusInitial matInput required> 
                         <mat-error *ngIf="courseSubject.errors?.required">
                             {{'courseSubjectIsRequired'|translate}}</mat-error>             
                     </mat-form-field>                 
-                </ng-template>
+               
                 
                 <a class="cursor-pointer text-blue" *ngIf="addSubjectMode === false" (click)="saveSubject()"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewSubject' | translate}}</a>
             </li>
@@ -216,7 +219,7 @@
                             <div class="flex justify-between items-center pl-3">
                                 <div title="show the standard description">{{checkedStandard.standardDetails}}</div>
                                 <div>
-                                    <span matTooltip="hkjhkh" class="inline-block opacity-75 p-2"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                    <span matTooltip="" class="inline-block opacity-75 p-2"><mat-icon [icIcon]="icInfo"></mat-icon></span>
                                     <a class="cursor-pointer opacity-75 py-2 px-3 inline-block" (click) = "removeStandard(checkedStandard)"><mat-icon [icIcon]="icRemove"></mat-icon></a>
                                 </div>
                             </div>

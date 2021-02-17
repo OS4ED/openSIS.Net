@@ -78,18 +78,18 @@ export class EditReportCardGradeComponent implements OnInit {
          this.gradesService.addGrade(this.gradeAddViewModel).subscribe(
           (res:GradeAddViewModel)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Grade failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Grade failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Grade Successful Created.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -109,18 +109,18 @@ export class EditReportCardGradeComponent implements OnInit {
         this.gradesService.updateGrade(this.gradeAddViewModel).subscribe(
           (res:GradeAddViewModel)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Grade failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Grade failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else {
-                this.snackbar.open('Grade Successful Edited.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

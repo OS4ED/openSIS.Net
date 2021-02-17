@@ -55,6 +55,7 @@ namespace opensis.data.Repository
                     this.context?.CustomFields.Add(customFieldAddViewModel.customFields);
                     this.context?.SaveChanges();
                     customFieldAddViewModel._failure = false;
+                    customFieldAddViewModel._message = "Custom Field Added Successfully";
                 }
                 else
                 {
@@ -90,7 +91,7 @@ namespace opensis.data.Repository
                     this.context.Entry(customFieldUpdate).CurrentValues.SetValues(customFieldAddViewModel.customFields);
                     this.context?.SaveChanges();
                     customFieldAddViewModel._failure = false;
-                    customFieldAddViewModel._message = "Entity Updated";
+                    customFieldAddViewModel._message = "Custom Field Updated Successfully";
                 }
                 else
                 {
@@ -131,7 +132,7 @@ namespace opensis.data.Repository
                         this.context?.CustomFields.Remove(customFieldDelete);
                         this.context?.SaveChanges();
                         customFieldAddViewModel._failure = false;
-                        customFieldAddViewModel._message = "Deleted";
+                        customFieldAddViewModel._message = "Custom Field Deleted Successfully";
                     }
                 }
             }
@@ -165,6 +166,7 @@ namespace opensis.data.Repository
             this.context?.FieldsCategory.Add(fieldsCategoryAddViewModel.fieldsCategory);
             this.context?.SaveChanges();
             fieldsCategoryAddViewModel._failure = false;
+            fieldsCategoryAddViewModel._message = "Field Category Added Successfully";
 
             return fieldsCategoryAddViewModel;
         }
@@ -185,7 +187,7 @@ namespace opensis.data.Repository
                 this.context.Entry(fieldsCategoryUpdate).CurrentValues.SetValues(fieldsCategoryAddViewModel.fieldsCategory);
                 this.context?.SaveChanges();
                 fieldsCategoryAddViewModel._failure = false;
-                fieldsCategoryAddViewModel._message = "Entity Updated";
+                fieldsCategoryAddViewModel._message = "Field Category Updated Successfully";
             }
             catch (Exception es)
             {
@@ -217,7 +219,7 @@ namespace opensis.data.Repository
                         this.context?.FieldsCategory.Remove(fieldsCategoryDelete);
                         this.context?.SaveChanges();
                         fieldsCategoryAddViewModel._failure = false;
-                        fieldsCategoryAddViewModel._message = "Deleted";
+                        fieldsCategoryAddViewModel._message = "Field Category Deleted Successfully";
                     }
                 }                              
             }
@@ -304,6 +306,7 @@ namespace opensis.data.Repository
                 }
                 this.context?.SaveChanges();
                 customFieldSortOrderModel._failure = false;
+                customFieldSortOrderModel._message = "Custom Field Sort Order Updated Successfully";
             }
             catch (Exception es)
             {

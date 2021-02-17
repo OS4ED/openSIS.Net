@@ -56,6 +56,8 @@ namespace opensis.data.Repository
                     rooms.tableRoom.IsActive = rooms.tableRoom.IsActive;
                     this.context?.Rooms.Add(rooms.tableRoom);
                     this.context?.SaveChanges();
+                    rooms._failure = false;
+                    rooms._message = "Room Added Successfully";
                 }               
             }
             catch (Exception es)
@@ -122,6 +124,7 @@ namespace opensis.data.Repository
                         this.context.Entry(roomMaster).CurrentValues.SetValues(room.tableRoom);
                         this.context?.SaveChanges();
                         room._failure = false;
+                        room._message = "Room Updated Successfully";
                     }                    
                 }
                 else
@@ -192,7 +195,7 @@ namespace opensis.data.Repository
                 this.context?.Rooms.Remove(Room);
                 this.context?.SaveChanges();
                 room._failure = false;
-                room._message = "Deleted";
+                room._message = "Room Deleted Successfully";
             }
             catch (Exception es)
             {

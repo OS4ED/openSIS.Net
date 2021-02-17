@@ -9,6 +9,7 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
         public int CourseId { get; set; }
         public int CourseSectionId { get; set; }
+        public decimal? AcademicYear { get; set; }
         public int GradeScaleId { get; set; }
         public string CourseSectionName { get; set; }
         public int? CalendarId { get; set; }

@@ -109,7 +109,7 @@
         <ng-container matColumnDef="domain">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'domain'|translate}}</th>
             <td mat-cell *matCellDef="let element">
-                {{element.domain}}
+                {{element.domain | EmtyValueCheckPipe}}
             </td>
         </ng-container>
 

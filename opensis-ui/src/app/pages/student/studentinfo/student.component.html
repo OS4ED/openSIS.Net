@@ -20,7 +20,7 @@
                             <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
-                            <mat-progress-spinner matSuffix *ngIf="loading" class="ml-4" fxFlex="none" color="primary" diameter="20" mode="indeterminate"></mat-progress-spinner>
+                            <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
                             <a (click)="showAdvanceSearch()" class="text-primary cursor-pointer ml-3">
                                 <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
                                 | translate}}
@@ -165,7 +165,7 @@
 
 <div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
     <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20" @fadeInRight>
-        <vex-search-student (showHideAdvanceSearch)="hideAdvanceSearch($event)"></vex-search-student>
+        <vex-search-student (searchList)="getSearchResult($event)" (showHideAdvanceSearch)="hideAdvanceSearch($event)"></vex-search-student>
     </div>
     <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
 </div>

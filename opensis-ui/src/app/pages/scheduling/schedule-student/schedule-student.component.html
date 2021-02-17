@@ -1,0 +1,141 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Schedule studets" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Scheduling']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+        <div class="card -mt-16">
+            <div class="p-6 text-center">
+                To schedule students into course sections, search and select students(s)
+                and course section(s) first.
+            </div>
+            <hr class="border-normal" />
+            <div class="flex w-full">
+                <div class="w-1/2 border-r border-normal cursor-pointer relative" (click)="selectStudent()">
+                    <div class="flex items-center">
+                        <div class="w-2/12 bg-green text-white text-center py-6 rounded-bl relative arrow-right">
+                            <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
+                        </div>
+                        <div class="w-10/12 pl-6">
+                            <h2>Student</h2>
+                            <p class="text-blue">Select Student to Schedule</p>
+                        </div>
+                    </div>
+                    <div class="schedule-icon bg-white">
+                        <img src="assets/img/icons/teacher-course-schedule.svg" width="80%" class="inline-block" />
+                    </div>
+
+                    <!-- start Schedule button design -->
+                    <!-- <div class="schedule-button">
+                        <button mat-button class="bg-green text-white">
+                            Schedule Student
+                        </button>
+                    </div> -->
+                    <!-- end Schedule button design -->
+
+                    <!-- start refresh button design -->
+                    <!-- <div class="schedule-refresh bg-white">
+                        <mat-icon aria-hidden="false" aria-label="icon" class="text-primary">refresh</mat-icon>
+                    </div> -->
+                    <!-- end refresh button design -->
+                </div>
+                <div class="w-1/2 cursor-pointer" (click)="selectCourseSection()">
+                    <div class="flex items-center">
+                        <div class="w-10/12 text-right pr-6">
+                            <h2>Course Section</h2>
+                            <p class="text-blue">Select Course Section to Schedule</p>
+                        </div>
+                        <div class="w-2/12 bg-primary text-white text-center py-6 rounded-br relative arrow-left">
+                            <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-6 p-4">
+            <!-- when schedule student selected -->
+            <!-- <div class="flex">
+                <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
+                <div class="ml-4">
+                    <span class="text-lg inline-block align-middle text-primary font-bold">Scheduling Students</span>
+                    <p class="">Please do not refresh the page or click back button.</p>
+                </div>
+            </div> -->
+            <!-- when schedule completed  -->
+            <div class="flex">
+                <mat-icon aria-hidden="false" aria-label="icon" class="mt-1 text-green">check_circle</mat-icon>
+                <div class="ml-4">
+                    <span class="text-lg inline-block align-middle text-green font-bold">Scheduling Completed</span>
+                    <p class="">Some student could not be scheduled due to conflicts.Please find the detailed report
+                        below.</p>
+                </div>
+            </div>
+            <mat-divider class="-mx-6 mt-4 text-border"></mat-divider>
+            <ul class="grid grid-cols-1 md:grid-cols-2 col-gap-4 mt-6">
+                <li class="flex mb-10">
+                    <div class="flex-shrink-0">
+                        <div class="spinner-container">
+                            <div class="spinner-background font-semibold text-warn">{{spinner1.value}}%</div>
+                            <mat-progress-spinner #spinner1 color="primary" mode="determinate" value="69" strokeWidth="5" diameter="70" class="spinner-red">
+                            </mat-progress-spinner>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex flex-col justify-center">
+                        <h5 class="mb-2 text-lg font-semibold">Geometry - GEOM001</h5>
+                        <p>38 Students could not be scheduled because they have period conflict with other course
+                            section.</p>
+                    </div>
+                </li>
+                <li class="flex mb-10">
+                    <div class="flex-shrink-0">
+                        <div class="spinner-container">
+                            <div class="spinner-background font-semibold text-green">{{spinner2.value}}%</div>
+                            <mat-progress-spinner #spinner2 color="primary" mode="determinate" value="100"
+                                strokeWidth="5" diameter="70" class="spinner-green"></mat-progress-spinner>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex flex-col justify-center">
+                        <h5 class="mb-2 text-lg font-semibold">Algebra - ALGB001</h5>
+                        <p>120 Students scheduled.</p>
+                    </div>
+                </li>
+                <li class="flex mb-10">
+                    <div class="flex-shrink-0">
+                        <div class="spinner-container">
+                            <div class="spinner-background font-semibold text-warn">{{spinner3.value}}%</div>
+                            <mat-progress-spinner #spinner3 color="primary" mode="determinate" value="75"
+                                strokeWidth="5" diameter="70" class="spinner-red">
+                            </mat-progress-spinner>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex flex-col justify-center">
+                        <h5 class="mb-2 text-lg font-semibold">World History - WHS05</h5>
+                        <p>30 Students could not be scheduled due to seat unavailability.</p>
+                    </div>
+                </li>
+                <li class="flex mb-10">
+                    <div class="flex-shrink-0">
+                        <div class="spinner-container">
+                            <div class="spinner-background font-semibold text-warn">{{spinner4.value}}%</div>
+                            <mat-progress-spinner #spinner4 color="primary" mode="determinate" value="95"
+                                strokeWidth="5" diameter="70" class="spinner-red">
+                            </mat-progress-spinner>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex flex-col justify-center">
+                        <h5 class="mb-2 text-lg font-semibold">Life Science - LSC03</h5>
+                        <p>5 Students could not be scheduled because they are already scheduled to the same course
+                            section.</p>
+                    </div>
+                </li>
+            </ul>
+            <div class="text-center mb-4">
+                <button class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit">
+                    <i class="icon icon-file-excel mr-2"></i>Download this report to Excel
+                </button>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

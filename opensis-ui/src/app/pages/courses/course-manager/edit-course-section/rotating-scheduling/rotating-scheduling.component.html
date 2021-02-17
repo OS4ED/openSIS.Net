@@ -1,0 +1,60 @@
+<div class="flex py-2 border-t border-normal">
+    <div class="w-1/12"></div>
+    <div class="w-3/12 font-bold">{{'blockRotationDay' | translate}}</div>
+    <div class="w-3/12 font-bold">{{'period' | translate}}</div>
+    <div class="w-3/12 font-bold">{{'room' | translate}}</div>
+    <div class="w-2/12 font-bold text-center">{{'takeAttendance' | translate}}</div>
+</div>
+
+<div class="flex py-3 border-t border-normal" *ngFor="let row of divCount;let index=index">
+    <div class="w-1/12 text-center pt-2" *ngIf="blockScheduleAddModel.courseBlockScheduleList[index].courseSectionId==null;else dontDelete">
+        <a class="cursor-pointer" (click)="deleteRow(index)">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </a>
+    </div>
+    <ng-template #dontDelete>
+        <div class="w-1/12 text-center pt-2">
+            <a class="cursor-pointer text-gray">
+                <mat-icon [icIcon]="icClose"></mat-icon>
+            </a>
+        </div>
+    </ng-template>
+   
+    <div class="w-3/12 pr-6">
+        <select name="{{'rotationDay'+index}}" class="border border-normal rounded px-3 py-2 w-full"
+            (change)="onBlockDayChange($event.target.value,index)" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].blockId">
+            <option selected [value]=selected>Select</option>
+            <option *ngFor="let block of blockListViewModel.getBlockListForView" [value]="block.blockId">
+                {{block.blockTitle}}</option>
+        </select>
+    </div>
+    <div class="w-3/12 pr-6">
+        <select (change)="onPeriodChange($event.target.value,index)" name="{{'period'+index}}"
+            class="border border-normal rounded px-3 py-2 w-full" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].periodId">
+            <option selected [value]=selected>Select</option>
+            <option *ngFor="let period of blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod"
+                [value]="period.periodId">{{period.periodTitle}}</option>
+        </select>
+        <p class="pt-1 text-xs" *ngIf="blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodStartTime">
+            {{blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodStartTime
+            }} to
+            {{blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodEndTime}}
+        </p>
+    </div>
+    <div class="w-3/12 pr-6" >
+        <select name="{{'room'+index}}" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].roomId" class="border border-normal rounded px-3 py-2 w-full">
+            <option selected [value]=selected>Select</option>
+            <option *ngFor="let room of roomListViewModel.tableroomList" [value]="room.roomId">{{room.title}}</option>
+        </select>
+    </div>
+    <div class="w-2/12 pt-2 text-center">
+        <mat-slide-toggle color="primary" name="{{'takeAttendance'+index}}" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].takeAttendance"></mat-slide-toggle>
+    </div>
+</div> 
+
+<div class="border-t border-normal px-6 py-3">
+    <a class="text-blue cursor-pointer" (click)="addMoreRotatingScheduleRow()">
+        <mat-icon [icIcon]="icPlusCircle" class="mr-2 align-middle"></mat-icon>{{'addAnotherBlockRotationDay' |
+        translate}}
+    </a>
+</div>

@@ -201,3 +201,15 @@ export class GetMarkingPeriodTitleListModel extends CommonField{
         }
 }
 
+export class GetAllMarkingPeriodTitle extends CommonField{
+    schoolId: number;
+    tenantId: string;
+    academicYear: number;
+    getMarkingPeriodView: []
+    constructor() {
+        super();
+        this.tenantId=sessionStorage.getItem("tenantId");
+        this._tenantName=sessionStorage.getItem('tenant');
+        this._token=sessionStorage.getItem("token");
+    }
+}

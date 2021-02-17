@@ -6,12 +6,11 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SchoolPeriodService } from 'src/app/services/school-period.service';
-import { LoaderService } from 'src/app/services/loader.service';
-import { ValidationService } from 'src/app/pages/shared/validation.service';
-import { BlockPeriodAddViewModel } from 'src/app/models/schoolPeriodModel';
+import { SchoolPeriodService } from '../../../../services/school-period.service';
+import { ValidationService } from '../../../shared/validation.service';
+import { BlockPeriodAddViewModel } from '../../../../models/schoolPeriodModel';
 import { getTime } from 'date-fns';
-import { SharedFunction } from 'src/app/pages/shared/shared-function';
+import { SharedFunction } from '../../../shared/shared-function';
 
 export const dateTimeCustomFormats = {
 };
@@ -44,7 +43,7 @@ export class EditPeriodComponent implements OnInit {
     this.form = fb.group({
       periodId: [0],
       title: ['', [Validators.required, ValidationService.noWhitespaceValidator]],
-      shortName: ['', [Validators.required]],
+      shortName: ['', [Validators.required,ValidationService.noWhitespaceValidator]],
       startTime: ['', [Validators.required]],
       endTime: [, [Validators.required]]
     })
@@ -71,6 +70,7 @@ export class EditPeriodComponent implements OnInit {
   }
 
   submit() {
+    this.form.markAllAsTouched();
     if (this.form.valid) {
       if (this.form.controls.periodId.value == 0) {
         this.blockPeriodAddViewModel.blockPeriod.blockId = this.currentBlockId;

@@ -35,6 +35,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 import {DragDropModule } from '@angular/cdk/drag-drop';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
 
 @NgModule({
   declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent,SchoolFieldsComponent, PeriodsComponent, PeriodsListComponent],
@@ -69,7 +71,8 @@ import {DragDropModule } from '@angular/cdk/drag-drop';
     MatSortModule,
     MatCheckboxModule,
     MatPaginatorModule,
-    DragDropModule
+    DragDropModule,
+    MatSlideToggleModule
   ]
 })
 export class SchoolSettingsModule { }

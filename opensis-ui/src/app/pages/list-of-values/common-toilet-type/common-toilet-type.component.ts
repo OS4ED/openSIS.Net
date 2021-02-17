@@ -127,18 +127,18 @@ export class CommonToiletTypeComponent implements OnInit {
     this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
       (res:LovAddView)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Common Toilet Type Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Common Toilet Type Deletion failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Common Toilet Type ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
             this.getAllCommonToiletType()
@@ -167,7 +167,7 @@ export class CommonToiletTypeComponent implements OnInit {
     this.commonService.getAllDropdownValues(this.lovList).subscribe(
       (res:LovList)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Common Toilet Type List failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }

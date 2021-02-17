@@ -61,7 +61,7 @@
                             matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='goToAddGrade()'>
+                        <button color="primary" [disabled]="gradeScaleList==null" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='goToAddGrade()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
                             </ic-icon>

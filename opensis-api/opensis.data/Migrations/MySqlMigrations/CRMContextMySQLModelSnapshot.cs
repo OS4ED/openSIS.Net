@@ -198,6 +198,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("period_id")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("CalculateAttendance")
+                        .HasColumnName("calculate_attendance")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnName("created_by")
                         .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
@@ -2230,6 +2234,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.Property<int>("CourseSectionId")
                         .HasColumnName("course_section_id")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("AcademicYear")
+                        .HasColumnName("academic_year")
+                        .HasColumnType("decimal(4, 0)");
 
                     b.Property<bool?>("AffectsClassRank")
                         .HasColumnName("affects_class_rank")

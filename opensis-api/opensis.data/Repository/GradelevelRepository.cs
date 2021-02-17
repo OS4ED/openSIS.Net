@@ -44,6 +44,7 @@ namespace opensis.data.Repository
                     this.context?.Gradelevels.Add(gradelevel.tblGradelevel);
                     this.context?.SaveChanges();
                     gradelevel._failure = false;
+                    gradelevel._message = "Gradelevel Added Successsfully";
                 }                
             }
             catch (Exception es)
@@ -111,7 +112,7 @@ namespace opensis.data.Repository
                         this.context.Entry(GradeLevel).CurrentValues.SetValues(gradelevel.tblGradelevel);
                         this.context?.SaveChanges();
                         gradelevel._failure = false;
-                        gradelevel._message = "Entity Updated";
+                        gradelevel._message = "Gradelevel Updated Successsfully";
                     }                    
                 }
                 else
@@ -150,7 +151,7 @@ namespace opensis.data.Repository
                     this.context?.Gradelevels.Remove(GradeLevel);
                     this.context?.SaveChanges();
                     gradelevel._failure = false;
-                    gradelevel._message = "Deleted";
+                    gradelevel._message = "Gradelevel Deleted Successsfully";
                 }
             }
             catch (Exception es)

@@ -109,6 +109,7 @@ namespace opensis.data.Repository
                     this.context?.SaveChanges();                
                     transaction.Commit();
                     parentInfoAddViewModel._failure = false;
+                    parentInfoAddViewModel._message = "Parent Added Successfully";
                 }
                 catch (Exception es)
                 {
@@ -340,7 +341,7 @@ namespace opensis.data.Repository
                         }
                     }
                     this.context?.SaveChanges();
-                    parentInfoAddViewModel._message = "Data Updated Successfully";
+                    parentInfoAddViewModel._message = "Parent Updated Successfully";
                     parentInfoAddViewModel._failure = false;
                     transaction.Commit();
                 }
@@ -472,7 +473,7 @@ namespace opensis.data.Repository
                 this.context?.ParentInfo.Remove(ParentInfo);
                 this.context?.SaveChanges();
                 parentInfoAddViewModel._failure = false;
-                parentInfoAddViewModel._message = "Deleted";
+                parentInfoAddViewModel._message = "Parent Deleted Successfully";
             }
             catch (Exception es)
             {
@@ -643,6 +644,7 @@ namespace opensis.data.Repository
                 this.context?.ParentInfo.Add(parentInfoAddViewModel.parentInfo);
                 this.context?.SaveChanges();
                 parentInfoAddViewModel._failure = false;
+                parentInfoAddViewModel._message = "Parent Added Successfully";
             }
             catch (Exception es)
             {
@@ -667,6 +669,8 @@ namespace opensis.data.Repository
                     ParentInfo.Associationship = false;
                     this.context?.SaveChanges();
                 }
+                parentInfoDeleteViewModel._failure = false;
+                parentInfoDeleteViewModel._message = "Parent Associationship Removed Successfully";
             }
             catch (Exception es)
             {

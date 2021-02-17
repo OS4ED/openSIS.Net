@@ -14,12 +14,10 @@ module.exports = {
     colors: {
       current: 'currentColor',
       transparent: 'transparent',
-
       black: 'var(--text-color)',
       white: 'var(--text-color-light)',
       'contrast-black': 'black',
       'contrast-white': 'white',
-
       gray: {
         light: 'rgba(158, 158, 158, 0.5)',
         default: 'rgb(158, 158, 158)',

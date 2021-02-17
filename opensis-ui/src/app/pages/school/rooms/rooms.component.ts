@@ -80,7 +80,7 @@ export class RoomsComponent implements OnInit {
     this.roomService.getAllRoom(this.roomListViewModel).subscribe(
       (res:RoomListViewModel)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Room list failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
@@ -97,7 +97,7 @@ export class RoomsComponent implements OnInit {
               }
   
             } else {
-              this.snackbar.open('Room List failed. ' + res._message, '', {
+              this.snackbar.open('' + res._message, '', {
                 duration: 10000
               });
             }
@@ -162,13 +162,13 @@ export class RoomsComponent implements OnInit {
     this.roomService.deleteRoom(this.roomaddviewmodel).subscribe(
       (res:RoomAddView)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Room Delete failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Room Delete failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 

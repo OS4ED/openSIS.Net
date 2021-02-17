@@ -9,6 +9,10 @@ import { AddStudentComponent } from './pages/student/add-student/add-student.com
 import { 
   AuthGuard as AuthGuard
 } from '../app/common/auth.guard';
+import { VariableSchedulingComponent } from './pages/courses/course-manager/edit-course-section/variable-scheduling/variable-scheduling.component';
+import { FixedSchedulingComponent } from './pages/courses/course-manager/edit-course-section/fixed-scheduling/fixed-scheduling.component';
+import { RotatingSchedulingComponent } from './pages/courses/course-manager/edit-course-section/rotating-scheduling/rotating-scheduling.component';
+import { CalendarDaysComponent } from './pages/courses/course-manager/edit-course-section/calendar-days/calendar-days.component';
 const routes: Routes = [
   // { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
@@ -75,6 +79,7 @@ const routes: Routes = [
             path: 'students',
             loadChildren: () => import('./pages/student/studentinfo/student.module').then(m => m.StudentModule),
             canActivate: [AuthGuard]
+            
           }
         ]
       },
@@ -104,7 +109,7 @@ const routes: Routes = [
           {
             path: 'course-manager',
             loadChildren: () => import('./pages/courses/course-manager/course-manager.module').then(m => m.CourseManagerModule),
-            //canActivate: [AuthGuard]            
+            
           }
         ]
       },
@@ -128,7 +133,27 @@ const routes: Routes = [
             
           }
         ]
-      },      
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'schedule-student',
+            loadChildren: () => import('./pages/scheduling/schedule-student/schedule-student.module').then(m => m.ScheduleStudentModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'group-drop',
+            loadChildren: () => import('./pages/scheduling/group-drop/group-drop.module').then(m => m.GroupDropModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },       
     ]
   },
 ];

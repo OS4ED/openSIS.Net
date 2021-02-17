@@ -154,18 +154,18 @@ export class ReportCardGradesComponent implements OnInit {
    this.gradesService.deleteGradeScale(this.gradeScaleAddViewModel).subscribe(
      (res:GradeScaleAddViewModel)=>{
       if(typeof(res)=='undefined'){
-        this.snackbar.open('Grade Scale failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
       else{
         if (res._failure) {
-          this.snackbar.open('Grade Scale failed. ' + res._message, '', {
+          this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
         } 
         else{
-          this.snackbar.open('Grade Scale ' + res._message, '', {
+          this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
           this.getAllGradeScale();
@@ -193,18 +193,18 @@ export class ReportCardGradesComponent implements OnInit {
    this.gradesService.deleteGrade(this.gradeAddViewModel).subscribe(
      (res:GradeAddViewModel)=>{
       if(typeof(res)=='undefined'){
-        this.snackbar.open('Grade failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
       else{
         if (res._failure) {
-          this.snackbar.open('Grade failed. ' + res._message, '', {
+          this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
         } 
         else{
-          this.snackbar.open('Grade ' + res._message, '', {
+          this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
           this.getAllGradeScale();
@@ -231,15 +231,16 @@ export class ReportCardGradesComponent implements OnInit {
     this.gradesService.getAllGradeScaleList(this.gradeScaleListView).subscribe(
       (res:GradeScaleListView)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Grade Scale list failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Grade Scale list failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
+            this.gradeScaleList=res.gradeScaleList
           } 
           else{
             this.gradeScaleList=res.gradeScaleList
@@ -268,12 +269,12 @@ export class ReportCardGradesComponent implements OnInit {
     this.gradesService.updateGradeSortOrder(this.gradeDragDropModel).subscribe(
       (res:GradeDragDropModel)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Grade Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }else{
           if (res._failure) {
-            this.snackbar.open('Grade Drag short failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 

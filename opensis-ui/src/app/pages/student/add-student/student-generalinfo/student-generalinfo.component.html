@@ -76,7 +76,7 @@
                             <input [formControl]="internalId"
                                 [(ngModel)]="studentAddModel.studentMaster.studentInternalId" name="studentInternalId"
                                 matInput required>
-                                <mat-progress-spinner matSuffix *ngIf="isStudentInternalId" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
+                                <span matSuffix><img *ngIf="isStudentInternalId" src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
                             <mat-error *ngIf="internalId.errors?.required">
                                 {{'studentInternalIdIsRequired'|translate}}</mat-error>
                             <mat-error *ngIf="internalId.errors?.nomatch">
@@ -309,7 +309,7 @@
                                 <mat-label>{{'loginEmailAddress'|translate}}</mat-label>
                                 <input [formControl]="loginEmail" name="loginEmail" [(ngModel)]="studentAddModel.loginEmail"
                                  matInput [required]="hideAccess ? true : null ">
-                                <mat-progress-spinner matSuffix *ngIf="isUser" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
+                                <span matSuffix><img *ngIf="isUser" src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
                                 <mat-error class="text-red" *ngIf="loginEmail.errors?.required && hideAccess">
                                     {{'loginEmailAddressIsRequired'|translate}}</mat-error>
                                     <mat-error *ngIf="loginEmail.errors?.nomatch">

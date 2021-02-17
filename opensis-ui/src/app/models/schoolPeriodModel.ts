@@ -34,8 +34,32 @@ export class BlockAddViewModel extends CommonField {
     }
 }
 
+
+export class GetBlockListForView {
+    tenantId: string;
+    schoolId: number;
+    blockId: number;
+    blockTitle: string;
+    blockSortOrder: number;
+    createdBy: string;
+    updatedBy: string;
+    blockPeriod: BlockPeriod[];
+    createdOn: string;
+    updatedOn: string
+    constructor() {
+        this.tenantId = sessionStorage.getItem('tenantId');
+        this.schoolId = +sessionStorage.getItem('selectedSchoolId');
+        this.blockId = 0;
+        this.blockTitle = "";
+        this.blockSortOrder = 0;
+        this.updatedBy = null;
+        this.blockPeriod = [];
+    }
+
+}
+
 export class BlockListViewModel extends CommonField {
-    public blockList: [Block];
+    public getBlockListForView: GetBlockListForView[];
     public tenantId: string;
     public schoolId: number;
     constructor() {

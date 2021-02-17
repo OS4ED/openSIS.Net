@@ -77,18 +77,18 @@ export class EditGradeScaleComponent implements OnInit {
         this.gradesService.addGradeScale(this.gradeScaleAddViewModel).subscribe(
           (res:GradeScaleAddViewModel)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Grade Scale  failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Grade Scale failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Grade Scale Successful Created.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -109,18 +109,18 @@ export class EditGradeScaleComponent implements OnInit {
         this.gradesService.updateGradeScale(this.gradeScaleAddViewModel).subscribe(
           (res:GradeScaleAddViewModel)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Grade Scale failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }  
             else{
               if (res._failure) {
-                this.snackbar.open('Grade Scale failed. ' + res._message, '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Grade Scale Successful Created.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

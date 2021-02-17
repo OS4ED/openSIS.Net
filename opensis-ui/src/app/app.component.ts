@@ -206,7 +206,7 @@ export class AppComponent {
           {
             type: 'link',
             label: 'Schedule Students',
-            route: '/school/schedulestudents',
+            route: '/school/schedule-student',
             icon: icinfo
           },
           {
@@ -220,7 +220,13 @@ export class AppComponent {
             label: 'Run Scheduler',
             route: '/school/runscheduler',
             icon: icinfo
-          }
+          },
+          {
+            type: 'link',
+            label: 'Group Drop',
+            route: '/school/group-drop',
+            icon: icinfo
+          },
         ]
       },
       { type: 'dropdown',

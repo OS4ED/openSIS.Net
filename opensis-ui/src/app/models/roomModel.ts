@@ -45,6 +45,7 @@ export class RoomListViewModel extends CommonField {
     public schoolId: number;
     constructor() {
         super();
+        this.schoolId=+sessionStorage.getItem("selectedSchoolId")
         this._tenantName=sessionStorage.getItem("tenant")
         this.tenantId=sessionStorage.getItem("tenantId")
         this._token=sessionStorage.getItem("token")

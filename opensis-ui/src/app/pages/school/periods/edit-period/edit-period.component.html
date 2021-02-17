@@ -11,20 +11,18 @@
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'title' | translate}}</mat-label>
         <input formControlName="title" cdkFocusInitial matInput required>
-        <mat-error *ngIf="form.get('title').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
-
+        <mat-error *ngIf="form.get('title').hasError('whitespace')">{{'titleIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'shortName' | translate}}</mat-label>
         <input formControlName="shortName" type="text" matInput required>
-        <mat-error *ngIf="form.get('shortName').hasError('required')">{{'periodShortNameIsRequired'|translate}}</mat-error>
-
+        <mat-error *ngIf="form.get('shortName').hasError('whitespace')">{{'periodShortNameIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'startTime' | translate}}</mat-label>
-        <input formControlName="startTime" name="startTime" [owlDateTimeTrigger]="startTime" [owlDateTime]="startTime"
+        <input formControlName="startTime" onkeydown="return false" name="startTime" [owlDateTimeTrigger]="startTime" [owlDateTime]="startTime"
             matInput required>
         <owl-date-time [pickerType]="'timer'" [hour12Timer]='true' #startTime></owl-date-time>
         <mat-error *ngIf="form.get('startTime').hasError('required')">{{'startTimeIsRequired'|translate}}</mat-error>
@@ -32,11 +30,16 @@
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'endTime' | translate}}</mat-label>
-        <input formControlName="endTime" name="endTime" [owlDateTimeTrigger]="endTime" [owlDateTime]="endTime" matInput
+        <input formControlName="endTime" name="endTime" onkeydown="return false" [owlDateTimeTrigger]="endTime" [owlDateTime]="endTime" matInput
             required>
         <owl-date-time [pickerType]="'timer'"  [hour12Timer]='true' #endTime></owl-date-time>
         <mat-error *ngIf="form.get('endTime').hasError('required')">{{'endTimeIsRequired'|translate}}</mat-error>
     </mat-form-field>
+
+    <div class="flex">
+        <mat-slide-toggle color="primary" class="mr-6">{{'calculateAttendance'|translate}}</mat-slide-toggle>
+        <mat-slide-toggle color="primary">{{'ignoreForScheduling'|translate}}</mat-slide-toggle>
+    </div>
 
 </mat-dialog-content>
 

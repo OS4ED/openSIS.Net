@@ -55,6 +55,8 @@ export class PeriodsComponent implements OnInit {
     { label: 'Start Time', property: 'periodStartTime', type: 'text', visible: true },
     { label: 'End Time', property: 'periodEndTime', type: 'text', visible: true },
     { label: 'Length', property: 'length', type: 'number', visible: true },
+    { label: 'Calculate Attendance', property: 'calculateAttendance', type: 'text', visible: true },
+    { label: 'Ignore for Scheduling', property: 'ignoreForScheduling', type: 'text', visible: true },
     { label: 'action', property: 'action', type: 'text', visible: true }
   ];
   searchKey: string;
@@ -102,6 +104,9 @@ export class PeriodsComponent implements OnInit {
     this.blockPeriodList.sort = this.sort;
   }
   getAllBlockList() {
+    this.blockListViewModel.getBlockListForView = [];
+    this.blockListViewModel.tenantId = sessionStorage.getItem('tenantId');
+    this.blockListViewModel.schoolId = +sessionStorage.getItem('selectedSchoolId');
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(
       (res: BlockListViewModel) => {
         if (typeof (res) == 'undefined') {
@@ -117,16 +122,16 @@ export class PeriodsComponent implements OnInit {
           }
           else {
             this.blockListViewModel = res;
-            this.blockCount= res.blockList.length;
+            this.blockCount= res.getBlockListForView.length;
             if (this.currentBlockId == null) {
-              this.currentBlockId = res.blockList[0].blockId;
-              this.currentBlockName = res.blockList[0].blockTitle;
+              this.currentBlockId = res.getBlockListForView[0].blockId;
+              this.currentBlockName = res.getBlockListForView[0].blockTitle;
               let periodList= this.itemInPeriodList(0 , res);
               this.blockPeriodList = new MatTableDataSource(periodList);
               this.blockPeriodList.sort = this.sort;
             }
             else {
-              let index = this.blockListViewModel.blockList.findIndex((x) => {
+              let index = this.blockListViewModel.getBlockListForView.findIndex((x) => {
                 return x.blockId === this.currentBlockId
               });
               let periodList= this.itemInPeriodList(index, res);
@@ -140,7 +145,7 @@ export class PeriodsComponent implements OnInit {
   }
 
   itemInPeriodList(index=0,response){
-    let periodList = response.blockList[index].blockPeriod?.map(function (item) {
+    let periodList = response.getBlockListForView[index].blockPeriod?.map(function (item) {
       return {
         blockId: item.blockId,
         periodId: item.periodId,
@@ -157,7 +162,7 @@ export class PeriodsComponent implements OnInit {
 
   excelPeriodList(index=0,response){
     
-    let periodList = response.blockList[index].blockPeriod?.map(function (item) {
+    let periodList = response.getBlockListForView[index].blockPeriod?.map(function (item) {
 
       return {
         Title: item.periodTitle,
@@ -200,8 +205,8 @@ export class PeriodsComponent implements OnInit {
             this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
-            this.currentBlockId = null;
-            this.getAllBlockList()
+            this.currentBlockId= null;
+            this.getAllBlockList();
           }
         }
       }
@@ -236,7 +241,9 @@ export class PeriodsComponent implements OnInit {
 
 
   exportPeriodListToExcel(){
-
+    this.blockListViewModel.getBlockListForView = [];
+    this.blockListViewModel.tenantId = sessionStorage.getItem('tenantId');
+    this.blockListViewModel.schoolId = +sessionStorage.getItem('selectedSchoolId');
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(
       (res: BlockListViewModel) => {
         if (typeof (res) == 'undefined') {
@@ -253,7 +260,7 @@ export class PeriodsComponent implements OnInit {
           else {
             this.blockListViewModel = res;
             if (this.currentBlockId == null) {
-              this.currentBlockId = res.blockList[0].blockId;
+              this.currentBlockId = res.getBlockListForView[0].blockId;
               let periodList= this.excelPeriodList(0, res);
               if(periodList.length!=0){
                 this.excelService.exportAsExcelFile(periodList,'Period_List_')
@@ -266,7 +273,7 @@ export class PeriodsComponent implements OnInit {
               
             }
             else {
-              let index = this.blockListViewModel.blockList.findIndex((x) => {
+              let index = this.blockListViewModel.getBlockListForView.findIndex((x) => {
                 return x.blockId === this.currentBlockId
               });
               let periodList= this.excelPeriodList(index, res);

@@ -17,7 +17,7 @@ export class CalendarService {
     }
     viewCalendar(calendar: CalendarAddViewModel) {
         let apiurl = this.apiUrl + calendar._tenantName + "/Calendar/viewCalendar";
-        return this.http.post<CalendarListModel>(apiurl, calendar)
+        return this.http.post<CalendarAddViewModel>(apiurl, calendar)
     }
 
     updateCalendar(calendar: CalendarAddViewModel) {

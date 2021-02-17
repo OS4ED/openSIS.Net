@@ -15,6 +15,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatSelectModule } from '@angular/material/select';
+import { MatTableModule } from '@angular/material/table';
 
 
 
@@ -35,7 +37,9 @@ import { TranslateModule } from '@ngx-translate/core';
     MatMenuModule,
     MatFormFieldModule,
     MatCheckboxModule,
-    TranslateModule
+    TranslateModule,
+    MatSelectModule,
+    MatTableModule
   ]
 })
 export class AddTeacherModule { }

@@ -40,6 +40,7 @@ namespace opensis.data.Repository
             this.context?.AttendanceCode.Add(attendanceCodeAddViewModel.attendanceCode);
             this.context?.SaveChanges();
             attendanceCodeAddViewModel._failure = false;
+            attendanceCodeAddViewModel._message = "Attendance Code Added Successfully";
 
             return attendanceCodeAddViewModel;
         }
@@ -90,7 +91,7 @@ namespace opensis.data.Repository
                 this.context.Entry(attendanceCodeUpdate).CurrentValues.SetValues(attendanceCodeAddViewModel.attendanceCode);
                 this.context?.SaveChanges();
                 attendanceCodeAddViewModel._failure = false;
-                attendanceCodeAddViewModel._message = "Entity Updated";
+                attendanceCodeAddViewModel._message = "Attendance Code Updated Successfully";
             }
             catch (Exception es)
             {
@@ -149,7 +150,7 @@ namespace opensis.data.Repository
                 this.context?.AttendanceCode.Remove(attendanceCodeDelete);
                 this.context?.SaveChanges();
                 attendanceCodeAddViewModel._failure = false;
-                attendanceCodeAddViewModel._message = "Deleted";
+                attendanceCodeAddViewModel._message = "Attendance Code Deleted Successfully";
             }
             catch (Exception es)
             {
@@ -181,6 +182,7 @@ namespace opensis.data.Repository
             this.context?.AttendanceCodeCategories.Add(attendanceCodeCategoriesAddViewModel.attendanceCodeCategories);
             this.context?.SaveChanges();
             attendanceCodeCategoriesAddViewModel._failure = false;
+            attendanceCodeCategoriesAddViewModel._message = "Attendance Code Category Added Successfully";
 
             return attendanceCodeCategoriesAddViewModel;
         }
@@ -229,7 +231,7 @@ namespace opensis.data.Repository
                 this.context.Entry(attendanceCodeCategoriesUpdate).CurrentValues.SetValues(attendanceCodeCategoriesAddViewModel.attendanceCodeCategories);
                 this.context?.SaveChanges();
                 attendanceCodeCategoriesAddViewModel._failure = false;
-                attendanceCodeCategoriesAddViewModel._message = "Entity Updated";
+                attendanceCodeCategoriesAddViewModel._message = "Attendance Code Category Updated Successfully";
             }
             catch (Exception es)
             {
@@ -297,7 +299,7 @@ namespace opensis.data.Repository
                     this.context?.AttendanceCodeCategories.Remove(attendanceCodeCategoriesDelete);
                     this.context?.SaveChanges();
                     attendanceCodeCategoriesAddViewModel._failure = false;
-                    attendanceCodeCategoriesAddViewModel._message = "Deleted";
+                    attendanceCodeCategoriesAddViewModel._message = "Attendance Code Category Deleted Successfully";
                 }                
             }
             catch (Exception es)

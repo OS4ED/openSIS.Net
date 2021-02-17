@@ -204,7 +204,7 @@
                         </mat-form-field>
                     </li>
                     <li>
-                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-form-field class="w-full" appearance="outline" color="primary" [class.hide]="schoolAddViewModel.schoolMaster.schoolDetail[0].status!==false">
                             <mat-label>{{'dateSchoolClosed'|translate}}</mat-label>
                             <input #date_school_closed="ngModel" (dateInput)="checkClosedDate()"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed"

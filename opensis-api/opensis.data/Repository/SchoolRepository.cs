@@ -337,6 +337,7 @@ namespace opensis.data.Repository
                         school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
                     }
                     school._failure = false;
+                    school._message = "School Updated Successfully";
                 }               
                 return school;
             }
@@ -537,6 +538,7 @@ namespace opensis.data.Repository
                 this.context?.SchoolMaster.Add(school.schoolMaster);
                 this.context?.SaveChanges();
                 school._failure = false;
+                school._message = "School Added Successfully";
 
                 //school.schoolMaster.Membership.ToList().ForEach(x=>x.SchoolMaster=null);
                 /*if (school.schoolMaster.SchoolDetail.ToList().Count>0)

@@ -1,0 +1,63 @@
+<form #form="ngForm" novalidate appInvalidControlScroll>
+  <div class="flex py-2 border-t border-normal">
+            <div class="w-1/12"></div>
+            <div class="w-3/12 font-bold">{{'day' | translate}}</div>
+            <div class="w-3/12 font-bold">{{'period' | translate}}</div>
+            <div class="w-3/12 font-bold">{{'room' | translate}}</div>
+            <div class="w-2/12 font-bold text-center">{{'takeAttendance' | translate}}</div>
+        </div>
+        <div class="flex py-3 border-t border-normal" *ngFor="let row of divCount;let index=index">
+            <div class="w-1/12 text-center pt-2" >
+                <a class="cursor-pointer" (click)="deleteRow(index)" *ngIf="!detailsFromParentModal.editMode">
+                    <mat-icon [icIcon]="icClose"></mat-icon>
+                </a>
+            </div>
+           
+           
+            <div class="w-3/12 pr-6">
+                <select #day="ngModel" name="{{'day'+index}}" class="border border-normal rounded px-3 py-2 w-full"
+                     [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].day" required>
+                     <option selected [value]=selected>Select</option>
+                    <option *ngFor="let weekDays of weekDaysList" [value]="weekDays.value">
+                        {{weekDays.label}}</option>
+                </select>
+                <mat-error *ngIf="day.errors?.required && day.touched">
+                        {{'dayIsRequired'|translate}}
+                </mat-error>
+            </div>
+            <div class="w-3/12 pr-6">
+                <select #periodId="ngModel" (change)="onPeriodChange($event.target.value,index)" name="{{'periodId'+index}}"
+                    class="border border-normal rounded px-3 py-2 w-full" [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].periodId" required>
+                    <option selected [value]=selected>Select</option>
+                    <option *ngFor="let period of periodList"
+                        [value]="period.periodId">{{period.periodTitle}}</option>
+                </select>
+                <mat-error *ngIf="periodId.errors?.required && periodId.touched">
+                        {{'periodIsRequired'|translate}}
+                </mat-error>
+                <p class="pt-1 text-xs" *ngIf="this.periodList[selectedPeriod[index]]?.periodStartTime">
+                    {{this.periodList[selectedPeriod[index]]?.periodStartTime | transform24to12Pipe
+                    }} to
+                    {{this.periodList[selectedPeriod[index]]?.periodEndTime | transform24to12Pipe}}
+                </p>
+            </div>
+            <div class="w-3/12 pr-6" >
+                <select #roomId="ngModel" name="{{'roomId'+index}}" [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].roomId" class="border border-normal rounded px-3 py-2 w-full" required>
+                    <option selected [value]=selected>Select</option>
+                    <option *ngFor="let room of roomListViewModel.tableroomList" [value]="room.roomId">{{room.title}}</option>
+                </select>
+                <mat-error *ngIf="roomId.errors?.required && roomId.touched">
+                        {{'roomIsRequired'|translate}}
+                </mat-error>
+            </div>
+            <div class="w-2/12 pt-2 text-center">
+                <mat-slide-toggle color="primary" name="{{'takeAttendance'+index}}" [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].takeAttendance"></mat-slide-toggle>
+            </div>
+        </div> 
+        <div class="border-t border-normal px-6 py-3" *ngIf="!detailsFromParentModal.editMode">
+            <a class="text-blue cursor-pointer" (click)="addMoreRotatingScheduleRow()">
+                <mat-icon [icIcon]="icPlusCircle" class="mr-2 align-middle"></mat-icon>{{'addAnotherDay' |
+                translate}}
+            </a>
+        </div>
+</form>

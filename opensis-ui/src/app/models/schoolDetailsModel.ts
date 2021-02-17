@@ -51,6 +51,7 @@ export class schoolDetailsModel {
    
     constructor(){
         this.id= 0;
+        this.status=true;
         this.tenantId=sessionStorage.getItem("tenantId");
         
     }

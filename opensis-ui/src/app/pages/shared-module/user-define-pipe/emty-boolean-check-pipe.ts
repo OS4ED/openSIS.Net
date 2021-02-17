@@ -5,21 +5,40 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class EmtyBooleanCheckPipe implements PipeTransform {
 
-  transform(value: boolean): string {
-    if(value===false){
-      return "No";
-      
+  transform(value: boolean,type?: string): string {
+    if(type=="status"){
+      if(value===false){
+        return "Inactive";
+        
+      }
+      else if (value===true){
+        return "Active";
+      }
+      else if(value ===null){
+        return "-";
+      }
+     
+      else{
+        return "-";
+      }
     }
-    else if (value===true){
-      return "Yes";
-    }
-    else if(value ===null){
-      return "-";
-    }
-   
     else{
-      return "-";
+      if(value===false){
+        return "No";
+        
+      }
+      else if (value===true){
+        return "Yes";
+      }
+      else if(value ===null){
+        return "-";
+      }
+     
+      else{
+        return "-";
+      }
     }
+ 
   }
 
 }

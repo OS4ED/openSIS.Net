@@ -6,7 +6,7 @@
     </button>
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
-
+ 
 <mat-dialog-content fxLayout="column" [formGroup]="form">
 
     <div class="mt-6 mb-4" id="subject">
@@ -73,7 +73,7 @@
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'standardRefNo' | translate}}</mat-label>
         <input name="standardRefNo" formControlName="standardRefNo"  type="text" matInput required>
-        <mat-progress-spinner matSuffix *ngIf="loading" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
+        <span matSuffix *ngIf="checkStandardRefNo" ><img src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
         <mat-error *ngIf="form.get('standardRefNo').hasError('required')">{{'standardRefNoIsRequired'|translate}}
         </mat-error>
         <mat-error *ngIf="form.controls['standardRefNo'].errors?.nomatch">

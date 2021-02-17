@@ -240,6 +240,8 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.PeriodId).HasColumnName("period_id");
 
+                entity.Property(e => e.CalculateAttendance).HasColumnName("calculate_attendance");
+
                 entity.Property(e => e.CreatedBy)
                     .HasColumnName("created_by")
                     .HasMaxLength(150)
@@ -696,6 +698,10 @@ namespace opensis.data.Models
                 entity.Property(e => e.CourseId).HasColumnName("course_id");
 
                 entity.Property(e => e.CourseSectionId).HasColumnName("course_section_id");
+
+                entity.Property(e => e.AcademicYear)
+                   .HasColumnName("academic_year")
+                   .HasColumnType("decimal(4, 0)");
 
                 entity.Property(e => e.AffectsClassRank).HasColumnName("affects_class_rank");
 

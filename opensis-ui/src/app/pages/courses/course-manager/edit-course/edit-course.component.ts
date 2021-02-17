@@ -180,6 +180,8 @@ export class EditCourseComponent implements OnInit {
       this.checkedStandardList.splice(findIndexArray, 1);
     }
   }
+
+ 
   getAllSubjectStandardList(){    
     this.gradesService.getAllSubjectStandardList(this.gradeStandardSubjectList).subscribe((res) => {
       if (typeof (res) == 'undefined') {
@@ -239,7 +241,7 @@ export class EditCourseComponent implements OnInit {
       if(data._failure){
         
       }else{      
-        this.courseList=data.courseList;              
+        this.courseList=data.courseViewModelList;              
       }
     });
   }
@@ -309,10 +311,17 @@ export class EditCourseComponent implements OnInit {
   }
 
   saveProgram(){
-    this.addProgramMode=true;
+    document.getElementById("program").className='hidden';
+    document.getElementById("program1").classList.remove('hidden');
+    document.getElementById("courseProgram").focus();
+    this.currentForm.controls.courseProgram.markAsTouched();
+    
   }
   saveSubject(){
-    this.addSubjectMode=true;
+    document.getElementById("subject").className='hidden';
+    document.getElementById("subject1").classList.remove('hidden');
+    document.getElementById("subjectFocus").focus();
+    this.currentForm.controls.courseSubject.markAsTouched();
   }
   submit(){
     if (this.currentForm.form.valid) {
@@ -479,6 +488,7 @@ export class EditCourseComponent implements OnInit {
   }
 
   closeStandardsSelection(){
+    
     this.addStandard = false;
   }
 

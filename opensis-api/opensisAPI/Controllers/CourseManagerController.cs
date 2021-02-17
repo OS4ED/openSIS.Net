@@ -256,5 +256,21 @@ namespace opensisAPI.Controllers
             }
             return courseSectionView;
         }
+
+        [HttpPut("updateCourseSection")]
+        public ActionResult<CourseSectionAddViewModel> UpdateCourseSection(CourseSectionAddViewModel courseSectionAddViewModel)
+        {
+            CourseSectionAddViewModel courseSectionUpdate = new CourseSectionAddViewModel();
+            try
+            {
+                courseSectionUpdate = _courseManagerService.UpdateCourseSection(courseSectionAddViewModel);
+            }
+            catch (Exception es)
+            {
+                courseSectionUpdate._failure = true;
+                courseSectionUpdate._message = es.Message;
+            }
+            return courseSectionUpdate;
+        }
     }
 }

@@ -42,6 +42,7 @@ export class EditSchoolSpecificStandardComponent implements OnInit, OnDestroy{
   modalDialogTitle="addNewStandard"
   destroySubject$: Subject<void> = new Subject();
   loading:boolean;
+  checkStandardRefNo=false;
   constructor(private dialogRef: MatDialogRef<EditSchoolSpecificStandardComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private gradeLevelService: GradeLevelService,
@@ -99,7 +100,9 @@ export class EditSchoolSpecificStandardComponent implements OnInit, OnDestroy{
     this.form.controls['standardRefNo'].valueChanges.pipe(debounceTime(500),distinctUntilChanged()).subscribe((term)=>{
       if(term!=''){
           this.standardRefNoModel.standardRefNo = term;
+          this.checkStandardRefNo=true;
           this.gradesService.checkStandardRefNo(this.standardRefNoModel).pipe(debounceTime(500),distinctUntilChanged()).subscribe(data => {
+            this.checkStandardRefNo=false;
             if (data.isValidStandardRefNo) {
               this.form.controls['standardRefNo'].setErrors(null);}
             else {

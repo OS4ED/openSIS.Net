@@ -49,7 +49,7 @@ export class GetAllAttendanceCodeModel extends CommonField{
 }
 
 
-class AttendanceCodeCategories{
+export class AttendanceCodeCategories{
     public tenantId:string;
     public schoolId:number;
     public attendanceCategoryId:number;

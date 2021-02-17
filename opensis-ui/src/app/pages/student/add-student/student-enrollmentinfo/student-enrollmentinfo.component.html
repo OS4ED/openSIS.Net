@@ -37,7 +37,7 @@
 
                 <hr class="-mx-3 mt-6" />
 
-
+ 
                 <div class="flex w-full justify-between items-center px-4 pb-2 pt-10">
                     <h4 class="text-primary">{{'enrollmentInfo'|translate}}</h4>
                     <div class="text-right">
@@ -391,9 +391,9 @@
                     </thead>
                     <tbody>
                         <tr *ngFor="let enrollment of studentEnrollmentModel.studentEnrollmentListForView"
-                            [ngClass]="enrollment.exitType=='Drop (Transfer)'?'bg-skyblue-light':''">
+                            [ngClass]="(enrollment.exitType=='Drop (Transfer)' && enrollment.enrollmentType==null)  || enrollment.exitType=='Drop'?'bg-skyblue-light':''">
                             <td>{{enrollment.academicYear}}</td>
-                            <td><span *ngIf="enrollment.exitType!='Drop (Transfer)'">{{enrollment.enrollmentDate | date}}
+                            <td><span *ngIf="(enrollment.exitType!='Drop (Transfer)' && enrollment.enrollmentType!=null) || enrollment.exitType!='Drop'">{{enrollment.enrollmentDate | date}}
                                 <mat-icon [icIcon]="icExternal" class="text-blue align-middle mx-2"
                                         *ngIf="enrollment.enrollmentType=='Add' && enrollment.type=='External'"></mat-icon>
                                     <mat-icon [icIcon]="icAdd" class="text-blue align-middle mx-2"
@@ -409,7 +409,7 @@
                                     {{enrollment.type=="External"?'Enrolled as External Student':enrollment.enrollmentCode=='Rolled Over'?'Promoted':enrollment.enrollmentCode}}
                                 </span></td>
                             <td><span>{{enrollment.gradeLevelTitle}}</span></td>
-                            <td><span *ngIf="enrollment.exitType=='Drop (Transfer)'">{{enrollment.exitDate | date}}
+                            <td><span *ngIf="(enrollment.exitType=='Drop (Transfer)' && enrollment.enrollmentType==null) || enrollment.exitType=='Drop'">{{enrollment.exitDate | date}}
                                 <mat-icon [icIcon]="icTrasnferOut" class="text-warn align-middle mx-2"
                                         *ngIf="enrollment.exitType=='Drop (Transfer)'"></mat-icon>
                                         <mat-icon [icIcon]="icPromoted" class="text-blue align-middle mx-2"

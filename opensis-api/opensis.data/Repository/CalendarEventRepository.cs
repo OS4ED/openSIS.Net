@@ -42,6 +42,8 @@ namespace opensis.data.Repository
             calendarEvent.schoolCalendarEvent.LastUpdated = DateTime.UtcNow;
             this.context?.CalendarEvents.Add(calendarEvent.schoolCalendarEvent);
             this.context?.SaveChanges();
+            calendarEvent._failure = false;
+            calendarEvent._message = "Calendar Event Added Successfully";
             return calendarEvent;
         }
 
@@ -93,6 +95,7 @@ namespace opensis.data.Repository
                 this.context.Entry(calendarEventRepository).CurrentValues.SetValues(calendarEvent.schoolCalendarEvent);
                 this.context?.SaveChanges();
                 calendarEvent._failure = false;
+                calendarEvent._message = "Calendar Event Updated Successfully";
                 return calendarEvent;
             }
             catch (Exception ex)
@@ -156,7 +159,7 @@ namespace opensis.data.Repository
                     this.context?.CalendarEvents.Remove(calendarEventRepository);
                     this.context?.SaveChanges();
                     calendarEvent._failure = false;
-                    calendarEvent._message = "Deleted";
+                    calendarEvent._message = "Calendar Event Deleted Successfully";
                 }
             }
             catch (Exception ex)

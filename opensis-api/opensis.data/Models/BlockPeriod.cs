@@ -21,6 +21,7 @@ namespace opensis.data.Models
         public string PeriodStartTime { get; set; }
         public string PeriodEndTime { get; set; }
         public int? PeriodSortOrder { get; set; }
+        public bool? CalculateAttendance { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string UpdatedBy { get; set; }

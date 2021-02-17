@@ -56,7 +56,7 @@
                     <label class="text-sm leading-5 text-gray">{{'dateSchoolOpened' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].dateSchoolOpened|date:'mediumDate'|EmtyValueCheckPipe}}</p>
                 </li>
-                <li>
+                <li [class.hide]="schoolViewDetails?.schoolMaster.schoolDetail[0].status!==false">
                     <label class="text-sm leading-5 text-gray">{{'dateSchoolClosed' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].dateSchoolClosed|date:'mediumDate'|EmtyValueCheckPipe}}</p>
                 </li>
@@ -78,7 +78,11 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'status' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><span [ngClass]="status!=null?'':status=='Active'?'text-green':'text-red'">{{status|EmtyValueCheckPipe}}</span></p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        <span [class.text-red]="schoolViewDetails?.schoolMaster.schoolDetail[0].status===null||schoolViewDetails?.schoolMaster.schoolDetail[0].status===''||schoolViewDetails?.schoolMaster.schoolDetail[0].status===false"
+                        [class.text-green]="schoolViewDetails?.schoolMaster.schoolDetail[0].status===true">
+                        {{schoolViewDetails?.schoolMaster.schoolDetail[0].status|EmtyBooleanCheckPipe:'status'}}
+                    </span></p>
                 </li>
                 <!-- <li *ngFor="let customField of customFieldListViewModel">
                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>

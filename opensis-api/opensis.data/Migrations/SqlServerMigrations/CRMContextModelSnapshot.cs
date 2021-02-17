@@ -200,6 +200,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("period_id")
                         .HasColumnType("int");
 
+                    b.Property<bool?>("CalculateAttendance")
+                        .HasColumnName("calculate_attendance")
+                        .HasColumnType("bit");
+
                     b.Property<string>("CreatedBy")
                         .HasColumnName("created_by")
                         .HasColumnType("varchar(150)")
@@ -2234,6 +2238,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.Property<int>("CourseSectionId")
                         .HasColumnName("course_section_id")
                         .HasColumnType("int");
+
+                    b.Property<decimal?>("AcademicYear")
+                        .HasColumnName("academic_year")
+                        .HasColumnType("decimal(4, 0)");
 
                     b.Property<bool?>("AffectsClassRank")
                         .HasColumnName("affects_class_rank")

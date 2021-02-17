@@ -28,9 +28,8 @@ export class LoaderInterceptor implements HttpInterceptor {
     if (req.url !== this.apiUrl + this.tenant + "/User/checkUserLoginEmail" && req.url !== this.apiUrl + this.tenant + "/Student/checkStudentInternalId"  && req.url !== this.apiUrl + this.tenant + "/Staff/checkStaffInternalId" 
     && req.url !== this.apiUrl + this.tenant + "/School/checkSchoolInternalId" && req.url !== this.apiUrl + this.tenant +"/Grade/checkStandardRefNo") {
       this.requests.push(req);
-
       // console.log("No of requests--->" + this.requests.length);
-
+      console.log();
       this.loaderService.isLoading.next(true);
      return this.returnRequest(req,next);
     }

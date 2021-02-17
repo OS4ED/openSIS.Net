@@ -47,7 +47,7 @@ export class CourseManagerComponent implements OnInit {
     { label: 'Grade Level', property: 'grade_level', type: 'text', visible: true },
     { label: 'Schedule Date', property: 'schedule_date', type: 'text', visible: true }
   ];
-
+  selectedCourseDetails;
   EffortGradeScaleModelList;
   selectedOption = '1';
   icSettings = icSettings;
@@ -62,7 +62,7 @@ export class CourseManagerComponent implements OnInit {
   icClose = icClose;
   icCheckboxChecked = icCheckboxChecked;
   icCheckboxUnchecked = icCheckboxUnchecked;
-  showCourses = false;
+  showCourses = true;
   courseDetails = 0;
   icFilterList = icFilterList;
   icSearch = icSearch;
@@ -109,6 +109,8 @@ export class CourseManagerComponent implements OnInit {
   name;
   cloneFilterCourseList=[];
   selectedCourseFlag:boolean;
+  showCourseSections:boolean=true;
+  visibleColumns;
   constructor(
     public translateService:TranslateService,
     private dialog: MatDialog,
@@ -159,11 +161,11 @@ export class CourseManagerComponent implements OnInit {
           });        
         }
       }else{      
-        this.courseList=data.courseList;     
-        this.courseListClone = data.courseList;           
+        this.courseList=data.courseViewModelList;
+        this.courseListClone = data.courseViewModelList;           
         this.totalCourse = this.courseList.length;  
         if(this.totalCourse > 0){
-          this.selectedCourse = this.courseList[0]; 
+          this.selectedCourse = this.courseList[0].course; 
           this.standard = this.courseList[0].courseStandard;
         }      
       }
@@ -196,7 +198,7 @@ export class CourseManagerComponent implements OnInit {
 
  
 
-  globalFilter(value){    
+  globalFilter(value){ 
     var chkFlag = "N";
     if(this.cloneFilterCourseList.length > 0){
       if(value != ""){
@@ -225,12 +227,12 @@ export class CourseManagerComponent implements OnInit {
       if(value != ""){
         for(let i = 0;i< this.courseListClone.length ;i++){
           var obj1 = {};     
-          if(value == this.courseListClone[i].courseTitle || value == this.courseListClone[i].courseSubject || value == this.courseListClone[i].courseProgram){                   
-              obj1["courseTitle"]= this.courseListClone[i].courseTitle,
-              obj1["courseShortName"] = this.courseListClone[i].courseShortName,
-              obj1["courseGradeLevel"] = this.courseListClone[i].courseGradeLevel,
-              obj1["courseProgram"] = this.courseListClone[i].courseProgram,
-              obj1["courseSubject"] = this.courseListClone[i].courseSubject   
+          if(value == this.courseListClone[i].course.courseTitle || value == this.courseListClone[i].course.courseSubject || value == this.courseListClone[i].course.courseProgram){                   
+              obj1["courseTitle"]= this.courseListClone[i].course.courseTitle,
+              obj1["courseShortName"] = this.courseListClone[i].course.courseShortName,
+              obj1["courseGradeLevel"] = this.courseListClone[i].course.courseGradeLevel,
+              obj1["courseProgram"] = this.courseListClone[i].course.courseProgram,
+              obj1["courseSubject"] = this.courseListClone[i].course.courseSubject   
               this.globalFilterCourseList.push(obj1);  
               chkFlag = "Y";                 
             }    
@@ -275,14 +277,14 @@ export class CourseManagerComponent implements OnInit {
       for(let i = 0;i< this.courseListClone.length ;i++){
         var obj1 = {};      
        
-        if(subject == this.courseListClone[i].courseSubject && program == this.courseListClone[i].courseProgram && gradeLevel == this.courseListClone[i].courseGradeLevel ){
+        if(subject == this.courseListClone[i].course.courseSubject && program == this.courseListClone[i].course.courseProgram && gradeLevel == this.courseListClone[i].course.courseGradeLevel ){
         
             var l_flag = "Y";             
-            obj1["courseTitle"]= this.courseListClone[i].courseTitle,
-            obj1["courseShortName"] = this.courseListClone[i].courseShortName,
-            obj1["courseGradeLevel"] = this.courseListClone[i].courseGradeLevel,
-            obj1["courseProgram"] = this.courseListClone[i].courseProgram,
-            obj1["courseSubject"] = this.courseListClone[i].courseSubject   
+            obj1["courseTitle"]= this.courseListClone[i].course.courseTitle,
+            obj1["courseShortName"] = this.courseListClone[i].course.courseShortName,
+            obj1["courseGradeLevel"] = this.courseListClone[i].course.courseGradeLevel,
+            obj1["courseProgram"] = this.courseListClone[i].course.courseProgram,
+            obj1["courseSubject"] = this.courseListClone[i].course.courseSubject   
             this.filterCourseList.push(obj1);  
             this.cloneFilterCourseList.push(obj1);  
          
@@ -309,11 +311,12 @@ export class CourseManagerComponent implements OnInit {
         this.getAllCourse();
       }
     }
-  backToCourse() {
+  backToCourse(event) {
     this.showCourses = true;
   }
 
-  courseSections() {
+  courseSections(selectedCourseDetails) {
+   this.selectedCourseDetails=selectedCourseDetails.course;
     this.showCourses = false;
   }
 
@@ -414,11 +417,6 @@ export class CourseManagerComponent implements OnInit {
     });
   }
 
-  openModalEditCourseSection() {
-    this.dialog.open(EditCourseSectionComponent, {
-      width: '900px'
-    });
-  }
 
   changeTab(currentTab) {
     this.selectedTab = currentTab;

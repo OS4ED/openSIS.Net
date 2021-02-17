@@ -156,13 +156,13 @@ export class EffortGradeLibraryComponent implements OnInit {
     this.gradesService.deleteEffortGradeLibraryCategory(this.effortGradeLibraryCategoryAddViewModel).subscribe(
       (res:EffortGradeLibraryCategoryAddViewModel)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Effort Category failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Effort Category failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
@@ -191,13 +191,13 @@ export class EffortGradeLibraryComponent implements OnInit {
     this.gradesService.deleteEffortGradeLibraryCategoryItem(this.effortGradeLibraryCategoryItemAddViewModel).subscribe(
       (res:EffortGradeLibraryCategoryItemAddViewModel)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Effort Items failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Effort Items failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
@@ -226,15 +226,16 @@ export class EffortGradeLibraryComponent implements OnInit {
     this.gradesService.getAllEffortGradeLlibraryCategoryList(this.effortGradeLibraryCategoryListView).subscribe(
       (res:EffortGradeLibraryCategoryListView)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Effort Categories list failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Effort Categories list failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
+            this.effortCategoriesList= res.effortGradeLibraryCategoryList;
           } 
           else{
             this.effortCategoriesList= res.effortGradeLibraryCategoryList;
@@ -265,18 +266,18 @@ export class EffortGradeLibraryComponent implements OnInit {
         this.gradesService.addEffortGradeLibraryCategory(this.effortGradeLibraryCategoryAddViewModel).subscribe(
           (res:EffortGradeLibraryCategoryAddViewModel)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Effort Category failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Effort Category failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else{
-                this.snackbar.open('Effort Category Successful Created.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.getAllEffortGradeLlibraryCategoryList();
@@ -293,18 +294,18 @@ export class EffortGradeLibraryComponent implements OnInit {
         this.gradesService.updateEffortGradeLibraryCategory(this.effortGradeLibraryCategoryAddViewModel).subscribe(
           (res:EffortGradeLibraryCategoryAddViewModel)=>{
    if(typeof(res)=='undefined'){
-              this.snackbar.open('Effort Category failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Effort Category failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else{
-                this.snackbar.open('Effort Category Successful Edited.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.getAllEffortGradeLlibraryCategoryList();
@@ -325,13 +326,13 @@ export class EffortGradeLibraryComponent implements OnInit {
     this.gradesService.updateEffortGradeLlibraryCategorySortOrder(this.effortGradeLlibraryDragDropModel).subscribe(
       (res:EffortGradeLlibraryDragDropModel)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Effort Category Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Effort Category Drag short failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }
@@ -350,13 +351,13 @@ export class EffortGradeLibraryComponent implements OnInit {
     this.gradesService.updateEffortGradeLlibraryCategorySortOrder(this.effortGradeLlibraryDragDropModel).subscribe(
       (res:EffortGradeLlibraryDragDropModel)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Effort Item Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Effort Item Drag short failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }

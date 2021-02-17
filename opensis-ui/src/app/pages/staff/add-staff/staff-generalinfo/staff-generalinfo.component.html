@@ -60,7 +60,7 @@
                             <mat-label>{{'staffId'|translate}}</mat-label>
                             <input [formControl]="internalId"
                                 [(ngModel)]="staffAddModel.staffMaster.staffInternalId" name="staffInternalId" matInput required>
-                                <mat-progress-spinner matSuffix *ngIf="isStaffInternalId" color="primary" diameter="18" mode="indeterminate" ></mat-progress-spinner>
+                                <span matSuffix><img *ngIf="isStaffInternalId" src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
                             <mat-error *ngIf="internalId.errors?.required">
                                 {{'staffInternalIdIsRequired'|translate}}</mat-error>
                             <mat-error *ngIf="internalId.errors?.nomatch">
@@ -259,7 +259,7 @@
                                 <input [formControl]="loginEmail" name="loginEmailAddress"
                                     [(ngModel)]="staffAddModel.staffMaster.loginEmailAddress" matInput
                                     [required]="hideAccess ? true : null " >
-                                    <mat-progress-spinner matSuffix *ngIf="isUser" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
+                                <span matSuffix><img *ngIf="isUser" src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
                                 <mat-error class="text-red" *ngIf="loginEmail.errors?.required && hideAccess">
                                     {{'loginEmailAddressIsRequired'|translate}}</mat-error>
                                 <mat-error *ngIf="loginEmail.errors?.nomatch">

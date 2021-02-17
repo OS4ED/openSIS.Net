@@ -1,0 +1,83 @@
+<div class="absolute w-full h-full bg-gray-light z-50 p-10" *ngIf="addCalendarDay === 1">
+    <form #f="ngForm" (ngSubmit)="classSubmit()">
+        <div class="shadow-lg w-full bg-white rounded p-6">
+            <div class="pb-4">
+                <h3>{{'addClass' | translate}}</h3>
+            </div>
+
+            <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'date' | translate}}</mat-label>
+                        <input #date="ngModel" [(ngModel)]="courseCalendarSchedule.date" name="date" matInput
+                            [matDatepicker]="pickerStartDate" required disabled>
+                        <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
+                        <mat-datepicker #pickerStartDate></mat-datepicker>
+                        <mat-error *ngIf="date.errors?.required">
+                            {{'dateIsRequired'|translate}}</mat-error>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'period' | translate}}</mat-label>
+                        <mat-select #periodId="ngModel" (selectionChange)="onPeriodChange($event.value)"
+                            [(ngModel)]="courseCalendarSchedule.periodId" name="periodId" required>
+                            <mat-option *ngFor="let period of periodList" [value]='period.periodId'>
+                                {{period.periodTitle}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="periodId.errors?.required">
+                            {{'periodIsRequired'|translate}}</mat-error>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{'room' | translate}}</mat-label>
+                        <mat-select #roomId="ngModel" [(ngModel)]="courseCalendarSchedule.roomId" name="roomId"
+                            required>
+                            <mat-option *ngFor="let room of roomModelList" [value]='room.roomId'>
+                                {{room.title}}
+                            </mat-option>
+                        </mat-select>
+                        <mat-error *ngIf="roomId.errors?.required">
+                            {{'roomIsRequired'|translate}}</mat-error>
+                    </mat-form-field>
+                </li>
+                <li class="pt-3">
+                    <mat-slide-toggle class="mb-3" color="primary" [(ngModel)]="courseCalendarSchedule.takeAttendance"
+                        name="takeAttendance">{{'takeAttendance' | translate}}</mat-slide-toggle>
+                </li>
+            </ul>
+
+            <div class="pt-5 text-right">
+                <button mat-button type="button" class="mr-2" (click)="cancelAddClass()">{{'cancel' |
+                    translate}}</button>
+                <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+            </div>
+        </div>
+    </form>
+</div>
+<hr />
+<mat-error
+    *ngIf="showError">
+    Please Select a Calendar.
+</mat-error>
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+    <div class="cal-cell-top">
+        <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div class="cal-events pl-2 pb-2 justify-center" *ngIf="day.events.length > 0">
+        <div class="mr-2" *ngFor="let event of day.events;">
+
+            <span (click)="$event.stopPropagation(); editEvent(event)" class="text-xs cursor-pointer">{{ event.title }}</span>
+
+        </div>
+    </div>
+</ng-template>
+
+<div [ngSwitch]="view" *ngIf="!showError">
+    <mwl-calendar-month-view *ngSwitchCase="'month'" (dayClicked)="openAddNewEvent($event.day)" [viewDate]="viewDate"
+        [events]="events" [refresh]="refresh" (beforeViewRender)="beforeMonthViewRender($event)"
+        [weekendDays]="weekendDays" [cellTemplate]="customCellTemplate">
+    </mwl-calendar-month-view>
+</div>

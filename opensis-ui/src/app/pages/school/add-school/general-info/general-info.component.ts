@@ -194,7 +194,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.schoolService.changePageMode(this.schoolCreateMode);
   }
-
+ 
   checkLowGradeLevel(event) {
     let index = this.gradeLevel?.findIndex((val) => {
       return val.lovColumnValue == event.value;

@@ -51,6 +51,8 @@ namespace opensis.data.Repository
             this.context?.StudentEnrollmentCode.Add(studentEnrollmentCodeAddViewModel.studentEnrollmentCode);
             this.context?.SaveChanges();
             studentEnrollmentCodeAddViewModel._failure = false;
+            studentEnrollmentCodeAddViewModel._message = "Enrollment Code Added Successfully";
+
             return studentEnrollmentCodeAddViewModel;
         }
 
@@ -117,7 +119,7 @@ namespace opensis.data.Repository
                             this.context?.StudentEnrollmentCode.Remove(studentEnrollmentCodeDelete);
                             this.context?.SaveChanges();
                             studentEnrollmentCodeAddViewModel._failure = false;
-                            studentEnrollmentCodeAddViewModel._message = "Deleted";                           
+                            studentEnrollmentCodeAddViewModel._message = "Enrollment Code Deleted Successfully";
                         }
                     }
                 }
@@ -168,6 +170,7 @@ namespace opensis.data.Repository
                     this.context.Entry(studentEnrollmentCodeUpdate).CurrentValues.SetValues(studentEnrollmentCodeAddViewModel.studentEnrollmentCode);
                     this.context?.SaveChanges();
                     studentEnrollmentCodeAddViewModel._failure = false;
+                    studentEnrollmentCodeAddViewModel._message = "Enrollment Code Updated Successfully";
                 }
             }
             catch (Exception ex)

@@ -22,13 +22,17 @@ import { SafePipe } from './user-define-pipe/safeHtml.pipe';
 import { TransformDateTimePipe } from './user-define-pipe/transform-datetime-pipe';
 import {EmailvalidatorDirective} from './user-defined-directives/emailvalidator.directive';
 import {PhonevalidatorDirective} from './user-defined-directives/phonevalidator.directive';
-import { AgePipe } from './user-define-pipe/age-calculator-pipe';
+import { AgePipe } from './user-define-pipe/age-calculator.pipe';
 import { TransformTimePipe } from './user-define-pipe/transfrom-time.pipe';
 import { EvenOddPipe } from './user-define-pipe/even-odd.pipe';
+import { WeekDayPipe } from './user-define-pipe/number-to-week-day.pipe';
+import { NgForFilterPipe } from './user-define-pipe/course-section-ngFor-div-filter.pipe';
+import { Transform24to12Pipe } from './user-define-pipe/transform-24to12.pipe';
+
 @NgModule({
   declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyBooleanCheckReversePipe,
     EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,
-    PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe],
+    PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -39,9 +43,10 @@ import { EvenOddPipe } from './user-define-pipe/even-odd.pipe';
     MatIconModule,
     IconModule,
     MatCardModule,
-    TranslateModule
+    TranslateModule,
+    
   ],
   exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe,InvalidControlScrollDirective,
-    EmtyBooleanCheckReversePipe,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe]
+    EmtyBooleanCheckReversePipe,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe]
 })
 export class SharedModuleModule { }

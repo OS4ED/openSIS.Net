@@ -527,5 +527,31 @@ namespace opensisAPI.Controllers
             }
             return dropDownViewModel;
         }
+
+        [HttpPost("getAllMarkingPeriodList")]
+        public ActionResult<MarkingPeriodListViewModel> GetAllMarkingPeriodList(MarkingPeriodListViewModel markingPeriodListViewModel)
+        {
+            MarkingPeriodListViewModel markingPeriodList = new MarkingPeriodListViewModel();
+            try
+            {
+                if (markingPeriodListViewModel.SchoolId > 0)
+                {
+                    markingPeriodList = _markingPeriodService.GetAllMarkingPeriodList(markingPeriodListViewModel);
+                }
+                else
+                {
+                    markingPeriodList._token = markingPeriodListViewModel._token;
+                    markingPeriodList._tenantName = markingPeriodListViewModel._tenantName;
+                    markingPeriodList._failure = true;
+                    markingPeriodList._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                markingPeriodList._failure = true;
+                markingPeriodList._message = es.Message;
+            }
+            return markingPeriodList;
+        }
     }
 }

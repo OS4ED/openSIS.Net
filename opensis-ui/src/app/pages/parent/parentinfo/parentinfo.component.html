@@ -16,6 +16,10 @@
                             <input matInput [(ngModel)]="searchKey" (keyup)="applyFilter()"
                                 class="py-3 border-0 outline-none w-full bg-transparent" appearance="outline"
                                 color="primary" placeholder="Search..." type="search" (search)="onSearchClear()">
+                                <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
+                                <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            </button>
                         </div>
                     </div>
 
@@ -87,7 +91,7 @@
 
                 <ng-container matColumnDef="loading">
                     <mat-footer-cell *matFooterCellDef colspan="6">
-                        <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                        <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
                     </mat-footer-cell>
                 </ng-container>
                 <ng-container matColumnDef="noData">

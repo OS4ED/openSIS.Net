@@ -58,6 +58,7 @@ namespace opensis.data.Repository
                     this.context?.GradeScale.Add(gradeScaleAddViewModel.gradeScale);
                     this.context?.SaveChanges();
                     gradeScaleAddViewModel._failure = false;
+                    gradeScaleAddViewModel._message = "Grade Scale Added Successfully";
                 }                
             }
             catch (Exception es)
@@ -138,7 +139,7 @@ namespace opensis.data.Repository
                         this.context?.GradeScale.Remove(gradeScaleDelete);
                         this.context?.SaveChanges();
                         gradeScaleAddViewModel._failure = false;
-                        gradeScaleAddViewModel._message = "Deleted";
+                        gradeScaleAddViewModel._message = "Grade Scale Deleted Successfully";
                     }
                 }
                 else
@@ -193,6 +194,7 @@ namespace opensis.data.Repository
                     this.context?.Grade.Add(gradeAddViewModel.grade);
                     this.context?.SaveChanges();
                     gradeAddViewModel._failure = false;
+                    gradeAddViewModel._message = "Grade Added Successfully";
                 }                
             }
             catch (Exception es)
@@ -265,7 +267,7 @@ namespace opensis.data.Repository
                         this.context?.Grade.Remove(gradeDelete);
                         this.context?.SaveChanges();
                         gradeAddViewModel._failure = false;
-                        gradeAddViewModel._message = "Deleted";                    
+                        gradeAddViewModel._message = "Grade Deleted Successfully";                    
                 }
                 else
                 {
@@ -397,6 +399,7 @@ namespace opensis.data.Repository
                     this.context?.EffortGradeLibraryCategory.Add(effortGradeLibraryCategoryAddViewModel.effortGradeLibraryCategory);
                     this.context?.SaveChanges();
                     effortGradeLibraryCategoryAddViewModel._failure = false;
+                    effortGradeLibraryCategoryAddViewModel._message = "Effort Grade Library Category Added Successfully";
                 }
                 else
                 {
@@ -482,7 +485,7 @@ namespace opensis.data.Repository
                         this.context?.EffortGradeLibraryCategory.Remove(EffortGradeLibraryCategoryDelete);
                         this.context?.SaveChanges();
                         effortGradeLibraryCategoryAddViewModel._failure = false;
-                        effortGradeLibraryCategoryAddViewModel._message = "Deleted";
+                        effortGradeLibraryCategoryAddViewModel._message = "Effort Grade Library Category Deleted Successfully";
                     }
                     
                 }
@@ -535,6 +538,7 @@ namespace opensis.data.Repository
                     this.context?.EffortGradeLibraryCategoryItem.Add(effortGradeLibraryCategoryItemAddViewModel.effortGradeLibraryCategoryItem);
                     this.context?.SaveChanges();
                     effortGradeLibraryCategoryItemAddViewModel._failure = false;
+                    effortGradeLibraryCategoryItemAddViewModel._message = "Effort Grade Library Category Item Added Successfully";
                 }
                 else
                 {
@@ -612,7 +616,7 @@ namespace opensis.data.Repository
                     this.context?.EffortGradeLibraryCategoryItem.Remove(EffortGradeLibraryCategoryItemDelete);
                     this.context?.SaveChanges();
                     effortGradeLibraryCategoryItemAddViewModel._failure = false;
-                    effortGradeLibraryCategoryItemAddViewModel._message = "Deleted";
+                    effortGradeLibraryCategoryItemAddViewModel._message = "Effort Grade Library Category Item Deleted Successfully";
                 }
                 else
                 {
@@ -783,6 +787,7 @@ namespace opensis.data.Repository
                     this.context?.EffortGradeScale.Add(effortGradeScaleAddViewModel.effortGradeScale);
                     this.context?.SaveChanges();
                     effortGradeScaleAddViewModel._failure = false;
+                    effortGradeScaleAddViewModel._message = "Effort Grade Scale Added Successfully";
                 }
                 else
                 {
@@ -822,7 +827,7 @@ namespace opensis.data.Repository
                         this.context.Entry(effortGradeScaleUpdate).CurrentValues.SetValues(effortGradeScaleAddViewModel.effortGradeScale);
                         this.context?.SaveChanges();
                         effortGradeScaleAddViewModel._failure = false;
-                        effortGradeScaleAddViewModel._message = "EffortGradeScale Updated Successfully";
+                        effortGradeScaleAddViewModel._message = "Effort Grade Scale Updated Successfully";
                     }
                     else
                     {
@@ -861,7 +866,7 @@ namespace opensis.data.Repository
                     this.context?.EffortGradeScale.Remove(effortGradeScaleDelete);
                     this.context?.SaveChanges();
                     effortGradeScaleAddViewModel._failure = false;
-                    effortGradeScaleAddViewModel._message = "Deleted Successfully";
+                    effortGradeScaleAddViewModel._message = "Effort Grade Scale Deleted Successfully";
                 }
                 else
                 {
@@ -1013,6 +1018,7 @@ namespace opensis.data.Repository
                     this.context?.GradeUsStandard.Add(gradeUsStandardAddViewModel.gradeUsStandard);
                     this.context?.SaveChanges();
                     gradeUsStandardAddViewModel._failure = false;
+                    gradeUsStandardAddViewModel._message = "GradeUs Standard Added Successfully";
                 }
                 else
                 {
@@ -1068,7 +1074,7 @@ namespace opensis.data.Repository
                     this.context.Entry(gradeUsStandardUpdate).CurrentValues.SetValues(gradeUsStandardAddViewModel.gradeUsStandard);
                     this.context?.SaveChanges();
                     gradeUsStandardAddViewModel._failure = false;
-                    gradeUsStandardAddViewModel._message = "GradeUsStandard Updated Successfully";
+                    gradeUsStandardAddViewModel._message = "GradeUs Standard Updated Successfully";
                 }
                 else
                 {
@@ -1101,7 +1107,7 @@ namespace opensis.data.Repository
                     this.context?.GradeUsStandard.Remove(gradeUsStandardDelete);
                     this.context?.SaveChanges();
                     gradeUsStandardAddViewModel._failure = false;
-                    gradeUsStandardAddViewModel._message = "Deleted Successfully";
+                    gradeUsStandardAddViewModel._message = "GradeUs Standard Deleted Successfully";
                 }
                 else
                 {
@@ -1349,6 +1355,7 @@ namespace opensis.data.Repository
                     this.context?.HonorRolls.Add(honorRollsAddViewModel.honorRolls);
                     this.context?.SaveChanges();
                     honorRollsAddViewModel._failure = false;
+                    honorRollsAddViewModel._message = "Honor Roll Added Successfully";
                 }
             }
             catch (Exception es)

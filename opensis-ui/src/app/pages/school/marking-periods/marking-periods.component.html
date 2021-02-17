@@ -117,24 +117,24 @@
                     </div>
                     <mat-card-content>
                         <div class="border-t border-b py-3 px-6">
-                            <div class="flex align-items-center mr-6">
+                            <div class="flex items-center mr-6">
                                 <div *ngIf="doesGrades;else doesnotGrades" class="mr-6">
                                     <mat-icon [icIcon]="icCheckBox" class="inline-block align-middle"></mat-icon> {{'graded' | translate}}
                                 </div>
                                 <ng-template #doesnotGrades>
-                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon> <span class="mr-6">{{'graded' | translate}}</span>
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank" class="inline-block align-middle"></mat-icon> <span class="ml-1 mr-6">{{'graded' | translate}}</span>
                                 </ng-template>
                                 <div *ngIf="doesExam;else doesnotExam" class="mr-6">
                                     <mat-icon [icIcon]="icCheckBox" class="inline-block align-middle"></mat-icon> {{'exam' | translate}}
                                 </div>
                                 <ng-template #doesnotExam>
-                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon><span class="ml-2 mr-6">{{'exam' | translate}}</span>                               
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank" class="inline-block align-middle"></mat-icon><span class="ml-1 mr-6">{{'exam' | translate}}</span>                               
                                 </ng-template>
                                 <div *ngIf="doesComments;else doesnotComments" class="mr-6">
                                     <mat-icon [icIcon]="icCheckBox" class="inline-block align-middle"></mat-icon> {{'comments' | translate}}
                                 </div>
                                 <ng-template #doesnotComments>
-                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank"></mat-icon><span class="ml-1 mr-6">{{'comments' | translate}}</span>                               
+                                    <mat-icon [icIcon]="icCheckBoxOutlineBlank" class="inline-block align-middle"></mat-icon><span class="ml-1 mr-6">{{'comments' | translate}}</span>                               
                                 </ng-template>
                             </div>
                         </div>

@@ -62,18 +62,18 @@ export class EditEffortItemComponent implements OnInit {
         this.gradesService.addEffortGradeLibraryCategoryItem(this.effortGradeLibraryCategoryItemAddViewModel).subscribe(
           (res:EffortGradeLibraryCategoryItemAddViewModel)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Effort Item failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Effort Item failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Effort Item Successful Created.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -88,17 +88,17 @@ export class EditEffortItemComponent implements OnInit {
         this.gradesService.updateEffortGradeLibraryCategoryItem(this.effortGradeLibraryCategoryItemAddViewModel).subscribe(
           (res:EffortGradeLibraryCategoryItemAddViewModel)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Effort Item failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }else{
               if (res._failure) {
-                this.snackbar.open('Effort Item failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else{
-                this.snackbar.open('Effort Item Successful Edited.', '', {
+                this.snackbar.open(''+res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

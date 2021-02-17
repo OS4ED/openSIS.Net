@@ -34,5 +34,7 @@ namespace opensis.data.Models
         public SortingModel SortingModel { get; set; }
 
         public List<FilterParams> FilterParams { get; set; }
+        public DateTime? DobStartDate { get; set; }
+        public DateTime? DobEndDate { get; set; }
     }
 }

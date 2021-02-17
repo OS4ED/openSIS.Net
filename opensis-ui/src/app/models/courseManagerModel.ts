@@ -140,7 +140,7 @@ export class DeleteProgramModel extends CommonField{
 } 
 
 export class GetAllCourseListModel extends CommonField{
-    public courseList:[];
+    public courseViewModelList:[];
     public tenantId:string;
     public schoolId:number;
     constructor() {

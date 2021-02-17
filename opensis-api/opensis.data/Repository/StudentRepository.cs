@@ -160,7 +160,7 @@ namespace opensis.data.Repository
                     }
 
                     student._failure = false;
-
+                    student._message = "Student Added Successfully";
                     transaction.Commit();
                 }
                 catch (Exception es)
@@ -347,42 +347,8 @@ namespace opensis.data.Repository
                             }
                         }
 
-                        //if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
-                        //{
-                        //    UserMaster userMaster = new UserMaster();
-
-                        //    var decrypted = Utility.Decrypt(student.PasswordHash);
-                        //    string passwordHash = Utility.GetHashedPassword(decrypted);
-
-                        //    var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.EmailAddress == student.LoginEmail);
-
-                        //    if (loginInfo == null)
-                        //    {
-                        //        var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
-
-                        //        userMaster.SchoolId = student.studentMaster.SchoolId;
-                        //        userMaster.TenantId = student.studentMaster.TenantId;
-                        //        userMaster.UserId = student.studentMaster.StudentId;
-                        //        userMaster.LangId = 1;
-                        //        userMaster.MembershipId = membership.MembershipId;
-                        //        userMaster.EmailAddress = student.LoginEmail;
-                        //        userMaster.PasswordHash = passwordHash;
-                        //        userMaster.Name = student.studentMaster.FirstGivenName;
-                        //        userMaster.LastUpdated = DateTime.UtcNow;
-                        //        userMaster.IsActive = true;
-
-                        //        this.context?.UserMaster.Add(userMaster);
-                        //        this.context?.SaveChanges();
-
-
-                        //        //Update StudentPortalId in Studentmaster table.
-                        //        var studentPortalId = this.context?.StudentMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.StudentId == student.studentMaster.StudentId);
-                        //        studentUpdate.StudentPortalId = student.LoginEmail;
-
-                        //        this.context?.SaveChanges();
-                        //    }
-                        //}
                         student._failure = false;
+                        student._message = "Student Updated Successfully";
                     }
                     transaction.Commit();
                    
@@ -441,6 +407,13 @@ namespace opensis.data.Repository
                 FirstLanguage=e.FirstLanguage,
                 SecondLanguage=e.SecondLanguage,
                 ThirdLanguage=e.ThirdLanguage,
+                HomeAddressLineOne = e.HomeAddressLineOne,
+                HomeAddressLineTwo = e.HomeAddressLineTwo,
+                HomeAddressCity = e.HomeAddressCity,
+                HomeAddressCountry = e.HomeAddressCountry,
+                HomeAddressState = e.HomeAddressState,
+                HomeAddressZip = e.HomeAddressZip,
+                BusNo=e.BusNo,
                 StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == true).Select(s => new StudentEnrollment
                 {
                     EnrollmentDate = s.EnrollmentDate,
@@ -494,12 +467,21 @@ namespace opensis.data.Repository
                             }
                         }
                         else
-                        {
+                        {                            
                             transactionIQ = Utility.FilteredData(pageResult.FilterParams, studentDataList).AsQueryable();
-                        }
-
+                            
+                        }  
                     }
                     //transactionIQ = transactionIQ.Distinct();
+                }
+
+                if (pageResult.DobStartDate != null && pageResult.DobEndDate != null)
+                {
+                    var filterInDateRange = transactionIQ.AsNoTracking().ToList().Where(x => x.Dob >= pageResult.DobStartDate && x.Dob <= pageResult.DobEndDate).AsQueryable();
+                    if (filterInDateRange.ToList().Count() > 0)
+                    {
+                        transactionIQ = filterInDateRange;
+                    }
                 }
 
                 if (pageResult.SortingModel != null)
@@ -580,6 +562,7 @@ namespace opensis.data.Repository
                 }
 
                 studentDocumentAddViewModel._failure = false;
+                studentDocumentAddViewModel._message = "Student Document Added Successfully";
             }
             catch (Exception es)
             {
@@ -604,7 +587,7 @@ namespace opensis.data.Repository
                 this.context.Entry(studentDocumentUpdate).CurrentValues.SetValues(studentDocumentAddViewModel.studentDocuments.FirstOrDefault());
                 this.context?.SaveChanges();
                 studentDocumentAddViewModel._failure = false;
-                studentDocumentAddViewModel._message = "Updated Successfully";
+                studentDocumentAddViewModel._message = "Student Document Updated Successfully";
             }
             catch (Exception es)
             {
@@ -664,7 +647,7 @@ namespace opensis.data.Repository
                 this.context?.StudentDocuments.Remove(studentDocumentDelete);
                 this.context?.SaveChanges();
                 studentDocumentAddViewModel._failure = false;
-                studentDocumentAddViewModel._message = "Deleted Successfully";
+                studentDocumentAddViewModel._message = "Student Document Deleted Successfully";
             }
             catch (Exception es)
             {
@@ -717,6 +700,7 @@ namespace opensis.data.Repository
                     }
                 }
                 login._failure = false;
+                login._message = "Student Login Info Added Succesfully";
             }
             catch (Exception es)
             {
@@ -741,6 +725,7 @@ namespace opensis.data.Repository
                 this.context?.StudentComments.Add(studentCommentAddViewModel.studentComments);
                 this.context?.SaveChanges();
                 studentCommentAddViewModel._failure = false;
+                studentCommentAddViewModel._message = "Student Comment Added Successfully";
             }
             catch (Exception es)
             {
@@ -764,7 +749,7 @@ namespace opensis.data.Repository
                 this.context.Entry(studentCommentUpdate).CurrentValues.SetValues(studentCommentAddViewModel.studentComments);
                 this.context?.SaveChanges();
                 studentCommentAddViewModel._failure = false;
-                studentCommentAddViewModel._message = "Updated Successfully";
+                studentCommentAddViewModel._message = "Student Comment Updated Successfully";
             }
             catch (Exception es)
             {
@@ -823,7 +808,7 @@ namespace opensis.data.Repository
                 this.context?.StudentComments.Remove(studentCommentDelete);
                 this.context?.SaveChanges();
                 studentCommentAddViewModel._failure = false;
-                studentCommentAddViewModel._message = "Deleted Successfully";
+                studentCommentAddViewModel._message = "Student Comment Deleted Successfully";
             }
             catch (Exception es)
             {
@@ -857,6 +842,7 @@ namespace opensis.data.Repository
                 }
                 this.context?.SaveChanges();
                 studentEnrollmentListModel._failure = false;
+                studentEnrollmentListModel._message = "Student Enrollment Added Successfully";
             }
             catch (Exception es)
             {
@@ -1014,6 +1000,27 @@ namespace opensis.data.Repository
                                                     }
                                                     this.context?.SaveChanges();
 
+                                                    studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
+                                                    studentEnrollmentList.SchoolId = (int)studentEnrollmentList.SchoolId;
+                                                    studentEnrollmentList.StudentId = studentEnrollmentUpdate.StudentId;
+                                                    studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
+                                                    studentEnrollmentList.EnrollmentDate = null;
+                                                    studentEnrollmentList.EnrollmentCode = null;
+                                                    studentEnrollmentList.ExitCode = studentExitCode.Title;
+                                                    studentEnrollmentList.ExitDate = studentEnrollmentList.ExitDate;
+                                                    studentEnrollmentList.SchoolName = studentEnrollmentUpdate.SchoolName;
+                                                    studentEnrollmentList.SchoolTransferred = studentEnrollmentList.SchoolTransferred;
+                                                    studentEnrollmentList.TransferredSchoolId = studentEnrollmentList.TransferredSchoolId;
+                                                    studentEnrollmentList.GradeLevelTitle = null;
+                                                    studentEnrollmentList.TransferredGrade = studentEnrollmentList.TransferredGrade;
+                                                    studentEnrollmentList.CalenderId = studentEnrollmentUpdate.CalenderId;
+                                                    studentEnrollmentList.RollingOption = studentEnrollmentListModel.RollingOption;
+                                                    studentEnrollmentList.LastUpdated = DateTime.UtcNow;
+                                                    studentEnrollmentList.IsActive = false;
+                                                    this.context?.StudentEnrollment.AddRange(studentEnrollmentList);
+                                                    this.context?.SaveChanges();
+                                                    EnrollmentId++;
+
                                                     studentEnrollmentList.StudentId = (int)MasterStudentId;
                                                 }
                                             }
@@ -1028,30 +1035,12 @@ namespace opensis.data.Repository
                                                 calenderId = defaultCalender.CalenderId;
                                             }
 
-                                            studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
-                                            studentEnrollmentList.SchoolId = (int)studentEnrollmentList.SchoolId;
-                                            studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
-                                            studentEnrollmentList.EnrollmentDate = null;
-                                            studentEnrollmentList.EnrollmentCode = null;
-                                            studentEnrollmentList.ExitCode = studentExitCode.Title;
-                                            studentEnrollmentList.ExitDate = studentEnrollmentList.ExitDate;
-                                            studentEnrollmentList.SchoolName = studentEnrollmentList.SchoolTransferred;
-                                            studentEnrollmentList.SchoolTransferred = null;
-                                            studentEnrollmentList.TransferredSchoolId = studentEnrollmentList.TransferredSchoolId;
-                                            studentEnrollmentList.GradeLevelTitle = null;
-                                            studentEnrollmentList.TransferredGrade = studentEnrollmentList.TransferredGrade;
-                                            studentEnrollmentList.CalenderId = calenderId;
-                                            studentEnrollmentList.RollingOption = studentEnrollmentListModel.RollingOption;
-                                            studentEnrollmentList.LastUpdated = DateTime.UtcNow;
-                                            studentEnrollmentList.IsActive = false;
-                                            this.context?.StudentEnrollment.AddRange(studentEnrollmentList);
-                                            this.context?.SaveChanges();
-                                            EnrollmentId++;
+                                            
                                             
                                             studentEnrollmentList.TenantId = studentEnrollmentList.TenantId;
                                             studentEnrollmentList.SchoolId = (int)studentEnrollmentList.TransferredSchoolId;
                                             studentEnrollmentList.EnrollmentId = (int)EnrollmentId;
-                                            studentEnrollmentList.EnrollmentDate = studentEnrollmentList.EnrollmentDate;
+                                            studentEnrollmentList.EnrollmentDate = studentEnrollmentList.ExitDate;
                                             studentEnrollmentList.EnrollmentCode = studentTransferIn.Title;
                                             studentEnrollmentList.ExitCode = null;
                                             studentEnrollmentList.ExitDate = null;
@@ -1186,6 +1175,7 @@ namespace opensis.data.Repository
                     this.context?.SaveChanges();
                     transaction.Commit();
                     studentEnrollmentListModel._failure = false;
+                    studentEnrollmentListModel._message = "Student Enrollment Updated Successfully";
                 }
                 catch (Exception es)
                 {
@@ -1527,6 +1517,8 @@ namespace opensis.data.Repository
                         siblingAddUpdateForStudentModel._message = NORECORDFOUND;
                     }
                     this.context?.SaveChanges();
+                    siblingAddUpdateForStudentModel._failure = false;
+                    siblingAddUpdateForStudentModel._message = "Sibling Added Successfully";
                 }
             }
             catch (Exception es)
@@ -1639,7 +1631,7 @@ namespace opensis.data.Repository
                         StudentAssociateByAfterDel = null;
                     }
                     StudentAssociateBy.Associationship = StudentAssociateByAfterDel;
-                    siblingAddUpdateForStudentModel._message = "Associationship Remove Successfully";
+                    siblingAddUpdateForStudentModel._message = "Sibling Deleted Successfully";
                 }
                 this.context?.SaveChanges();
                 
@@ -1688,7 +1680,7 @@ namespace opensis.data.Repository
                 {
                     studentUpdate.StudentPhoto = studentAddViewModel.studentMaster.StudentPhoto;
                     this.context?.SaveChanges();
-                    studentAddViewModel._message = "Updated Successfully";
+                    studentAddViewModel._message = "Student Photo Updated Successfully";
                 }
                 else
                 {

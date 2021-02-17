@@ -108,21 +108,32 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public LanguageAddModel AddLanguage(LanguageAddModel languageAdd)
         {
-            var getLanguage = this.context?.Language.FirstOrDefault(x => x.Locale.ToLower() == languageAdd.Language.Locale.ToLower());
-
-            if (getLanguage != null)
+            try
             {
-                languageAdd._message = "This Language Name Already Exist";
-                languageAdd._failure = true;
+                var getLanguage = this.context?.Language.FirstOrDefault(x => x.Locale.ToLower() == languageAdd.Language.Locale.ToLower());
+
+                if (getLanguage != null)
+                {
+                    languageAdd._message = "This Language Name Already Exist";
+                    languageAdd._failure = true;
+                }
+                else
+                {
+                    int? languageId = Utility.GetMaxPK(this.context, new Func<Language, int>(x => x.LangId));
+                    languageAdd.Language.LangId = (int)languageId;
+                    languageAdd.Language.CreatedOn = DateTime.UtcNow;
+                    this.context?.Language.Add(languageAdd.Language);
+                    this.context?.SaveChanges();
+                    languageAdd._failure = false;
+                    languageAdd._message = "Language Added Successfully";
+                }
             }
-            else
+            catch (Exception es)
             {
-                int? languageId = Utility.GetMaxPK(this.context, new Func<Language, int>(x => x.LangId));
-                languageAdd.Language.LangId = (int)languageId;
-                languageAdd.Language.CreatedOn = DateTime.UtcNow;
-                this.context?.Language.Add(languageAdd.Language);
-                this.context?.SaveChanges();
-
+                languageAdd._message = es.Message;
+                languageAdd._failure = true;
+                languageAdd._tenantName = languageAdd._tenantName;
+                languageAdd._token = languageAdd._token;
             }
             return languageAdd;
         }
@@ -190,6 +201,7 @@ namespace opensis.data.Repository
                     this.context.Entry(getLanguageData).CurrentValues.SetValues(languageUpdate.Language);
                     this.context?.SaveChanges();
                     languageUpdate._failure = false;
+                    languageUpdate._message = "Language Updated Successfully";
                 }   
             }
             return languageUpdate;
@@ -276,10 +288,8 @@ namespace opensis.data.Repository
                     this.context?.Language.Remove(getLanguageValue);
                     this.context?.SaveChanges();
                     deleteLanguageModel._failure = false;
-                    deleteLanguageModel._message = "Deleted";
-
+                    deleteLanguageModel._message = "Language Deleted Successfully";
                 }
-
             }
             catch (Exception ex)
             {
@@ -288,8 +298,6 @@ namespace opensis.data.Repository
             }
             return deleteLanguageModel;
         }
-
-
 
         /// <summary>
         /// Dropdown value Add
@@ -312,6 +320,8 @@ namespace opensis.data.Repository
                 dpdownValue.DropdownValue.CreatedOn = DateTime.UtcNow;
                 this.context?.DpdownValuelist.Add(dpdownValue.DropdownValue);
                 this.context?.SaveChanges();
+                dpdownValue._failure = false;
+                dpdownValue._message = "LOV Added Successfully";
             }
             return dpdownValue;
         }
@@ -459,10 +469,9 @@ namespace opensis.data.Repository
                         getDpdownValue.UpdatedOn = DateTime.UtcNow;
                         getDpdownValue.UpdatedBy = dpdownValue.DropdownValue.UpdatedBy;
                         this.context?.SaveChanges();
-
                         dpdownValue._failure = false;
+                        dpdownValue._message = "LOV Updated Successfully";
                         transaction.Commit();
-
                     }
                     return dpdownValue;
                 }
@@ -574,6 +583,8 @@ namespace opensis.data.Repository
                     countryAddModel.country.CreatedOn = DateTime.UtcNow;
                     this.context?.Country.Add(countryAddModel.country);
                     this.context?.SaveChanges();
+                    countryAddModel._failure = true;
+                    countryAddModel._message = "Country Added Successfully";
                 }
             }
             catch (Exception es)
@@ -612,7 +623,7 @@ namespace opensis.data.Repository
                     this.context.Entry(getCountryData).CurrentValues.SetValues(countryAddModel.country);
                     this.context?.SaveChanges();
                     countryAddModel._failure = false;
-                    countryAddModel._message = "Updated Successfully";
+                    countryAddModel._message = "Country Updated Successfully";
                 }
             }
             catch (Exception es)
@@ -678,7 +689,7 @@ namespace opensis.data.Repository
                     this.context?.Country.Remove(getCountryValue);
                     this.context?.SaveChanges();
                     deleteCountryModel._failure = false;
-                    deleteCountryModel._message = "Deleted";
+                    deleteCountryModel._message = "Country Deleted Successfully";
 
                 }
 
@@ -806,7 +817,7 @@ namespace opensis.data.Repository
                     this.context?.DpdownValuelist.Remove(getDpValue);
                     this.context?.SaveChanges();
                     dropdownValueAddModel._failure = false;
-                    dropdownValueAddModel._message = "Deleted";
+                    dropdownValueAddModel._message = "LOV Deleted Successfully";
                 }
 
             }
@@ -866,6 +877,7 @@ namespace opensis.data.Repository
             DashboardViewModel dashboardView = new DashboardViewModel();
             try
             {
+                var todayDate = DateTime.Today;
                 dashboardView.TenantId = dashboardViewModel.TenantId;
                 dashboardView.SchoolId = dashboardViewModel.SchoolId;
                 dashboardView.AcademicYear = dashboardViewModel.AcademicYear;
@@ -881,8 +893,8 @@ namespace opensis.data.Repository
                 dashboardView.TotalStaff= this.context?.StaffMaster.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId).ToList().Count();
 
                 dashboardView.TotalParent = this.context?.ParentAssociationship.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Associationship == true).Select(x => x.ParentId).ToList().Distinct().Count();
-                
-                var notice = this.context?.Notice.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Isactive == true).OrderByDescending(x => x.ValidFrom).FirstOrDefault();
+
+                var notice = this.context?.Notice.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Isactive == true && (x.ValidFrom <= todayDate && todayDate <= x.ValidTo)).OrderByDescending(x => x.ValidFrom).FirstOrDefault();
                 if (notice != null)
                 {
                     dashboardView.NoticeTitle = notice.Title;
@@ -895,7 +907,7 @@ namespace opensis.data.Repository
                     dashboardView.schoolCalendar = defaultCalender;
                     dashboardView.schoolCalendar.SchoolMaster = null;
 
-                    var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalender.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true)).ToList();
+                    var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalender.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true) &&(x.StartDate >= todayDate || (x.StartDate <= todayDate && todayDate <= x.EndDate))).ToList();
                     if (Events.Count > 0)
                     {
                         dashboardView.calendarEventList = Events;

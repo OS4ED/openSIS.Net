@@ -25,8 +25,7 @@ import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { FlexLayoutModule } from '@angular/flex-layout';
-
-
+import { CourseSectionModule } from './course-section/course-section.module';
 
 @NgModule({
   declarations: [CourseManagerComponent],
@@ -37,6 +36,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
       useFactory: adapterFactory
     }),
     CourseManagerRoutingModule,
+    CourseSectionModule,
     SecondaryToolbarModule,
     BreadcrumbsModule,
     MatIconModule,

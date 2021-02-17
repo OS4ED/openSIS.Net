@@ -10,7 +10,8 @@ namespace opensis.data.ViewModels.CourseManager
         public CourseSection courseSection { get; set; }
         public CourseFixedSchedule courseFixedSchedule { get; set; }
         public List<CourseVariableSchedule> courseVariableScheduleList { get; set; }
-        public CourseCalendarSchedule courseCalendarSchedule { get; set; }
+        public List<CourseCalendarSchedule> courseCalendarScheduleList { get; set; }
         public List<CourseBlockSchedule> courseBlockScheduleList { get; set; }
+        public string MarkingPeriodId { get; set; }
     }
 }

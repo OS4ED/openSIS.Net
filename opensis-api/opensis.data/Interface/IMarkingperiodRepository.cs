@@ -31,5 +31,6 @@ namespace opensis.data.Interface
         public ProgressPeriodAddViewModel DeleteProgressPeriod(ProgressPeriodAddViewModel progressPeriod);
         public DropDownViewModel GetAcademicYearList(DropDownViewModel downViewModel);
         public PeriodViewModel GetMarkingPeriodTitleList(PeriodViewModel periodViewModel);
+        public MarkingPeriodListViewModel GetAllMarkingPeriodList(MarkingPeriodListViewModel markingPeriodListViewModel);
     }
 }

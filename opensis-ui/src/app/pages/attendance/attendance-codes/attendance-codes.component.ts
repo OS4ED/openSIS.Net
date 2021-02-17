@@ -44,8 +44,8 @@ export class AttendanceCodesComponent implements OnInit {
     { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
     { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: true },
     { label: 'Allow Entry By', property: 'allowEntryBy', type: 'text', visible: true },
-    { label: 'Default for Teacher & Office', property: 'defaultCode', type: 'text', visible: false },
-    { label: 'State Code', property: 'stateCode', type: 'text', visible: false },
+    { label: 'Default for Teacher & Office', property: 'defaultCode', type: 'text', visible: true },
+    { label: 'State Code', property: 'stateCode', type: 'text', visible: true },
     { label: 'action', property: 'action', type: 'text', visible: true }
   ];
 

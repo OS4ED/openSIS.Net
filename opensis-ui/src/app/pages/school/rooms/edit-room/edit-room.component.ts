@@ -39,7 +39,7 @@ export class EditRoomComponent implements OnInit {
         capacity:[,[ValidationService.noWhitespaceValidator,Validators.min(0)]],
         sortorder:[,[ValidationService.noWhitespaceValidator,Validators.min(1)]],
         description:[],
-        isActive:[false]
+        isActive:[true]
   
       })
       if(data==null){

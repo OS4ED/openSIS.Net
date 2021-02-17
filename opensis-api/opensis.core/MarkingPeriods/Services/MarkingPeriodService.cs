@@ -419,5 +419,29 @@ namespace opensis.core.MarkingPeriods.Services
 
             return dropDownViewModel;
         }
+
+        public MarkingPeriodListViewModel GetAllMarkingPeriodList(MarkingPeriodListViewModel markingPeriodListViewModel)
+        {
+            MarkingPeriodListViewModel markingPeriodList = new MarkingPeriodListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(markingPeriodListViewModel._tenantName, markingPeriodListViewModel._token))
+                {
+                    markingPeriodList = this.markingperiodRepository.GetAllMarkingPeriodList(markingPeriodListViewModel);
+                }
+                else
+                {
+                    markingPeriodList._failure = true;
+                    markingPeriodList._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                markingPeriodList._failure = true;
+                markingPeriodList._message = es.Message;
+            }
+
+            return markingPeriodList;
+        }
     }
 }

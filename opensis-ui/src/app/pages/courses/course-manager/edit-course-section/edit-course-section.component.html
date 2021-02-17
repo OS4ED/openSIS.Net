@@ -1,8 +1,9 @@
+<form [formGroup]="form" (ngSubmit)="checkForSubmit()">
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto"><span class="text-green">Chemistry</span> -
-        {{'addNewCourseSection'|translate}}</h2>
+    <h2 class="headline m-0" fxFlex="auto"><span class="text-green">{{data.courseDetails.courseTitle}}</span> -
+        {{courseSectionModalTitle|translate}}</h2>
     <div>
-        <mat-slide-toggle class="mr-4" color="primary" checked="checked">{{'active' | translate}}</mat-slide-toggle>
+        <mat-slide-toggle class="mr-4" color="primary" formControlName="isActive" name="isActive">{{'active' | translate}}</mat-slide-toggle>
         <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
             <mat-icon [icIcon]="icClose"></mat-icon>
         </button>
@@ -10,132 +11,155 @@
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-content fxLayout="column">
-
+<mat-dialog-content fxLayout="column" >
     <ul class="md:grid md:grid-cols-2 col-gap-8 mt-6">
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'courseSectionName' | translate}}</mat-label>
-                <input type="text" matInput required>
+                <input formControlName="courseSectionName"    name="courseSectionName" cdkFocusInitial matInput required>
+                <mat-error *ngIf="form.get('courseSectionName').hasError('required')">{{'courseSectionNameIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'calendar' | translate}}</mat-label>
-                <mat-select name="gradeLevel" required>
-                    <mat-option value="">Show calendar names</mat-option>
+                <mat-select  formControlName="calendarId"  name="calendarId" (selectionChange) = "changeCalendar($event.value)" name="calendarId" required>
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let calendars of calendarList" [value]="calendars.calenderId">
+                        {{calendars.title}}
+                    </mat-option>
                 </mat-select>
+                <mat-error *ngIf="form.get('calendarId').hasError('required')">{{'calendarIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'gradeScale' | translate}}</mat-label>
-                <mat-select name="program" required>
-                    <mat-option value="">Not Graded</mat-option>
-                    <mat-option value="">Numeric</mat-option>
-                    <mat-option value="">Show grade scales created by school (dynamic)</mat-option>
-                    <mat-option value="">Allow Teacher to create own Grade Scale</mat-option>
+                <mat-select formControlName="gradeScaleId"  name="gradeScaleId"  name="gradeScaleId" required>
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let gradeScale of gradeScaleList" [value]='gradeScale.gradeScaleId'>
+                        {{gradeScale.gradeScaleName}}
+                    </mat-option>
                 </mat-select>
+                <mat-error *ngIf="form.get('gradeScaleId').hasError('required')">{{'gradeScaleIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'creditHours' | translate}}</mat-label>
-                <input type="text" matInput value="3.00">
+                <input type="text" formControlName="creditHours" name="creditHours"   name="creditHours" matInput value="3.00">
                 <!-- Inherit value from Course and let them edit if needed -->
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'seats' | translate}}</mat-label>
-                <input type="text" matInput value="3.00" required>
+                <input type="text" formControlName="seats" name="seats"   name="seats" matInput value="3.00" required>
+                <mat-error *ngIf="form.get('seats').hasError('required')">{{'seatsIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'attendanceCategory' | translate}}</mat-label>
-                <mat-select name="suffix">
-                    <mat-option value="">Show school specific Attendance Category</mat-option>
+                <mat-select formControlName="attendanceCategoryId" name="attendanceCategoryId"    name="attendanceCategoryId">
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let attendanceCategory of attendanceCategoryList" [value]='attendanceCategory.attendanceCategoryId'>
+                        {{attendanceCategory.title}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li class="col-span-2">
             <div class="flex flex-wrap">
                 <span class="mr-6">
-                    <mat-slide-toggle class="mb-3" color="primary">{{'courseIsWeighted' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle formControlName="isWeightedCourse" name="isWeightedCourse" class="mb-3" color="primary">{{'courseIsWeighted' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6">
-                    <mat-slide-toggle class="mb-3" color="primary">{{'affectsClassRank' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mb-3" formControlName="affectsClassRank" name="affectsClassRank"   color="primary">{{'affectsClassRank' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6">
-                    <mat-slide-toggle class="mb-3" color="primary">{{'affectsHonorRoll' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle class="mb-3" formControlName="affectsHonorRoll" name="affectsHonorRoll"   color="primary">{{'affectsHonorRoll' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6 mb-3">
-                    <mat-slide-toggle [(ngModel)]="isChecked" color="primary">{{'onlineClassRoom' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle formControlName="onlineClassRoom" (change)="showOnlineClassRoom($event)" name="onlineClassRoom"   color="primary">{{'onlineClassRoom' | translate}}</mat-slide-toggle>
                 </span>
             </div>
         </li>
-        <li *ngIf="isChecked">
+        <li *ngIf="isCheckedOnlineClassRoom">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'onlineClassRoomUrl' | translate}}</mat-label>
-                <input type="text" matInput>
+                <input type="text" formControlName="onlineClassroomUrl" name ="onlineClassroomUrl" matInput>
             </mat-form-field>
         </li>
-        <li *ngIf="isChecked">
+        <li *ngIf="isCheckedOnlineClassRoom">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'onlineClassRoomPasswordIfAny' | translate}}</mat-label>
-                <input type="text" matInput>
+                <input type="text" formControlName="onlineClassroomPassword" name ="onlineClassroomPassword" matInput>
             </mat-form-field>
         </li>
         <li class="col-span-2 pb-3">
-            <mat-slide-toggle [(ngModel)]="useStandardGrades" color="primary">{{'useStandards' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle formControlName="useStandards" (change)="showUseStandards($event)"  color="primary">{{'useStandards' | translate}}</mat-slide-toggle>
         </li>
         <li *ngIf="useStandardGrades">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'standardGradeScale' | translate}}</mat-label>
-                <mat-select name="suffix">
-                    <mat-option value="">Show standard specific grade scale categories</mat-option>
+                <mat-select formControlName="standardGradeScaleId" name="standardGradeScaleId" required>
+                    <mat-option></mat-option>
+                    <mat-option *ngFor="let standardGradeScale of standardGradeScaleList" [value]='standardGradeScale.gradeUsStandard.gradeStandardId'>
+                        {{standardGradeScale.gradeUsStandard.standardRefNo}} - {{standardGradeScale.gradeUsStandard.topic}}
+                    </mat-option>
                 </mat-select>
+                <mat-error *ngIf="form.get('standardGradeScaleId').hasError('required')">{{'standardGradeScaleIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
     </ul>
 
 
-    <hr class="-mx-6 my-4">
+     <hr class="-mx-6 my-4">
 
     <h4 class="text-green mb-4">{{'duration' | translate}}</h4>
-    <mat-radio-group aria-label="Select an option" (change)="setDuration($event)" name="duration">
-        <mat-radio-button value="1" color="primary" [checked]="true">{{'markingPeriod' | translate}}</mat-radio-button>
-        <mat-radio-button value="2" color="primary">{{'customDateRange' | translate}}</mat-radio-button>
+    <mat-radio-group aria-label="Select an option" formControlName="durationType" (change)="setDuration($event)" name="duration">
+        <mat-radio-button name="markingPeriod" value="1" color="primary" name="markingPeriod">{{'markingPeriod' | translate}}</mat-radio-button>
+        <mat-radio-button name="customDate" value="2" color="primary" name="customDate">{{'customDateRange' | translate}}</mat-radio-button>
     </mat-radio-group>
-    <div *ngIf="durationType === '1'">
+    
+    <div *ngIf="form.value.durationType=='1'">
         <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'markingPeriod' | translate}}</mat-label>
-                    <mat-select name="suffix" required>
-                        <mat-option value="">Show marking periods list</mat-option>
+                    <mat-select formControlName="markingPeriodId" name="markingPeriodId" required>
+                        <mat-option></mat-option>
+                        <mat-option *ngFor="let markingPeriod of markingPeriodList" [value]='markingPeriod.value'>
+                            {{markingPeriod.text}}
+                        </mat-option>
                     </mat-select>
+                    <mat-error *ngIf="form.get('markingPeriodId').hasError('required')">{{'markingPeriodIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </li>
         </ul>
     </div>
-    <div *ngIf="durationType === '2'">
+    <div *ngIf="form.value.durationType=='2'">
         <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
-            <li>
-                <mat-form-field class="w-full" appearance="outline" color="primary">
+            <li >
+                <mat-form-field class="w-full" appearance="outline" color="primary" >
                     <mat-label>{{'startDate' | translate}}</mat-label>
-                    <input matInput [matDatepicker]="pickerStartDate" required>
+                    <input formControlName="durationStartDate" name="durationStartDate"  matInput [matDatepicker]="pickerStartDate"  [min]="startDate" [max]="endDate" required  [disabled]="showCalendarDates"> 
+                    
                     <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
                     <mat-datepicker #pickerStartDate></mat-datepicker>
+                    <mat-error *ngIf="form.get('durationStartDate').hasError('required')">{{'startDateIsRequired'|translate}}</mat-error>
                 </mat-form-field>
+                
             </li>
+            
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'endDate' | translate}}</mat-label>
-                    <input name="endDate" [matDatepicker]="pickerEndDate" matInput required>
+                    <input formControlName="durationEndDate" name="durationEndDate" [matDatepicker]="pickerEndDate"  [min]="startDate" [max]="endDate" matInput required  [disabled]="showCalendarDates">
                     <mat-datepicker-toggle [for]="pickerEndDate" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #pickerEndDate></mat-datepicker>
+                    <mat-error *ngIf="form.get('durationEndDate').hasError('required')">{{'endDateIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </li>
         </ul>
@@ -145,446 +169,33 @@
 
     <h4 class="text-green mb-4">{{'scheduleType' | translate}}</h4>
     <mat-radio-group aria-label="Select an option" (change)="setScheduleType($event)" name="scheduleType">
-        <mat-radio-button value="1" color="primary" [checked]="true">{{'fixedSchedule' | translate}}</mat-radio-button>
-        <mat-radio-button value="2" color="primary">{{'variableSchedule' | translate}}</mat-radio-button>
-        <mat-radio-button value="3" color="primary">{{'enterByCalendarDays' | translate}}</mat-radio-button>
-        <mat-radio-button value="4" color="primary">{{'blockRotatingSchedule' | translate}}</mat-radio-button>
+        <mat-radio-button value="1" [checked]="data.editMode && scheduleType=='1'" [disabled]="data.editMode && scheduleType!='1'" color="primary">{{'fixedSchedule' | translate}}</mat-radio-button>
+        <mat-radio-button value="2" [checked]="data.editMode && scheduleType=='2'" [disabled]="data.editMode && scheduleType!='2'" color="primary">{{'variableSchedule' | translate}}</mat-radio-button>
+        <mat-radio-button value="3" [checked]="data.editMode && scheduleType=='3'" [disabled]="data.editMode && scheduleType!='3'" color="primary">{{'enterByCalendarDays' | translate}}</mat-radio-button>
+        <mat-radio-button value="4" [checked]="data.editMode && scheduleType=='4'" [disabled]="data.editMode && scheduleType!='4'" color="primary">{{'blockRotatingSchedule' | translate}}</mat-radio-button>
     </mat-radio-group>
 
     <div class="" *ngIf="scheduleType === '1'">
-        <ul class="md:grid md:grid-cols-2 col-gap-8 mt-6">
-            <li>
-                <mat-form-field class="w-full" appearance="outline" color="primary">
-                    <mat-label>{{'room' | translate}}</mat-label>
-                    <mat-select name="gradeLevel" required>
-                        <mat-option value="">Show rooms</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </li>
-            <li>
-                <mat-form-field class="w-full" appearance="outline" color="primary">
-                    <mat-label>{{'period' | translate}}</mat-label>
-                    <mat-select name="gradeLevel" required>
-                        <mat-option value="">Show school periods</mat-option>
-                    </mat-select>
-                </mat-form-field>
-            </li>
-        </ul>
-        <h4 class="font-bold mb-2">{{'meetingDays' | translate}}</h4>
-        <div class="mb-6">
-            <mat-checkbox color="primary" class="mr-5" [disabled]="true">{{'sunday' | translate}}</mat-checkbox>
-            <mat-checkbox color="primary" class="mr-5">{{'monday' | translate}}</mat-checkbox>
-            <mat-checkbox color="primary" class="mr-5">{{'tuesday' | translate}}</mat-checkbox>
-            <mat-checkbox color="primary" class="mr-5">{{'wednesday' | translate}}</mat-checkbox>
-            <mat-checkbox color="primary" class="mr-5">{{'thursday' | translate}}</mat-checkbox>
-            <mat-checkbox color="primary" class="mr-5">{{'friday' | translate}}</mat-checkbox>
-            <mat-checkbox color="primary" class="mr-5" [disabled]="true">{{'saturday' | translate}}</mat-checkbox>
-        </div>
-        <div>
-            <mat-slide-toggle class="mb-3" color="primary">{{'takeAttendance' | translate}}</mat-slide-toggle>
-        </div>
+        <vex-fixed-scheduling [calendar]="selectedCalendar" [detailsFromParentModal]="data" (fixedScheduleData)="manipulateFixedScheduleBeforeSubmit($event)"></vex-fixed-scheduling>
     </div>
 
     <div class="-mx-6 mt-5" *ngIf="scheduleType === '2'">
-        <div class="flex py-2 border-t border-normal">
-            <div class="w-1/12"></div>
-            <div class="w-3/12 font-bold">{{'day' | translate}}</div>
-            <div class="w-3/12 font-bold">{{'period' | translate}}</div>
-            <div class="w-3/12 font-bold">{{'room' | translate}}</div>
-            <div class="w-2/12 font-bold text-center">{{'takeAttendance' | translate}}</div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon" selected="selected">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="P1" selected="selected">Period 1</option>
-                </select>
-                <p class="pt-1 text-xs">8:00 AM to 8:55 AM</p>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="room1" checked="checked">Room 101</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue" selected="selected">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed" selected="selected">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu" selected="selected">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri" selected="selected">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="border-t border-normal px-6 py-3">
-            <a href="" class="text-blue">
-                <mat-icon [icIcon]="icPlusCircle" class="mr-2 align-middle"></mat-icon>{{'addAnotherDay' | translate}}
-            </a>
-        </div>
+        <vex-variable-scheduling  [selectedCalendar]="selectedCalendar" [detailsFromParentModal]="data" (variableScheduleData)="manipulateVariableScheduleBeforeSubmit($event)"></vex-variable-scheduling>
     </div>
 
     <div class="-mx-6 mt-5 relative" *ngIf="scheduleType === '3'">
-         
-        <div class="absolute w-full h-full bg-gray-light z-50 p-10" *ngIf="addCalendarDay === 1">
-            <div class="shadow-lg w-full bg-white rounded p-6">
-                <div class="pb-4">
-                    <h3>{{'addClass' | translate}}</h3>
-                </div>
-
-                <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
-                    <li>
-                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'date' | translate}}</mat-label>
-                            <input matInput [matDatepicker]="pickerStartDate" required [value]='selectedDate'>
-                            <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
-                            <mat-datepicker #pickerStartDate></mat-datepicker>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'period' | translate}}</mat-label>
-                            <mat-select name="period" required>
-                                <mat-option value="">Show period list</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'room' | translate}}</mat-label>
-                            <mat-select name="room" required>
-                                <mat-option value="">Show room list</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </li>
-                    <li class="pt-3">
-                        <mat-slide-toggle class="mb-3" color="primary">{{'takeAttendance' | translate}}</mat-slide-toggle>
-                    </li>
-                </ul>
-
-                <div class="pt-5 text-right">
-                    <button mat-button type="button" class="mr-2" (click)="cancelAddClass()">{{'cancel' | translate}}</button>
-                    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
-                </div>
-            </div>
-        </div>
-        <hr/>
-        <ng-template #customCellTemplate let-day="day" let-locale="locale">
-            <div class="cal-cell-top">
-                <span class="cal-day-badge" *ngIf="day.badgeTotal > 0">{{ day.badgeTotal }}</span>
-                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
-            </div>
-            <!-- <small style="margin: 5px;">There are {{ day.events.length }} events on this day</small> -->
-        </ng-template>
-
-        <div [ngSwitch]="view">
-            <mwl-calendar-month-view *ngSwitchCase="'month'" (dayClicked)="openAddNewEvent($event.day)" [viewDate]="viewDate" [events]="events"
-                [cellTemplate]="customCellTemplate">
-            </mwl-calendar-month-view>
-        </div>
-
+        <vex-calendar-days (calendarScheduleData)="manipulateCalendarScheduleBeforeSubmit($event)" [selectedCalendar]="selectedCalendar"></vex-calendar-days>      
     </div>
 
     <div class="-mx-6 mt-5" *ngIf="scheduleType === '4'">
-        <div class="flex py-2 border-t border-normal">
-            <div class="w-1/12"></div>
-            <div class="w-3/12 font-bold">{{'blockRotationDay' | translate}}</div>
-            <div class="w-3/12 font-bold">{{'period' | translate}}</div>
-            <div class="w-3/12 font-bold">{{'room' | translate}}</div>
-            <div class="w-2/12 font-bold text-center">{{'takeAttendance' | translate}}</div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon" selected="selected">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="P1" selected="selected">Period 1</option>
-                </select>
-                <p class="pt-1 text-xs">8:00 AM to 8:55 AM</p>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="room1" checked="checked">Room 101</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue" selected="selected">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed" selected="selected">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu" selected="selected">Thursday</option>
-                    <option value="fri">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="flex py-3 border-t border-normal">
-            <div class="w-1/12 text-center pt-2">
-                <a href="" class="text-gray">
-                    <mat-icon [icIcon]="icClose"></mat-icon>
-                </a>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option value="mon">Monday</option>
-                    <option value="tue">Tuesday</option>
-                    <option value="wed">Wednesday</option>
-                    <option value="thu">Thursday</option>
-                    <option value="fri" selected="selected">Friday</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-3/12 pr-6">
-                <select class="border border-normal rounded px-3 py-2 w-full">
-                    <option>Select</option>
-                </select>
-            </div>
-            <div class="w-2/12 pt-2 text-center">
-                <mat-slide-toggle color="primary"></mat-slide-toggle>
-            </div>
-        </div>
-
-        <div class="border-t border-normal px-6 py-3">
-            <a href="" class="text-blue">
-                <mat-icon [icIcon]="icPlusCircle" class="mr-2 align-middle"></mat-icon>{{'addAnotherBlockRotationDay' |
-                translate}}
-            </a>
-        </div>
+        <vex-rotating-scheduling [detailsFromParentModal]="data" (blockScheduleData)="manipulateBlockScheduleBeforeSubmit($event)"></vex-rotating-scheduling>   
     </div>
 
 
-</mat-dialog-content>
+</mat-dialog-content> 
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
     <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-    <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+    <button color="primary" mat-raised-button type="submit">{{courseSectionActionButtonTitle | translate}}</button>
 </mat-dialog-actions>
+</form>

@@ -978,3 +978,11 @@ table {
     font-style: italic;
   }
 }
+.mat-progress-spinner {
+  &.spinner-red circle {
+    stroke: rgb(var(--color-warn));
+  }
+  &.spinner-green circle {
+    stroke: #4caf50;
+  }
+}

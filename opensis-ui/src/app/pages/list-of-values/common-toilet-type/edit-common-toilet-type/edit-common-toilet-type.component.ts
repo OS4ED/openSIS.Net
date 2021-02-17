@@ -64,18 +64,18 @@ export class EditCommonToiletTypeComponent implements OnInit {
         this.commonService.addDropdownValue(this.lovAddView).subscribe(
           (res:LovAddView)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Common Toilet Type insertion failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Common Toilet Type insertion failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Common Toilet Type inserted Successfully.' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');
@@ -92,20 +92,20 @@ export class EditCommonToiletTypeComponent implements OnInit {
         this.commonService.updateDropdownValue(this.lovAddView).subscribe(
           (res:LovAddView)=>{
             if(typeof(res)=='undefined'){
-              this.snackbar.open('Common Toilet Type Update failed. ' + sessionStorage.getItem("httpError"), '', {
+              this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
               });
             }
             else{
              
               if (res._failure) {
-                this.snackbar.open('Common Toilet Type Update failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
                
-                this.snackbar.open('Common Toilet Type Updated Successfully.' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

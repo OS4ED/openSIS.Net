@@ -162,6 +162,7 @@ namespace opensis.data.Repository
                     this.context?.Semesters.Add(semester.tableSemesters);
                     this.context?.SaveChanges();
                     semester._failure = false;
+                    semester._message = "Semester Added Successfully";
                     //semester.tableSemesters.SchoolYears = null;
                 }
                 else
@@ -194,6 +195,7 @@ namespace opensis.data.Repository
                     this.context.Entry(semesterUpdate).CurrentValues.SetValues(semester.tableSemesters);
                     this.context?.SaveChanges();
                     semester._failure = false;
+                    semester._message = "Semester Updated Successfully";
                 }
                 else
                 {
@@ -254,7 +256,7 @@ namespace opensis.data.Repository
                     this.context?.Semesters.Remove(semesterDelete);
                     this.context?.SaveChanges();
                     semester._failure = false;
-                    semester._message = "Deleted";
+                    semester._message = "Semester Deleted Successfully";
                 }
 
 
@@ -289,6 +291,7 @@ namespace opensis.data.Repository
                 this.context?.ProgressPeriods.Add(progressPeriod.tableProgressPeriods);
                 this.context?.SaveChanges();
                 progressPeriod._failure = false;
+                progressPeriod._message = "Progress Period Added Successfully";
                 //progressPeriod.tableProgressPeriods.Quarters = null;
             }
             else
@@ -313,6 +316,7 @@ namespace opensis.data.Repository
                     this.context.Entry(progressUpdate).CurrentValues.SetValues(progressPeriod.tableProgressPeriods);
                     this.context?.SaveChanges();
                     progressPeriod._failure = false;
+                    progressPeriod._message = "Progress Period Updated Successfully";
                 }
                 else
                 {
@@ -365,7 +369,7 @@ namespace opensis.data.Repository
                 this.context?.ProgressPeriods.Remove(progressPeriodDelete);
                 this.context?.SaveChanges();
                 progressPeriod._failure = false;
-                progressPeriod._message = "Deleted";
+                progressPeriod._message = "Progress Period Deleted Successfully";
             }
 
             catch (Exception es)
@@ -398,6 +402,7 @@ namespace opensis.data.Repository
                 this.context?.SchoolYears.Add(schoolYears.tableSchoolYears);
                 this.context?.SaveChanges();
                 schoolYears._failure = false;
+                schoolYears._message = "School Year Added Successfully";
             }
             catch (Exception es)
             {
@@ -463,6 +468,7 @@ namespace opensis.data.Repository
                     this.context.Entry(schoolYearsMaster).CurrentValues.SetValues(schoolYears.tableSchoolYears);
                     this.context?.SaveChanges();
                     schoolYears._failure = false;
+                    schoolYears._message = "School Year Updated Successfully";
                 }
             }
             catch (Exception ex)
@@ -497,7 +503,7 @@ namespace opensis.data.Repository
                     this.context?.SchoolYears.Remove(deleteSchoolYear);
                     this.context?.SaveChanges();
                     schoolYears._failure = false;
-                    schoolYears._message = "Deleted";
+                    schoolYears._message = "School Year Deleted Successfully";
                 }                
             }
             catch (Exception es)
@@ -532,6 +538,7 @@ namespace opensis.data.Repository
                     this.context?.Quarters.Add(quarters.tableQuarter);
                     this.context?.SaveChanges();
                     quarters._failure = false;
+                    quarters._message = "Quarter Added Successfully";
                     //quarters.tableQuarter.Semesters = null;
                 }
                 else
@@ -599,6 +606,7 @@ namespace opensis.data.Repository
                     this.context.Entry(quarteMaster).CurrentValues.SetValues(quarters.tableQuarter);
                     this.context?.SaveChanges();
                     quarters._failure = false;
+                    quarters._message = "Quarter Updated Successfully";
                 }
                 else
                 {
@@ -636,7 +644,7 @@ namespace opensis.data.Repository
                     this.context?.Quarters.Remove(quarterDelete);
                     this.context?.SaveChanges();
                     quarter._failure = false;
-                    quarter._message = "Deleted";
+                    quarter._message = "Quarter Deleted Successfully";
                 }
             }
             catch (Exception es)
@@ -724,6 +732,65 @@ namespace opensis.data.Repository
                 periodViewModel._failure = true;
             }            
             return periodViewModel;
+        }
+
+        public MarkingPeriodListViewModel GetAllMarkingPeriodList(MarkingPeriodListViewModel markingPeriodListViewModel)
+        {
+            MarkingPeriodListViewModel markingPeriodList = new MarkingPeriodListViewModel();
+            try
+            {
+                var markingPeriodData = this.context?.SchoolYears.Include(x => x.Semesters).ThenInclude(s => s.Quarters).Where(x => x.TenantId == markingPeriodListViewModel.TenantId && x.SchoolId == markingPeriodListViewModel.SchoolId && x.AcademicYear == markingPeriodListViewModel.AcademicYear).ToList();
+                if (markingPeriodData.Count > 0)
+                {
+                    foreach (var markingPeriod in markingPeriodData)
+                    {
+                        var schoolYear = new GetMarkingPeriodView
+                        {
+                            Value = "0" + "_" + markingPeriod.MarkingPeriodId,
+                            Text = markingPeriod.ShortName
+                        };
+                        markingPeriodList.getMarkingPeriodView.Add(schoolYear);
+                    }
+
+                    var semesterData = markingPeriodData.SelectMany(x=>x.Semesters).ToList();
+                    foreach (var semester in semesterData)
+                    {
+                        var sem = new GetMarkingPeriodView
+                        {
+                            Value = "1" + "_" + semester.MarkingPeriodId,
+                            Text = semester.ShortName
+                        };
+                        markingPeriodList.getMarkingPeriodView.Add(sem);
+                    }
+                    var quaterData = markingPeriodData.SelectMany(x => x.Semesters).SelectMany(x=>x.Quarters).ToList();
+                    foreach (var quater in quaterData)
+                    {
+                        var qtr = new GetMarkingPeriodView
+                        {
+                            Value = "2" + "_" + quater.MarkingPeriodId,
+                            Text = quater.ShortName
+                        };
+                        markingPeriodList.getMarkingPeriodView.Add(qtr);
+                    }                      
+                    markingPeriodList._failure = false;
+                }
+                else
+                {
+                    markingPeriodList._failure = true;
+                    markingPeriodList._message = NORECORDFOUND;
+                }
+                markingPeriodList.TenantId = markingPeriodListViewModel.TenantId;
+                markingPeriodList.SchoolId = markingPeriodListViewModel.SchoolId;
+                markingPeriodList.AcademicYear = markingPeriodListViewModel.AcademicYear;
+                markingPeriodList._tenantName = markingPeriodListViewModel._tenantName;
+                markingPeriodList._token = markingPeriodListViewModel._token;
+            }
+            catch (Exception es)
+            {
+                markingPeriodList._failure = true;
+                markingPeriodList._message = es.Message;
+            }
+            return markingPeriodList;
         }
     }
 }

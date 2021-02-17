@@ -79,6 +79,7 @@ export class CommonToiletAccessibilityComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAllDropdownValues();
   }
 
   getPageEvent(event){    

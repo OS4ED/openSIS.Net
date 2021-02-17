@@ -1,4 +1,4 @@
-import { Component, Input, OnInit,Output,EventEmitter, ViewChild, OnDestroy } from '@angular/core';
+import { Component, Input, OnInit,Output,EventEmitter, ViewChild, OnDestroy, OnChanges, SimpleChanges } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icSearch from '@iconify/icons-ic/search';
@@ -69,6 +69,7 @@ export class StudentComponent implements OnInit,OnDestroy {
   
   moduleIdentifier=ModuleIdentifier;
   createMode=SchoolCreate;
+  
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort
 
@@ -100,10 +101,16 @@ export class StudentComponent implements OnInit,OnDestroy {
       this.callAllStudent();
     }
 
-  
-
   ngOnInit(): void {
     this.searchCtrl = new FormControl();
+  }
+
+  getSearchResult(res){
+    this.totalCount= res.totalCount;
+    this.pageNumber = res.pageNumber;
+    this.pageSize = res.pageSize;
+    this.StudentModelList = new MatTableDataSource(res.studentMaster); 
+    this.getAllStudent=new StudentListModel();
   }
 
   ngAfterViewInit() {

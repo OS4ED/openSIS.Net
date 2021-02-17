@@ -133,6 +133,7 @@ namespace opensis.data.Repository
                         }
 
                         staffAddViewModel._failure = false;
+                        staffAddViewModel._message = "Staff Added Successfully";
                     //}
                     //else
                     //{
@@ -212,6 +213,14 @@ namespace opensis.data.Repository
                         transactionIQ = Utility.FilteredData(pageResult.FilterParams, StaffMasterList).AsQueryable();
                     }
                     //transactionIQ = transactionIQ.Distinct();
+                }
+                if (pageResult.DobStartDate != null && pageResult.DobEndDate != null)
+                {
+                    var filterInDateRange = transactionIQ.Where(x => x.Dob >= pageResult.DobStartDate && x.Dob <= pageResult.DobEndDate).AsQueryable();
+                    if (filterInDateRange.ToList().Count() > 0)
+                    {
+                        transactionIQ = filterInDateRange;
+                    }
                 }
                 if (pageResult.SortingModel != null)
                 {
@@ -457,7 +466,6 @@ namespace opensis.data.Repository
                         staffAddViewModel.staffMaster.LastUpdated = DateTime.Now;
                         this.context.Entry(staffUpdate).CurrentValues.SetValues(staffAddViewModel.staffMaster);
                         this.context?.SaveChanges();
-                        staffAddViewModel._message = "Updated Successfully";
 
                         if (staffAddViewModel.fieldsCategoryList != null && staffAddViewModel.fieldsCategoryList.ToList().Count > 0)
                         {
@@ -487,6 +495,7 @@ namespace opensis.data.Repository
                             }
                         }
                         staffAddViewModel._failure = false;
+                        staffAddViewModel._message = "Staff Updated Successfully";
                     }
                     transaction.Commit();
                 }
@@ -564,6 +573,7 @@ namespace opensis.data.Repository
 
                     transaction.Commit();
                     staffSchoolInfoAddViewModel._failure = false;
+                    staffSchoolInfoAddViewModel._message = "Staff School Info Added Successfully";
                 }
                 catch (Exception es)
                 {
@@ -669,6 +679,7 @@ namespace opensis.data.Repository
                     }
                     transaction.Commit();
                     staffSchoolInfoAddViewModel._failure = false;
+                    staffSchoolInfoAddViewModel._message = "Staff School Info Updated Successfully";
                 }
                 catch (Exception es)
                 {
@@ -686,12 +697,23 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public StaffCertificateInfoAddViewModel AddStaffCertificateInfo(StaffCertificateInfoAddViewModel staffCertificateInfoAddViewModel)
         {
-            int? Id = Utility.GetMaxPK(this.context, new Func<StaffCertificateInfo, int>(x => x.Id));
-            staffCertificateInfoAddViewModel.staffCertificateInfo.Id = (int)Id;
-            staffCertificateInfoAddViewModel.staffCertificateInfo.UpdatedAt = DateTime.UtcNow;
-            this.context?.StaffCertificateInfo.Add(staffCertificateInfoAddViewModel.staffCertificateInfo);
-            this.context?.SaveChanges();
-            staffCertificateInfoAddViewModel._failure = false;
+            try
+            {
+                int? Id = Utility.GetMaxPK(this.context, new Func<StaffCertificateInfo, int>(x => x.Id));
+                staffCertificateInfoAddViewModel.staffCertificateInfo.Id = (int)Id;
+                staffCertificateInfoAddViewModel.staffCertificateInfo.UpdatedAt = DateTime.UtcNow;
+                this.context?.StaffCertificateInfo.Add(staffCertificateInfoAddViewModel.staffCertificateInfo);
+                this.context?.SaveChanges();
+                staffCertificateInfoAddViewModel._failure = false;
+                staffCertificateInfoAddViewModel._message = "Staff Certificate Added Successfully";
+            }
+            catch (Exception es)
+            {
+                staffCertificateInfoAddViewModel._message = es.Message;
+                staffCertificateInfoAddViewModel._failure = true;
+                staffCertificateInfoAddViewModel._tenantName = staffCertificateInfoAddViewModel._tenantName;
+                staffCertificateInfoAddViewModel._token = staffCertificateInfoAddViewModel._token;
+            }
 
             return staffCertificateInfoAddViewModel;
         }
@@ -755,7 +777,7 @@ namespace opensis.data.Repository
                     this.context.Entry(staffCertificateInfoUpdate).CurrentValues.SetValues(staffCertificateInfoAddViewModel.staffCertificateInfo);
                     this.context?.SaveChanges();
                     staffCertificateInfoAddViewModel._failure = false;
-                    staffCertificateInfoAddViewModel._message= "Updated Successfully";
+                    staffCertificateInfoAddViewModel._message= "Staff Certificate Updated Successfully";
                 }
                 else
                 {
@@ -786,7 +808,7 @@ namespace opensis.data.Repository
                     this.context?.StaffCertificateInfo.Remove(staffCertificateInfoDelete);
                     this.context?.SaveChanges();
                     staffCertificateInfoAddViewModel._failure = false;
-                    staffCertificateInfoAddViewModel._message = "Deleted";
+                    staffCertificateInfoAddViewModel._message = "Staff Certificate Deleted Successfully";
                 }
                 else
                 {
@@ -817,7 +839,7 @@ namespace opensis.data.Repository
                 {
                     staffUpdate.StaffPhoto = staffAddViewModel.staffMaster.StaffPhoto;
                     this.context?.SaveChanges();
-                    staffAddViewModel._message = "Updated Successfully";
+                    staffAddViewModel._message = "Staff Photo Updated Successfully";
                 }
                 else
                 {

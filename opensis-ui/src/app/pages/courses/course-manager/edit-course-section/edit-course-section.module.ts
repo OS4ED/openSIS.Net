@@ -21,10 +21,14 @@ import { MatFormFieldModule } from '@angular/material/form-field';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { MatRadioModule } from '@angular/material/radio';
-
+import { FixedSchedulingComponent } from './fixed-scheduling/fixed-scheduling.component';
+import { VariableSchedulingComponent } from './variable-scheduling/variable-scheduling.component';
+import { CalendarDaysComponent } from './calendar-days/calendar-days.component';
+import { RotatingSchedulingComponent } from './rotating-scheduling/rotating-scheduling.component';
+import { SharedModuleModule } from '../../../../pages/shared-module/shared-module.module';
 
 @NgModule({
-  declarations: [EditCourseSectionComponent],
+  declarations: [EditCourseSectionComponent, FixedSchedulingComponent, VariableSchedulingComponent, CalendarDaysComponent, RotatingSchedulingComponent],
   imports: [
     CommonModule,
     AngularCalendarModule.forRoot({
@@ -49,7 +53,8 @@ import { MatRadioModule } from '@angular/material/radio';
     FormsModule,
     MatSnackBarModule,
     MatSlideToggleModule,
-    MatRadioModule
+    MatRadioModule,
+    SharedModuleModule
   ]
 })
 export class EditCourseSectionModule { }

@@ -18,8 +18,7 @@
                                 [formControl]="searchCtrl"
                                 class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                                 type="search">
-                            <mat-progress-spinner matSuffix *ngIf="loading" class="ml-4" fxFlex="none" color="primary" diameter="20" mode="indeterminate"></mat-progress-spinner>
-
+                            <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
                             <button  *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>

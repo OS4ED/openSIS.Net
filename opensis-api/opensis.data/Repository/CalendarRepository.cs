@@ -52,6 +52,8 @@ namespace opensis.data.Repository
 
             this.context?.SchoolCalendars.Add(calendar.schoolCalendar);
             this.context?.SaveChanges();
+            calendar._failure = false;
+            calendar._message = "Calendar Added Successfully";
 
             return calendar;
         }
@@ -142,6 +144,7 @@ namespace opensis.data.Repository
 
                 this.context?.SaveChanges();
                 calendar._failure = false;
+                calendar._message = "Calendar Updated Successfully";
                 return calendar;
             }
             catch (Exception ex)
@@ -216,7 +219,7 @@ namespace opensis.data.Repository
                         this.context?.SchoolCalendars.Remove(calendarRepository);
                         this.context?.SaveChanges();
                         calendar._failure = false;
-                        calendar._message = "Deleted";
+                        calendar._message = "Calendar Deleted Successfully";
                     }
                 }
 

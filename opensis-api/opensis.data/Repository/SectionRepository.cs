@@ -51,6 +51,7 @@ namespace opensis.data.Repository
                     this.context?.Sections.Add(section.tableSections);
                     this.context?.SaveChanges();
                     section._failure = false;
+                    section._message = "Section Added Successfully";
                 }                
             }
             catch(Exception es)
@@ -87,6 +88,7 @@ namespace opensis.data.Repository
                         this.context.Entry(sectionUpdate).CurrentValues.SetValues(section.tableSections);
                         this.context?.SaveChanges();
                         section._failure = false;
+                        section._message = "Section Updated Successfully";
                     }                    
                 }
                 else
@@ -187,7 +189,7 @@ namespace opensis.data.Repository
                 this.context?.Sections.Remove(sectionDel);
                 this.context?.SaveChanges();
                 section._failure = false;
-                section._message = "Deleted";
+                section._message = "Section Deleted Successfully";
             }
             catch (Exception es)
             {
