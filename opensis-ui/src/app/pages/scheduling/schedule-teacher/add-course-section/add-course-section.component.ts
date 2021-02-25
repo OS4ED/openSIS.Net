@@ -1,12 +1,18 @@
 import { Component, OnInit } from '@angular/core';
 import { SearchCourseSection } from '../../../../models/courseSectionModel';
 import icClose from '@iconify/icons-ic/twotone-close';
+import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
+import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 
 @Component({
   selector: 'vex-add-course-section',
   templateUrl: './add-course-section.component.html',
-  styleUrls: ['./add-course-section.component.scss']
+  styleUrls: ['./add-course-section.component.scss'],
+  animations: [
+    stagger60ms,
+    fadeInUp400ms
+  ]
 })
 export class AddCourseSectionComponent implements OnInit {
 

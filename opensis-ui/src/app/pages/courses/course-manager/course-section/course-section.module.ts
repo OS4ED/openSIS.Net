@@ -21,11 +21,17 @@ import { SharedModuleModule } from '../../../shared-module/shared-module.module'
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
+import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [CourseSectionComponent],
   imports: [
     CommonModule,
+    AngularCalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     MatIconModule,
     MatButtonModule,
     SecondaryToolbarModule,

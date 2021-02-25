@@ -55,10 +55,15 @@ namespace opensis.data.Models
         public virtual DbSet<ParentAddress> ParentAddress { get; set; }
         public virtual DbSet<ParentAssociationship> ParentAssociationship { get; set; }
         public virtual DbSet<ParentInfo> ParentInfo { get; set; }
+        public virtual DbSet<PermissionCategory> PermissionCategory { get; set; }
+        public virtual DbSet<PermissionGroup> PermissionGroup { get; set; }
         public virtual DbSet<Plans> Plans { get; set; }
         public virtual DbSet<Programs> Programs { get; set; }
         public virtual DbSet<ProgressPeriods> ProgressPeriods { get; set; }
         public virtual DbSet<Quarters> Quarters { get; set; }
+        public virtual DbSet<ReleaseNumber> ReleaseNumber { get; set; }
+        public virtual DbSet<RolePermission> RolePermission { get; set; }
+        
         public virtual DbSet<Rooms> Rooms { get; set; }
         public virtual DbSet<SchoolCalendars> SchoolCalendars { get; set; }
         public virtual DbSet<SchoolDetail> SchoolDetail { get; set; }
@@ -119,7 +124,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.StateCode)
                     .HasColumnName("state_code")
-                    .HasMaxLength(1)
+                    .HasMaxLength(8)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Title)
@@ -1682,37 +1687,36 @@ namespace opensis.data.Models
                     .HasColumnName("membership_id")
                     .HasComment("can be considered as profileid of Opensis1");
 
-                entity.Property(e => e.Access)
-                    .HasColumnName("access")
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
                     .IsUnicode(false);
 
-                entity.Property(e => e.LastUpdated)
-                    .HasColumnName("last_updated")
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
                     .HasColumnType("datetime");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.IsSuperadmin).HasColumnName("is_superadmin");
+
+                entity.Property(e => e.IsSystem).HasColumnName("is_system");
+
                 entity.Property(e => e.Profile)
-                    .HasColumnName("profile")
                     .IsRequired()
+                    .HasColumnName("profile")
                     .HasMaxLength(30)
                     .IsUnicode(false)
                     .HasComment("E.g. admin,student,teacher");
 
-                entity.Property(e => e.Title)
-                    .HasColumnName("title")
-                    .IsRequired()
-                    .HasMaxLength(100)
-                    .IsUnicode(false)
-                    .HasComment("e.g. Administrator,Student,Teacher,Dept. head");
-
                 entity.Property(e => e.UpdatedBy)
-                    .IsRequired()
                     .HasColumnName("updated_by")
-                    .HasMaxLength(100)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
 
-                entity.Property(e => e.WeeklyUpdate)
-                    .HasColumnName("weekly_update")
-                    .HasDefaultValueSql("((0))");
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
 
                 entity.HasOne(d => d.SchoolMaster)
                     .WithMany(p => p.Membership)
@@ -1921,7 +1925,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.HomePhone)
                     .HasColumnName("home_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.IsPortalUser).HasColumnName("is_portal_user");
@@ -1937,7 +1941,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.Mobile)
                     .HasColumnName("mobile")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.LoginEmail)
@@ -1977,14 +1981,154 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.WorkPhone)
                     .HasColumnName("work_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
-
-               
-
-                
             });
 
+            modelBuilder.Entity<PermissionCategory>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.PermissionCategoryId })
+                    .HasName("PK_permission_category_1");
+
+                entity.ToTable("permission_category");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.PermissionCategoryId).HasColumnName("permission_category_id");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    ;
+
+                entity.Property(e => e.EnableAdd).HasColumnName("enable_add");
+
+                entity.Property(e => e.EnableDelete).HasColumnName("enable_delete");
+
+                entity.Property(e => e.EnableEdit).HasColumnName("enable_edit");
+
+                entity.Property(e => e.EnableView).HasColumnName("enable_view");
+
+                entity.Property(e => e.Path)
+                    .HasColumnName("path")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PermissionCategoryName)
+                    .HasColumnName("permission_category_name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PermissionGroupId).HasColumnName("permission_group_id");
+
+                entity.Property(e => e.ShortCode)
+                    .HasColumnName("short_code")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    ;
+
+                entity.HasOne(d => d.PermissionGroup)
+                    .WithMany(p => p.PermissionCategory)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PermissionGroupId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_permission_category_permission_group");
+            });
+
+            modelBuilder.Entity<PermissionGroup>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.PermissionGroupId });
+
+                entity.ToTable("permission_group");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.PermissionGroupId).HasColumnName("permission_group_id");
+
+                entity.Property(e => e.Active).HasColumnName("active");
+
+                entity.Property(e => e.BadgeType)
+                    .HasColumnName("badgeType")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BadgeValue)
+                    .HasColumnName("badgeValue")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Icon)
+                    .HasColumnName("icon")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IconType)
+                    .HasColumnName("icon_type")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.IsSystem).HasColumnName("is_system");
+
+                entity.Property(e => e.Path)
+                    .HasColumnName("path")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PermissionGroupName)
+                    .HasColumnName("permission_group_name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ShortName)
+                    .HasColumnName("short_name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SchoolMaster)
+                    .WithMany(p => p.PermissionGroup)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_permission_group_school_master");
+            });
 
             modelBuilder.Entity<Plans>(entity =>
             {
@@ -2192,6 +2336,82 @@ namespace opensis.data.Models
                     .HasConstraintName("FK_quarters_semesters");
             });
 
+            modelBuilder.Entity<ReleaseNumber>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.ReleaseNumber1 });
+
+                entity.ToTable("release_number");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.ReleaseNumber1)
+                    .HasColumnName("release_number")
+                    .HasMaxLength(9)
+                    .IsUnicode(false)
+                    .HasComment("999.99.99");
+
+                entity.Property(e => e.ReleaseDate)
+                    .HasColumnName("release_date")
+                    .HasColumnType("date");
+            });
+
+            modelBuilder.Entity<RolePermission>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.RolePermissionId });
+
+                entity.ToTable("role_permission");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.RolePermissionId).HasColumnName("role_permission_id");
+
+                entity.Property(e => e.CanAdd).HasColumnName("can_add");
+
+                entity.Property(e => e.CanDelete).HasColumnName("can_delete");
+
+                entity.Property(e => e.CanEdit).HasColumnName("can_edit");
+
+                entity.Property(e => e.CanView).HasColumnName("can_view");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    ;
+
+                entity.Property(e => e.PermissionCategoryId).HasColumnName("permission_category_id");
+
+                entity.Property(e => e.MembershipId).HasColumnName("membership_id");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    ;
+
+                entity.HasOne(d => d.PermissionCategory)
+                    .WithMany(p => p.RolePermission)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PermissionCategoryId })
+                    .HasConstraintName("FK_role_permission_permission_category");
+
+                entity.HasOne(d => d.Membership)
+                    .WithMany(p => p.RolePermission)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.MembershipId })
+                    .HasConstraintName("FK_role_permission_membership");
+
+            });
+
+           
             modelBuilder.Entity<Rooms>(entity =>
             {
                 entity.ToTable("rooms");
@@ -2433,7 +2653,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.Telephone)
                 .HasColumnName("telephone")
-                    .HasMaxLength(20)
+                    .HasMaxLength(30)
                     .IsFixedLength();
 
                 entity.Property(e => e.TenantId).HasColumnName("tenant_id");
@@ -2489,9 +2709,9 @@ namespace opensis.data.Models
                     .HasMaxLength(100);
 
                 entity.Property(e => e.Longitude)
-    .HasColumnName("longitude");
-                entity.Property(e => e.Latitude)
-.HasColumnName("latitude");
+                .HasColumnName("longitude");
+                            entity.Property(e => e.Latitude)
+                .HasColumnName("latitude");
 
                 entity.Property(e => e.City)
                 .HasColumnName("city")
@@ -2965,7 +3185,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.EmergencyHomePhone)
                     .HasColumnName("emergency_home_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmergencyLastName)
@@ -2975,12 +3195,12 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.EmergencyMobilePhone)
                     .HasColumnName("emergency_mobile_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EmergencyWorkPhone)
                     .HasColumnName("emergency_work_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.EndDate)
@@ -3040,7 +3260,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.HomePhone)
                     .HasColumnName("home_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.HomeroomTeacher).HasColumnName("homeroom_teacher");
@@ -3127,14 +3347,14 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.MobilePhone)
                     .HasColumnName("mobile_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Nationality).HasColumnName("nationality");
 
                 entity.Property(e => e.OfficePhone)
                     .HasColumnName("office_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.OtherGovtIssuedNumber)
@@ -3691,7 +3911,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.HomePhone)
                     .HasColumnName("home_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Instagram)
@@ -3785,7 +4005,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.MobilePhone)
                     .HasColumnName("mobile_phone")
-                    .HasMaxLength(15)
+                    .HasMaxLength(30)
                     .IsUnicode(false);
 
                 entity.Property(e => e.Nationality).HasColumnName("nationality");

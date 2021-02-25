@@ -45,7 +45,8 @@ export class EditPeriodComponent implements OnInit {
       title: ['', [Validators.required, ValidationService.noWhitespaceValidator]],
       shortName: ['', [Validators.required,ValidationService.noWhitespaceValidator]],
       startTime: ['', [Validators.required]],
-      endTime: [, [Validators.required]]
+      endTime: [, [Validators.required]],
+      calculateAttendance: [false]
     })
     if (data.periodData == null) {
       this.currentBlockId = data.blockId;
@@ -62,6 +63,7 @@ export class EditPeriodComponent implements OnInit {
       this.form.controls.shortName.patchValue(data.periodData.periodShortName);
       this.form.controls.startTime.patchValue(new Date(data.periodData.periodStartTime));
       this.form.controls.endTime.patchValue(new Date(data.periodData.periodEndTime));
+      this.form.controls.calculateAttendance.patchValue(data.periodData.calculateAttendance);
     }
 
   }
@@ -75,6 +77,7 @@ export class EditPeriodComponent implements OnInit {
       if (this.form.controls.periodId.value == 0) {
         this.blockPeriodAddViewModel.blockPeriod.blockId = this.currentBlockId;
         this.blockPeriodAddViewModel.blockPeriod.periodTitle = this.form.controls.title.value;
+        this.blockPeriodAddViewModel.blockPeriod.calculateAttendance = this.form.controls.calculateAttendance.value;
         this.blockPeriodAddViewModel.blockPeriod.periodShortName = this.form.controls.shortName.value;
         this.blockPeriodAddViewModel.blockPeriod.periodStartTime = this.form.controls.startTime.value.toString().substr(16, 5);
         this.blockPeriodAddViewModel.blockPeriod.periodEndTime = this.form.controls.endTime.value.toString().substr(16, 5);
@@ -109,6 +112,7 @@ export class EditPeriodComponent implements OnInit {
         this.blockPeriodAddViewModel.blockPeriod.periodId = this.form.controls.periodId.value;
         this.blockPeriodAddViewModel.blockPeriod.blockId = this.currentBlockId;
         this.blockPeriodAddViewModel.blockPeriod.periodTitle = this.form.controls.title.value;
+        this.blockPeriodAddViewModel.blockPeriod.calculateAttendance = this.form.controls.calculateAttendance.value;
         this.blockPeriodAddViewModel.blockPeriod.periodShortName = this.form.controls.shortName.value;
         this.blockPeriodAddViewModel.blockPeriod.periodStartTime = this.form.controls.startTime.value.toString().substr(16, 5);
         this.blockPeriodAddViewModel.blockPeriod.periodEndTime = this.form.controls.endTime.value.toString().substr(16, 5);

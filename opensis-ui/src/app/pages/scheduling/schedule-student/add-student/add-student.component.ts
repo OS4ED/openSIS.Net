@@ -19,11 +19,11 @@ export class AddStudentComponent implements OnInit {
 
   icClose = icClose;
   studentDetails: StudentDetails[] = [
-    {studentSelected: true, studentName: 'Danielle Boucher', studentId: 'ST4562', alternateId: 'Grade 9', gradeLevel: 'Mathematics', section: 'Section A', tbd: '-'},
-    {studentSelected: false, studentName: 'Andrew Brown', studentId: 'ST756', alternateId: 'Grade 10', gradeLevel: 'Science', section: 'Section B', tbd: '-'},
-    {studentSelected: true, studentName: 'Lian Fang', studentId: 'ST456', alternateId: 'Grade 9', gradeLevel: 'Mathematics', section: 'Section A', tbd: '-'}
+    {studentSelected: true, studentName: 'Danielle Boucher', studentId: 'ST4562', alternateId: 'Grade 9', gradeLevel: 'Mathematics', section: 'Section A', firstLanguage: 'English'},
+    {studentSelected: false, studentName: 'Andrew Brown', studentId: 'ST756', alternateId: 'Grade 10', gradeLevel: 'Science', section: 'Section B', firstLanguage: 'English'},
+    {studentSelected: true, studentName: 'Lian Fang', studentId: 'ST456', alternateId: 'Grade 9', gradeLevel: 'Mathematics', section: 'Section A', firstLanguage: 'English'}
   ];
-  displayedColumns: string[] = ['studentSelected', 'studentName', 'studentId', 'alternateId', 'gradeLevel', 'section', 'tbd'];
+  displayedColumns: string[] = ['studentSelected', 'studentName', 'studentId', 'alternateId', 'gradeLevel', 'section', 'firstLanguage'];
 
 
   constructor(private dialogRef: MatDialogRef<AddStudentComponent>, public translateService:TranslateService) { 

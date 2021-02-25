@@ -65,7 +65,7 @@ export class WashInfoComponent implements OnInit,OnDestroy {
   ngOnInit(): void {
     if (this.schoolCreateMode == this.schoolCreate.VIEW) {
       this.schoolService.changePageMode(this.schoolCreateMode);
-      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
       this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
     } else {
@@ -97,7 +97,7 @@ export class WashInfoComponent implements OnInit,OnDestroy {
     this.schoolService.changePageMode(this.schoolCreateMode);
   }
   cancelEdit() {
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
     this.imageCropperService.cancelImage("school");
     if(JSON.stringify(this.schoolAddViewModel)!==this.cloneSchool){
       this.schoolAddViewModel=JSON.parse(this.cloneSchool);
@@ -136,7 +136,7 @@ export class WashInfoComponent implements OnInit,OnDestroy {
             this.schoolDetailsForViewAndEdit=data;
             this.cloneSchool=JSON.stringify(this.schoolDetailsForViewAndEdit);
             this.schoolService.changePageMode(this.schoolCreateMode);
-            this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
+            this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
           }
         }
 

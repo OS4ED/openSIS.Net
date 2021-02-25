@@ -73,54 +73,54 @@
 
 
                 <ng-container matColumnDef="fieldId">
-                    <th mat-header-cell *matHeaderCellDef>
-                    </th>
-                    <td mat-cell *matCellDef="let element" cdkDrag>
-                        <div class="w-10 drag-icon">
+                    <th mat-header-cell *matHeaderCellDef></th>
+                    <td mat-cell *matCellDef="let element" >
+                        <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
+                   <!--      <div class="w-10 drag-icon">
                             <i  class="material-icons" cdkDragHandle>reorder</i>
-                        </div>
+                        </div> -->
                     </td>
                 </ng-container>
 
 
                 <ng-container matColumnDef="title">
-                    <th mat-header-cell *matHeaderCellDef>{{'fieldName'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'fieldName'|translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         {{element.title}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
 
                 <!-- Body -->
 
                 <ng-container matColumnDef="type">
-                    <th mat-header-cell *matHeaderCellDef>{{'fieldType'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'fieldType'|translate}}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         {{element.type}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
 
 
 
                 <ng-container matColumnDef="hide">
-                    <th mat-header-cell *matHeaderCellDef>{{'inUse'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'inUse'|translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         {{element.hide|EmtyBooleanCheckReversePipe}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
 
 
 
                 <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef>{{'action'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                             <a class="mr-3 cursor-pointer" (click)="openEditdata(element)">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
                         <a class="cursor-pointer"(click)="confirmDelete(element)">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
-                    </td>
+                    </mat-cell>
                 </ng-container>
 
                 <ng-container matColumnDef="loading">
@@ -134,9 +134,9 @@
                     </td>
                   </ng-container>
 
-                <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-                <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+                <mat-row cdkDrag *matRowDef="let row; columns: visibleColumns" @fadeInUp></mat-row >
+                <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
                 <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="customFieldList?.data.length!=0"></tr>
             </table>
             

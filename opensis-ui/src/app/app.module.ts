@@ -26,12 +26,17 @@ import { LoaderService } from './services/loader.service';
 import { ResponseMessageService } from './services/response-message.service';
 import { ConfirmDialogComponent } from './pages/shared-module/confirm-dialog/confirm-dialog.component';
 import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
- 
+import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     BrowserModule,
+    AngularCalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     AppRoutingModule,
     BrowserAnimationsModule,
     HttpClientModule,

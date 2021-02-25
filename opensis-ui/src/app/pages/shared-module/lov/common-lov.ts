@@ -17,8 +17,10 @@ export class CommonLOV {
         let schoolId=this.schoolService.getSchoolId()
         if(schoolId!=null){
             this.lovList.schoolId=+schoolId;
+            this.lovList._token = sessionStorage.getItem('token');
         }else{
-            this.lovList.schoolId=+sessionStorage.getItem("selectedSchoolId");
+            this.lovList.schoolId = +sessionStorage.getItem("selectedSchoolId");
+            this.lovList._token = sessionStorage.getItem('token');
         }
         this.lovList.lovName = LovName;
         return this.commonService.getAllDropdownValues(this.lovList)

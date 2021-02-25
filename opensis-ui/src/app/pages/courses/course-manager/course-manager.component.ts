@@ -97,6 +97,8 @@ export class CourseManagerComponent implements OnInit {
     "updatedBy": "",
     "updatedOn": ""
   };
+  selectedCourseObj;
+  nameSearch:string='';
   globalFilterCourseCount=0;
   courseIndex = 0;
   totalCourse= 0;
@@ -111,6 +113,9 @@ export class CourseManagerComponent implements OnInit {
   selectedCourseFlag:boolean;
   showCourseSections:boolean=true;
   visibleColumns;
+  selectedCourses:number=0;
+  filterFlag:boolean=false;
+  deletedCourse:number=0;
   constructor(
     public translateService:TranslateService,
     private dialog: MatDialog,
@@ -164,9 +169,24 @@ export class CourseManagerComponent implements OnInit {
         this.courseList=data.courseViewModelList;
         this.courseListClone = data.courseViewModelList;           
         this.totalCourse = this.courseList.length;  
+        var fl= false;
         if(this.totalCourse > 0){
-          this.selectedCourse = this.courseList[0].course; 
-          this.standard = this.courseList[0].courseStandard;
+          for(let i=0;i<this.totalCourse;i++){
+            if(this.deletedCourse === this.selectedCourses){
+              fl = true;
+           }
+          }       
+          if(fl){
+            this.selectedCourses = 0;
+            this.selectedCourseObj = this.courseList[0].course;           
+            this.standard = this.courseList[0].course.courseStandard;
+            this.courseIndex = 0;
+          }else{
+            this.selectedCourse = data.courseViewModelList[this.selectedCourses];
+            this.selectedCourseObj = this.courseList[this.selectedCourses].course;           
+            this.standard = this.courseList[this.selectedCourses].course.courseStandard;
+            this.courseIndex = this.selectedCourses;
+          }       
         }      
       }
     });
@@ -198,61 +218,7 @@ export class CourseManagerComponent implements OnInit {
 
  
 
-  globalFilter(value){ 
-    var chkFlag = "N";
-    if(this.cloneFilterCourseList.length > 0){
-      if(value != ""){
-      for(let i = 0;i< this.cloneFilterCourseList.length ;i++){
-        var obj1 = {};     
-        if(value == this.cloneFilterCourseList[i].courseTitle || value == this.cloneFilterCourseList[i].courseSubject || value == this.cloneFilterCourseList[i].courseProgram){   
-                     
-            obj1["courseTitle"]= this.cloneFilterCourseList[i].courseTitle,
-            obj1["courseShortName"] = this.cloneFilterCourseList[i].courseShortName,
-            obj1["courseGradeLevel"] = this.cloneFilterCourseList[i].courseGradeLevel,
-            obj1["courseProgram"] = this.cloneFilterCourseList[i].courseProgram,
-            obj1["courseSubject"] = this.cloneFilterCourseList[i].courseSubject   
-            this.globalFilterCourseList.push(obj1);  
-            chkFlag = "Y";    
-            this.filterCourseList = [];             
-          }    
-        }
-        if(chkFlag=="N"){
-          this.globalFilterCourseList = [];
-          this.courseList = [];
-        }
-      }else{
-        this.getAllCourse();
-      }
-    }else{
-      if(value != ""){
-        for(let i = 0;i< this.courseListClone.length ;i++){
-          var obj1 = {};     
-          if(value == this.courseListClone[i].course.courseTitle || value == this.courseListClone[i].course.courseSubject || value == this.courseListClone[i].course.courseProgram){                   
-              obj1["courseTitle"]= this.courseListClone[i].course.courseTitle,
-              obj1["courseShortName"] = this.courseListClone[i].course.courseShortName,
-              obj1["courseGradeLevel"] = this.courseListClone[i].course.courseGradeLevel,
-              obj1["courseProgram"] = this.courseListClone[i].course.courseProgram,
-              obj1["courseSubject"] = this.courseListClone[i].course.courseSubject   
-              this.globalFilterCourseList.push(obj1);  
-              chkFlag = "Y";                 
-            }    
-          }
-          this.globalFilterCourseCount = this.globalFilterCourseList.length;
-          if(this.globalFilterCourseList.length > 0){
-            this.selectedCourse = this.globalFilterCourseList[0]; 
-            
-          }   
-          if(chkFlag=="N"){            
-            this.globalFilterCourseList = [];
-            this.courseList = [];
-            this.globalFilterCourseCount=0;
-            this.totalCourse=0;
-          }
-      }else{
-        this.getAllCourse();
-      }     
-    }    
-  }
+  
   filterCourse(event,category){
   
     if(category === "Subject"){
@@ -284,18 +250,24 @@ export class CourseManagerComponent implements OnInit {
             obj1["courseShortName"] = this.courseListClone[i].course.courseShortName,
             obj1["courseGradeLevel"] = this.courseListClone[i].course.courseGradeLevel,
             obj1["courseProgram"] = this.courseListClone[i].course.courseProgram,
-            obj1["courseSubject"] = this.courseListClone[i].course.courseSubject   
+            obj1["courseSubject"] = this.courseListClone[i].course.courseSubject,
+            obj1["courseStandard"] = this.courseListClone[i].course.courseStandard,
+            obj1["courseCategory"] = this.courseListClone[i].course.courseCategory,
+            obj1["creditHours"] = this.courseListClone[i].course.creditHours,
+            obj1["courseDescription"] = this.courseListClone[i].course.courseDescription,    
             this.filterCourseList.push(obj1);  
-            this.cloneFilterCourseList.push(obj1);  
-         
-                     
+            this.cloneFilterCourseList.push(obj1);                  
           }
           
         }
         this.filterCourseCount = this.filterCourseList.length;   
         if(this.filterCourseList.length > 0){
+          this.selectedCourseObj = this.filterCourseList[0]; 
+          this.selectedCourse = this.filterCourseList[this.selectedCourses];          
+          this.standard = this.filterCourseList[0].courseStandard;
           this.selectedCourse = this.filterCourseList[0]; 
           this.standard = this.filterCourseList[0].courseStandard;
+          this.filterFlag = true;
         }     
         
         if(l_flag == "N"){
@@ -326,10 +298,15 @@ export class CourseManagerComponent implements OnInit {
 
   showDetails(element,index) {
     this.courseIndex = index;    
-    this.selectedCourse = element;
+    this.selectedCourseObj = element;    
+    this.selectedCourses = index;
     this.standard = element.courseStandard;
   }
   editCourse(element){
+  
+    if(element.hasOwnProperty('courseSectionCount')){    
+      Object.assign(element,element.course)
+    }  
     
     this.dialog.open(EditCourseComponent, {
       width: '800px',
@@ -343,8 +320,8 @@ export class CourseManagerComponent implements OnInit {
       }     
     });
   }
-  deleteCourse(){   
-    this.addCourseModel.course.courseId = this.selectedCourse.courseId;
+  deleteCourse(element,index){   
+    this.addCourseModel.course.courseId = element.courseId;   
     this.courseManager.DeleteCourse(this.addCourseModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Course Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -361,12 +338,12 @@ export class CourseManagerComponent implements OnInit {
           this.snackbar.open('Course Deletion Successful.', '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
+            this.deletedCourse = index;            
             this.getAllCourse();
           });
           
         }
       }
-
     });
   }
   openModalManageSubjects() {
@@ -384,21 +361,21 @@ export class CourseManagerComponent implements OnInit {
       this.getAllProgramList();
     });   
   }
-  confirmDelete(){
+  confirmDelete(element,index){
     
     // call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
           title: "Are you sure?",
-          message: "You are about to delete "+this.selectedCourse.courseTitle+"."}
+          message: "You are about to delete "+element.courseTitle+"."}
     });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {
       // if user pressed yes dialogResult will be true, 
       // if user pressed no - it will be false
       if(dialogResult){
-        this.deleteCourse();
+        this.deleteCourse(element,index);
       }
    });
   }

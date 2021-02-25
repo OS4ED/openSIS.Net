@@ -18,6 +18,14 @@
             </div>
             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
                 <div class="flex">
+                        <span  class="custody mr-3"  *ngIf="parent.isCustodian;else noCustody"><img src="../../../../assets/img/icons/mother.svg"
+                            matTooltip="Custody of Student"
+                            class="w-6 inline-block align-middle" /></span>
+                   <ng-template #noCustody>
+                        <span  class="no-custody mr-3"  ><img src="../../../../assets/img/icons/mother.svg"
+                            matTooltip="No Custody of Student"
+                            class="inline-block align-middle" /></span>
+                   </ng-template>
                     <button mat-icon-button matTooltip="Edit" type="button" class="text-gray">
                     <mat-icon (click) = "editParentInfo(parent)" [icIcon]="icEdit" class="mr-2"></mat-icon>
                 </button>

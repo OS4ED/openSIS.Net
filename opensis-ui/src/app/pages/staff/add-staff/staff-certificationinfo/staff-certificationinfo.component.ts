@@ -181,13 +181,13 @@ export class StaffCertificationinfoComponent implements OnInit {
   }
   confirmDelete(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+element.title+"."}
+          title: 'Are you sure?',
+          message: 'You are about to delete ' + element.certificationName + '.'}
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
-      if(dialogResult){
+      if (dialogResult){
         this.deleteStaffCertificatedata(element);
       }
    });

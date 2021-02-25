@@ -7,7 +7,8 @@
 
     <vex-page-layout-content class="-mt-6">
         <div class="card -mt-16">
-            <div class="p-6 text-center">To schedule teachers into course sections, search and select teacher(s) and course section(s) first.</div>
+            <div class="p-6 text-center">To schedule teachers into course sections, search and select teacher(s) and
+                course section(s) first.</div>
             <hr class="border-normal">
             <div class="flex w-full">
                 <div class="w-1/2 border-r border-normal cursor-pointer relative" (click)="selectTeacher()">
@@ -20,7 +21,8 @@
                             <p class="text-blue">Select Teacher to Schedule</p>
                         </div>
                     </div>
-                    <div class="schedule-icon bg-white"><img src="assets/img/icons/teacher-course-schedule.svg" width="80%" class="inline-block"></div>
+                    <div class="schedule-icon bg-white"><img src="assets/img/icons/teacher-course-schedule.svg"
+                            width="80%" class="inline-block"></div>
                 </div>
                 <div class="w-1/2 cursor-pointer" (click)="selectCourseSection()">
                     <div class="flex items-center">
@@ -37,426 +39,339 @@
         </div>
 
         <div class="pt-6">
-            <h4 class="text-primary font-bold">Occurrence</h4>
-            <p>The course occurrences are given below and selected by default. Check teacher availability before proceeding to scheduling.</p>
+            <h4 class="text-primary font-bold">Course Section Details</h4>
+            <p>Select course section details are given below. Check teacher availability before proceeding to scheduling.</p>
             <div class="card mt-4 p-4">
                 <div class="teacher-info mb-2">
                     <span class="text-lg inline-block align-middle text-green font-bold">Danielle Boucher</span>
-                    <span class="inline-block align-middle ml-3" matTooltip="Homeroom Teacher"><img src="assets/img/icons/homeroom_teacher.svg" class="w-4 opacity-50"></span>
+                    <span class="inline-block align-middle ml-3" matTooltip="Homeroom Teacher"><img
+                            src="assets/img/icons/homeroom_teacher.svg" class="w-4 opacity-50"></span>
                     <span class="dot-separator"></span>
                     <span>#287</span>
                     <span class="dot-separator"></span>
                     <span><a href="" class="hover:text-blue">danielle.boucher@example.com</a></span>
                 </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM001</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto">
-                            <table class="w-full fixed-schedule-table">
+                <div class="border-t border-normal -mx-4 mt-4">
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <table class="w-full calendar-schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="1%">
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </th>
+                                    <th>{{ "course" | translate }}</th>
+                                    <th>{{ "courseSection" | translate }}</th>
+                                    <th>{{ "markingPeriod" | translate }}</th>
+                                    <th>{{ "startDate" | translate }}</th>
+                                    <th>{{ "endDate" | translate }}</th>
+                                    <th>{{ "meetingDays" | translate }}</th>
+                                    <th>{{ "scheduledTeacher" | translate }}</th>
+                                    <th width="1%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM001</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <button matTooltip="Jolly Holmes"
+                                            aria-label="Button that displays a tooltip when focused or hovered over"
+                                            [matTooltipPosition]="'above'">
+                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                                        </button>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Friday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM004</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Feb 15, 2021 - Jun 10, 2021</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto">
-                            <table class="w-full fixed-schedule-table">
                                 <tr>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM002</td>
+                                    <td>Custom</td>
+                                    <td>Feb 01, 2021</td>
+                                    <td>Jun 10, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <button matTooltip="Jolly Holmes"
+                                            aria-label="Button that displays a tooltip when focused or hovered over"
+                                            [matTooltipPosition]="'above'">
+                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                                        </button>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM005</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto overflow-y-hidden">
-                            <table class="w-full calendar-schedule-table">
-                                <thead>
-                                    <tr>
-                                        <th width="1%"></th>
-                                        <th>Date</th>
-                                        <th>Period</th>
-                                        <th>Room</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM006</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto overflow-y-hidden">
-                            <table class="w-full fixed-schedule-table">
                                 <tr>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM003</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">C</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        -
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">D</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
-                            </table>
-                        </div>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM004</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>N/A</td>
+                                    <td>-</td>
+                                    <td>
+                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM005</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td class="text-primary">Calendar Days</td>
+                                    <td>-</td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="text-xl" (click)="selectCalendar()"><i class="icon icon-info2"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
-
             <div class="card mt-4 p-4">
                 <div class="teacher-info mb-2">
                     <span class="text-lg inline-block align-middle text-green font-bold">Lian Fang</span>
+                    <span class="inline-block align-middle ml-3" matTooltip="Homeroom Teacher"><img
+                            src="assets/img/icons/homeroom_teacher.svg" class="w-4 opacity-50"></span>
                     <span class="dot-separator"></span>
-                    <span>#287</span>
+                    <span>#542</span>
                     <span class="dot-separator"></span>
-                    <span><a href="" class="hover:text-blue">lianfang@example.com</a></span>
+                    <span><a href="" class="hover:text-blue">lian.fang@example.com</a></span>
                 </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM001</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto">
-                            <table class="w-full fixed-schedule-table">
+                <div class="border-t border-normal -mx-4 mt-4">
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <table class="w-full calendar-schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="1%">
+                                        <mat-checkbox color="primary"></mat-checkbox>
+                                    </th>
+                                    <th>{{ "course" | translate }}</th>
+                                    <th>{{ "courseSection" | translate }}</th>
+                                    <th>{{ "markingPeriod" | translate }}</th>
+                                    <th>{{ "startDate" | translate }}</th>
+                                    <th>{{ "endDate" | translate }}</th>
+                                    <th>{{ "meetingDays" | translate }}</th>
+                                    <th>{{ "scheduledTeacher" | translate }}</th>
+                                    <th width="1%"></th>
+                                </tr>
+                            </thead>
+                            <tbody>
                                 <tr>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM001</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <button matTooltip="Jolly Holmes"
+                                            aria-label="Button that displays a tooltip when focused or hovered over"
+                                            [matTooltipPosition]="'above'">
+                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                                        </button>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Friday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <a href="javascript:void(0);" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM004</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Feb 15, 2021 - Jun 10, 2021</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto">
-                            <table class="w-full fixed-schedule-table">
                                 <tr>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Monday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM002</td>
+                                    <td>Custom</td>
+                                    <td>Feb 01, 2021</td>
+                                    <td>Jun 10, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Tuesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <button matTooltip="Jolly Holmes"
+                                            aria-label="Button that displays a tooltip when focused or hovered over"
+                                            [matTooltipPosition]="'above'">
+                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                                        </button>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Wednesday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">Thursday</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM005</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto overflow-y-hidden">
-                            <table class="w-full calendar-schedule-table">
-                                <thead>
-                                    <tr>
-                                        <th width="1%"></th>
-                                        <th>Date</th>
-                                        <th>Period</th>
-                                        <th>Room</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                    <tr>
-                                        <td><mat-checkbox color="primary" checked="checked"></mat-checkbox></td>
-                                        <td>2/5/2021</td>
-                                        <td>Period 1 (9:00 AM - 9:50 AM)</td>
-                                        <td>Room 101</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="course-section-occurrence border border-normal rounded bg-skyblue mb-4">
-                    <div class="px-3 py-2">
-                        <span class="text-primary font-bold"><mat-checkbox color="primary" checked="checked">Geometry - GEOM006</mat-checkbox></span>
-                        <span class="dot-separator"></span>
-                        <span>Duration : Quarter 1 (Jan 01, 2021 - Mar 31, 2021)</span>
-                    </div>
-                    <div class="bg-white border-t border-normal rounded-b">
-                        <div class="overflow-x-auto overflow-y-hidden">
-                            <table class="w-full fixed-schedule-table">
                                 <tr>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM003</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">C</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        -
                                     </td>
                                     <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">A</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
-                                    </td>
-                                    <td>
-                                        <div class="font-bold"><mat-checkbox color="primary" checked="checked">D</mat-checkbox></div>
-                                        <div class="mt-2">
-                                            <p>Period 1</p>
-                                            <p>9:00 AM - 9:50 AM</p>
-                                            <p>Room 101</p>
-                                        </div>
+                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
-                            </table>
-                        </div>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM003</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td class="text-primary">
+                                        Block/Rotation Days
+                                    </td>
+                                    <td>
+                                        -
+                                    </td>
+                                    <td>
+                                        <a href="javascript:void(0);" class="text-xl" (click)="selectDays()"><i class="icon icon-info2"></i></a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary"></mat-checkbox>
+                                    </td>
+                                    <td class="text-warn">Geometry</td>
+                                    <td class="text-warn">GEOM004</td>
+                                    <td class="text-warn">Quarter 1</td>
+                                    <td class="text-warn">Jan 01, 2021</td>
+                                    <td class="text-warn">Mar 31, 2021</td>
+                                    <td>N/A</td>
+                                    <td>-</td>
+                                    <td>
+                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
+                </div>
+            </div>
+            <div class="flex mt-4 items-center flex-wrap">
+                <p class="text-base mt-2 mr-10">
+                    <i class="icon icon-notification2 mr-2 text-warn"></i>
+                    Items in red denotes teacher unavailability.You can change your selection or proceed to scheduling.
+                </p>
+                <!-- After completed conflicts below text is seen -->
+                <!-- <p class="text-base mt-2 mr-10"><i class="icon checkmark-circle2 mr-2 text-warn"></i>There are no conflicts detected. You may proceed to scheduling.</p> -->
+
+                <div class="ml-auto mt-2">
+                    <button color="primary" mat-raised-button type="submit">
+                        <i class="icon icon-loop3 mr-2"></i>{{ 'checkAvailability' | translate }}
+                    </button>
+                    <button mat-raised-button type="submit" class="bg-green ml-2 text-white">
+                        {{ 'startScheduling' | translate }}
+                    </button>
                 </div>
             </div>
         </div>

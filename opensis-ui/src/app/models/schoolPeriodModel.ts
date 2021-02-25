@@ -82,6 +82,7 @@ export class BlockPeriod {
     periodStartTime: string;
     periodEndTime: string;
     periodSortOrder: number;
+    calculateAttendance: boolean;
     createdBy: string;
     updatedBy: string;
     createdOn: string;
@@ -93,6 +94,7 @@ export class BlockPeriod {
         this.periodId = 0;
         this.periodTitle = "";
         this.periodSortOrder = 0;
+        this.calculateAttendance= false;
         this.updatedBy = null;
     }
 

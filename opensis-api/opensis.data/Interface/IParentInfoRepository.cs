@@ -17,5 +17,6 @@ namespace opensis.data.Interface
         public ParentInfoAddViewModel ViewParentInfo(ParentInfoAddViewModel parentInfoAddViewModel);
         public ParentInfoAddViewModel AddParentInfo(ParentInfoAddViewModel parentInfoAddViewModel);
         public ParentInfoDeleteViewModel RemoveAssociatedParent(ParentInfoDeleteViewModel parentInfoDeleteViewModel);
+        public ParentInfoAddViewModel AddUpdateParentPhoto(ParentInfoAddViewModel parentInfoAddViewModel);
     }
 }

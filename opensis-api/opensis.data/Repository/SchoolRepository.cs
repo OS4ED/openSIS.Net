@@ -398,15 +398,15 @@ namespace opensis.data.Repository
                 }
 
                 school.schoolMaster.Membership = new List<Membership>() {
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Super Administrator",Title= "Super Administrator",MembershipId= 1},
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Administrator",Title= "Administrator",MembershipId= 2},
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher",Title= "Teacher",MembershipId= 3 },
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Student",Title= "Student",MembershipId= 4},
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent",Title= "Parent",MembershipId= 5},
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Admin Assistant",Title= "Admin Assistant",MembershipId= 6},
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Administrator w/Custom",Title= "Administrator w/Custom",MembershipId= 7},
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher w/Custom",Title= "Teacher w/Custom",MembershipId= 8},
-                    new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent w/Custom",Title= "Parent w/Custom",MembershipId= 9},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Super Administrator",MembershipId= 1},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Administrator",MembershipId= 2},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher",MembershipId= 3 },
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Student",MembershipId= 4},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent",MembershipId= 5},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Admin Assistant",MembershipId= 6},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Administrator w/Custom",MembershipId= 7},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher w/Custom",MembershipId= 8},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent w/Custom",MembershipId= 9},
                 };
                 long? dpdownValueId = Utility.GetMaxLongPK(this.context, new Func<DpdownValuelist, long>(x => x.Id));
                 school.schoolMaster.DpdownValuelist = new List<DpdownValuelist>() {
@@ -625,6 +625,37 @@ namespace opensis.data.Repository
                 schoolListView._token = schoolListViewModel._token;
             }
             return schoolListView;
+        }
+
+        /// <summary>
+        /// Add Update School Logo
+        /// </summary>
+        /// <param name="schoolAddViewModel"></param>
+        /// <returns></returns>
+        public SchoolAddViewModel AddUpdateSchoolLogo(SchoolAddViewModel schoolAddViewModel)
+        {
+            try
+            {
+                var schoolLogoUpdate = this.context?.SchoolDetail.FirstOrDefault(x => x.TenantId == schoolAddViewModel.schoolMaster.TenantId && x.SchoolId == schoolAddViewModel.schoolMaster.SchoolId && x.Id == schoolAddViewModel.schoolMaster.SchoolDetail.FirstOrDefault().Id);
+                
+                if (schoolLogoUpdate != null)
+                {
+                    schoolLogoUpdate.SchoolLogo = schoolAddViewModel.schoolMaster.SchoolDetail.FirstOrDefault().SchoolLogo;
+                    this.context?.SaveChanges();
+                    schoolAddViewModel._message = "School Logo Updated Successfully";
+                }
+                else
+                {
+                    schoolAddViewModel._failure = true;
+                    schoolAddViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                schoolAddViewModel._failure = true;
+                schoolAddViewModel._message = es.Message;
+            }
+            return schoolAddViewModel;
         }
     }
 }

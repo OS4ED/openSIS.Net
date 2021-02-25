@@ -990,7 +990,7 @@ namespace opensis.data.Repository
                                                             userMaster.EmailAddress = userMasterData.EmailAddress;
                                                             userMaster.PasswordHash = userMasterData.PasswordHash;
                                                             userMaster.LangId = userMasterData.LangId;
-                                                            var membershipsId = this.context?.Membership.Where(x => x.SchoolId == (int)studentEnrollmentList.TransferredSchoolId && x.TenantId == studentEnrollmentList.TenantId && x.Title == "Student").Select(x => x.MembershipId).FirstOrDefault();
+                                                            var membershipsId = this.context?.Membership.Where(x => x.SchoolId == (int)studentEnrollmentList.TransferredSchoolId && x.TenantId == studentEnrollmentList.TenantId && x.Profile == "Student").Select(x => x.MembershipId).FirstOrDefault();
                                                             userMaster.MembershipId = (int)membershipsId;
                                                             userMaster.LastUpdated = DateTime.UtcNow;
                                                             userMaster.UpdatedBy = studentEnrollmentList.UpdatedBy;

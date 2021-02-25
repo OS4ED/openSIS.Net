@@ -46,8 +46,10 @@
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "tbd" | translate }}</mat-label>
-                <input name="tbd" matInput />
+                <mat-label>{{ "firstLanguage" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="">Show All Languages</mat-option>
+                </mat-select>
             </mat-form-field>
         </li>
     </ul>
@@ -69,7 +71,7 @@
         <ng-container matColumnDef="studentName">
             <th mat-header-cell *matHeaderCellDef>{{ "studentName" | translate }}</th>
             <td mat-cell *matCellDef="let element" class="relative student-link">
-                <div class="text-primary">{{ element.studentName }}</div>
+                {{ element.studentName }}
             </td>
         </ng-container>
         <ng-container matColumnDef="studentId">
@@ -88,9 +90,9 @@
             <th mat-header-cell *matHeaderCellDef>{{ 'section' | translate }}</th>
             <td mat-cell *matCellDef="let element">{{ element.section }}</td>
         </ng-container>
-        <ng-container matColumnDef="tbd">
-            <th mat-header-cell *matHeaderCellDef>{{ 'tbd' | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.tbd }}</td>
+        <ng-container matColumnDef="firstLanguage">
+            <th mat-header-cell *matHeaderCellDef>{{ 'firstLanguage' | translate }}</th>
+            <td mat-cell *matCellDef="let element">{{ element.firstLanguage }}</td>
         </ng-container>
 
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>

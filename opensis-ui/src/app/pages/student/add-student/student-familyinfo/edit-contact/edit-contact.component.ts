@@ -93,12 +93,14 @@ export class EditContactComponent implements OnInit,OnDestroy {
       if(this.data.mode === "view"){       
        this.mode = "view";
        this.viewData = this.data.parentInfo;  
+       
        if(this.viewData.middlename === null){
         this.viewData.middlename = "";
        }
        if(this.viewData.salutation === null){
         this.viewData.salutation = "";
        }
+       
       }else{
         if(this.data.mode === "add"){
         this.disableAddressFlag =true;
@@ -106,7 +108,8 @@ export class EditContactComponent implements OnInit,OnDestroy {
         this.val="Yes";     
         this.addParentInfoModel.parentAssociationship.contactType = this.data.contactType;    
         this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = true;   
-        }else{        
+        }else{ 
+             
           this.addParentInfoModel.parentInfo.parentAddress[0].addressLineOne = this.data.parentInfo.parentAddress.addressLineOne;  
           this.addParentInfoModel.parentInfo.parentAddress[0].addressLineTwo = this.data.parentInfo.parentAddress.addressLineTwo;
           this.addParentInfoModel.parentInfo.parentAddress[0].country = +this.data.parentInfo.parentAddress.country;
@@ -148,7 +151,10 @@ export class EditContactComponent implements OnInit,OnDestroy {
             this.isPortalUser = false;
             this.addParentInfoModel.parentInfo.isPortalUser = false; 
           }   
-               
+          if(this.addParentInfoModel.parentAssociationship.isCustodian === false){
+           
+            this.disableAddressFlag = true;
+          }   
           this.addParentInfoModel.parentAssociationship.contactType = this.data.parentInfo.contactType;       
         }
         this.mode = "add";     
@@ -160,10 +166,14 @@ export class EditContactComponent implements OnInit,OnDestroy {
     if(event.value === true){
       this.disableAddressFlag = false;
       this.disableNewAddressFlag=false;
+      //console.log(this.addParentInfoModel.parentAssociationship.isCustodian)
     }else{
       this.disableAddressFlag = true;
+      this.disableNewAddressFlag = false;
       this.val="No";     
       this.sameAsStudentAddress = false;
+      this.addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame = false;
+      //console.log(this.addParentInfoModel.parentAssociationship.isCustodian)
     }
   }
   associateStudentToParent(){    
@@ -266,7 +276,16 @@ export class EditContactComponent implements OnInit,OnDestroy {
         if (data._failure) {
           this.countryListArr = [];
         } else {
-          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
+          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} ) 
+          if(this.data.mode === "edit"){
+            this.countryListArr.map((val) => {            
+              if(this.data.parentInfo.parentAddress.country == val.name){
+                this.addParentInfoModel.parentInfo.parentAddress[0].country = val.id;
+                
+              }                
+            })  
+          } 
+          
           if(this.mode === "view"){
             this.countryListArr.map((val) => {
               var countryInNumber = +this.viewData.parentAddress.country;            
@@ -274,7 +293,8 @@ export class EditContactComponent implements OnInit,OnDestroy {
                   this.viewData.parentAddress.country= val.name;
                 }               
               })     
-          }  
+          } 
+         
              
         }
       }

@@ -186,15 +186,15 @@ namespace opensisAPI.Controllers
                 var school = new List<SchoolMaster>()
                 { new SchoolMaster() {TenantId=tenantId,SchoolId=(int)schoolId,SchoolInternalId="SC-00"+i,SchoolGuid=GuidId,SchoolName="Test School"+i,SchoolAltId="SAC-OO"+i,SchoolStateId="California",SchoolDistrictId="Sacramento",SchoolLevel="1",AlternateName="TS"+i,StreetAddress1="XYZ",StreetAddress2="ABC",City="Compton",Country="USA",County="Los Angeles County",SchoolClassification="Primary",Division="1ST",State="California",District="Sacramento",Zip="90224",CurrentPeriodEnds=Convert.ToDateTime("2021-01-15"),MaxApiChecks=1,Features="Feature 1",CreatedBy="Sayan Das",DateCreated=DateTime.UtcNow,ModifiedBy="Sayan Das",DateModifed=DateTime.UtcNow,Longitude=00.00,Latitude=11.00,Membership=new List<Membership>()
                     {
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Super Administrator",Title= "Super Administrator",MembershipId= 1},
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Administrator",Title= "Administrator",MembershipId= 2},
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Teacher",Title= "Teacher",MembershipId= 3 },
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Student",Title= "Student",MembershipId= 4},
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Parent",Title= "Parent",MembershipId= 5},
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Admin Assistant",Title= "Admin Assistant",MembershipId= 6},
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Administrator w/Custom",Title= "Administrator w/Custom",MembershipId= 7},
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Teacher w/Custom",Title= "Teacher w/Custom",MembershipId= 8},
-                        new Membership(){LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Parent w/Custom",Title= "Parent w/Custom",MembershipId= 9}
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Super Administrator",MembershipId= 1},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Administrator",MembershipId= 2},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Teacher",MembershipId= 3 },
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Student",MembershipId= 4},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Parent",MembershipId= 5},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Admin Assistant",MembershipId= 6},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Administrator w/Custom",MembershipId= 7},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Teacher w/Custom",MembershipId= 8},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Parent w/Custom",MembershipId= 9}
                     },
                     SchoolDetail =new List<SchoolDetail>()
                     {

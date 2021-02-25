@@ -1,4 +1,4 @@
-import { Component, OnInit,ViewChild,Input, OnChanges,EventEmitter,Output } from '@angular/core';
+import { Component, OnInit,ViewChild,Input, OnChanges,EventEmitter,Output, SimpleChanges, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewChecked } from '@angular/core';
 import icClose from '@iconify/icons-ic/twotone-close';
 import icPlusCircle from '@iconify/icons-ic/add-circle-outline';
 import { weekDay } from '../../../../../enums/day.enum';
@@ -14,10 +14,12 @@ import { NgForm } from '@angular/forms';
 @Component({
   selector: 'vex-variable-scheduling',
   templateUrl: './variable-scheduling.component.html',
-  styleUrls: ['./variable-scheduling.component.scss']
+  styleUrls: ['./variable-scheduling.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VariableSchedulingComponent implements OnInit ,OnChanges {
+export class VariableSchedulingComponent implements OnInit ,OnChanges, AfterViewChecked {
   @Input() selectedCalendar;
+  @Input() seatChangeFlag;
   icClose = icClose;
   icPlusCircle = icPlusCircle;
   variableScheduleList=[];
@@ -32,47 +34,62 @@ export class VariableSchedulingComponent implements OnInit ,OnChanges {
   weekDaysList=[];
   filterDays;
   periodList=[];
+  selectedRooms=[];
+  roomIdWithCapacity=[];
   @ViewChild('form') currentForm: NgForm;
-  @Input() detailsFromParentModal;
-  @Output() variableScheduleData = new EventEmitter<OutputEmitDataFormat>()
+  @Input() detailsFromParentModal;  
+  @Output() variableScheduleData = new EventEmitter<OutputEmitDataFormat>();
+  
   constructor(private snackbar: MatSnackBar,
     private schoolPeriodService: SchoolPeriodService,
     private roomService:RoomService,
-    private courseSectionService:CourseSectionService) {
+    private courseSectionService:CourseSectionService,
+    private cdr: ChangeDetectorRef) {
         this.courseSectionService.currentUpdate.subscribe((res)=>{
           if(res){
-            this.sendBlockScheduleDataToParent();
+            this.sendVariableScheduleDataToParent();
           }
         })
      }
 
   ngOnInit(): void {   
-    this.weekDaysList= Object.keys(weekDay).filter(k => typeof weekDay[k] === 'number')
-    .map(label => ({ label, value: weekDay[label] }))  
     this.getAllBlockList();
     this.getAllRooms();
-    if(this.detailsFromParentModal.editMode){
+    this.weekDaysList= Object.keys(weekDay).filter(k => typeof weekDay[k] === 'number')
+    .map(label => ({ label, value: weekDay[label] }))  
+   
+  
+    
+   if(this.detailsFromParentModal.editMode){
       for(let i=0;i<this.detailsFromParentModal.courseSectionDetails.courseVariableSchedule.length;i++){
           this.courseSectionAddViewModel.courseVariableScheduleList[i]=this.detailsFromParentModal.courseSectionDetails.courseVariableSchedule[i];
-          
+        
           this.weekDaysList.map(val=>{
             if(this.courseSectionAddViewModel.courseVariableScheduleList[i].day === val.label){
               this.courseSectionAddViewModel.courseVariableScheduleList[i].day = val.value;
             }
-          })
+          }) 
+              
           this.divCount[i]=i;
-      }     
+      }
+
+     
     }else{
       this.courseSectionAddViewModel.courseVariableScheduleList[0].courseId=this.detailsFromParentModal.courseDetails.courseId;
     }
-   
+    
   }
-  ngOnChanges(changes: import("@angular/core").SimpleChanges): void { 
-  
+  ngOnChanges(changes:SimpleChanges): void {    
     if(this.selectedCalendar.days !== undefined){
       this.getDays(this.selectedCalendar.days)
-    }    
+    }  
+   
   }
+
+  ngAfterViewChecked(){
+    this.cdr.detectChanges();
+ }
+  
   getDays(days: string) {
     const calendarDays = days;
     var allDays = [0, 1, 2, 3, 4, 5, 6];
@@ -95,8 +112,7 @@ export class VariableSchedulingComponent implements OnInit ,OnChanges {
   }
 
   addMoreRotatingScheduleRow() {
-    this.courseSectionAddViewModel.courseVariableScheduleList.push(new CourseVariableSchedule());
-   
+    this.courseSectionAddViewModel.courseVariableScheduleList.push(new CourseVariableSchedule());   
     this.divCount.push(2); // Why 2? We have to fill up the divCount, It could be anything.
   }
 
@@ -113,15 +129,26 @@ export class VariableSchedulingComponent implements OnInit ,OnChanges {
         if(data._message==="NO RECORD FOUND"){
           this.periodList=[];      
           this.snackbar.open('NO RECORD FOUND. ', '', {
-            duration: 1000
+          duration: 1000
           });        
         }
       }else{    
         this.blockListViewModel = data;     
         if(data.getBlockListForView.length >0){
           this.periodList = data.getBlockListForView[0].blockPeriod;
-          
-        }    
+        }
+        if(this.detailsFromParentModal.editMode){   
+          for (let [i, val] of this.courseSectionAddViewModel.courseVariableScheduleList.entries()) {              
+            this.blockListViewModel.getBlockListForView?.map((item,j)=>{
+              let periodIndex = this.blockListViewModel.getBlockListForView[j].blockPeriod.findIndex((x) => {                
+                return x.periodId == +this.courseSectionAddViewModel.courseVariableScheduleList[i].periodId;
+              });
+              if(periodIndex!=-1){
+                this.selectedPeriod[i] = periodIndex;
+              }
+            });         
+          }
+        }     
       }
     });
   }
@@ -147,34 +174,65 @@ export class VariableSchedulingComponent implements OnInit ,OnChanges {
           } 
           else { 
             this.roomListViewModel=res;  
+            this.roomListViewModel.tableroomList.map((item,index)=>{
+              this.roomIdWithCapacity[item.roomId]=item.capacity;
+            })
            
           }
         }
       })
   }
-
+     
+  
  
 
-  sendBlockScheduleDataToParent(){
-    
+  sendVariableScheduleDataToParent(){    
+    this.currentForm.form.markAllAsTouched()
+    let invalidSeatCapacity=false;
+    invalidSeatCapacity = this.courseSectionAddViewModel.courseVariableScheduleList.some((item, i) => {
+      if (this.detailsFromParentModal.form.value.seats>this.roomIdWithCapacity[item.roomId]) {
+        return true;
+      } else {
+        return false;
+      }
+    })
+    if (this.currentForm.form.valid && !invalidSeatCapacity) {
+      this.checkDuplicateRow();
+    } else {      
+      this.variableScheduleData.emit({scheduleType:'variableSchedule',roomList: null,scheduleDetails:this.courseSectionAddViewModel.courseVariableScheduleList,error:true});
+    }
+  }
+  checkDuplicateRow(){
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.invalid) {
       return
     }
-    var error = false;
-    var arr = [];
-    for(var i=0;i<this.courseSectionAddViewModel.courseVariableScheduleList.length;i++){   
-      arr[0] = this.courseSectionAddViewModel.courseVariableScheduleList[i];      
-      for(var j=i+1;j<this.courseSectionAddViewModel.courseVariableScheduleList.length;j++){
-        if(arr[0].day == this.courseSectionAddViewModel.courseVariableScheduleList[j].day && arr[0].periodId == this.courseSectionAddViewModel.courseVariableScheduleList[j].periodId){
-          error = true;
-        }else{
-          error = false;
-        }
+    let Ids = [];
+    for (let [i, val] of this.courseSectionAddViewModel.courseVariableScheduleList.entries()) {
+      Ids[i] =  this.courseSectionAddViewModel.courseVariableScheduleList[i].day
+        + this.courseSectionAddViewModel.courseVariableScheduleList[i].periodId
+        + this.courseSectionAddViewModel.courseVariableScheduleList[i].roomId
+    }    
+    
+    let checkDuplicate = Ids.sort().some((item, i) => {
+      if (item == Ids[i + 1]) {  
+        this.snackbar.open('Cannot Save Duplicate Variable Schedule ', '', {
+          duration: 10000
+        });     
+        return true;
+      } else {
+        return false;
       }
+    })
+    for(var i=0;i<this.courseSectionAddViewModel.courseVariableScheduleList.length;i++){ 
+      let blockId = this.periodList[0].blockId;
+      this.courseSectionAddViewModel.courseVariableScheduleList[i].blockId = blockId
     }
-    this.variableScheduleData.emit({scheduleType:'variableSchedule',scheduleDetails:this.courseSectionAddViewModel.courseVariableScheduleList,error:error});
-  }
-  
-
+    
+    if (checkDuplicate) {     
+      this.variableScheduleData.emit({scheduleType:'variableSchedule',roomList: null,scheduleDetails:this.courseSectionAddViewModel.courseVariableScheduleList,error:true});
+    } else {
+      this.variableScheduleData.emit({scheduleType:'variableSchedule',roomList: null,scheduleDetails:this.courseSectionAddViewModel.courseVariableScheduleList,error:false});
+    }  
+  }   
 }

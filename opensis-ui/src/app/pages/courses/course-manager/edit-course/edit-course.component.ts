@@ -75,6 +75,10 @@ export class EditCourseComponent implements OnInit {
   ischecked: boolean = false
   checkAllTrades: boolean = false;
   currentStandardDetailsIndex:number;
+  nonDuplicateCheckedStandardList=[];
+  addNewProgramFlag:boolean=false;
+  addNewSubjectFlag:boolean=false;
+  gradeSubjectCourse=[];
   constructor(
     private courseManager:CourseManagerService,
     private snackbar: MatSnackBar,
@@ -98,29 +102,32 @@ export class EditCourseComponent implements OnInit {
         this.courseModalActionTitle="update"     
       this.addCourseModel.course = this.data.editDetails;
       this.courseId = this.data.editDetails.courseId;
-      if(this.data.editDetails.courseStandard.length > 0){
-        this.data.editDetails.courseStandard.forEach(value=>{
-          let obj1={};
-          obj1["tenantId"] = value.gradeUsStandard.tenantId;
-          obj1["schoolId"] = value.gradeUsStandard.schoolId;
-          obj1["standardRefNo"] = value.gradeUsStandard.standardRefNo;
-          obj1["gradeStandardId"]= value.gradeUsStandard.gradeStandardId;
-          obj1["gradeLevel"] = value.gradeUsStandard.gradeLevel;
-          obj1["domain"] = value.gradeUsStandard.domain;
-          obj1["subject"] = value.gradeUsStandard.subject;
-          obj1["course"] = value.gradeUsStandard.course;
-          obj1["topic"] = value.gradeUsStandard.topic;
-          obj1["standardDetails"] = value.gradeUsStandard.standardDetails;
-          obj1["isSchoolSpecific"] = value.gradeUsStandard.isSchoolSpecific;
-          obj1["createdBy"] = value.gradeUsStandard.createdBy;
-          obj1["createdOn"] = value.gradeUsStandard.createdOn;
-          obj1["updatedBy"] = value.gradeUsStandard.updatedBy;
-          obj1["updatedOn"] =value.gradeUsStandard.updatedOn;
-          obj1["courseId"] =value.courseId;
-          this.updatedCheckedStandardList.push(obj1);
-          this.checkedStandardList.push(obj1);
-        })
+      if(this.data.editDetails.courseStandard !== undefined){
+        if(this.data.editDetails.courseStandard.length > 0){
+          this.data.editDetails.courseStandard.forEach(value=>{
+            let obj1={};
+            obj1["tenantId"] = value.gradeUsStandard.tenantId;
+            obj1["schoolId"] = value.gradeUsStandard.schoolId;
+            obj1["standardRefNo"] = value.gradeUsStandard.standardRefNo;
+            obj1["gradeStandardId"]= value.gradeUsStandard.gradeStandardId;
+            obj1["gradeLevel"] = value.gradeUsStandard.gradeLevel;
+            obj1["domain"] = value.gradeUsStandard.domain;
+            obj1["subject"] = value.gradeUsStandard.subject;
+            obj1["course"] = value.gradeUsStandard.course;
+            obj1["topic"] = value.gradeUsStandard.topic;
+            obj1["standardDetails"] = value.gradeUsStandard.standardDetails;
+            obj1["isSchoolSpecific"] = value.gradeUsStandard.isSchoolSpecific;
+            obj1["createdBy"] = value.gradeUsStandard.createdBy;
+            obj1["createdOn"] = value.gradeUsStandard.createdOn;
+            obj1["updatedBy"] = value.gradeUsStandard.updatedBy;
+            obj1["updatedOn"] =value.gradeUsStandard.updatedOn;
+            obj1["courseId"] =value.courseId;
+            this.updatedCheckedStandardList.push(obj1);
+            this.nonDuplicateCheckedStandardList.push(obj1);
+          })
+        }
       }
+    
       
     }
     this.getAllProgramList();
@@ -265,10 +272,13 @@ export class EditCourseComponent implements OnInit {
           filterOption: 11
         }
       ]
-      Object.assign(this.schoolSpecificStandardsList, { filterParams: filterParams });
+      
+      
+      
+        Object.assign(this.schoolSpecificStandardsList, { filterParams: filterParams });
+       
+      
       this.getAllSchoolSpecificList(); 
-   
-    
   }
   showStandardDetails(index){   
     this.currentStandardDetailsIndex=index;
@@ -276,38 +286,73 @@ export class EditCourseComponent implements OnInit {
   
   goToCourse(){
     this.addStandard = false;
+    this.nonDuplicateCheckedStandardList = this.checkedStandardList.reduce((unique, o) => {
+      if(!unique.some(obj => obj.gradeStandardId === o.gradeStandardId)) {
+        unique.push(o);
+      }
+      return unique;
+  },[]);
+  
   }
-  removeStandard(checkedStandard){
-    let findIndexArray = this.checkedStandardList.findIndex(x => x.gradeStandardId === checkedStandard.gradeStandardId);
-    this.checkedStandardList.splice(findIndexArray, 1);
+  removeStandard(checkedStandard){   
+    let findIndexArray = this.nonDuplicateCheckedStandardList.findIndex(x => x.gradeStandardId === checkedStandard.gradeStandardId);
+    this.nonDuplicateCheckedStandardList.splice(findIndexArray, 1);
   }
   getAllSchoolSpecificList(){   
-    this.schoolSpecificStandardsList.sortingModel = null; 
-    this.gradesService.getAllGradeUsStandardList(this.schoolSpecificStandardsList).subscribe(res => {
-      if (res._failure) {
-        this.snackbar.open('School Specific Standard List failed. ' + res._message, 'LOL THANKS', {
-          duration: 10000
-        });
-      } else {    
-        res.gradeUsStandardList.forEach(val=>{
-          let obj2={};
-          obj2["tenantId"] = val.tenantId;
-          obj2["schoolId"] = val.schoolId;
-          obj2["standardRefNo"] = val.standardRefNo;
-          obj2["gradeStandardId"] = val.gradeStandardId;
-          obj2["gradeLevel"] = val.gradeLevel;
-          obj2["domain"] = val.domain;
-          obj2["subject"] = val.subject;
-          obj2["course"] = val.course;
-          obj2["topic"] = val.topic;
-          obj2["standardDetails"] = val.standardDetails;
-          obj2["selected"] = false;
-          this.schoolSpecificList.push(obj2)
-        })  
-       
-        this.schoolSpecificListCount = res.gradeUsStandardList.length;      
-      }
-    });    
+    if(this.form.value.subject !== null && this.form.value.course !== null && this.form.value.gradeLevel !== null){
+      this.schoolSpecificStandardsList.sortingModel = null; 
+      this.gradesService.getAllGradeUsStandardList(this.schoolSpecificStandardsList).subscribe(res => {
+        if (res._failure) {
+          this.snackbar.open('School Specific Standard List failed. ' + res._message, 'LOL THANKS', {
+            duration: 10000
+          });
+        } else {    
+          let obj={
+            subject: this.form.value.subject,
+            course: this.form.value.course,
+            grade: this.form.value.gradeLevel
+          }
+          this.gradeSubjectCourse.push(obj);
+          let Ids = [];
+          for (let [i, val] of this.gradeSubjectCourse.entries()) {
+            Ids[i] =  this.gradeSubjectCourse[i].subject
+              + this.gradeSubjectCourse[i].course
+              + this.gradeSubjectCourse[i].grade
+          }    
+        
+          let checkDuplicate = Ids.sort().some((item, i) => {
+            if (item == Ids[i + 1]) {                
+              return true;
+            } else {
+              return false;
+            }
+          })
+          if(checkDuplicate === false){
+            res.gradeUsStandardList.forEach(val=>{
+              let obj2={};
+              obj2["tenantId"] = val.tenantId;
+              obj2["schoolId"] = val.schoolId;
+              obj2["standardRefNo"] = val.standardRefNo;
+              obj2["gradeStandardId"] = val.gradeStandardId;
+              obj2["gradeLevel"] = val.gradeLevel;
+              obj2["domain"] = val.domain;
+              obj2["subject"] = val.subject;
+              obj2["course"] = val.course;
+              obj2["topic"] = val.topic;
+              obj2["standardDetails"] = val.standardDetails;
+              obj2["selected"] = false;
+              this.schoolSpecificList.push(obj2)
+            })   
+          }                
+          this.schoolSpecificListCount = res.gradeUsStandardList.length;     
+          if(this.schoolSpecificListCount === 0){
+            this.schoolSpecificList = [];
+            this.gradeSubjectCourse=[];
+          } 
+        }
+      });    
+    }
+    
   }
 
   saveProgram(){
@@ -315,6 +360,7 @@ export class EditCourseComponent implements OnInit {
     document.getElementById("program1").classList.remove('hidden');
     document.getElementById("courseProgram").focus();
     this.currentForm.controls.courseProgram.markAsTouched();
+    this.addNewProgramFlag = true;
     
   }
   saveSubject(){
@@ -322,6 +368,7 @@ export class EditCourseComponent implements OnInit {
     document.getElementById("subject1").classList.remove('hidden');
     document.getElementById("subjectFocus").focus();
     this.currentForm.controls.courseSubject.markAsTouched();
+    this.addNewSubjectFlag = true;
   }
   submit(){
     if (this.currentForm.form.valid) {
@@ -385,31 +432,32 @@ export class EditCourseComponent implements OnInit {
           }      
         });
       }
-      
-    
-    
+      if(this.addNewProgramFlag){
+        this.addCourseModel.programId = 0;
+      }
+      if(this.addNewSubjectFlag){
+        this.addCourseModel.subjectId = 0;
+      }   
       if(this.data.mode === "EDIT"){
         this.addCourseModel.course.courseStandard = [new CourseStandardModel()]
-        if(this.checkedStandardList.length > 0){
-          this.checkedStandardList.forEach(val=>{
-            
+       
+        if(this.nonDuplicateCheckedStandardList.length > 0){
+          this.nonDuplicateCheckedStandardList.forEach(val=>{            
             let obj:CourseStandardModel;
-            obj = new CourseStandardModel();   
-            
-              obj.tenantId= sessionStorage.getItem("tenantId")
-              obj.schoolId=+sessionStorage.getItem("selectedSchoolId"); 
-              if(val.hasOwnProperty("courseId")){
-                obj.courseId= val.courseId;
-              }else{
-                obj.courseId= this.courseId;
-              }           
-              obj.standardRefNo= val.standardRefNo;
-              obj.createdBy= sessionStorage.getItem("email");
-              this.addCourseModel.course.courseStandard.push(obj)
-                
+            obj = new CourseStandardModel();
+            obj.tenantId= sessionStorage.getItem("tenantId")
+            obj.schoolId=+sessionStorage.getItem("selectedSchoolId"); 
+            if(val.hasOwnProperty("courseId")){
+              obj.courseId= val.courseId;
+            }else{
+              obj.courseId= this.courseId;
+            }           
+            obj.standardRefNo= val.standardRefNo;
+            obj.createdBy= sessionStorage.getItem("email");
+            this.addCourseModel.course.courseStandard.push(obj);                
           })
         }  
-        this.addCourseModel.course.courseStandard.splice(0, 1);
+        this.addCourseModel.course.courseStandard.splice(0, 1);        
         this.courseManager.UpdateCourse(this.addCourseModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('Course Updation failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -452,6 +500,7 @@ export class EditCourseComponent implements OnInit {
           })
         }  
         this.addCourseModel.course.courseStandard.splice(0, 1);
+       
         this.courseManager.AddCourse(this.addCourseModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
             this.snackbar.open('Course Submission failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -478,13 +527,16 @@ export class EditCourseComponent implements OnInit {
     
   }
   selectStandards() { 
- 
-  this.currentForm.form.controls.courseTitle.markAllAsTouched();
-   if(this.currentForm.form.controls.courseTitle.value === undefined){    
-    this.currentForm.controls.courseTitle.setErrors({ required: true })    
-   }else{
-    this.addStandard = true; 
-   }    
+    this.currentForm.form.controls.courseTitle.markAllAsTouched();
+    if(this.currentForm.form.controls.courseTitle.value === undefined){    
+      this.currentForm.controls.courseTitle.setErrors({ required: true })    
+    }else{
+      this.addStandard = true; 
+      this.schoolSpecificList=[];
+      this.gradeSubjectCourse=[];
+      this.schoolSpecificListCount=0;
+      this.form.reset();
+    }    
   }
 
   closeStandardsSelection(){

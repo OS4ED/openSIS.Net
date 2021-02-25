@@ -188,5 +188,21 @@ namespace opensisAPI.Controllers
             }
             return parentAssociationshipDelete;
         }
+
+        [HttpPut("addUpdateParentPhoto")]
+        public ActionResult<ParentInfoAddViewModel> AddUpdateParentPhoto(ParentInfoAddViewModel parentInfoAddViewModel)
+        {
+            ParentInfoAddViewModel parentPhotoUpdate = new ParentInfoAddViewModel();
+            try
+            {
+                parentPhotoUpdate = _parentInfoRegisterService.AddUpdateParentPhoto(parentInfoAddViewModel);
+            }
+            catch (Exception es)
+            {
+                parentPhotoUpdate._failure = true;
+                parentPhotoUpdate._message = es.Message;
+            }
+            return parentPhotoUpdate;
+        }
     }
 }

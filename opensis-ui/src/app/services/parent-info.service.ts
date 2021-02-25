@@ -80,6 +80,14 @@ export class ParentInfoService {
     return this.http.post<RemoveAssociateParent>(apiurl,obj)
   }
 
+  addUpdateParentPhoto(obj: AddParentInfoModel){
+    obj.parentInfo.parentId = this.getParentId();
+    obj.parentInfo.parentPhoto = this.parentImage;
+    let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/addUpdateParentPhoto";   
+    return this.http.put<AddParentInfoModel>(apiurl,obj)
+  }
+
+
 // to Update staff details in General for first time.
 private parentDetailsForGeneralInfo = new Subject;
 getParentDetailsForGeneral = this.parentDetailsForGeneralInfo.asObservable();

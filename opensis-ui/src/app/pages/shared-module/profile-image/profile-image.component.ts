@@ -17,6 +17,9 @@ import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 import { StaffAddModel } from '../../../models/staffModel';
 import { StudentAddModel } from '../../../models/studentModel';
 import { LoaderService } from '../../../services/loader.service';
+import { SchoolAddViewModel } from '../../../models/schoolMasterModel';
+import { ParentInfoService } from '../../../services/parent-info.service';
+import { AddParentInfoModel } from '../../../models/parentInfoModel';
 
 @Component({
   selector: 'vex-profile-image',
@@ -53,11 +56,14 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
   loading:boolean;
   staffAddModel: StaffAddModel = new StaffAddModel();
   studentAddModel:StudentAddModel = new StudentAddModel();
+  schoolAddModel:SchoolAddViewModel = new SchoolAddViewModel();
+  AddParentInfoModel:AddParentInfoModel = new AddParentInfoModel();
   constructor(private dialog: MatDialog,
     private imageCropperService: ImageCropperService,
     private snackbar: MatSnackBar,
     private schoolService: SchoolService,
     private staffService: StaffService,
+    private parentService: ParentInfoService,
     private studentService: StudentService,
     private loaderService: LoaderService) {
       this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
@@ -179,6 +185,9 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     this.croppedImage = '';
     let sendImageData2 = (e) => {
       this.imageCropperService.sendUncroppedEvent(e);
+    if (this.moduleIdentifier == this.modules.SCHOOL && this.createMode!=this.modes.ADD) {
+        this.updateSchoolImage();
+        }
       this.fileUploader.value = null;
     }
     sendImageData2(e);
@@ -222,24 +231,48 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
       this.updateStudentImage();
     } else if (this.moduleIdentifier == this.modules.STAFF) {
         this.updateStaffImage();
-    }
+    } else if (this.moduleIdentifier == this.modules.PARENT) {
+      this.updateParentImage();
+  }
+  }
+
+  updateSchoolImage(){
+    this.schoolService.addUpdateSchoolLogo(this.schoolAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('School Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 5000
+        });
+      }
+      else {
+        if (res._failure) {
+          this.snackbar.open('School Image Update failed. ' + res._message, '', {
+            duration: 5000
+          });
+        } else {
+          this.snackbar.open('School Image Updated Successfully.', '', {
+            duration: 5000
+          });
+          this.schoolService.setSchoolCloneImage(res.schoolMaster.schoolDetail[0].schoolLogo);
+        }
+      }
+    });
   }
 
   updateStudentImage(){
     this.studentService.addUpdateStudentPhoto(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Student Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
+          duration: 5000
         });
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Student Update failed. ' + res._message, '', {
-            duration: 10000
+          this.snackbar.open('Student Image Update failed. ' + res._message, '', {
+            duration: 5000
           });
         } else {
           this.snackbar.open('Student Image Updated Successfully.', '', {
-            duration: 10000
+            duration: 5000
           });
           this.studentService.setStudentCloneImage(res.studentMaster.studentPhoto);
           this.dialog.closeAll();
@@ -252,17 +285,17 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     this.staffService.addUpdateStaffPhoto(this.staffAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Staff Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
+          duration: 5000
         });
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Staff Update failed. ' + res._message, '', {
-            duration: 10000
+          this.snackbar.open('Staff Image Update failed. ' + res._message, '', {
+            duration: 5000
           });
         } else {
           this.snackbar.open('Staff Image Updated Successfully.', '', {
-            duration: 10000
+            duration: 5000
           });
           this.staffService.setStaffCloneImage(res.staffMaster.staffPhoto);
           this.dialog.closeAll();
@@ -270,6 +303,29 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
       }
     });
   }
+
+  updateParentImage(){
+    this.parentService.addUpdateParentPhoto(this.AddParentInfoModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Parent Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 5000
+        });
+      }
+      else {
+        if (res._failure) {
+          this.snackbar.open('Parent Image Update failed. ' + res._message, '', {
+            duration: 5000
+          });
+        } else {
+          this.snackbar.open('Parent Image Updated Successfully.', '', {
+            duration: 5000
+          });
+          this.dialog.closeAll();
+        }
+      }
+    });
+  }
+
 
   ngOnDestroy(): void {
     this.destroySubject$.next();

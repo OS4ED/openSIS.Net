@@ -24,5 +24,6 @@ namespace opensis.core.School.Interfaces
         public SchoolListModel GetAllSchoolList(PageResult pageResult);
         public CheckSchoolInternalIdViewModel CheckSchoolInternalId(CheckSchoolInternalIdViewModel checkSchoolInternalIdViewModel);
         public SchoolListViewModel StudentEnrollmentSchoolList(SchoolListViewModel schoolListViewModel);
+        public SchoolAddViewModel AddUpdateSchoolLogo(SchoolAddViewModel schoolAddViewModel);
     }
 }

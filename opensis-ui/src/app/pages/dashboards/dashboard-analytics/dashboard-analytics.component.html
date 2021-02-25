@@ -64,7 +64,7 @@
     </ng-template>
     <vex-scrollbar *ngIf="events$ | async; let event" [ngSwitch]="view" class="px-0 shadow flex-auto relative"
     vexContainer>
-    <div [ngSwitch]="view">
+    <div [ngSwitch]="view" *ngIf="showCalendarView">
         <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="event"
         [weekendDays]="weekendDays" (beforeViewRender)="beforeMonthViewRender($event)" [cellTemplate]="customCellTemplate">
         </mwl-calendar-month-view>

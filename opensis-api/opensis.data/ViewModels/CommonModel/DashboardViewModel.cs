@@ -7,6 +7,11 @@ namespace opensis.data.ViewModels.CommonModel
 {
     public class DashboardViewModel : CommonFields
     {
+        public DashboardViewModel()
+        {
+            calendarEventList = new List<opensis.data.Models.CalendarEvents>();
+        }
+
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }
         public string SuperAdministratorName { get; set; }

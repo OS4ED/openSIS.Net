@@ -3,7 +3,7 @@ import { CalendarModel } from "./calendarModel";
 import { GradeScaleModel } from "./grades.model";
 import {AttendanceCodeCategories} from './attendanceCodeModel';
 import { RoomModel } from "./roomModel";
-import { BlockPeriod } from "./schoolPeriodModel";
+import { BlockPeriod, GetBlockListForView } from "./schoolPeriodModel";
 
 export class FixedSchedulingCourseSectionAddModel extends CommonField {
     public courseSection: CourseSection;
@@ -38,7 +38,8 @@ export class CourseFixedSchedule {
     constructor() {      
         this.attendanceTaken=false;    
         this.createdBy= sessionStorage.getItem("email");
-        this.updatedBy=sessionStorage.getItem("email");
+        this.tenantId= sessionStorage.getItem("tenantId");
+        this.schoolId= +sessionStorage.getItem("selectedSchoolId"); 
     }
 }
 
@@ -113,7 +114,7 @@ export class CourseCalendarSchedule {
     public courseSectionId: number;
     public gradeScaleId: number;
     public serial: number;
-    public date: number;
+    public date: string;
     public periodId: number;
     public roomId: number;
     public takeAttendance: boolean;
@@ -121,6 +122,8 @@ export class CourseCalendarSchedule {
     public createdOn: string;
     public updatedBy: string;
     public updatedOn: string;
+    public blockPeriod: BlockPeriod;
+    public rooms: RoomModel;
     constructor() {
         this.courseSectionId = 0;
         this.createdBy = sessionStorage.getItem("email");
@@ -129,6 +132,7 @@ export class CourseCalendarSchedule {
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.createdOn = null;
         this.updatedOn = null;
+        this.rooms= new RoomModel();
     }
 }
 
@@ -161,6 +165,9 @@ export class CourseBlockSchedule {
     public serial: number;
     public blockId: number;
     public periodId: number;
+    public block:GetBlockListForView;
+    public blockPeriod:BlockPeriod;
+    public rooms:RoomModel;
     public roomId: number;
     public takeAttendance: boolean;
     public createdBy: string;
@@ -220,28 +227,33 @@ export class CourseSection {
     public schoolYears:markingPeriodTitle;
     public semesters:markingPeriodTitle;
     public mpTitle:string; //[marking period title]This key is only used for front end view to extract mp title, this is not related to backend.
-    public 
+    public mpStartDate:string;
+    public mpEndDate:string;
     constructor() {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.durationStartDate = null;
         this.durationEndDate = null;
+        
         this.isActive=true;
         this.durationBasedOnPeriod=true;
     }
 }
 class markingPeriodTitle{
     title;
+    startDate;
+    endDate;
 }
 export class GetAllCourseSectionModel extends CommonField {
     public getCourseSectionForView: [CourseSectionAddViewModel];
     public tenantId: string;
     public schoolId: number;
     public courseId: number;
+    public academicYear: number;
     constructor() {
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");        
         this._tenantName = sessionStorage.getItem("tenant");
         this._token = sessionStorage.getItem("token");
     }
@@ -259,6 +271,7 @@ export interface SearchCourseSection {
 
 export class OutputEmitDataFormat{
     scheduleType:string;
+    roomList: any;
     scheduleDetails:any;
     error:boolean;
 }
@@ -305,6 +318,7 @@ export class CourseSectionAddViewModel extends CommonField {
 
     public markingPeriodId: string;
     public markingPeriod: string;
+    public standardRefNo:string;
     constructor() {
         super();
         this.courseSection = new CourseSection();
@@ -315,4 +329,25 @@ export class CourseSectionAddViewModel extends CommonField {
         this._tenantName = sessionStorage.getItem("tenant");
         this._token = sessionStorage.getItem("token");
     }
+
+}
+
+
+export class GetAllCourseStandardForCourseSectionModel extends CommonField{
+    tenantId: string;
+    schoolId: number;
+    courseId: number;
+    getCourseStandardForCourses:[GetCourseStandardForCoursesModel]
+    constructor(){
+        super();
+        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this.tenantId = sessionStorage.getItem("tenantId");
+    }
+}
+
+class GetCourseStandardForCoursesModel{
+        standardRefNo: string;
+        gradeStandardId: number   
 }

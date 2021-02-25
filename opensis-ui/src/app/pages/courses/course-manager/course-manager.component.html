@@ -66,12 +66,13 @@
                     </div>
                     <hr />
                     <input
-                        class="w-full border-0 focus:border-0 focus:border-none focus:outline-none px-6 py-4 box-border"
-                        type="text" #myInput placeholder="Search..." [(ngModel)]="name" (input)="globalFilter(myInput.value)">
+                    class="w-full border-0 focus:border-0 focus:border-none focus:outline-none px-6 py-4 box-border"
+                    type="text" placeholder="Search Course..." [(ngModel)]="nameSearch">
                     <hr />
-                    <div *ngIf = "filterCourseList.length > 0 ; else globalSearch">
-                        <ul *ngFor="let course of filterCourseList; let index = index">
-                            <li class="pl-6 pr-2 py-3 bg-green-light border-b">
+
+                    <div *ngIf = "filterCourseList.length > 0 ; else noFilter">
+                        <ul >
+                            <li *ngFor="let course of filterCourseList | courseFilter:nameSearch:filterFlag;let index=index" [ngClass]="selectedCourses==index?'pl-5 pr-2 py-3 bg-green-light border-l-4 border-green':'pl-6 pr-2 py-3 border-b'">
                                 <div class="flex items-center w-full justify-between">
                                     <a href="javascript:void(0)" (click)="showDetails(course,index)" class="cursor-pointer">
                                         <h4 class="text-green font-bold" *ngIf = "index === courseIndex; else notSelected">{{course.courseTitle}}</h4>
@@ -93,51 +94,20 @@
                                     <button mat-menu-item (click) = "editCourse(course)">
                                         <span>{{'editItem' | translate}}</span>
                                     </button>
-                                    <button mat-menu-item (click) = "confirmDelete()">
+                                    <button mat-menu-item (click) = "confirmDelete(course,index)">
                                         <span>{{'deleteItem' | translate}}</span>
                                     </button>
                                 </mat-menu>
                             </li>                    
                         </ul>
                     </div>
-                   <ng-template #globalSearch>
-                       <div *ngIf = "globalFilterCourseList.length > 0 ; else noFilter">
-                        <ul *ngFor="let course of globalFilterCourseList; let index = index">
-                            <li class="pl-6 pr-2 py-3 bg-green-light border-b">
+                   
+                      
+                    <ng-template #noFilter>
+                        <ul>
+                            <li *ngFor="let course of courseList | courseFilter:nameSearch:filterFlag;let index=index" [ngClass]="selectedCourses==index?'pl-5 pr-2 py-3 bg-green-light border-l-4 border-green':'pl-6 pr-2 py-3 border-b'">
                                 <div class="flex items-center w-full justify-between">
-                                    <a href="javascript:void(0)" (click)="showDetails(course,index)" class="cursor-pointer">
-                                        <h4 class="text-green font-bold" *ngIf = "index === courseIndex; else notSelected">{{course.courseTitle}}</h4>
-                                        <ng-template #notSelected>
-                                            <h4 class="font-bold">{{course.courseTitle}}</h4>
-                                        </ng-template>
-                                        <p>{{course.courseSubject}}<span class="dot-separator"></span>{{course.courseProgram}}</p>
-                                    </a>
-                                    <div>
-                                        <span (click)="courseSections(course)" class="mr-4 text-blue cursor-pointer">Sections
-                                            (4)</span>
-                                        <a [matMenuTriggerFor]="addNewMenu"
-                                            class="cursor-pointer inline-block ml-3 pt-1 align-middle">
-                                            <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
-                                        </a>
-                                    </div>
-                                </div>
-                                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                                    <button mat-menu-item (click) = "editCourse(course)">
-                                        <span>{{'editItem' | translate}}</span>
-                                    </button>
-                                    <button mat-menu-item (click) = "confirmDelete()">
-                                        <span>{{'deleteItem' | translate}}</span>
-                                    </button>
-                                </mat-menu>
-                            </li>                    
-                        </ul>
-                       </div>
-                     <ng-template #noFilter>
-                         
-                        <ul *ngFor="let course of courseList; let index = index">
-                            <li class="pl-6 pr-2 py-3 bg-green-light border-b">
-                                <div class="flex items-center w-full justify-between">
-                                    <a href="javascript:void(0)" (click)="showDetails(course,index)" class="cursor-pointer">
+                                    <a href="javascript:void(0)" (click)="showDetails(course.course,index)" class="cursor-pointer">
                                         <h4 class="text-green font-bold" *ngIf = "index === courseIndex; else notSelected">{{course.course.courseTitle}}</h4>
                                         <ng-template #notSelected>
                                             <h4 class="font-bold">{{course.course.courseTitle}}</h4>
@@ -154,23 +124,23 @@
                                     </div>
                                 </div>
                                 <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                                    <button mat-menu-item (click) = "editCourse(course)">
+                                    <button mat-menu-item (click) = "editCourse(course.course)">
                                         <span>{{'editItem' | translate}}</span>
                                     </button>
-                                    <button mat-menu-item (click) = "confirmDelete()">
+                                    <button mat-menu-item (click) = "confirmDelete(course.course,index)">
                                         <span>{{'deleteItem' | translate}}</span>
                                     </button>
                                 </mat-menu>
                             </li>                    
                         </ul>
-                     </ng-template>
-                   </ng-template>
+                    </ng-template>             
+                   
                 </div>
             </div>
             <div class="lg:w-1/2 lg:pl-6 course-details" *ngIf="totalCourse > 0">
                 <div class="card overflow-auto">
                     <div class="flex justify-between w-full pl-6 py-3 align-middle">
-                        <h3 class="pt-1">{{selectedCourse.courseTitle}}</h3>
+                        <h3 class="pt-1">{{selectedCourseObj.courseTitle}}</h3>
                         <div>
                             <a [matMenuTriggerFor]="addNewMenu"
                                 class="cursor-pointer inline-block ml-2 px-1 pt-1 align-middle">
@@ -183,10 +153,10 @@
                         </div>
                     </div>
                     <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                        <button mat-menu-item (click) = "editCourse(selectedCourse)">
+                        <button mat-menu-item (click) = "editCourse(selectedCourseObj)">
                             <span>{{'editItem' | translate}}</span>
                         </button>
-                        <button mat-menu-item (click) = "confirmDelete()">
+                        <button mat-menu-item (click) = "confirmDelete(selectedCourseObj,0)">
                             <span>{{'deleteItem' | translate}}</span>
                         </button>
                     </mat-menu>
@@ -194,38 +164,38 @@
                     <ul class="grid sm:grid-cols-2 sm:col-gap-6 row-gap-6 sm:row-gap-8 my-6 px-6">
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'title' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.courseTitle}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.courseTitle|EmtyValueCheckPipe}}</p>
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'shortName' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.courseShortName}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.courseShortName|EmtyValueCheckPipe}}</p>
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.courseGradeLevel}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.courseGradeLevel|EmtyValueCheckPipe}}</p>
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'program' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.courseProgram}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.courseProgram|EmtyValueCheckPipe}}</p>
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'subject' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.courseSubject}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.courseSubject|EmtyValueCheckPipe}}</p>
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'courseCategory' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.courseCategory}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.courseCategory|EmtyValueCheckPipe}}</p>
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.creditHours}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.creditHours}}</p>
                         </li>
                         <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'standards' | translate}}</label>
                             <div class="standards-list mt-1" *ngFor="let std of standard">
                                 <hr/>
                                 <div class="flex justify-between items-center">
-                                    <div title="show the standard description">{{std.gradeUsStandard.standardDetails}}
+                                    <div title="show the standard description">{{std.gradeUsStandard.standardDetails|EmtyValueCheckPipe}}
                                     </div>
                                     <div>
                                         <span class="inline-block opacity-75 p-2 text-gray">
@@ -238,7 +208,7 @@
                         </li>
                         <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'description' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourse.courseDescription}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.courseDescription|EmtyValueCheckPipe}}</p>
                         </li>
                     </ul>
                 </div>

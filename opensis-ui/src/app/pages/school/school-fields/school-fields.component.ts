@@ -18,8 +18,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
-import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
-import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum'
+import { FieldsCategoryListView, FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
+import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum';
 import { CdkDragDrop} from '@angular/cdk/drag-drop';
 
 @Component({
@@ -45,7 +45,7 @@ export class SchoolFieldsComponent implements OnInit {
   EnrollmentCodeModelList;
   fieldsCategoryList;
   currentCategoryId=null;
-  fieldCategoryModuleEnum=FieldCategoryModuleEnum
+  fieldCategoryModuleEnum = FieldCategoryModuleEnum;
 
   icMoreVert = icMoreVert;
   icAdd = icAdd;
@@ -53,7 +53,7 @@ export class SchoolFieldsComponent implements OnInit {
   icDelete = icDelete;
   icSearch = icSearch;
   icFilterList = icFilterList;
-  loading:boolean;
+  loading: boolean;
   searchKey:string;
   customFieldListViewModel:CustomFieldListViewModel= new CustomFieldListViewModel();
   customFieldAddView:CustomFieldAddView= new CustomFieldAddView()
@@ -229,11 +229,14 @@ deleteFieldCategory(element){
           this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
-          this.getAllCustomFieldCategory()
+          if (element.categoryId === this.currentCategoryId){
+            this.currentCategoryId = null;
+          }
+          this.getAllCustomFieldCategory();
         }
       }
     }
-  )
+  );
 }
 confirmDeleteFieldCategory(element){
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {

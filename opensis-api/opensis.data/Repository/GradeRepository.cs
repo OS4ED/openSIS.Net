@@ -657,11 +657,23 @@ namespace opensis.data.Repository
                         UpdatedOn=p.UpdatedOn,
                         EffortGradeLibraryCategoryItem = p.EffortGradeLibraryCategoryItem.OrderBy(c => c.SortOrder).ToList() 
                     }).ToList();
-
+                if(effortGradeLlibraryCategoryList.Count >0)
+                {
                     effortGradeLlibraryCategoryListModel.effortGradeLibraryCategoryList = effortGradeLlibraryCategoryList;
                     effortGradeLlibraryCategoryListModel._tenantName = effortGradeLlibraryCategoryListViewModel._tenantName;
                     effortGradeLlibraryCategoryListModel._token = effortGradeLlibraryCategoryListViewModel._token;
-                    effortGradeLlibraryCategoryListModel._failure = false;                
+                    effortGradeLlibraryCategoryListModel._failure = false;
+                }
+                else
+                {
+                    effortGradeLlibraryCategoryListModel.effortGradeLibraryCategoryList = null;
+                    effortGradeLlibraryCategoryListModel._tenantName = effortGradeLlibraryCategoryListViewModel._tenantName;
+                    effortGradeLlibraryCategoryListModel._token = effortGradeLlibraryCategoryListViewModel._token;
+                    effortGradeLlibraryCategoryListModel._failure = true;
+                    effortGradeLlibraryCategoryListModel._message = NORECORDFOUND;
+                }
+
+                                    
             }
             catch (Exception es)
             {

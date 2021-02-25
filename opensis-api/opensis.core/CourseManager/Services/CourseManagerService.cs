@@ -410,6 +410,62 @@ namespace opensis.core.CourseManager.Services
             }
             return courseSectionUpdate;
         }
+
+        /// <summary>
+        /// Delete Course Section
+        /// </summary>
+        /// <param name="courseSectionAddViewModel"></param>
+        /// <returns></returns>
+        public CourseSectionAddViewModel DeleteCourseSection(CourseSectionAddViewModel courseSectionAddViewModel)
+        {
+            CourseSectionAddViewModel courseSectionDelete = new CourseSectionAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName, courseSectionAddViewModel._token))
+                {
+                    courseSectionDelete = this.courseManagerRepository.DeleteCourseSection(courseSectionAddViewModel);
+                }
+                else
+                {
+                    courseSectionDelete._failure = true;
+                    courseSectionDelete._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseSectionDelete._failure = true;
+                courseSectionDelete._message = es.Message;
+            }
+            return courseSectionDelete;
+        }
+
+        /// <summary>
+        /// Get All Course Standard For Course Section
+        /// </summary>
+        /// <param name="courseStandardForCourseViewModel"></param>
+        /// <returns></returns>
+        public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
+        {
+            CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseStandardForCourseViewModel._tenantName, courseStandardForCourseViewModel._token))
+                {
+                    courseStandardForCourseView = this.courseManagerRepository.GetAllCourseStandardForCourseSection(courseStandardForCourseViewModel);
+                }
+                else
+                {
+                    courseStandardForCourseView._failure = true;
+                    courseStandardForCourseView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseStandardForCourseView._failure = true;
+                courseStandardForCourseView._message = es.Message;
+            }
+            return courseStandardForCourseView;
+        }
     }
 }
  

@@ -14,8 +14,9 @@ import { environment } from '../../environments/environment';
 export class LoaderInterceptor implements HttpInterceptor {
   private requests: HttpRequest<any>[] = [];
   apiUrl: string = environment.apiURL;
-  constructor(private loaderService: LoaderService) { }
-  tenant: string = sessionStorage.getItem('tenant');
+  tenant: string='opensisv2';
+  constructor(private loaderService: LoaderService) { 
+  }
   removeRequest(req: HttpRequest<any>) {
     const i = this.requests.indexOf(req);
     if (i >= 0) {
@@ -29,11 +30,11 @@ export class LoaderInterceptor implements HttpInterceptor {
     && req.url !== this.apiUrl + this.tenant + "/School/checkSchoolInternalId" && req.url !== this.apiUrl + this.tenant +"/Grade/checkStandardRefNo") {
       this.requests.push(req);
       // console.log("No of requests--->" + this.requests.length);
-      console.log();
       this.loaderService.isLoading.next(true);
      return this.returnRequest(req,next);
     }
     else {
+      this.loaderService.isLoading.next(false);
       return this.returnRequest(req,next);
     }
 

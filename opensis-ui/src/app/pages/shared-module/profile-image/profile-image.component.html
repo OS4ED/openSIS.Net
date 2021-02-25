@@ -17,8 +17,8 @@
         <img [src]="croppedImage" width="160px" />
           </div>
         </div>
-        <div class="flex justify-end" *ngIf="(createMode!=modes.ADD) && (moduleIdentifier == modules.STUDENT || moduleIdentifier == modules.STAFF)">
-          <button mat-raised-button  (click)="cancelPhoto()" *ngIf="!loading">Cancel</button>
+        <div class="flex justify-end" *ngIf="(createMode!=modes.ADD) && (moduleIdentifier == modules.STUDENT || moduleIdentifier == modules.STAFF || moduleIdentifier == modules.PARENT)">
+          <button mat-raised-button (click)="cancelPhoto()" *ngIf="!loading && moduleIdentifier !== modules.PARENT">Cancel</button>
             <button mat-raised-button [disabled]="loading" color="primary" (click)="uploadPhotoDirectly()">Upload
               <mat-icon class="ml-2" *ngIf="loading"><mat-spinner color="primary" diameter="20">
               </mat-spinner></mat-icon>

@@ -22,3 +22,32 @@
     @apply rounded;
     @apply ml-4;
 }
+
+span.no-custody {
+    border: 2px solid #c90000;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    line-height: 36px;
+    text-align: center;
+    position: relative;
+
+    &::after {
+        content: " ";
+    	height: 2px;
+    	width: 100%;
+    	background: #c90000;
+    	display: inline-block;
+    	position: absolute;
+    	left: 0;
+    	top: 17px;
+    	transform: rotate(-45deg);
+    }
+
+    img {
+	filter: grayscale(100%);
+    	opacity: 30%;
+    	display: inline-block;
+    	width: 70%;
+    }
+}

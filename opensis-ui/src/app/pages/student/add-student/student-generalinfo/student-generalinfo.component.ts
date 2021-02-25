@@ -20,7 +20,7 @@ import { SharedFunction } from '../../../shared/shared-function';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import icEdit from '@iconify/icons-ic/edit';
 import { Subject } from 'rxjs/internal/Subject';
-import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { auditTime, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
 import { SectionService } from '../../../../services/section.service';
@@ -92,7 +92,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   internalId: FormControl;
   loginEmail:FormControl;
   cloneStudentModel;
-  isSubjectActivated=false;
   @Output() dataAfterSavingGeneralInfo = new EventEmitter<any>();
   constructor(
     private el: ElementRef,
@@ -108,7 +107,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     private commonLOV:CommonLOV) {
     translateService.use('en');
     this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
-      this.isSubjectActivated=true;
       this.studentAddModel = res;
       this.studentAddModel.loginEmail = this.studentAddModel.studentMaster.studentPortalId;
       this.data = this.studentAddModel?.studentMaster;
@@ -137,12 +135,12 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       }
       this.accessPortal();
       this.cloneStudentModel=JSON.stringify(this.studentAddModel);
-      if(!this.isSubjectActivated){
+
         this.GetAllLanguage();
         this.getAllCountry();
         this.getAllSection();
-        this.callLOVs();
-      }
+        // this.callLOVs();
+      
 
     } else if (this.studentCreateMode == this.studentCreate.EDIT && (this.studentDetailsForViewAndEdit != undefined || this.studentDetailsForViewAndEdit != null)) {
       this.studentAddModel = this.studentDetailsForViewAndEdit;

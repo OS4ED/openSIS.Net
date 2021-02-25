@@ -7,6 +7,7 @@ namespace opensis.data.Models
     {
         public Membership()
         {
+            RolePermission = new HashSet<RolePermission>();
             UserMaster = new HashSet<UserMaster>();
         }
 
@@ -14,13 +15,16 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
         public int MembershipId { get; set; }
         public string Profile { get; set; }
-        public string Title { get; set; }
-        public string Access { get; set; }
-        public bool? WeeklyUpdate { get; set; }
-        public DateTime LastUpdated { get; set; }
+        public bool IsActive { get; set; }
+        public bool? IsSystem { get; set; }
+        public bool? IsSuperadmin { get; set; }
+        public string CreatedBy { get; set; }
+        public DateTime? CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
+        public DateTime? UpdatedOn { get; set; }
 
         public virtual SchoolMaster SchoolMaster { get; set; }
+        public virtual ICollection<RolePermission> RolePermission { get; set; }
         public virtual ICollection<UserMaster> UserMaster { get; set; }
     }
 }

@@ -54,12 +54,12 @@ export class AddCertificateComponent implements OnInit {
         certificationDescription:[]
       });
       if(data==null){
-        this.staffCertificateTitle="addNewCertificate";
+        this.staffCertificateTitle = 'addNewCertification';
         this.buttonType="submit";
       }
       else{
-        this.staffCertificateTitle="editCertificate";
-        this.buttonType="update";
+        this.staffCertificateTitle = 'editCertification';
+        this.buttonType = 'update';
         this.form.controls.id.patchValue(data.id);
         this.form.controls.certificationName.patchValue(data.certificationName);
         this.form.controls.shortName.patchValue(data.shortName);
@@ -74,7 +74,6 @@ export class AddCertificateComponent implements OnInit {
   ngOnInit(): void {
   }
   submit(){
-    
     if (this.form.valid) {
       if(
         ((this.form.controls.certificationCode.value!=null) || 

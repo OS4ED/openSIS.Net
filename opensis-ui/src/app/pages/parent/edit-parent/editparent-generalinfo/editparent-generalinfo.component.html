@@ -85,9 +85,14 @@
                             </div>
                             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end" class="pr-3">
                                 <div class="flex items-center">
-                                    <span class="custody" *ngIf="student.isCustodian"><img src="../../../../assets/img/icons/mother.svg"
+                                    <span  class="custody mr-3"  *ngIf="student.isCustodian;else noCustody"><img src="../../../../assets/img/icons/mother.svg"
                                             matTooltip="Custody of Student"
-                                            class="w-6 mr-3 inline-block align-middle" /></span>
+                                            class="w-6 inline-block align-middle" /></span>
+                                   <ng-template #noCustody>
+                                        <span  class="no-custody mr-3"  ><img src="../../../../assets/img/icons/mother.svg"
+                                            matTooltip="No Custody of Student"
+                                            class="inline-block align-middle" /></span>
+                                   </ng-template>     
                                 <button mat-icon-button matTooltip="Remove Association" type="button" class="text-gray">
                                     <mat-icon (click) = "confirmDelete(student)" [icIcon]="icRemove"></mat-icon>
                                 </button>

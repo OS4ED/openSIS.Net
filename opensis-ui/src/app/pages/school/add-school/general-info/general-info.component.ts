@@ -118,7 +118,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.schoolAddViewModel=this.schoolDetailsForViewAndEdit;
       this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
       this.schoolInternalId = this.schoolDetailsForViewAndEdit.schoolMaster.schoolInternalId;
-      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
+      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
     }
     else if (this.schoolCreateMode == this.schoolCreate.EDIT && (this.schoolDetailsForViewAndEdit != undefined || this.schoolDetailsForViewAndEdit != null)) {
       this.getAllCountry();
@@ -186,7 +186,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   cancelEdit() {
     this.schoolCreateMode = this.schoolCreate.VIEW;
     this.imageCropperService.cancelImage("school");
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
     if(JSON.stringify(this.schoolAddViewModel)!==this.cloneSchool){
       this.schoolAddViewModel=JSON.parse(this.cloneSchool);
       this.schoolDetailsForViewAndEdit=this.schoolAddViewModel;
@@ -491,7 +491,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.schoolCreateMode = this.schoolCreate.VIEW;
           this.cloneSchool=JSON.stringify(data);
           this.schoolService.changePageMode(this.schoolCreateMode);
-          this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:false,mode:this.schoolCreate.VIEW});
+          this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
         }
       }
     });

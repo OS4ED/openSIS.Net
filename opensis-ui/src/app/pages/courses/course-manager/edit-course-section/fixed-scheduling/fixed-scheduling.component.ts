@@ -57,7 +57,6 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
   }
 
   ngOnInit(): void {
-    console.log(this.detailsFromParentModal);
     if(this.detailsFromParentModal.editMode){
       this.patchFormValue();
     }
@@ -69,6 +68,11 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
     this.fixedSchedulingModel.courseFixedSchedule.roomId=this.detailsFromParentModal.courseSectionDetails.courseFixedSchedule.roomId;
     this.fixedSchedulingModel.courseFixedSchedule.periodId=this.detailsFromParentModal.courseSectionDetails.courseFixedSchedule.periodId;
     this.fixedSchedulingModel.courseFixedSchedule.attendanceTaken=this.detailsFromParentModal.courseSectionDetails.courseSection.attendanceTaken;
+    this.fixedSchedulingModel.courseFixedSchedule.courseSectionId=this.detailsFromParentModal.courseSectionDetails.courseSection.courseSectionId;
+    this.fixedSchedulingModel.courseFixedSchedule.serial=this.detailsFromParentModal.courseSectionDetails.courseFixedSchedule.serial;
+    this.fixedSchedulingModel.courseFixedSchedule.gradeScaleId=this.detailsFromParentModal.courseSectionDetails.courseSection.gradeScaleId;
+    this.fixedSchedulingModel.courseFixedSchedule.tenantId=sessionStorage.getItem('tenantId')
+    this.fixedSchedulingModel.courseFixedSchedule.updatedBy=sessionStorage.getItem("email");
     let days = this.detailsFromParentModal.courseSectionDetails.courseSection.meetingDays.split('|').join('');
     for(let i=0;i<days.length;i++){
       this.activeDays.push(parseInt(days[i]));
@@ -139,12 +143,12 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
   }
 
   sendFixedScheduleDataToParent(){
-    this.fixedSchedulingModel.courseFixedSchedule.meetingDays=this.activeDays?.join('|');
     if(this.currentForm.form.valid && this.activeDays.length>0){
-      this.fixedScheduleData.emit({scheduleType:'fixedschedule',scheduleDetails:this.fixedSchedulingModel.courseFixedSchedule,error:false});
+      this.fixedSchedulingModel.courseFixedSchedule.meetingDays=this.activeDays?.join('|');
+      this.fixedScheduleData.emit({scheduleType:'fixedschedule',roomList: null,scheduleDetails:this.fixedSchedulingModel.courseFixedSchedule,error:false});
     }else{
     this.activeDaysError=true;
-    this.fixedScheduleData.emit({scheduleType:'fixedschedule',scheduleDetails:null,error:true});
+    this.fixedScheduleData.emit({scheduleType:'fixedschedule', roomList: null, scheduleDetails:null,error:true});
     }
 
   }

@@ -27,7 +27,7 @@
                             <mat-label>{{'schoolId'|translate}}</mat-label>
                             <input [(ngModel)]="schoolAddViewModel.schoolMaster.schoolInternalId"
                             [formControl]="internalId" name="schoolId" maxlength="50" required matInput>
-                            <mat-progress-spinner matSuffix *ngIf="isSchoolInternalId" color="primary" diameter="18" mode="indeterminate" class="float-right"></mat-progress-spinner>
+                            <span matSuffix><img *ngIf="isSchoolInternalId" src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
                                 <mat-error *ngIf="internalId.errors?.required">
                                     {{'schoolIdIsRequired'|translate}}</mat-error>
                                     <mat-error *ngIf="internalId.errors?.nomatch">
@@ -213,6 +213,9 @@
                             <mat-datepicker #dateSchoolClosed></mat-datepicker>
                             <mat-error *ngIf="date_school_closed.errors?.required">
                                 {{'schoolClosedDateIsRequired'|translate}}</mat-error>
+                                
+                            <mat-error *ngIf="date_school_closed.errors?.nomatch">
+                                {{'dateSchoolClosedCannotBeSameOrEarlierThanDateSchoolFirstStarted'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
                      </ul>

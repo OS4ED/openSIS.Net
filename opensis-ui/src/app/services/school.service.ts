@@ -110,6 +110,13 @@ export class SchoolService {
     this.schoolDetailsForGeneral.next(schoolDetailsForGeneral);
   }
 
+  addUpdateSchoolLogo(obj: SchoolAddViewModel){
+    obj.schoolMaster.schoolId = this.getSchoolId();
+    obj.schoolMaster.schoolDetail[0].id = this.getSchoolId();
+    obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
+    let apiurl = this.apiUrl + obj._tenantName + "/School/addUpdateSchoolLogo";
+    return this.http.put<SchoolAddViewModel>(apiurl, obj)
+  }
 
 
 

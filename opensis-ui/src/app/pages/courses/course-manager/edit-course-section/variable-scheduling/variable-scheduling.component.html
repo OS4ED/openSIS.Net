@@ -30,7 +30,7 @@
                     class="border border-normal rounded px-3 py-2 w-full" [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].periodId" required>
                     <option selected [value]=selected>Select</option>
                     <option *ngFor="let period of periodList"
-                        [value]="period.periodId">{{period.periodTitle}}</option>
+                        [value]='period.periodId'>{{period.periodTitle}}</option>
                 </select>
                 <mat-error *ngIf="periodId.errors?.required && periodId.touched">
                         {{'periodIsRequired'|translate}}
@@ -42,14 +42,18 @@
                 </p>
             </div>
             <div class="w-3/12 pr-6" >
-                <select #roomId="ngModel" name="{{'roomId'+index}}" [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].roomId" class="border border-normal rounded px-3 py-2 w-full" required>
+                <select #room="ngModel" name="{{'roomId'+index}}" #roomId [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].roomId" class="border border-normal rounded px-3 py-2 w-full" required>
                     <option selected [value]=selected>Select</option>
                     <option *ngFor="let room of roomListViewModel.tableroomList" [value]="room.roomId">{{room.title}}</option>
                 </select>
-                <mat-error *ngIf="roomId.errors?.required && roomId.touched">
-                        {{'roomIsRequired'|translate}}
-                </mat-error>
-            </div>
+                
+                <mat-error *ngIf="room.errors?.required && room.touched">
+                    {{'roomIsRequired'|translate}}
+            </mat-error>
+            <mat-error *ngIf="detailsFromParentModal.form.value.seats>roomIdWithCapacity[+roomId.value]">
+                {{'invalidSeatCapacity'|translate}}
+            </mat-error>
+                </div>
             <div class="w-2/12 pt-2 text-center">
                 <mat-slide-toggle color="primary" name="{{'takeAttendance'+index}}" [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].takeAttendance"></mat-slide-toggle>
             </div>

@@ -20,6 +20,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
+import { ExcelService } from 'src/app/services/excel.service';
 @Component({
   selector: 'vex-rooms',
   templateUrl: './rooms.component.html',
@@ -42,10 +43,11 @@ export class RoomsComponent implements OnInit {
   loading:boolean;
   searchKey:string;
   constructor(private dialog: MatDialog,
-    private roomService:RoomService,
-    private snackbar: MatSnackBar,
-    private translateService : TranslateService,
-    private loaderService:LoaderService,private layoutService: LayoutService) {
+              private roomService: RoomService,
+              private snackbar: MatSnackBar,
+              private excelService: ExcelService,
+              private translateService: TranslateService,
+              private loaderService: LoaderService, private layoutService: LayoutService) {
       translateService.use('en');
       if(localStorage.getItem("collapseValue") !== null){
         if( localStorage.getItem("collapseValue") === "false"){
@@ -78,24 +80,24 @@ export class RoomsComponent implements OnInit {
   }
   getAllRooms(){
     this.roomService.getAllRoom(this.roomListViewModel).subscribe(
-      (res:RoomListViewModel)=>{
-        if(typeof(res)=='undefined'){
+      (res: RoomListViewModel) => {
+        if(typeof(res) === 'undefined'){
           this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else{
-          if (res._failure) {     
+          if (res._failure) {
             if (res._message === "NO RECORD FOUND") {
               if (res.tableroomList == null) {
-                this.roomModelList=new MatTableDataSource([]) ;
-                this.roomModelList.sort=this.sort;  
+                this.roomModelList = new MatTableDataSource([]) ;
+                this.roomModelList.sort = this.sort;
               }
               else {
-                this.roomModelList=new MatTableDataSource(res.tableroomList) ;
-                this.roomModelList.sort=this.sort;  
+                this.roomModelList = new MatTableDataSource(res.tableroomList) ;
+                this.roomModelList.sort = this.sort;
               }
-  
+
             } else {
               this.snackbar.open('' + res._message, '', {
                 duration: 10000
@@ -129,7 +131,7 @@ export class RoomsComponent implements OnInit {
   }
 
   onSearchClear(){
-    this.searchKey="";
+    this.searchKey = '';
     this.applyFilter();
   }
 
@@ -151,18 +153,18 @@ export class RoomsComponent implements OnInit {
     this.dialog.open(EditRoomComponent, {
       data: element,
         width: '600px'
-    }).afterClosed().subscribe((data)=>{
-      if(data==='submited'){
-        this.getAllRooms()
+    }).afterClosed().subscribe((data) => {
+      if (data === 'submited'){
+        this.getAllRooms();
       }
-    })
+    });
   }
   deleteRoomdata(element){
-    this.roomaddviewmodel.tableRoom=element
+    this.roomaddviewmodel.tableRoom = element;
     this.roomService.deleteRoom(this.roomaddviewmodel).subscribe(
-      (res:RoomAddView)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
+      (res: RoomAddView) => {
+        if (typeof(res) === 'undefined'){
+          this.snackbar.open('' + sessionStorage.getItem('httpError'), '', {
             duration: 10000
           });
         }
@@ -171,25 +173,43 @@ export class RoomsComponent implements OnInit {
             this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
-          } 
-          else { 
-            this.getAllRooms()
+          }
+          else {
+            this.getAllRooms();
           }
         }
       }
-    )
+    );
   }
   confirmDelete(element){
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-        maxWidth: "400px",
+        maxWidth: '400px',
         data: {
-            title: "Are you sure?",
-            message: "You are about to delete "+element.title+"."}
+            title: 'Are you sure?',
+            message: 'You are about to delete ' + element.title + '.'}
       });
       dialogRef.afterClosed().subscribe(dialogResult => {
-        if(dialogResult){
+        if (dialogResult){
           this.deleteRoomdata(element);
         }
      });
+  }
+  exportToExcel(){
+    if (this.roomModelList.data?.length > 0) {
+      const reportList = this.roomModelList.data?.map((x) => {
+        return {
+          Title: x.title,
+          Capacity: x.capacity,
+          Description: x.description,
+          'Sort Order': x.sortOrder
+
+        };
+      });
+      this.excelService.exportAsExcelFile(reportList, 'Rooms_List_');
+    } else {
+      this.snackbar.open('No records found. failed to export Rooms List', '', {
+        duration: 5000
+      });
+    }
   }
 }

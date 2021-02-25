@@ -95,7 +95,7 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.VIEW});
     this.callLOVs();    
     this.parentInfo = {};
     if(this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')){

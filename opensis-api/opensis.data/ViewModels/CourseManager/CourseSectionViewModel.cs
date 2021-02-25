@@ -15,5 +15,6 @@ namespace opensis.data.ViewModels.CourseManager
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }
         public int? CourseId { get; set; }
+        public decimal? AcademicYear { get; set; }
     }
 }

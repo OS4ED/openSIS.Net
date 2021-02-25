@@ -22,7 +22,7 @@ import { CalendarDateFormatter, CalendarEvent, CalendarEventAction, CalendarEven
 import { CalendarEventModel } from '../../../models/calendarEventModel';
 import { Observable, Subject } from 'rxjs';
 import { CalendarModel } from 'src/app/models/calendarModel';
-import { map, takeUntil, tap } from 'rxjs/operators';
+import { map, takeUntil, tap, shareReplay } from 'rxjs/operators';
 import { CustomDateFormatter } from '../../shared-module/user-defined-directives/custom-date-formatter.provider';
 
 
@@ -160,7 +160,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
       this.layoutService.expandSidenav();
     }
     this.dasboardService.getPageLoadEvent().pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
-      if (message === true) {
+      if (message) {
         this.getDashboardView();
       }
     });
@@ -200,15 +200,15 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
 
   getDashboardView() {
     this.dashboardViewModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.events$ = this.dasboardService.getDashboardView(this.dashboardViewModel).pipe(tap((res)=> {
+    this.events$ = this.dasboardService.getDashboardView(this.dashboardViewModel).pipe(shareReplay(),tap((res)=> {
       if (typeof (res) == 'undefined') {
-        this.snackbar.open('Custom Field list failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open('Dashboard View failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Custom Field list failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Dashboard View failed. ' + res._message, 'LOL THANKS', {
             duration: 10000
           });
         }

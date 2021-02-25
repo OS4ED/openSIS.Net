@@ -1,3 +1,9 @@
+<mat-error *ngIf="detailsFromParentModal.form.value.seats=='' || detailsFromParentModal.form.value.seats==null;else blockSchedule">
+   <span class="mx-4">Please Select Seats.</span>
+    </mat-error>
+<ng-template #blockSchedule>
+
+<form #form="ngForm">
 <div class="flex py-2 border-t border-normal">
     <div class="w-1/12"></div>
     <div class="w-3/12 font-bold">{{'blockRotationDay' | translate}}</div>
@@ -21,31 +27,43 @@
     </ng-template>
    
     <div class="w-3/12 pr-6">
-        <select name="{{'rotationDay'+index}}" class="border border-normal rounded px-3 py-2 w-full"
-            (change)="onBlockDayChange($event.target.value,index)" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].blockId">
+        <select #block="ngModel" name="{{'rotationDay'+index}}" class="border border-normal rounded px-3 py-2 w-full"
+            (change)="onBlockDayChange($event.target.value,index)" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].blockId" required>
             <option selected [value]=selected>Select</option>
             <option *ngFor="let block of blockListViewModel.getBlockListForView" [value]="block.blockId">
                 {{block.blockTitle}}</option>
         </select>
+        <mat-error *ngIf="block.errors?.required && block.touched">
+            {{'blockDayIsRequired'|translate}}
+    </mat-error>
     </div>
     <div class="w-3/12 pr-6">
-        <select (change)="onPeriodChange($event.target.value,index)" name="{{'period'+index}}"
-            class="border border-normal rounded px-3 py-2 w-full" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].periodId">
+        <select #period="ngModel" (change)="onPeriodChange($event.target.value,index)" name="{{'period'+index}}"
+            class="border border-normal rounded px-3 py-2 w-full" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].periodId" required>
             <option selected [value]=selected>Select</option>
             <option *ngFor="let period of blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod"
                 [value]="period.periodId">{{period.periodTitle}}</option>
         </select>
-        <p class="pt-1 text-xs" *ngIf="blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodStartTime">
-            {{blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodStartTime
+        <p class="pt-1 text-xs" *ngIf="blockScheduleAddModel.courseBlockScheduleList[index].periodId">
+            {{blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodStartTime | transform24to12Pipe
             }} to
-            {{blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodEndTime}}
+            {{blockListViewModel.getBlockListForView[selectedBlocks[index]]?.blockPeriod[selectedPeriod[index]]?.periodEndTime | transform24to12Pipe}}
         </p>
+        <mat-error *ngIf="period.errors?.required && period.touched">
+            {{'periodIsRequired'|translate}}
+    </mat-error>
     </div>
     <div class="w-3/12 pr-6" >
-        <select name="{{'room'+index}}" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].roomId" class="border border-normal rounded px-3 py-2 w-full">
+        <select #room="ngModel" name="{{'room'+index}}" #roomId [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].roomId" class="border border-normal rounded px-3 py-2 w-full" required>
             <option selected [value]=selected>Select</option>
             <option *ngFor="let room of roomListViewModel.tableroomList" [value]="room.roomId">{{room.title}}</option>
         </select>
+        <mat-error *ngIf="room.errors?.required && room.touched">
+            {{'roomIsRequired'|translate}}
+    </mat-error>
+    <mat-error *ngIf="detailsFromParentModal.form.value.seats>roomIdWithCapacity[+roomId.value]">
+        {{'invalidSeatCapacity'|translate}}
+</mat-error>
     </div>
     <div class="w-2/12 pt-2 text-center">
         <mat-slide-toggle color="primary" name="{{'takeAttendance'+index}}" [(ngModel)]="blockScheduleAddModel.courseBlockScheduleList[index].takeAttendance"></mat-slide-toggle>
@@ -58,3 +76,7 @@
         translate}}
     </a>
 </div>
+</form>
+</ng-template>
+
+

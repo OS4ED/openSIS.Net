@@ -69,7 +69,7 @@ namespace opensis.data.Repository
                     ReturnModel.TenantId = user.TenantId;
                     ReturnModel.Email = user.EmailAddress;
                     ReturnModel.Name = user.Name;
-                    ReturnModel.MembershipName = user.Membership.Title;
+                    ReturnModel.MembershipName = user.Membership.Profile;
                     ReturnModel._failure = false;
                     ReturnModel._message = "";
                 }

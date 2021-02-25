@@ -217,7 +217,7 @@ export class GradeScaleAddViewModel extends CommonField{
     }
 }
 export class GradeScaleListView extends CommonField{
-    public gradeScaleList: [GradeScaleModel];
+    public gradeScaleList: GradeScaleModel[];
     schoolId: number;
     tenantId: string;
     constructor(){

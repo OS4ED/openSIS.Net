@@ -22,5 +22,8 @@ namespace opensis.data.Interface
         public CourseSectionAddViewModel AddCourseSection(CourseSectionAddViewModel courseSectionAddViewModel);
         public CourseSectionViewModel GetAllCourseSection(CourseSectionViewModel courseSectionViewModel);
         public CourseSectionAddViewModel UpdateCourseSection(CourseSectionAddViewModel courseSectionAddViewModel);
+        public CourseSectionAddViewModel DeleteCourseSection(CourseSectionAddViewModel courseSectionAddViewModel);
+        public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel);
+
     }
 }

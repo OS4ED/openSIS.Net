@@ -144,5 +144,21 @@ namespace opensisAPI.Controllers
             }
             return schoolListView;
         }
+
+        [HttpPut("addUpdateSchoolLogo")]
+        public ActionResult<SchoolAddViewModel> AddUpdateSchoolLogo(SchoolAddViewModel schoolAddViewModel)
+        {
+            SchoolAddViewModel schoolLogoUpdate = new SchoolAddViewModel();
+            try
+            {
+                schoolLogoUpdate = _schoolRegisterService.AddUpdateSchoolLogo(schoolAddViewModel);
+            }
+            catch (Exception es)
+            {
+                schoolLogoUpdate._failure = true;
+                schoolLogoUpdate._message = es.Message;
+            }
+            return schoolLogoUpdate;
+        }
     }
 }

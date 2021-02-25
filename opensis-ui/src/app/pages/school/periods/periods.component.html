@@ -82,75 +82,75 @@
         
                 <ng-container matColumnDef="periodId">
                     <th mat-header-cell *matHeaderCellDef ></th>
-                    <td mat-cell *matCellDef="let element" cdkDrag>
-                        <mat-icon cdkDragHandle>reorder</mat-icon>
+                    <td mat-cell *matCellDef="let element" >
+                        <!-- <mat-icon cdkDragHandle>reorder</mat-icon> -->
+                        <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
                     </td>
                 </ng-container>
         
                 <ng-container matColumnDef="periodTitle">
-                    <th mat-header-cell *matHeaderCellDef>{{'title'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'title'|translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         {{element.periodTitle}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="periodShortName">
-                    <th mat-header-cell *matHeaderCellDef>{{'shortName'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'shortName'|translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         {{element.periodShortName}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="periodStartTime">
-                    <th mat-header-cell *matHeaderCellDef>{{'startTime'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'startTime'|translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         {{element.periodStartTime|transformTimePipe}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="periodEndTime">
-                    <th mat-header-cell *matHeaderCellDef>{{'endTime'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'endTime'|translate}}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         {{element.periodEndTime |transformTimePipe}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="length">
-                    <th mat-header-cell *matHeaderCellDef class="text-center">{{'lengthInMinutes'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
+                    <mat-header-cell *matHeaderCellDef class="text-center">{{'lengthInMinutes'|translate}}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element" class="text-center">
                         {{element.length}}
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="calculateAttendance">
-                    <th mat-header-cell *matHeaderCellDef class="text-center">{{'calculateAttendance'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
+                    <mat-header-cell *matHeaderCellDef class="text-center">{{'calculateAttendance'|translate}}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element" class="text-center">
                         No
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="ignoreForScheduling">
-                    <th mat-header-cell *matHeaderCellDef class="text-center">{{'ignoreForScheduling'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element" class="text-center">
+                    <mat-header-cell *matHeaderCellDef class="text-center">{{'ignoreForScheduling'|translate}}
+                    </mat-header-cell>
+                    <mat-cell *matCellDef="let element" class="text-center">
                         Yes
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef>{{'action'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
+                    <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
+                    <mat-cell *matCellDef="let element">
                         <a (click)="editPeriod(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
                         <a (click)="confirmDeletePeriod(element)" matTooltip="Delete Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
-                    </td>
+                    </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="loading">
@@ -164,10 +164,10 @@
                     </td>
                   </ng-container>
         
-                  <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+                  <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+                  <mat-row cdkDrag *matRowDef="let row; columns: visibleColumns" @fadeInUp></mat-row>
                   
-                  <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                  <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
                   <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="blockPeriodList?.data.length!=0"></tr>
         
             </table>

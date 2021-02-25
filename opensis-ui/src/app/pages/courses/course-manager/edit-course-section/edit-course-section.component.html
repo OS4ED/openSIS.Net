@@ -47,14 +47,14 @@
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'creditHours' | translate}}</mat-label>
-                <input type="text" formControlName="creditHours" name="creditHours"   name="creditHours" matInput value="3.00">
+                <input type="text" formControlName="creditHours"  name="creditHours" matInput>
                 <!-- Inherit value from Course and let them edit if needed -->
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'seats' | translate}}</mat-label>
-                <input type="text" formControlName="seats" name="seats"   name="seats" matInput value="3.00" required>
+                <input type="number" min="1" oninput="validity.valid||(value='');" formControlName="seats"   name="seats" matInput required>
                 <mat-error *ngIf="form.get('seats').hasError('required')">{{'seatsIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
@@ -81,32 +81,33 @@
                     <mat-slide-toggle class="mb-3" formControlName="affectsHonorRoll" name="affectsHonorRoll"   color="primary">{{'affectsHonorRoll' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6 mb-3">
-                    <mat-slide-toggle formControlName="onlineClassRoom" (change)="showOnlineClassRoom($event)" name="onlineClassRoom"   color="primary">{{'onlineClassRoom' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle (change)="showOnlineClassRoom($event)" formControlName="onlineClassRoom" name="onlineClassRoom"   color="primary">{{'onlineClassRoom' | translate}}</mat-slide-toggle>
                 </span>
             </div>
         </li>
-        <li *ngIf="isCheckedOnlineClassRoom">
+        <li *ngIf="form?.value.onlineClassRoom">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'onlineClassRoomUrl' | translate}}</mat-label>
-                <input type="text" formControlName="onlineClassroomUrl" name ="onlineClassroomUrl" matInput>
+                <input type="text" formControlName="onlineClassroomUrl" name ="onlineClassroomUrl" matInput [required]="form?.value.onlineClassRoom?true:null">
+                <mat-error *ngIf="form.get('onlineClassroomUrl').hasError('required')">{{'onlineClassroomUrlIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
-        <li *ngIf="isCheckedOnlineClassRoom">
+        <li *ngIf="form?.value.onlineClassRoom">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'onlineClassRoomPasswordIfAny' | translate}}</mat-label>
                 <input type="text" formControlName="onlineClassroomPassword" name ="onlineClassroomPassword" matInput>
             </mat-form-field>
         </li>
         <li class="col-span-2 pb-3">
-            <mat-slide-toggle formControlName="useStandards" (change)="showUseStandards($event)"  color="primary">{{'useStandards' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle (change)="toggleUsStandards($event)" formControlName="useStandards" color="primary">{{'useStandards' | translate}}</mat-slide-toggle>
         </li>
-        <li *ngIf="useStandardGrades">
+        <li *ngIf="form.value.useStandards">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'standardGradeScale' | translate}}</mat-label>
                 <mat-select formControlName="standardGradeScaleId" name="standardGradeScaleId" required>
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let standardGradeScale of standardGradeScaleList" [value]='standardGradeScale.gradeUsStandard.gradeStandardId'>
-                        {{standardGradeScale.gradeUsStandard.standardRefNo}} - {{standardGradeScale.gradeUsStandard.topic}}
+                    <mat-option *ngFor="let standardList of schoolSpecificStandardsList.getCourseStandardForCourses" [value]='standardList.gradeStandardId'>
+                        {{standardList.standardRefNo}} 
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="form.get('standardGradeScaleId').hasError('required')">{{'standardGradeScaleIsRequired'|translate}}</mat-error>
@@ -122,7 +123,9 @@
         <mat-radio-button name="markingPeriod" value="1" color="primary" name="markingPeriod">{{'markingPeriod' | translate}}</mat-radio-button>
         <mat-radio-button name="customDate" value="2" color="primary" name="customDate">{{'customDateRange' | translate}}</mat-radio-button>
     </mat-radio-group>
-    
+    <mat-error *ngIf="durationType== null">
+        Please Select Duration.
+    </mat-error>
     <div *ngIf="form.value.durationType=='1'">
         <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3">
             <li>
@@ -144,11 +147,11 @@
             <li >
                 <mat-form-field class="w-full" appearance="outline" color="primary" >
                     <mat-label>{{'startDate' | translate}}</mat-label>
-                    <input formControlName="durationStartDate" name="durationStartDate"  matInput [matDatepicker]="pickerStartDate"  [min]="startDate" [max]="endDate" required  [disabled]="showCalendarDates"> 
+                    <input formControlName="durationStartDate" name="durationStartDate"  matInput [matDatepicker]="pickerStartDate"  [min]="startDate" [max]="endDate" [required]="form.value.durationType=='2'?true:null"  [disabled]="showCalendarDates"> 
                     
                     <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
                     <mat-datepicker #pickerStartDate></mat-datepicker>
-                    <mat-error *ngIf="form.get('durationStartDate').hasError('required')">{{'startDateIsRequired'|translate}}</mat-error>
+                    <mat-error *ngIf="form.get('durationStartDate')?.hasError('required')">{{'startDateIsRequired'|translate}}</mat-error>
                 </mat-form-field>
                 
             </li>
@@ -156,10 +159,10 @@
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'endDate' | translate}}</mat-label>
-                    <input formControlName="durationEndDate" name="durationEndDate" [matDatepicker]="pickerEndDate"  [min]="startDate" [max]="endDate" matInput required  [disabled]="showCalendarDates">
+                    <input formControlName="durationEndDate" name="durationEndDate" [matDatepicker]="pickerEndDate"  [min]="startDate" [max]="endDate" matInput [required]="form.value.durationType=='2'?true:null"  [disabled]="showCalendarDates">
                     <mat-datepicker-toggle [for]="pickerEndDate" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #pickerEndDate></mat-datepicker>
-                    <mat-error *ngIf="form.get('durationEndDate').hasError('required')">{{'endDateIsRequired'|translate}}</mat-error>
+                    <mat-error *ngIf="form.get('durationEndDate')?.hasError('required')">{{'endDateIsRequired'|translate}}</mat-error>
                 </mat-form-field>
             </li>
         </ul>
@@ -184,7 +187,7 @@
     </div>
 
     <div class="-mx-6 mt-5 relative" *ngIf="scheduleType === '3'">
-        <vex-calendar-days (calendarScheduleData)="manipulateCalendarScheduleBeforeSubmit($event)" [selectedCalendar]="selectedCalendar"></vex-calendar-days>      
+        <vex-calendar-days (calendarScheduleData)="manipulateCalendarScheduleBeforeSubmit($event)" [detailsFromParentModal]="data" [selectedCalendar]="selectedCalendar"></vex-calendar-days>      
     </div>
 
     <div class="-mx-6 mt-5" *ngIf="scheduleType === '4'">
@@ -195,7 +198,8 @@
 </mat-dialog-content> 
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
-    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-    <button color="primary" mat-raised-button type="submit">{{courseSectionActionButtonTitle | translate}}</button>
+  <strong><mat-error *ngIf="calendarError">{{'invalidSeatCapacity' | translate}}</mat-error></strong>
+  <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+  <button color="primary" mat-raised-button type="submit">{{courseSectionActionButtonTitle | translate}}</button>
 </mat-dialog-actions>
 </form>

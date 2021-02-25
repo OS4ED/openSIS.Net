@@ -17,6 +17,7 @@ namespace opensis.data.Models
             GradeScale = new HashSet<GradeScale>();
             Gradelevels = new HashSet<Gradelevels>();
             Membership = new HashSet<Membership>();
+            PermissionGroup = new HashSet<PermissionGroup>();
             Quarters = new HashSet<Quarters>();
             SchoolCalendars = new HashSet<SchoolCalendars>();
             SchoolDetail = new HashSet<SchoolDetail>();
@@ -69,6 +70,7 @@ namespace opensis.data.Models
         public virtual ICollection<GradeScale> GradeScale { get; set; }
         public virtual ICollection<Gradelevels> Gradelevels { get; set; }
         public virtual ICollection<Membership> Membership { get; set; }
+        public virtual ICollection<PermissionGroup> PermissionGroup { get; set; }
         public virtual ICollection<Quarters> Quarters { get; set; }
         public virtual ICollection<SchoolCalendars> SchoolCalendars { get; set; }
         public virtual ICollection<SchoolDetail> SchoolDetail { get; set; }

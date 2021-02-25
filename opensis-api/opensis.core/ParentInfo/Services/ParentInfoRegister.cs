@@ -307,5 +307,33 @@ namespace opensis.core.ParentInfo.Services
 
             return parentAssociationshipDelete;
         }
+
+        /// <summary>
+        /// Add Update Parent Photo
+        /// </summary>
+        /// <param name="parentInfoAddViewModel"></param>
+        /// <returns></returns>
+        public ParentInfoAddViewModel AddUpdateParentPhoto(ParentInfoAddViewModel parentInfoAddViewModel)
+        {
+            ParentInfoAddViewModel parentPhotoUpdate = new ParentInfoAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName, parentInfoAddViewModel._token))
+                {
+                    parentPhotoUpdate = this.parentInfoRepository.AddUpdateParentPhoto(parentInfoAddViewModel);
+                }
+                else
+                {
+                    parentPhotoUpdate._failure = true;
+                    parentPhotoUpdate._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                parentPhotoUpdate._message = es.Message;
+                parentPhotoUpdate._failure = true;
+            }
+            return parentPhotoUpdate;
+        }
     }
 }

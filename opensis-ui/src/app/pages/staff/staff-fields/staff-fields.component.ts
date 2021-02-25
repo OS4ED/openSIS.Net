@@ -217,10 +217,10 @@ export class StaffFieldsComponent implements OnInit {
     })
   }
   deleteFieldCategory(element){
-    this.fieldsCategoryAddView.fieldsCategory=element
+    this.fieldsCategoryAddView.fieldsCategory = element;
     this.customFieldservice.deleteFieldsCategory(this.fieldsCategoryAddView).subscribe(
-      (res:FieldsCategoryAddView)=>{
-        if(typeof(res)=='undefined'){
+      (res: FieldsCategoryAddView) => {
+        if (typeof(res) === 'undefined'){
           this.snackbar.open('Field Category delete failed. ' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
@@ -230,12 +230,15 @@ export class StaffFieldsComponent implements OnInit {
             this.snackbar.open('Field Category delete failed. ' + res._message, '', {
               duration: 10000
             });
-          } 
+          }
           else{
             this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
-            this.getAllCustomFieldCategory()
+            if (element.categoryId === this.currentCategoryId){
+              this.currentCategoryId = null;
+            }
+            this.getAllCustomFieldCategory();
           }
         }
       }
@@ -260,7 +263,7 @@ export class StaffFieldsComponent implements OnInit {
     this.customFieldDragDropModel.currentSortOrder=this.customFieldList.data[event.currentIndex].sortOrder
     this.customFieldDragDropModel.previousSortOrder=this.customFieldList.data[event.previousIndex].sortOrder
     this.customFieldservice.updateCustomFieldSortOrder(this.customFieldDragDropModel).subscribe(
-      (res:CustomFieldDragDropModel)=>{
+      (res: CustomFieldDragDropModel)=>{
         if(typeof(res)=='undefined'){
           this.snackbar.open('Custom Field Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
             duration: 10000

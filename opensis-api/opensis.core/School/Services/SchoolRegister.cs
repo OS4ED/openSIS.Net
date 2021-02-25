@@ -214,5 +214,33 @@ namespace opensis.core.School.Services
             }
             return schoolListView;
         }
+
+        /// <summary>
+        /// Add Update School Logo
+        /// </summary>
+        /// <param name="schoolAddViewModel"></param>
+        /// <returns></returns>
+        public SchoolAddViewModel AddUpdateSchoolLogo(SchoolAddViewModel schoolAddViewModel)
+        {
+            SchoolAddViewModel schoolLogoUpdate = new SchoolAddViewModel();
+            try
+            {               
+                if (TokenManager.CheckToken(schoolAddViewModel._tenantName, schoolAddViewModel._token))
+                {
+                    schoolLogoUpdate = this.schoolRepository.AddUpdateSchoolLogo(schoolAddViewModel);
+                }
+                else
+                {
+                    schoolLogoUpdate._failure = true;
+                    schoolLogoUpdate._message = TOKENINVALID;
+                }                
+            }
+            catch (Exception es)
+            {
+                schoolLogoUpdate._message = es.Message;
+                schoolLogoUpdate._failure = true;
+            }
+            return schoolLogoUpdate;
+        }
     }
 }

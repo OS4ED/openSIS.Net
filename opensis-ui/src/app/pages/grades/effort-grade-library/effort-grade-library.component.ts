@@ -59,7 +59,7 @@ export class EffortGradeLibraryComponent implements OnInit {
   effortGradeLibraryCategoryAddViewModel:EffortGradeLibraryCategoryAddViewModel=new EffortGradeLibraryCategoryAddViewModel();
   effortGradeLibraryCategoryItemAddViewModel:EffortGradeLibraryCategoryItemAddViewModel=new EffortGradeLibraryCategoryItemAddViewModel();
   effortGradeLlibraryDragDropModel:EffortGradeLlibraryDragDropModel=new EffortGradeLlibraryDragDropModel();
-  effortCategoriesList;
+  effortCategoriesList = [];
   currentEffortCategoryId;
   effortItemList:MatTableDataSource<any>;
   form:FormGroup
@@ -165,13 +165,16 @@ export class EffortGradeLibraryComponent implements OnInit {
             this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
-          } 
-          else { 
-            this.getAllEffortGradeLlibraryCategoryList()
+          }
+          else {
+            if (element.effortCategoryId === this.currentEffortCategoryId){
+              this.currentEffortCategoryId = null;
+            }
+            this.getAllEffortGradeLlibraryCategoryList();
           }
         }
       }
-    )
+    );
   }
   confirmDeleteEffortCategory(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {

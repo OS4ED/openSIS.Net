@@ -316,5 +316,21 @@ namespace opensisAPI.Controllers
             return dashboardView;
         }
 
+        [HttpPost("getReleaseNumber")]
+
+        public ActionResult<ReleaseNumberAddViewModel> GetReleaseNumber(ReleaseNumberAddViewModel releaseNumberAddViewModel)
+        {
+            ReleaseNumberAddViewModel releaseNumberView = new ReleaseNumberAddViewModel();
+            try
+            {
+                releaseNumberView = _commonService.GetReleaseNumber(releaseNumberAddViewModel);
+            }
+            catch (Exception es)
+            {
+                releaseNumberView._failure = true;
+                releaseNumberView._message = es.Message;
+            }
+            return releaseNumberView;
+        }
     }
 }

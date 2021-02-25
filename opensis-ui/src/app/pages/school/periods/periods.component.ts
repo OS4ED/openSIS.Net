@@ -56,7 +56,6 @@ export class PeriodsComponent implements OnInit {
     { label: 'End Time', property: 'periodEndTime', type: 'text', visible: true },
     { label: 'Length', property: 'length', type: 'number', visible: true },
     { label: 'Calculate Attendance', property: 'calculateAttendance', type: 'text', visible: true },
-    { label: 'Ignore for Scheduling', property: 'ignoreForScheduling', type: 'text', visible: true },
     { label: 'action', property: 'action', type: 'text', visible: true }
   ];
   searchKey: string;
@@ -96,6 +95,7 @@ export class PeriodsComponent implements OnInit {
         periodShortName: item.periodShortName,
         periodStartTime: new Date("1900-01-01T" + item.periodStartTime),
         periodEndTime:  new Date("1900-01-01T" + item.periodEndTime),
+        calculateAttendance: item.calculateAttendance,
         sortOrder:item.periodSortOrder,
         length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000)
       };
@@ -153,6 +153,7 @@ export class PeriodsComponent implements OnInit {
         periodShortName: item.periodShortName,
         periodStartTime: new Date("1900-01-01T" + item.periodStartTime),
         periodEndTime:  new Date("1900-01-01T" + item.periodEndTime),
+        calculateAttendance: item.calculateAttendance,
         sortOrder:item.periodSortOrder,
         length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000)
       };
@@ -169,7 +170,8 @@ export class PeriodsComponent implements OnInit {
         ShortName: item.periodShortName,
         StartTime: moment(new Date("1900-01-01T" + item.periodStartTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
         EndTime:  moment(new Date("1900-01-01T" + item.periodEndTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
-        Length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000)
+        Length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000),
+        CalculateAttendance: item.calculateAttendance?'Yes':'No'
       };
     });
     return periodList;

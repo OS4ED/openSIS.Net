@@ -61,6 +61,7 @@ export class StudentContactsComponent implements OnInit {
   }
   
   openViewDetails(parentInfo) {
+    
     this.dialog.open(EditContactComponent, {
       data: {
         contactType:this.contactType,
@@ -71,7 +72,8 @@ export class StudentContactsComponent implements OnInit {
     });
   }
 
-  editParentInfo(parentInfo){   
+  editParentInfo(parentInfo){  
+    console.log(parentInfo.parentAddress.studentAddressSame) 
     this.dialog.open(EditContactComponent, {
       data: {
         parentInfo:parentInfo,
@@ -148,6 +150,7 @@ export class StudentContactsComponent implements OnInit {
           } 
           else { 
             this.parentListArray= data.parentInfoListForView; 
+            console.log(this.parentListArray)
             
             var var1 = 0;
             var var2 = 0;

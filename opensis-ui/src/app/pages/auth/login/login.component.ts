@@ -45,6 +45,7 @@ export class LoginComponent implements OnInit {
   expiredDate
   setValue = false;
   forceLoaderToStop:boolean;
+  buildVersion:string;
 
   constructor(
     private router: Router,
@@ -81,7 +82,7 @@ export class LoginComponent implements OnInit {
       this.form.patchValue({ password: JSON.parse(this.cookieService.get('userDetails')).password });
       this.form.markAsDirty();
     }
-
+    this.buildVersion= sessionStorage.getItem('buildVersion');
   }
 
   rememberMe(event) {

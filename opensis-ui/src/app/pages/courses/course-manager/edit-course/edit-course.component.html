@@ -213,7 +213,7 @@
                         <div class="text-gray">{{'standards' | translate}}</div>
                         <a class="cursor-pointer text-blue" (click)="selectStandards()"><mat-icon [icIcon]="icList"></mat-icon></a>
                     </div>
-                    <ul class="w-full" *ngFor = "let checkedStandard of checkedStandardList">
+                    <ul class="w-full" *ngFor = "let checkedStandard of nonDuplicateCheckedStandardList">
                         <li>
                             <hr/>
                             <div class="flex justify-between items-center pl-3">

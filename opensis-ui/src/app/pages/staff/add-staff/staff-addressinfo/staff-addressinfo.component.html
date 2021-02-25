@@ -164,7 +164,7 @@
 
                 <h4 class="text-primary px-4 pb-2 pt-6">{{'mailingAddress'|translate}}</h4>
                 <div class="px-4 pb-3">
-                    <mat-checkbox [checked]="checkBoxChecked"
+                    <mat-checkbox [checked]="checkBoxChecked" #checkBox
                         [(ngModel)]="staffAddModel.staffMaster.mailingAddressSameToHome"
                         (click)="copyHomeAddress($event)" name="mailingAddressSameToHome" color="primary">
                         {{'sameAsHomeAddress' | translate}}</mat-checkbox>
@@ -173,21 +173,21 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress1'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.mailingAddressLineOne"
+                            <input [disabled]="checkBox.checked" [(ngModel)]="staffAddModel.staffMaster.mailingAddressLineOne"
                                 name="mailingAddressLineOne" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress2'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.mailingAddressLineTwo"
+                            <input [disabled]="checkBox.checked" [(ngModel)]="staffAddModel.staffMaster.mailingAddressLineTwo"
                                 name="mailingAddressLineTwo" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'country'|translate}}</mat-label>
-                            <mat-select [(ngModel)]="staffAddModel.staffMaster.mailingAddressCountry"
+                            <mat-select [disabled]="checkBox.checked" [(ngModel)]="staffAddModel.staffMaster.mailingAddressCountry"
                                 name="mailingAddressCountry">
                                 <mat-option value=""></mat-option>
                                 <mat-option *ngFor="let country of countryListArr" [value]='country.id'>
@@ -199,21 +199,21 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'stateProvinceLocality'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.mailingAddressState"
+                            <input [disabled]="checkBox.checked" [(ngModel)]="staffAddModel.staffMaster.mailingAddressState"
                                 name="mailingAddressState" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'city'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.mailingAddressCity" name="mailingAddressCity"
+                            <input [disabled]="checkBox.checked" [(ngModel)]="staffAddModel.staffMaster.mailingAddressCity" name="mailingAddressCity"
                                 matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'zip/Postal Code'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.mailingAddressZip" name="mailingAddressZip"
+                            <input [disabled]="checkBox.checked" [(ngModel)]="staffAddModel.staffMaster.mailingAddressZip" name="mailingAddressZip"
                                 matInput>
                         </mat-form-field>
                     </li>

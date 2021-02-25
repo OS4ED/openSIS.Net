@@ -26,5 +26,6 @@ namespace opensis.data.Interface
         public LanguageAddModel DeleteLanguage(LanguageAddModel languageAddModel);
         public LanguageListModel GetAllLanguageForLogin(LanguageListModel languageListModel);
         public DashboardViewModel GetDashboardView(DashboardViewModel dashboardViewModel);
+        public ReleaseNumberAddViewModel GetReleaseNumber(ReleaseNumberAddViewModel releaseNumberAddViewModel);
     }
 }

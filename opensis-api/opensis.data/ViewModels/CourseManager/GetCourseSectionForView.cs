@@ -19,5 +19,6 @@ namespace opensis.data.ViewModels.CourseManager
         public List<CourseCalendarSchedule> courseCalendarSchedule { get; set; }
         public List<CourseBlockSchedule> courseBlockSchedule { get; set; }
         public string MarkingPeriod { get; set; }
+        public string StandardRefNo { get; set; }
     }
 }

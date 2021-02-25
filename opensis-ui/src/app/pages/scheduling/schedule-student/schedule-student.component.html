@@ -78,7 +78,8 @@
                     <div class="flex-shrink-0">
                         <div class="spinner-container">
                             <div class="spinner-background font-semibold text-warn">{{spinner1.value}}%</div>
-                            <mat-progress-spinner #spinner1 color="primary" mode="determinate" value="69" strokeWidth="5" diameter="70" class="spinner-red">
+                            <mat-progress-spinner #spinner1 color="primary" mode="determinate" value="69"
+                                strokeWidth="5" diameter="70" class="spinner-red">
                             </mat-progress-spinner>
                         </div>
                     </div>
@@ -132,9 +133,72 @@
                 </li>
             </ul>
             <div class="text-center mb-4">
+                <button class="p-2 text-primary border-2 border-primary rounded font-medium mr-4" type="submit">
+                    <i class="icon icon-eye mr-2"></i>View Report
+                </button>
                 <button class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit">
                     <i class="icon icon-file-excel mr-2"></i>Download this report to Excel
                 </button>
+            </div>
+        </div>
+        <div class="card mt-6 p-4">
+            <h6 class="text-base mb-3">Schedule Report</h6>
+            <div class="-mx-4 border-t overflow-auto">
+                <table mat-table [dataSource]="scheduleReport" class="mat-elevation-z8 shadow-none">
+                    <ng-container matColumnDef="studentName">
+                        <th mat-header-cell *matHeaderCellDef>{{ "studentName" | translate }}</th>
+                        <td mat-cell *matCellDef="let element" class="relative student-link">
+                            <div>{{ element.studentName }}</div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="studentId">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'studentId' | translate }}</th>
+                        <td mat-cell *matCellDef="let element">{{ element.studentId }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="geom001">
+                        <th mat-header-cell *matHeaderCellDef>GEOM001</th>
+                        <td mat-cell *matCellDef="let element">
+                            <button *ngIf="!element.geom001" matTooltip="Could not be scheduled due to period conflict with other course section"
+                                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                                <i class="text-lg text-warn icon icon-notification2"></i>
+                            </button>
+                            <span *ngIf="element.geom001"><i class="text-lg icon icon-checkmark3"></i></span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="algb001">
+                        <th mat-header-cell *matHeaderCellDef>ALGB001</th>
+                        <td mat-cell *matCellDef="let element">
+                            <button *ngIf="!element.algb001" matTooltip="Could not be scheduled due to period conflict with other course section"
+                                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                                <i class="text-lg text-warn icon icon-notification2"></i>
+                            </button>
+                            <span *ngIf="element.algb001"><i class="text-lg icon icon-checkmark3"></i></span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="whs05">
+                        <th mat-header-cell *matHeaderCellDef>WHS05</th>
+                        <td mat-cell *matCellDef="let element">
+                            <button *ngIf="!element.whs05" matTooltip="Could not be scheduled due to period conflict with other course section"
+                                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                                <i class="text-lg text-warn icon icon-notification2"></i>
+                            </button>
+                            <span *ngIf="element.whs05"><i class="text-lg icon icon-checkmark3"></i></span>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lsc03">
+                        <th mat-header-cell *matHeaderCellDef>LSC03</th>
+                        <td mat-cell *matCellDef="let element">
+                            <button *ngIf="!element.lsc03" matTooltip="Seat unavailable"
+                                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                                <i class="text-lg text-warn icon icon-notification2"></i>
+                            </button>
+                            <span *ngIf="element.lsc03"><i class="text-lg icon icon-checkmark3"></i></span>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                </table>
             </div>
         </div>
     </vex-page-layout-content>

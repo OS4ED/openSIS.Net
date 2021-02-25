@@ -28,11 +28,12 @@ import { EvenOddPipe } from './user-define-pipe/even-odd.pipe';
 import { WeekDayPipe } from './user-define-pipe/number-to-week-day.pipe';
 import { NgForFilterPipe } from './user-define-pipe/course-section-ngFor-div-filter.pipe';
 import { Transform24to12Pipe } from './user-define-pipe/transform-24to12.pipe';
+import { CourseNgForFilterPipe } from './user-define-pipe/course-ngFor-div-filter.pipe';
 
 @NgModule({
   declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyBooleanCheckReversePipe,
     EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,
-    PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe],
+    PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe,CourseNgForFilterPipe],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -47,6 +48,6 @@ import { Transform24to12Pipe } from './user-define-pipe/transform-24to12.pipe';
     
   ],
   exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe,InvalidControlScrollDirective,
-    EmtyBooleanCheckReversePipe,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe]
+    EmtyBooleanCheckReversePipe,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe,CourseNgForFilterPipe]
 })
 export class SharedModuleModule { }

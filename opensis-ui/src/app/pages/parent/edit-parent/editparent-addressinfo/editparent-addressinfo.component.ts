@@ -39,40 +39,42 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
   addParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
   countryModel: CountryModel = new CountryModel();
   countryListArr = [];
-  countryName = "-";
+  countryName = '-';
   country = '-';
   data;
   parentInfo;
-  moduleIdentifier=ModuleIdentifier;
+  moduleIdentifier = ModuleIdentifier;
+  mapUrl: string;
   constructor(private fb: FormBuilder,
-    private snackbar: MatSnackBar,
-    public translateService: TranslateService,
-    private commonService: CommonService,
-    private parentInfoService: ParentInfoService,
-    private imageCropperService:ImageCropperService) {
+              private snackbar: MatSnackBar,
+              public translateService: TranslateService,
+              private commonService: CommonService,
+              private parentInfoService: ParentInfoService,
+              private imageCropperService: ImageCropperService) {
     translateService.use('en');
-    
+
   }
 
   ngOnInit(): void {   
+    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.VIEW});
     this.parentCreateMode = this.parentCreate.VIEW;
-    this.parentInfo = {};    
-    this.addParentInfoModel = this.parentDetailsForViewAndEdit;   
+    this.parentInfo = {};
+    this.addParentInfoModel = this.parentDetailsForViewAndEdit;
     this.addParentInfoModel.parentInfo.parentAddress[0].country = +this.parentDetailsForViewAndEdit.parentInfo.parentAddress[0].country; 
     this.getAllCountry();
   }
 
-  
- 
+
+
 
   editAddressContactInfo() {
     this.parentCreateMode = this.parentCreate.EDIT;
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.EDIT});
+    this.imageCropperService.enableUpload({module: this.moduleIdentifier.PARENT, upload: true, mode: this.parentCreate.EDIT});
   }
 
   getAllCountry() {
     this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
-      if (typeof (data) == 'undefined') {
+      if (typeof (data) === 'undefined') {
         this.countryListArr = [];
       }
       else {
@@ -132,14 +134,29 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
           this.viewCountryName();
           this.parentCreateMode = this.parentCreate.VIEW;
           this.parentInfoService.changePageMode(this.parentCreateMode);
-          this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
+          this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.VIEW});
         }
       }
 
     });
   }
+  showOnGoogleMap(){
+    const stAdd1 = this.addParentInfoModel.parentInfo.parentAddress[0].addressLineOne;
+    const stAdd2 = this.addParentInfoModel.parentInfo.parentAddress[0].addressLineTwo;
+    const city = this.addParentInfoModel.parentInfo.parentAddress[0].city;
+    const country = this.countryName;
+    const state = this.addParentInfoModel.parentInfo.parentAddress[0].state;
+    const zip = this.addParentInfoModel.parentInfo.parentAddress[0].zip;
+    if (stAdd1 && country && city && zip){
+      this.mapUrl = `https://maps.google.com/?q=${stAdd1},${stAdd2},${city},${state},${zip},${country}`;
+      window.open(this.mapUrl, '_blank');
+    }else{
+      this.snackbar.open('Invalid parent address', 'Ok', {
+        duration: 5000
+      });
+    }
+  }
 
   ngOnDestroy(){
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
   }
 }

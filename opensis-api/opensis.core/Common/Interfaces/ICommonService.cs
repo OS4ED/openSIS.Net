@@ -25,5 +25,6 @@ namespace opensis.core.Common.Interfaces
         public DropdownValueAddModel DeleteDropdownValue(DropdownValueAddModel dpdownValue);
         public LanguageListModel GetAllLanguageForLogin(LanguageListModel languageListModel);
         public DashboardViewModel GetDashboardView(DashboardViewModel dashboardViewModel);
+        public ReleaseNumberAddViewModel GetReleaseNumber(ReleaseNumberAddViewModel releaseNumberAddViewModel);
     }
 }

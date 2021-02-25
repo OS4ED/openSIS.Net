@@ -1,0 +1,42 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        Geometry - GEOM003
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : Block/Rotation Days</p>
+<div class="-mx-6 border-t overflow-auto">
+    <table class="w-full calendar-schedule-table">
+        <thead>
+            <tr>
+                <th class="whitespace-nowrap">Block/Rotation Days</th>
+                <th>Period</th>
+                <th>Room</th>
+                <th class="whitespace-nowrap">Take Attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Mon-Thu</td>
+                <td>Period 1</td>
+                <td>Room 101</td>
+                <td>Yes</td>
+            </tr>
+            <tr>
+                <td>Mon-Thu</td>
+                <td>Period 5</td>
+                <td>Room 101</td>
+                <td>No</td>
+            </tr>
+            <tr>
+                <td>Tue-Fri</td>
+                <td>Period 5</td>
+                <td>Room 105</td>
+                <td>No</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

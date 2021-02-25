@@ -57,6 +57,7 @@ export class CourseManagerService {
     }
     
     DeleteCourse(courseManager: AddCourseModel) {
+        
         let apiurl = this.apiUrl + courseManager._tenantName + "/CourseManager/deleteCourse";
         return this.http.post<AddCourseModel>(apiurl, courseManager)
     }

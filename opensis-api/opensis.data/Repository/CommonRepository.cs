@@ -925,6 +925,40 @@ namespace opensis.data.Repository
             return dashboardView;
         }
 
-
+        /// <summary>
+        /// Get Release Number
+        /// </summary>
+        /// <param name="releaseNumberAddViewModel"></param>
+        /// <returns></returns>
+        public ReleaseNumberAddViewModel GetReleaseNumber(ReleaseNumberAddViewModel releaseNumberAddViewModel)
+        {
+            ReleaseNumberAddViewModel ReleaseNumberViewModel = new ReleaseNumberAddViewModel();
+            try
+            {
+                ReleaseNumberViewModel.releaseNumber = null;
+                var releaseNumber = this.context?.ReleaseNumber.OrderByDescending(c => c.ReleaseDate).FirstOrDefault();
+                
+                if (releaseNumber!=null)
+                {
+                    ReleaseNumberViewModel.releaseNumber = releaseNumber;                    
+                    ReleaseNumberViewModel._failure = false;                
+                }
+                else
+                {                    
+                    ReleaseNumberViewModel._message = NORECORDFOUND;
+                    ReleaseNumberViewModel._failure = true;                    
+                }
+                ReleaseNumberViewModel._tenantName = releaseNumberAddViewModel._tenantName;
+                ReleaseNumberViewModel._token = releaseNumberAddViewModel._token;
+            }
+            catch (Exception es)
+            {
+                ReleaseNumberViewModel._message = es.Message;
+                ReleaseNumberViewModel._failure = true;
+                ReleaseNumberViewModel._tenantName = releaseNumberAddViewModel._tenantName;
+                ReleaseNumberViewModel._token = releaseNumberAddViewModel._token;
+            }
+            return ReleaseNumberViewModel;
+        }
     }
 }

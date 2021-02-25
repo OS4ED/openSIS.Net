@@ -85,7 +85,7 @@
         <div @stagger fxLayout="column">
             <div class="flex w-full items-center pt-4 pb-2 mx-2">
                 <h4 class="text-blue mr-4">{{'homeAddress'|translate}} &nbsp; <span class="text-gray-light">|</span></h4>
-                <a class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
+                <a (click)="showOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
             </div>
             <p *ngIf="addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame" class="mb-6"><span class="same-as-home-address">Same as Student's Home Address</span></p>
             <p *ngIf="!addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame" class="mb-6"><span class="different-from-home-address">Different from Student's Home Address</span></p>

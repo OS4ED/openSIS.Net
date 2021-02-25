@@ -21,6 +21,20 @@
     }
 }
 
+:host::ng-deep .cal-month-view .cal-day-cell {
+    min-height: 0px; 
+}
+
+:host::ng-deep .cal-month-view .cal-cell-top{
+   min-height: 50px; 
+}
+
+:host::ng-deep .cal-month-view .cal-day-number {
+  
+    float: right; 
+    margin-right: 10px;
+}
+
 @media (max-width: 1023px) {
     .course-details {
         display:none;

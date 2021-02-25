@@ -402,5 +402,25 @@ namespace opensis.core.Common.Services
             return dashboardView;
         }
 
+        /// <summary>
+        /// Get Release Number
+        /// </summary>
+        /// <param name="releaseNumberAddViewModel"></param>
+        /// <returns></returns>
+        public ReleaseNumberAddViewModel GetReleaseNumber(ReleaseNumberAddViewModel releaseNumberAddViewModel)
+        {
+            ReleaseNumberAddViewModel releaseNumberView = new ReleaseNumberAddViewModel();
+            try
+            {                
+                releaseNumberView = this.commonRepository.GetReleaseNumber(releaseNumberAddViewModel);
+                return releaseNumberView;
+            }
+            catch (Exception ex)
+            {
+                releaseNumberView._failure = true;
+                releaseNumberView._message = null;
+                return releaseNumberView;
+            }            
+        }
     }
 }

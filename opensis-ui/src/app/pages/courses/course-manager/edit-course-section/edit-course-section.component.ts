@@ -1,4 +1,4 @@
-import { Component, ComponentFactoryResolver, Inject, OnInit, Optional } from '@angular/core';
+import { Component, ComponentFactoryResolver, Inject, OnInit, Optional, Output, EventEmitter } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import * as moment from 'moment';
@@ -24,7 +24,7 @@ import { CalendarListModel, CalendarModel } from '../../../../models/calendarMod
 import { GradesService } from '../../../../services/grades.service';
 import { GradeScaleListView, GetAllSchoolSpecificListModel } from '../../../../models/grades.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BlockedSchedulingCourseSectionAddModel,CourseCalendarSchedule,CourseSection, OutputEmitDataFormat, CourseVariableSchedule,CourseSectionAddViewModel,FixedSchedulingCourseSectionAddModel,VariableSchedulingCourseSectionAddModel,CourseVariableScheduleListModel} from '../../../../models/courseSectionModel';
+import { BlockedSchedulingCourseSectionAddModel,CourseCalendarSchedule,CourseSection, OutputEmitDataFormat, CourseVariableSchedule,CourseSectionAddViewModel,FixedSchedulingCourseSectionAddModel,VariableSchedulingCourseSectionAddModel,CourseVariableScheduleListModel, GetAllCourseStandardForCourseSectionModel} from '../../../../models/courseSectionModel';
 
 import { FormBuilder, FormGroup, Validators,FormControl } from '@angular/forms';
 import { AttendanceCodeService } from '../../../../services/attendance-code.service';
@@ -33,6 +33,7 @@ import { GetMarkingPeriodTitleListModel } from '../../../../models/markingPeriod
 import { MarkingPeriodService } from '../../../../services/marking-period.service';
 import { CourseSectionService } from '../../../../services/course-section.service';
 import { SharedFunction } from '../../../shared/shared-function';
+import { isNull } from 'util';
 
 @Component({
   selector: 'vex-edit-course-section',
@@ -44,6 +45,7 @@ import { SharedFunction } from '../../../shared/shared-function';
   ]
 })
 export class EditCourseSectionComponent implements OnInit {
+  
   icClose = icClose;
   icEdit = icEdit;
   icDelete = icDelete;
@@ -57,28 +59,24 @@ export class EditCourseSectionComponent implements OnInit {
   icPlusCircle = icPlusCircle;
   icLeftArrow = icLeftArrow;
   icRightArrow = icRightArrow;
-  useStandardGrades = false;
-  isChecked = false;
   scheduleType = '0';
-  durationType;
+  durationType='0';
   addCalendarDay = 0;
   selectedDate;
   attendanceCategoryList = [];
   form: FormGroup;
-  isCheckedOnlineClassRoom: boolean = false;
   calendarListModel: CalendarListModel = new CalendarListModel();
   gradeScaleListView: GradeScaleListView = new GradeScaleListView();
   courseSection: CourseSection = new CourseSection();
   courseSectionAddViewModel: CourseSectionAddViewModel = new CourseSectionAddViewModel();
   getMarkingPeriodTitleListModel: GetMarkingPeriodTitleListModel = new GetMarkingPeriodTitleListModel();
-  schoolSpecificStandardsList: GetAllSchoolSpecificListModel = new GetAllSchoolSpecificListModel();
+  schoolSpecificStandardsList: GetAllCourseStandardForCourseSectionModel = new GetAllCourseStandardForCourseSectionModel();
   getAllAttendanceCategoriesListModel: GetAllAttendanceCategoriesListModel = new GetAllAttendanceCategoriesListModel();
   view: CalendarView = CalendarView.Month;
-
-  courseCalendarSchedule: CourseCalendarSchedule= new CourseCalendarSchedule();
+  courseCalendarSchedule: CourseCalendarSchedule= new CourseCalendarSchedule(); 
+  calendarError:boolean= false;  
   variableSchedulingCourseSectionAddModel: VariableSchedulingCourseSectionAddModel= new VariableSchedulingCourseSectionAddModel();
   courseVariableSchedule : CourseVariableSchedule = new CourseVariableSchedule();
-  courseCalendarScheduleList = [];
   courseVariableScheduleList = [];
   calendarList=[];
   selectedCalendar= new CalendarModel();
@@ -95,7 +93,7 @@ export class EditCourseSectionComponent implements OnInit {
   startDate;
   endDate;
   showCalendarDates;
-  
+  seatChangeFlag:boolean; 
   constructor(
     private dialogRef: MatDialogRef<EditCourseSectionComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
@@ -113,30 +111,29 @@ export class EditCourseSectionComponent implements OnInit {
       
   }
   ngOnInit(): void {
-    console.log(this.data)
     this.form = this.fb.group(
       {
         courseSectionName: ['', Validators.required],
         calendarId: ['', Validators.required],
         isActive: [true],
         gradeScaleId: ['', Validators.required],
-        creditHours: [''],
+        creditHours: [this.data.courseDetails?.creditHours],
         seats: [''],
         attendanceCategoryId: [''],
-        isWeightedCourse: [],
-        affectsClassRank: [],
-        affectsHonorRoll: [],
-        onlineClassRoom: [],
-        useStandards: [],
-        standardGradeScaleId: [''],
-        onlineClassroomUrl: [''],
-        onlineClassroomPassword: [''],
+        isWeightedCourse: [false],
+        affectsClassRank: [false],
+        affectsHonorRoll: [false],
+        onlineClassRoom: [false],
+        useStandards: [false],
+        standardGradeScaleId: [null],
+        onlineClassroomUrl: [null],
+        onlineClassroomPassword: [null],
         markingPeriodId:[''],
-        durationType:[]
-      
+        durationType:[],
+        durationStartDate:[''],
+        durationEndDate:['']        
       });
-     
-      this.standardGradeScaleList = this.data.courseDetails.courseStandard;
+      this.data.form=this.form;      
       if(this.form.value.calendarId === ""){
        
         this.showCalendarDates = true;
@@ -147,25 +144,16 @@ export class EditCourseSectionComponent implements OnInit {
         this.courseSectionModalTitle="updateCourseSection";
         this.courseSectionActionButtonTitle="update";
         this.patchFormValue();
-      }else{
-  
       }
-    this.form.get('isActive').setValue(true);
     this.getAllCalendarList();
     this.getAllGradeScaleList();
     this.getAllAttendanceCategoryList();
-   
+    this.getAllSchoolSpecificStandardList();
     this.getAllMarkingPeriodList();
-    if(this.data.editMode){
-      this.courseSectionModalTitle="updateCourseSection";
-      this.courseSectionActionButtonTitle="update";
-      this.patchFormValue();
-    }else{
-
-    }
   }
  
   patchFormValue(){
+    this.durationType=this.data.courseSectionDetails.courseSection.durationBasedOnPeriod?'1':'2'
     this.form.patchValue({
       isActive: this.data.courseSectionDetails.courseSection.isActive,
       courseSectionName:this.data.courseSectionDetails.courseSection.courseSectionName,
@@ -178,13 +166,35 @@ export class EditCourseSectionComponent implements OnInit {
       affectsClassRank: this.data.courseSectionDetails.courseSection.affectsClassRank,
       affectsHonorRoll: this.data.courseSectionDetails.courseSection.affectsHonorRoll,
       onlineClassRoom: this.data.courseSectionDetails.courseSection.onlineClassRoom,
+      onlineClassroomUrl:this.data.courseSectionDetails.courseSection.onlineClassRoom?
+                        this.data.courseSectionDetails.courseSection.onlineClassroomUrl:null,
+      onlineClassroomPassword:this.data.courseSectionDetails.courseSection.onlineClassRoom?
+                              this.data.courseSectionDetails.courseSection.onlineClassroomPassword:null,
       useStandards: this.data.courseSectionDetails.courseSection.useStandards,
       durationType:this.data.courseSectionDetails.courseSection.durationBasedOnPeriod?'1':'2',
       markingPeriodId:this.data.courseSectionDetails?.markingPeriod,
       durationStartDate:this.data.courseSectionDetails.courseSection?.durationStartDate,
       durationEndDate:this.data.courseSectionDetails.courseSection?.durationEndDate,
+      standardGradeScaleId:this.data.courseSectionDetails.courseSection?.standardGradeScaleId
     });
  }
+
+ showOnlineClassRoom(event) {
+  if (event.checked) {
+    this.form.setControl('onlineClassroomUrl', this.fb.control('', [Validators.required])); 
+    }
+    else {
+      this.form.removeControl('onlineClassroomUrl'); 
+    }
+}
+
+toggleUsStandards(event) {
+  if (event.checked) {
+    this.form.setControl('standardGradeScaleId', this.fb.control('', Validators.required));
+  } else {
+    this.form.removeControl('standardGradeScaleId');
+  }
+}
 
   setScheduleTypeInEditMode(){
     let scheduleName=this.data?.courseSectionDetails?.courseSection.scheduleType
@@ -287,23 +297,8 @@ export class EditCourseSectionComponent implements OnInit {
       }
     });
   }
-  showOnlineClassRoom(event) {
-    if (event.checked) {
-      this.isCheckedOnlineClassRoom = true;
-    } else {
-      this.isCheckedOnlineClassRoom = false;
-    }
-  }
-  showUseStandards(event) {
-    if (event.checked) {
-      this.useStandardGrades = true;
-      const validators = [ Validators.required];
-      this.form.addControl('standardGradeScaleId', new FormControl('', validators));
-    } else {
-      this.useStandardGrades = false;
-      this.form.removeControl('standardGradeScaleId');
-    }
-  }
+  
+
   setScheduleType(mrChange) {
     this.scheduleType = mrChange.value;
     switch (this.scheduleType) {
@@ -335,6 +330,9 @@ export class EditCourseSectionComponent implements OnInit {
         duration: 10000
       })
     }
+    if (this.durationType == '0') {
+      this.durationType = null
+    }
     else {
       this.courseSectionService.sendCurrentData(true);
     }
@@ -359,29 +357,23 @@ export class EditCourseSectionComponent implements OnInit {
     this.courseSection.durationStartDate = this.form.value.durationStartDate;
     this.courseSection.durationEndDate = this.form.value.durationEndDate;
     this.courseSectionAddViewModel.markingPeriod = '';
-    this.courseSectionAddViewModel.markingPeriodId = this.form.value.markingPeriodId.toString();
+    this.courseSectionAddViewModel.markingPeriodId = this.form.value.markingPeriodId?.toString();
     this.courseSection.durationBasedOnPeriod=this.form.value.durationType=='1'?true:false;
     this.courseSectionAddViewModel.courseSection = this.courseSection;
-
-  }
-  submit() {
-    if(this.data.editMode){
-      this.updateCourseSection();
-    }else{
-      this.addCourseSection()
-    }
     
   }
-  addCourseSection(){
-    this.collectValuesFromForm();
-    if (this.scheduleType == '2') {
-      this.courseSectionAddViewModel.courseSection = this.courseSection;
-      this.courseSection.scheduleType = 'variableschedule';    
-      this.courseSectionAddViewModel.courseFixedSchedule = null;
-      this.courseSectionAddViewModel.courseBlockScheduleList = null;
-      this.courseSectionAddViewModel.courseCalendarScheduleList = null;
-      this.courseSectionAddViewModel.courseVariableScheduleList = this.courseSectionAddViewModel.courseVariableScheduleList;
+  submit() {
+    if(this.form.valid){
+      if(this.data.editMode){
+        this.updateCourseSection();
+      }else{
+        this.addCourseSection()
+      }
     }
+  }
+  addCourseSection(){
+    this.collectValuesFromForm();   
+    this.courseSectionAddViewModel.courseSection.createdBy=sessionStorage.getItem("email")
     this.courseSectionService.addCourseSection(this.courseSectionAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Course Section Save failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -403,7 +395,8 @@ export class EditCourseSectionComponent implements OnInit {
     });
   }
   updateCourseSection(){
-    this.collectValuesFromForm();
+    this.collectValuesFromForm();   
+     this.courseSectionAddViewModel.courseSection.updatedBy=sessionStorage.getItem("email")
     this.courseSection.courseSectionId=this.data.courseSectionDetails.courseSection.courseSectionId;
     this.courseSectionService.updateCourseSection(this.courseSectionAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
@@ -426,6 +419,21 @@ export class EditCourseSectionComponent implements OnInit {
     });
   }
 
+
+  getAllSchoolSpecificStandardList(){
+    this.schoolSpecificStandardsList.courseId=+this.data.courseDetails.courseId;
+    this.courseSectionService.getAllCourseStandardForCourseSection(this.schoolSpecificStandardsList).subscribe(res => {
+      if (res._failure) {
+        this.snackbar.open('School Specific Standard List failed. ' + res._message, 'LOL THANKS', {
+          duration: 10000
+        });
+      } else {
+       this.schoolSpecificStandardsList.getCourseStandardForCourses= res.getCourseStandardForCourses
+      }
+    });
+    
+  }
+
   openAddNewEvent(event) {
     this.addCalendarDay = 1;
     this.selectedDate = event.date;
@@ -435,17 +443,12 @@ export class EditCourseSectionComponent implements OnInit {
     
     if (this.durationType === '1') {
       this.courseSection.durationBasedOnPeriod = true;
-      const validators = [ Validators.required];
-      this.form.addControl('markingPeriodId', new FormControl('', validators));
-     
-      this.form.removeControl('durationStartDate');
-      this.form.removeControl('durationEndDate');
+      this.form.removeControl('durationStartDate'); 
+      this.form.removeControl('durationEndDate'); 
     }
     else {
-      const validators = [ Validators.required];
-      this.form.addControl('durationStartDate', new FormControl('', validators));
-      this.form.addControl('durationEndDate', new FormControl('', validators));
-      this.form.removeControl('markingPeriodId');
+      this.form.setControl('durationStartDate', this.fb.control('', [Validators.required])); 
+      this.form.setControl('durationEndDate', this.fb.control('', [Validators.required])); 
       this.courseSection.durationBasedOnPeriod = false;
     }
   }
@@ -456,9 +459,15 @@ export class EditCourseSectionComponent implements OnInit {
 
   manipulateBlockScheduleBeforeSubmit(details: OutputEmitDataFormat) {
     if (!details.error) {
+      this.courseSection.scheduleType = details.scheduleType;
       this.courseSectionAddViewModel.courseBlockScheduleList = details.scheduleDetails;
       this.courseSectionAddViewModel.courseBlockScheduleList = this.courseSectionAddViewModel.courseBlockScheduleList?.map((item) => {
         item.gradeScaleId = this.form.value.gradeScaleId;
+        if(this.data.editMode){
+          item.updatedBy=sessionStorage.getItem("email");
+        }else{
+          item.createdBy=sessionStorage.getItem("email");
+        }
         return item;
       });
       this.submit();
@@ -476,28 +485,50 @@ export class EditCourseSectionComponent implements OnInit {
       this.courseSectionAddViewModel.courseVariableScheduleList = this.courseSectionAddViewModel.courseVariableScheduleList;
      
       this.submit();
-    }else{
-      this.snackbar.open('Cannot Save Duplicate Period ', '', {
-        duration: 10000
-      });
     }
   }
 
   manipulateFixedScheduleBeforeSubmit(details: OutputEmitDataFormat) {
     if (!details.error) {
+      if(this.data.editMode){
+        details.scheduleDetails.updatedBy=sessionStorage.getItem("email");
+      }else{
+        details.scheduleDetails.createdBy=sessionStorage.getItem("email");
+      }
       this.courseSection.scheduleType = details.scheduleType;
       this.courseSection.attendanceTaken = details.scheduleDetails.attendanceTaken;
       this.courseSection.meetingDays = details.scheduleDetails.meetingDays;
       this.courseSectionAddViewModel.courseFixedSchedule = details.scheduleDetails;
+      this.courseSectionAddViewModel.courseFixedSchedule.schoolId=+sessionStorage.getItem("selectedSchoolId");
+      this.courseSectionAddViewModel.courseFixedSchedule.courseId=+this.data.courseDetails.courseId;
       this.submit();
     }
   }
 
   manipulateCalendarScheduleBeforeSubmit(details) {
-    if (!details.error) {      
+    if (!details.error) { 
+      console.log(details);     
       this.courseSection.scheduleType = details.scheduleType;
       this.courseSectionAddViewModel.courseCalendarScheduleList = details.scheduleDetails;
-      this.submit();
+      for(let schedule of this.courseSectionAddViewModel.courseCalendarScheduleList){
+        
+        for(let room of details.roomList){
+         
+          if (this.form.controls.seats.value !== "" && room.roomId === +schedule.roomId) {
+            if (+this.form.controls.seats.value > +room.capacity) {
+              this.calendarError = true;
+              break;
+            }
+          }
+          
+        }
+        if(this.calendarError){
+          break;
+     }
+      }
+      if(!this.calendarError){
+           this.submit();
+      }
     }
   }
 }

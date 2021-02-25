@@ -5,7 +5,7 @@ export interface StudentDetails {
     alternateId: string;
     gradeLevel: string;
     section: string;
-    tbd?: string;
+    firstLanguage?: string;
     phoneNumber?: string;
     action?: string;
 }

@@ -29,7 +29,7 @@
             </div>
         </mat-card>
     </div>
-    <div class="lg:w-9/12 lg:pl-4">
+    <div class="lg:w-9/12 lg:pl-4" *ngIf="gradeScaleList !==null">
         <mat-card class="w-full p-0" fxFlex="auto">
             <div class="bg-white h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
@@ -77,8 +77,8 @@
         
                 <ng-container matColumnDef="id">
                     <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" cdkDrag>
-                        <mat-icon cdkDragHandle>reorder</mat-icon>
+                    <td mat-cell *matCellDef="let element" >
+                        <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
                     </td>
                 </ng-container>
         
@@ -139,7 +139,7 @@
                 </ng-container> 
         
                 <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+                <tr mat-row cdkDrag *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
                 <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
         
             </table>
