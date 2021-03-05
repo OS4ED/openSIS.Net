@@ -22,9 +22,11 @@ export class TableCountryModel {
 export class CountryModel extends CommonField {    
     public tableCountry : [TableCountryModel];
     public stateCount: number;   
+    public isCountryAvailable:boolean;
     constructor() {
         super();
         this.tableCountry= null;
+        this.isCountryAvailable=false;
         this._tenantName=sessionStorage.getItem('tenant');
         this._token=sessionStorage.getItem('token');
     }

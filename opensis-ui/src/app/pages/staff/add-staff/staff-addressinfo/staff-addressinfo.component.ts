@@ -190,7 +190,7 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Staff Updation failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Staff Updation failed. ' + data._message, '', {
             duration: 10000
           });
         } else {

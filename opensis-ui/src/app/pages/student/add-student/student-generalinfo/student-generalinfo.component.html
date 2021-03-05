@@ -254,8 +254,8 @@
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'section'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentAddModel.studentMaster.sectionId" name="sectionId">
-                                <mat-option value="" *ngIf="sectionList?.length==0">No Sections Found</mat-option>
-                                <mat-option *ngFor="let section of sectionList" [value]='section.sectionId'>
+                                <mat-option value="" *ngIf="sectionList?.tableSectionsList?.length==0">No Sections Found</mat-option>
+                                <mat-option *ngFor="let section of sectionList.tableSectionsList" [value]='section.sectionId'>
                                     {{section.name}}</mat-option>
                             </mat-select>
                         </mat-form-field>

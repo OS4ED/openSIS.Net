@@ -77,7 +77,7 @@ export class SiblingsinfoComponent implements OnInit {
             }
            
           } else{
-            this.snackbar.open('Siblings failed to fetch.' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Siblings failed to fetch.' + res._message, '', {
               duration: 10000
             });
           }
@@ -115,7 +115,7 @@ export class SiblingsinfoComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Sibling is failed to remove.' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Sibling is failed to remove.' + res._message, '', {
             duration: 10000
           });
         } else {  

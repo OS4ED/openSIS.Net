@@ -57,28 +57,28 @@ export class SchoolFieldsCategoryComponent implements OnInit {
   ngOnInit(): void {
   }
   submit(){
-    if(this.form.valid){
-      if(this.form.controls.categoryId.value==0){
-        this.fieldsCategoryAddView.fieldsCategory.title=this.form.controls.title.value;
-        this.fieldsCategoryAddView.fieldsCategory.sortOrder=this.form.controls.sortOrder.value;
-        this.fieldsCategoryAddView.fieldsCategory.module=this.fieldCategoryModuleEnum.School
+    if (this.form.valid){
+      if (this.form.controls.categoryId.value === 0){
+        this.fieldsCategoryAddView.fieldsCategory.title = this.form.controls.title.value;
+        this.fieldsCategoryAddView.fieldsCategory.sortOrder = this.form.controls.sortOrder.value;
+        this.fieldsCategoryAddView.fieldsCategory.module = this.fieldCategoryModuleEnum.School;
         this.customFieldService.addFieldsCategory(this.fieldsCategoryAddView).subscribe(
-          (res:FieldsCategoryAddView)=>{
-            if(typeof(res)=='undefined'){
-              this.snackbar.open('field category failed. ' + sessionStorage.getItem("httpError"), '', {
+          (res: FieldsCategoryAddView) => {
+            if (typeof(res) === 'undefined'){
+              this.snackbar.open('field category failed. ' + sessionStorage.getItem('httpError'), '', {
                 duration: 10000
               });
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
-              } 
-              else { 
-                this.snackbar.open('field category Successful Created.', '', {
+              }
+              else {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
-                }); 
+                });
                 this.dialogRef.close('submited');
               }
             }
@@ -99,12 +99,12 @@ export class SchoolFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('field category Successful Edited.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

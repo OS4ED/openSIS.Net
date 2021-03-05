@@ -24,8 +24,8 @@ export class ViewSiblingComponent implements OnInit {
   icClose = icClose;
   address: string;
   schoolName;
-  getStudentForView = [];
-  gradeLevel;
+  getStudentForView = []; 
+  gradeLevelTitle;
   countryName;
   mapUrl: string;
   destroySubject$: Subject<void> = new Subject();
@@ -41,27 +41,18 @@ export class ViewSiblingComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllCountry();
-    if (this.data.flag === 'Parent'){
-      this.addParentInfoModel.parentInfo.parentId = this.data.siblingDetails.parentId;
-      this.parentInfoService.viewParentInfo(this.addParentInfoModel).subscribe( (res) => {
-        this.getStudentForView = res.getStudentForView;
-        this.getStudentForView.map(val => {
-          if (val.studentId === this.data.studentDetails.studentId){
-            this.data.siblingDetails = val;
-          }
-        });
-
-        this.schoolName = this.data.siblingDetails.schoolName;
-        if (this.data.siblingDetails.address !== ''){
-          this.address = this.data.siblingDetails.address;
+    if (this.data.flag === 'Parent'){      
+      this.data.siblingDetails = this.data.studentDetails;
+      this.gradeLevelTitle = this.data.studentDetails.gradeLevelTitle;
+      this.schoolName = this.data.studentDetails.schoolName;
+        if (this.data.studentDetails.address !== ''){
+          this.address = this.data.studentDetails.address;
         }else{
           this.address = null;
-        }
-        this.gradeLevel = this.data.siblingDetails.gradeLevelTitle;
-      });
+        }   
     }else{
       this.schoolName = this.data.siblingDetails.schoolMaster.schoolName;
-
+      this.gradeLevelTitle = this.data.siblingDetails.studentEnrollment[0].gradeLevelTitle;
       if (this.data.siblingDetails.homeAddressLineOne !== null){
         this.address = this.data.siblingDetails.homeAddressLineOne;
         if (this.data.siblingDetails.homeAddressLineTwo !== null){

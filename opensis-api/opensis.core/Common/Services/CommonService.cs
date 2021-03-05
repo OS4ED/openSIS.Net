@@ -420,7 +420,119 @@ namespace opensis.core.Common.Services
                 releaseNumberView._failure = true;
                 releaseNumberView._message = null;
                 return releaseNumberView;
-            }            
+            }
+        }
+
+        /// <summary>
+        /// Add Search Filter
+        /// </summary>
+        /// <param name="searchFilterAddViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterAddViewModel AddSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            SearchFilterAddViewModel SearchFilterAddModel = new SearchFilterAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName, searchFilterAddViewModel._token))
+                {
+                    SearchFilterAddModel = this.commonRepository.AddSearchFilter(searchFilterAddViewModel);
+                }
+                else
+                {
+                    SearchFilterAddModel._failure = true;
+                    SearchFilterAddModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+
+                SearchFilterAddModel._failure = true;
+                SearchFilterAddModel._message = es.Message;
+            }
+            return SearchFilterAddModel;
+        }
+        /// <summary>
+        /// Update Search Filter
+        /// </summary>
+        /// <param name="searchFilterAddViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterAddViewModel UpdateSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            SearchFilterAddViewModel SearchFilterUpdateModel = new SearchFilterAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName, searchFilterAddViewModel._token))
+                {
+                    SearchFilterUpdateModel = this.commonRepository.UpdateSearchFilter(searchFilterAddViewModel);
+                }
+                else
+                {
+                    SearchFilterUpdateModel._failure = true;
+                    SearchFilterUpdateModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+
+                SearchFilterUpdateModel._failure = true;
+                SearchFilterUpdateModel._message = es.Message;
+            }
+            return SearchFilterUpdateModel;
+        }
+
+        /// <summary>
+        /// Delete Search Filter
+        /// </summary>
+        /// <param name="searchFilterAddViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterAddViewModel DeleteSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            SearchFilterAddViewModel searchFilterDeleteModel = new SearchFilterAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName, searchFilterAddViewModel._token))
+                {
+                    searchFilterDeleteModel = this.commonRepository.DeleteSearchFilter(searchFilterAddViewModel);
+                }
+                else
+                {
+                    searchFilterDeleteModel._failure = true;
+                    searchFilterDeleteModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                searchFilterDeleteModel._failure = true;
+                searchFilterDeleteModel._message = es.Message;
+            }
+            return searchFilterDeleteModel;
+        }
+        /// <summary>
+        /// Get All Search Filter
+        /// </summary>
+        /// <param name="searchFilterListViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterListViewModel GetAllSearchFilter(SearchFilterListViewModel searchFilterListViewModel)
+        {
+            SearchFilterListViewModel searchFilterListModel = new SearchFilterListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(searchFilterListViewModel._tenantName, searchFilterListViewModel._token))
+                {
+                    searchFilterListModel = this.commonRepository.GetAllSearchFilter(searchFilterListViewModel);
+                }
+                else
+                {
+                    searchFilterListModel._failure = true;
+                    searchFilterListModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                searchFilterListModel._failure = true;
+                searchFilterListModel._message = es.Message;
+            }
+            return searchFilterListModel;
         }
     }
 }

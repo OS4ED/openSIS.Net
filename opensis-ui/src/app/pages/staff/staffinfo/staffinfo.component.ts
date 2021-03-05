@@ -25,6 +25,7 @@ import { ExcelService } from '../../../services/excel.service';
 import { Subject } from 'rxjs';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 import { SchoolCreate } from '../../../enums/school-create.enum';
+import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
 
 @Component({
   selector: 'vex-staffinfo',
@@ -32,7 +33,8 @@ import { SchoolCreate } from '../../../enums/school-create.enum';
   styleUrls: ['./staffinfo.component.scss'],
   animations: [
     fadeInUp400ms,
-    stagger40ms
+    stagger40ms,
+    fadeInRight400ms
   ]
 })
 export class StaffinfoComponent implements OnInit, AfterViewInit {
@@ -41,7 +43,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
 
   getAllStaff: GetAllStaffModel = new GetAllStaffModel();
   staffList: MatTableDataSource<StaffMasterModel>;
-
+  showAdvanceSearchPanel: boolean = false;
   columns = [
     { label: 'Name', property: 'lastFamilyName', type: 'text', visible: true },
     { label: 'Staff ID', property: 'staffInternalId', type: 'text', visible: true },
@@ -204,7 +206,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
     }
     this.staffService.getAllStaffList(this.getAllStaff).subscribe(res => {
       if (res._failure) {
-        this.snackbar.open('Staff information failed. ' + res._message, 'LOL THANKS', {
+        this.snackbar.open('Staff information failed. ' + res._message, '', {
           duration: 10000
         });
       } else {
@@ -224,12 +226,12 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
     getAllStaff.sortingModel=null;
       this.staffService.getAllStaffList(getAllStaff).subscribe(res => {
         if(res._failure){
-          this.snackbar.open('Failed to Export Staff List.'+ res._message, 'LOL THANKS', {
+          this.snackbar.open('Failed to Export Staff List.'+ res._message, '', {
           duration: 10000
           });
         }else{
           if(res.staffMaster.length>0){
-            let staffList = res.staffMaster?.map((x)=>{
+            let staffList = res.staffMaster?.map((x:StaffMasterModel)=>{
               let middleName=x.middleName==null?' ':' '+x.middleName+' ';
               return {
                Name: x.firstGivenName+middleName+x.lastFamilyName,
@@ -242,7 +244,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
             });
             this.excelService.exportAsExcelFile(staffList,'Staffs_List_')
           }else{
-            this.snackbar.open('No Records Found. Failed to Export Staff List','LOL THANKS', {
+            this.snackbar.open('No Records Found. Failed to Export Staff List','', {
               duration: 5000
             });
           }
@@ -259,6 +261,22 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
 
   get visibleColumns() {
     return this.columns.filter(column => column.visible).map(column => column.property);
+  }
+
+  showAdvanceSearch() {
+    this.showAdvanceSearchPanel = true;
+  }
+
+  hideAdvanceSearch(event){
+    this.showAdvanceSearchPanel = false;
+  }
+
+  getSearchResult(res){
+    this.totalCount= res.totalCount;
+    this.pageNumber = res.pageNumber;
+    this.pageSize = res.pageSize;
+    this.staffList = new MatTableDataSource(res.staffMaster);
+    this.getAllStaff = new GetAllStaffModel();
   }
 
   ngOnDestroy(){

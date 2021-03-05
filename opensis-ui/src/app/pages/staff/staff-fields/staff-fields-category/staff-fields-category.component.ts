@@ -70,12 +70,12 @@ export class StaffFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('field category Successful Created.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -98,14 +98,14 @@ export class StaffFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('field category Successful Edited.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
-                }); 
+                });
                 this.dialogRef.close('submited');
               }
             }

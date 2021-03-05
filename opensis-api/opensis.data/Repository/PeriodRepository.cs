@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class PeriodRepository: IPeriodRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public PeriodRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -313,21 +313,23 @@ namespace opensis.data.Repository
                         //block.BlockPeriod = block.BlockPeriod.OrderBy(x => x.PeriodSortOrder).ToList();
                         blockListModel.getBlockListForView.Add(blockList);
                     }
-                    blockListModel._tenantName = blockListViewModel._tenantName;
-                    blockListModel._token = blockListViewModel._token;
                     blockListModel._failure = false;
                 }
                 else
                 {
-                    blockListModel.getBlockListForView = null;
                     blockListModel._message = NORECORDFOUND;
                     blockListModel._failure = true;
-                    blockListModel._tenantName = blockListViewModel._tenantName;
-                    blockListModel._token = blockListViewModel._token;
                 }
+
+                blockListModel.TenantId = blockListViewModel.TenantId;
+                blockListModel.SchoolId = blockListViewModel.SchoolId;
+                blockListModel._tenantName = blockListViewModel._tenantName;
+                blockListModel._token = blockListViewModel._token;
+
             }
             catch (Exception es)
             {
+                blockListModel.getBlockListForView = null;
                 blockListModel._message = es.Message;
                 blockListModel._failure = true;
                 blockListModel._tenantName = blockListViewModel._tenantName;

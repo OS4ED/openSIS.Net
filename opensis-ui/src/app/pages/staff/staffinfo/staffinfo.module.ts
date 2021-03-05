@@ -22,10 +22,18 @@ import { TranslateModule } from '@ngx-translate/core';
 import { StaffinfoRoutingModule } from './staffinfo-routing-module';
 import { MatSortModule } from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
+import { SearchStaffComponent } from './search-staff/search-staff.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRippleModule } from '@angular/material/core';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
-
 @NgModule({
-  declarations: [StaffinfoComponent],
+  declarations: [StaffinfoComponent, SearchStaffComponent],
   imports: [
     CommonModule,
     StaffinfoRoutingModule,
@@ -51,7 +59,15 @@ import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
     ReactiveFormsModule,
     MatSortModule,
     MatTooltipModule,
-    MatProgressSpinnerModule
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatInputModule,
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
+    MatRippleModule
   ]
 })
 export class StaffinfoModule { }

@@ -26,5 +26,9 @@ namespace opensis.core.Common.Interfaces
         public LanguageListModel GetAllLanguageForLogin(LanguageListModel languageListModel);
         public DashboardViewModel GetDashboardView(DashboardViewModel dashboardViewModel);
         public ReleaseNumberAddViewModel GetReleaseNumber(ReleaseNumberAddViewModel releaseNumberAddViewModel);
+        public SearchFilterAddViewModel AddSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel);
+        public SearchFilterAddViewModel UpdateSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel);
+        public SearchFilterAddViewModel DeleteSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel);
+        public SearchFilterListViewModel GetAllSearchFilter(SearchFilterListViewModel searchFilterListViewModel);
     }
 }

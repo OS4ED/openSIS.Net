@@ -1,51 +1,66 @@
 <div class="text-center" style="display:none" *ngIf="enableCropTool">
-      <ng-template #mytemplate>
-    <div class="flex justify-between">
-      <h2 class="text-center">Crop Image</h2>
-      <button class="text-secondary" (click)="onClose()" mat-icon-button type="button">
-        <mat-icon [icIcon]="icClose"></mat-icon>
+  <ng-template #mytemplate>
+      <div class="flex justify-between">
+        <h2 class="text-center">Crop Image</h2>
+        <button class="text-secondary" (click)="onClose()" mat-icon-button type="button">
+          <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+      </div>
+    <mat-dialog-content fxLayout="column">
+      <div class="flex justify-around">
+        <div>
+          <image-cropper (imageCropped)="imageCropped($event)" [imageChangedEvent]="imageChangedEvent"
+            [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageLoaded)="imageLoaded()"
+            (cropperReady)="cropperReady()" [onlyScaleDown]="false" (loadImageFailed)="loadImageFailed()">
+          </image-cropper>
+        </div>
+        <div>
+          <img [src]="croppedImage" width="160px" />
+        </div>
+      </div>
+    </mat-dialog-content>
+
+
+    <mat-dialog-actions
+      *ngIf="(createMode!=modes.ADD) && (moduleIdentifier == modules.STUDENT || moduleIdentifier == modules.STAFF || moduleIdentifier == modules.PARENT)"
+       class="py-6">
+      <div class="flex justify-end">
+
+      <button mat-raised-button (click)="cancelPhoto()"
+        *ngIf="!loading && moduleIdentifier !== modules.PARENT">Cancel</button>
+      <button mat-raised-button [disabled]="loading" color="primary" (click)="uploadPhotoDirectly()">Upload
+        <mat-icon class="ml-2" *ngIf="loading">
+          <mat-spinner color="primary" diameter="20">
+          </mat-spinner>
+        </mat-icon>
       </button>
-        </div>
-    <div class="flex justify-around">
-          <div>
-            <image-cropper (imageCropped)="imageCropped($event)" [imageChangedEvent]="imageChangedEvent"
-              [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageLoaded)="imageLoaded()" (cropperReady)="cropperReady()"
-              [onlyScaleDown]="false" (loadImageFailed)="loadImageFailed()">
-            </image-cropper>
-          </div>
-          <div>
-        <img [src]="croppedImage" width="160px" />
-          </div>
-        </div>
-        <div class="flex justify-end" *ngIf="(createMode!=modes.ADD) && (moduleIdentifier == modules.STUDENT || moduleIdentifier == modules.STAFF || moduleIdentifier == modules.PARENT)">
-          <button mat-raised-button (click)="cancelPhoto()" *ngIf="!loading && moduleIdentifier !== modules.PARENT">Cancel</button>
-            <button mat-raised-button [disabled]="loading" color="primary" (click)="uploadPhotoDirectly()">Upload
-              <mat-icon class="ml-2" *ngIf="loading"><mat-spinner color="primary" diameter="20">
-              </mat-spinner></mat-icon>
-            </button>
-        </div>
-        
-      </ng-template>
     </div>
+
+    </mat-dialog-actions>
+  </ng-template>
+</div>
 <div class="input-group" style="display: none;">
   <input [type]="inputType" (change)="uploadFile($event,fileUpload)" #fileUpload
     accept="image/jpg, image/jpeg, image/png">
-  </div>
-<div @fadeInRight class="d-flex justify-center photo-upload" [ngClass]="inputType=='file'?'cursor-pointer':''" (click)="fileUpload.click();unsetImage()">
+</div>
+<div @fadeInRight class="d-flex justify-center photo-upload" [ngClass]="inputType=='file'?'cursor-pointer':''"
+  (click)="fileUpload.click();unsetImage()">
   <div @fadeInRight class="inline-block align-top bg-white" [ngClass]="customCss"
     *ngIf="croppedImage=='' && preview=='' && (responseImage==null || responseImage.length==0)">
-    <img id="img1" src="../../../../assets/img/UploadPhoto.svg" width="160" class="rounded-full"
-      alt="Upload Logo">
+    <img id="img1" src="../../../../assets/img/UploadPhoto.svg" width="160" class="rounded-full" alt="Upload Logo">
   </div>
   <div @fadeInRight class="inline-block align-top" [ngClass]="customCss" *ngIf="preview!='' && croppedImage==''">
     <img id="img2" [src]="preview" class="" width="160" />
   </div>
-  <div @fadeInRight *ngIf="responseImage" [ngClass]="customCss" class="profile-photo-wrapper inline-block align-top relative overflow-hidden">
+  <div @fadeInRight *ngIf="responseImage" [ngClass]="customCss"
+    class="profile-photo-wrapper inline-block align-top relative overflow-hidden">
     <img id="img3" [src]="'data:image/jpeg;base64,'+responseImage" class="" width="160" />
-    <span href="" *ngIf="inputType=='file'" class="absolute w-full pt-2 pb-4 upload-photo-link text-center">Upload Photo</span>
+    <span href="" *ngIf="inputType=='file'" class="absolute w-full pt-2 pb-4 upload-photo-link text-center">Upload
+      Photo</span>
   </div>
-  <div *ngIf="croppedImage!=''" [ngClass]="customCss" class="profile-photo-wrapper inline-block align-top relative overflow-hidden">
-    <img id="img4"  @fadeInRight [src]="croppedImage" class="" width="160" />
+  <div *ngIf="croppedImage!=''" [ngClass]="customCss"
+    class="profile-photo-wrapper inline-block align-top relative overflow-hidden">
+    <img id="img4" @fadeInRight [src]="croppedImage" class="" width="160" />
     <span href="" class="absolute w-full pt-2 pb-4 upload-photo-link text-center">Upload Photo</span>
   </div>
 </div>

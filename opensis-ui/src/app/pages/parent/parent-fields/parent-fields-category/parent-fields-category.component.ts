@@ -69,7 +69,7 @@ export class ParentFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('field category failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -89,7 +89,7 @@ export class ParentFieldsCategoryComponent implements OnInit {
         this.fieldsCategoryAddView.fieldsCategory.title=this.form.controls.title.value;
         this.fieldsCategoryAddView.fieldsCategory.sortOrder=this.form.controls.sortOrder.value;
         this.customFieldService.updateFieldsCategory(this.fieldsCategoryAddView).subscribe(
-          (res:FieldsCategoryAddView)=>{
+          (res: FieldsCategoryAddView) => {
             if(typeof(res)=='undefined'){
               this.snackbar.open('field category failed. ' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
@@ -97,10 +97,10 @@ export class ParentFieldsCategoryComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('field category failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('field category failed. ' + res._message, '', {
                   duration: 10000
                 });
-              } 
+              }
               else { 
                 this.snackbar.open('field category Successful Edited.', '', {
                   duration: 10000

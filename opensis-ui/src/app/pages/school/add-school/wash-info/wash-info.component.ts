@@ -123,7 +123,7 @@ export class WashInfoComponent implements OnInit,OnDestroy {
         }
         else {
           if (data._failure) {
-            this.snackbar.open(`Wash Info Updation failed` + data._message, 'LOL THANKS', {
+            this.snackbar.open(`Wash Info Updation failed` + data._message, '', {
               duration: 10000
             });
           } else {

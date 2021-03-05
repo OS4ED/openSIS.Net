@@ -72,7 +72,7 @@
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>From Date</mat-label>
-                            <input matInput [matDatepicker]="frompicker">
+                            <input matInput [(ngModel)]="dobStartDate" name="dobStartDate" [matDatepicker]="frompicker">
                             <mat-datepicker-toggle matSuffix [for]="frompicker"></mat-datepicker-toggle>
                             <mat-datepicker #frompicker></mat-datepicker>
                         </mat-form-field>
@@ -80,7 +80,7 @@
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>To Date</mat-label>
-                            <input matInput [matDatepicker]="topicker">
+                            <input matInput [(ngModel)]="dobEndDate" name="dobEndDate" [matDatepicker]="topicker">
                             <mat-datepicker-toggle matSuffix [for]="topicker"></mat-datepicker-toggle>
                             <mat-datepicker #topicker></mat-datepicker>
                         </mat-form-field>
@@ -317,7 +317,6 @@
             </mat-expansion-panel>
         </mat-accordion>
         <div class="px-6 py-4">
-            <mat-slide-toggle color="primary" class="mr-5">{{'groupByFamily' | translate}}</mat-slide-toggle>
             <mat-slide-toggle color="primary" class="mr-5">{{'searchAllSchools' | translate}}</mat-slide-toggle>
             <mat-slide-toggle color="primary">{{'includeInactiveStudents' | translate}}</mat-slide-toggle>
         </div>

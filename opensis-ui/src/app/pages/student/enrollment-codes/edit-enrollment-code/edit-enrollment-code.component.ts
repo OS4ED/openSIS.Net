@@ -75,12 +75,12 @@ export class EditEnrollmentCodeComponent implements OnInit {
           }
           else{
             if (res._failure) {
-              this.snackbar.open('Enrollment code failed. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
             } 
             else {
-              this.snackbar.open('Enrollment code Created Successfully. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               }); 
               this.dialogRef.close('submited');
@@ -105,12 +105,12 @@ export class EditEnrollmentCodeComponent implements OnInit {
           }
           else{
             if (res._failure) {
-              this.snackbar.open('Enrollment code failed. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
             } 
             else { 
-              this.snackbar.open('Enrollment code Edited Successfully. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               }); 
               this.dialogRef.close('submited');

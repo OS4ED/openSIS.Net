@@ -17,7 +17,7 @@ namespace opensis.data.Repository
     public class MarkingPeriodRepository : IMarkingperiodRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public MarkingPeriodRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -120,7 +120,6 @@ namespace opensis.data.Repository
                 }  
                 else
                 {
-                    markingPeriodModel.schoolYearsView = null;
                     markingPeriodModel._tenantName = markingPeriod._tenantName;
                     markingPeriodModel._token = markingPeriod._token;
                     markingPeriodModel._failure = true;
@@ -131,6 +130,7 @@ namespace opensis.data.Repository
             }
             catch (Exception es)
             {
+                markingPeriodModel.schoolYearsView = null;
                 markingPeriodModel._failure = true;
                 markingPeriodModel._message = es.Message;
             }
@@ -665,11 +665,21 @@ namespace opensis.data.Repository
                       m.StartDate.HasValue == true && m.StartDate.Value.Year == m.EndDate.Value.Year && m.EndDate.HasValue == true ? m.EndDate.Value.Year.ToString() : m.StartDate.HasValue == true && m.EndDate.HasValue == false ? m.StartDate.Value.Year.ToString()
                       : m.StartDate.HasValue == false && m.EndDate.HasValue == true ? m.EndDate.Value.Year.ToString() : null,AcademyYear=(int)m.AcademicYear
             }).ToList();
+
             dropDownViewModel.AcademicYears = data;
             dropDownViewModel.SchoolId = downViewModel.SchoolId;
             dropDownViewModel.TenantId = downViewModel.TenantId;
             dropDownViewModel._tenantName = downViewModel._tenantName;
-            dropDownViewModel._failure = false;
+
+            if (data.Count() > 0)
+            {
+                dropDownViewModel._failure = false;
+            }
+            else
+            {
+                dropDownViewModel._failure = true;
+                dropDownViewModel._message = NORECORDFOUND;
+            }            
             return dropDownViewModel;
         }
         public PeriodViewModel GetMarkingPeriodTitleList(PeriodViewModel periodViewModel)
@@ -747,8 +757,10 @@ namespace opensis.data.Repository
                         var schoolYear = new GetMarkingPeriodView
                         {
                             Value = "0" + "_" + markingPeriod.MarkingPeriodId,
-                            Text = markingPeriod.ShortName
-                        };
+                            Text = markingPeriod.ShortName,
+                            StartDate = markingPeriod.StartDate,
+                            EndDate = markingPeriod.EndDate
+                    };
                         markingPeriodList.getMarkingPeriodView.Add(schoolYear);
                     }
 
@@ -758,7 +770,9 @@ namespace opensis.data.Repository
                         var sem = new GetMarkingPeriodView
                         {
                             Value = "1" + "_" + semester.MarkingPeriodId,
-                            Text = semester.ShortName
+                            Text = semester.ShortName,
+                            StartDate = semester.StartDate,
+                            EndDate = semester.EndDate
                         };
                         markingPeriodList.getMarkingPeriodView.Add(sem);
                     }
@@ -768,7 +782,9 @@ namespace opensis.data.Repository
                         var qtr = new GetMarkingPeriodView
                         {
                             Value = "2" + "_" + quater.MarkingPeriodId,
-                            Text = quater.ShortName
+                            Text = quater.ShortName,
+                            StartDate = quater.StartDate,
+                            EndDate = quater.EndDate
                         };
                         markingPeriodList.getMarkingPeriodView.Add(qtr);
                     }                      
@@ -787,6 +803,7 @@ namespace opensis.data.Repository
             }
             catch (Exception es)
             {
+                markingPeriodList.getMarkingPeriodView = null;
                 markingPeriodList._failure = true;
                 markingPeriodList._message = es.Message;
             }

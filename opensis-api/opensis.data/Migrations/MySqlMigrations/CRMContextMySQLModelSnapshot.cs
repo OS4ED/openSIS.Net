@@ -5118,6 +5118,99 @@ namespace opensis.data.Migrations.MySqlMigrations
                     b.ToTable("permission_group");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.PermissionSubcategory", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionCategoryId")
+                        .HasColumnName("permission_category_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("PermissionSubcategoryId")
+                        .HasColumnName("permission_subcategory_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<bool?>("EnableAdd")
+                        .HasColumnName("enable_add")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("EnableDelete")
+                        .HasColumnName("enable_delete")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("EnableEdit")
+                        .HasColumnName("enable_edit")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<bool?>("EnableView")
+                        .HasColumnName("enable_view")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Path")
+                        .HasColumnName("path")
+                        .HasColumnType("varchar(255) CHARACTER SET utf8mb4")
+                        .HasMaxLength(255)
+                        .IsUnicode(false);
+
+                    b.Property<int>("PermissionGroupId")
+                        .HasColumnName("permission_group_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("PermissionSubcategoryName")
+                        .HasColumnName("permission_subcategory_name")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("ShortCode")
+                        .HasColumnName("short_code")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Title")
+                        .HasColumnName("title")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("Type")
+                        .HasColumnName("type")
+                        .HasColumnType("varchar(50) CHARACTER SET utf8mb4")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "PermissionCategoryId", "PermissionSubcategoryId");
+
+                    b.ToTable("permission_subcategory");
+                });
+
             modelBuilder.Entity("opensis.data.Models.Plans", b =>
                 {
                     b.Property<Guid>("TenantId")
@@ -5447,6 +5540,10 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("permission_category_id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PermissionSubcategoryId")
+                        .HasColumnName("permission_subcategory_id")
+                        .HasColumnType("int");
+
                     b.Property<string>("UpdatedBy")
                         .HasColumnName("updated_by")
                         .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
@@ -5461,7 +5558,7 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.HasIndex("TenantId", "SchoolId", "MembershipId");
 
-                    b.HasIndex("TenantId", "SchoolId", "PermissionCategoryId");
+                    b.HasIndex("TenantId", "SchoolId", "PermissionCategoryId", "PermissionSubcategoryId");
 
                     b.ToTable("role_permission");
                 });
@@ -6156,6 +6253,77 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasName("pk_table_school_years");
 
                     b.ToTable("school_years");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.SearchFilter", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("char(36)");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Module")
+                        .HasColumnName("module")
+                        .HasColumnType("char(15) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasMaxLength(15)
+                        .IsUnicode(false);
+
+                    b.Property<int>("FilterId")
+                        .HasColumnName("filter_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("char(50) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("DateCreated")
+                        .HasColumnName("date_created")
+                        .HasColumnType("datetime");
+
+                    b.Property<DateTime?>("DateModifed")
+                        .HasColumnName("date_modifed")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("Emailaddress")
+                        .HasColumnName("emailaddress")
+                        .HasColumnType("varchar(150) CHARACTER SET utf8mb4")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<string>("FilterName")
+                        .HasColumnName("filter_name")
+                        .HasColumnType("char(50) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("JsonList")
+                        .HasColumnName("json_list")
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
+
+                    b.Property<string>("ModifiedBy")
+                        .HasColumnName("modified_by")
+                        .HasColumnType("char(50) CHARACTER SET utf8mb4")
+                        .IsFixedLength(true)
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.HasKey("TenantId", "SchoolId", "Module", "FilterId");
+
+                    b.HasIndex("TenantId", "SchoolId", "Emailaddress");
+
+                    b.HasIndex("TenantId", "SchoolId", "FilterName")
+                        .HasName("IX_search_filter");
+
+                    b.ToTable("search_filter");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Sections", b =>
@@ -8057,6 +8225,15 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("opensis.data.Models.PermissionSubcategory", b =>
+                {
+                    b.HasOne("opensis.data.Models.PermissionCategory", "PermissionCategory")
+                        .WithMany("PermissionSubcategory")
+                        .HasForeignKey("TenantId", "SchoolId", "PermissionCategoryId")
+                        .HasConstraintName("FK_permission_subcategory_permission_category")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("opensis.data.Models.ProgressPeriods", b =>
                 {
                     b.HasOne("opensis.data.Models.Quarters", "Quarters")
@@ -8091,6 +8268,11 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .WithMany("RolePermission")
                         .HasForeignKey("TenantId", "SchoolId", "PermissionCategoryId")
                         .HasConstraintName("FK_role_permission_permission_category");
+
+                    b.HasOne("opensis.data.Models.PermissionSubcategory", "PermissionSubcategory")
+                        .WithMany("RolePermission")
+                        .HasForeignKey("TenantId", "SchoolId", "PermissionCategoryId", "PermissionSubcategoryId")
+                        .HasConstraintName("FK_role_permission_permission_subcategory");
                 });
 
             modelBuilder.Entity("opensis.data.Models.SchoolCalendars", b =>
@@ -8125,6 +8307,20 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasForeignKey("TenantId", "SchoolId")
                         .HasConstraintName("FK_school_years_school_master")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("opensis.data.Models.SearchFilter", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("SearchFilter")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_search_filter_school_master")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.UserMaster", "UserMaster")
+                        .WithMany("SearchFilter")
+                        .HasForeignKey("TenantId", "SchoolId", "Emailaddress")
+                        .HasConstraintName("FK_search_filter_user_master");
                 });
 
             modelBuilder.Entity("opensis.data.Models.Semesters", b =>

@@ -90,7 +90,7 @@ export class EnrollmentCodesComponent implements OnInit {
               }
   
             } else {
-              this.snackbar.open('Enrollment code list failed.' + res._message, 'LOL THANKS', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
             }
@@ -170,12 +170,12 @@ export class EnrollmentCodesComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Enrollment code Delete failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open(res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Enrollment code deleted.', 'LOL THANKS', {
+            this.snackbar.open(res._message, '', {
               duration: 10000
             });
             this.getAllStudentEnrollmentCode()

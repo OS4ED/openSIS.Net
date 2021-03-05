@@ -2,6 +2,7 @@
 using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.CommonModel;
+using opensis.data.ViewModels.Membership;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -12,7 +13,7 @@ namespace opensis.data.Repository
     public class CommonRepository : ICommonRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "No data found";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public CommonRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -22,7 +23,6 @@ namespace opensis.data.Repository
             CityListModel cityListModel = new CityListModel();
             try
             {
-                cityListModel.TableCity = null;
                 var CityList = this.context?.City.Where(x => x.StateId == city.StateId).ToList();
                 if (CityList.Count > 0)
                 {
@@ -936,7 +936,7 @@ namespace opensis.data.Repository
             try
             {
                 ReleaseNumberViewModel.releaseNumber = null;
-                var releaseNumber = this.context?.ReleaseNumber.OrderByDescending(c => c.ReleaseDate).FirstOrDefault();
+                var releaseNumber = this.context?.ReleaseNumber.OrderByDescending(c => c.ReleaseDate).FirstOrDefault(c=>c.SchoolId== releaseNumberAddViewModel.releaseNumber.SchoolId && c.TenantId== releaseNumberAddViewModel.releaseNumber.TenantId);
                 
                 if (releaseNumber!=null)
                 {
@@ -959,6 +959,168 @@ namespace opensis.data.Repository
                 ReleaseNumberViewModel._token = releaseNumberAddViewModel._token;
             }
             return ReleaseNumberViewModel;
+        }
+
+        /// <summary>
+        /// Add Search Filter
+        /// </summary>
+        /// <param name="searchFilterAddViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterAddViewModel AddSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            try
+            {
+                var checkFilterName = this.context?.SearchFilter.Where(x => x.SchoolId == searchFilterAddViewModel.searchFilter.SchoolId && x.TenantId == searchFilterAddViewModel.searchFilter.TenantId && x.FilterName.ToLower() == searchFilterAddViewModel.searchFilter.FilterName.ToLower() && x.Module.ToLower()== searchFilterAddViewModel.searchFilter.Module.ToLower()).FirstOrDefault();
+                
+                if (checkFilterName != null)
+                {
+                    searchFilterAddViewModel._failure = true;
+                    searchFilterAddViewModel._message = "Filter Name Already Exists";
+                }
+                else
+                {
+                    int? FilterId = 1;
+
+                    var searchFilterData = this.context?.SearchFilter.Where(x => x.SchoolId == searchFilterAddViewModel.searchFilter.SchoolId && x.TenantId == searchFilterAddViewModel.searchFilter.TenantId).OrderByDescending(x => x.FilterId).FirstOrDefault();
+
+                    if (searchFilterData != null)
+                    {
+                        FilterId = searchFilterData.FilterId + 1;
+                    }
+
+                    searchFilterAddViewModel.searchFilter.FilterId = (int)FilterId;
+                    searchFilterAddViewModel.searchFilter.DateCreated = DateTime.UtcNow;
+                    this.context?.SearchFilter.Add(searchFilterAddViewModel.searchFilter);
+                    this.context?.SaveChanges();
+                    searchFilterAddViewModel._failure = false;
+                    searchFilterAddViewModel._message = "Search Filter Added Successfully";
+                }
+            }
+            catch (Exception es)
+            {
+                searchFilterAddViewModel._failure = true;
+                searchFilterAddViewModel._message = es.Message;
+            }
+            return searchFilterAddViewModel;
+        }
+
+        /// <summary>
+        /// Update Search Filter
+        /// </summary>
+        /// <param name="searchFilterAddViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterAddViewModel UpdateSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            try
+            {
+                var searchFilterUpdate = this.context?.SearchFilter.FirstOrDefault(x => x.TenantId == searchFilterAddViewModel.searchFilter.TenantId && x.SchoolId == searchFilterAddViewModel.searchFilter.SchoolId && x.FilterId == searchFilterAddViewModel.searchFilter.FilterId);
+
+                if (searchFilterUpdate != null)
+                {
+                    var checkFilterName = this.context?.SearchFilter.Where(x => x.SchoolId == searchFilterAddViewModel.searchFilter.SchoolId && x.TenantId == searchFilterAddViewModel.searchFilter.TenantId && x.FilterId != searchFilterAddViewModel.searchFilter.FilterId && x.FilterName.ToLower() == searchFilterAddViewModel.searchFilter.FilterName.ToLower() && x.Module.ToLower()==searchFilterAddViewModel.searchFilter.Module.ToLower()).FirstOrDefault();
+
+                    if (checkFilterName != null)
+                    {
+                        searchFilterAddViewModel._failure = true;
+                        searchFilterAddViewModel._message = "Filter Name Already Exists";
+                    }
+                    else
+                    {
+                        searchFilterAddViewModel.searchFilter.FilterName = searchFilterUpdate.FilterName;
+                        searchFilterAddViewModel.searchFilter.CreatedBy = searchFilterUpdate.CreatedBy;
+                        searchFilterAddViewModel.searchFilter.DateCreated = searchFilterUpdate.DateCreated;
+                        searchFilterAddViewModel.searchFilter.DateModifed = DateTime.Now;
+                        this.context.Entry(searchFilterUpdate).CurrentValues.SetValues(searchFilterAddViewModel.searchFilter);
+                        this.context?.SaveChanges();
+                        searchFilterAddViewModel._failure = false;
+                        searchFilterAddViewModel._message = "Search Filter Updated Successfully";
+                    }
+                }
+                else
+                {
+                    searchFilterAddViewModel._failure = true;
+                    searchFilterAddViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+
+                searchFilterAddViewModel._failure = true;
+                searchFilterAddViewModel._message = es.Message;
+            }
+            return searchFilterAddViewModel;
+        }
+
+        /// <summary>
+        /// Delete Search Filter
+        /// </summary>
+        /// <param name="searchFilterAddViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterAddViewModel DeleteSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            try
+            {
+                var searchFilterDelete = this.context?.SearchFilter.FirstOrDefault(x => x.TenantId == searchFilterAddViewModel.searchFilter.TenantId && x.SchoolId == searchFilterAddViewModel.searchFilter.SchoolId && x.FilterId == searchFilterAddViewModel.searchFilter.FilterId);                
+
+                if (searchFilterDelete != null)
+                {
+                    this.context?.SearchFilter.Remove(searchFilterDelete);
+                    this.context?.SaveChanges();
+                    searchFilterAddViewModel._failure = false;
+                    searchFilterAddViewModel._message = "Search Filter Deleted Successfully";
+                    
+                }
+                else
+                {
+                    searchFilterAddViewModel._failure = true;
+                    searchFilterAddViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+
+                searchFilterAddViewModel._failure = true;
+                searchFilterAddViewModel._message = es.Message;
+            }
+            return searchFilterAddViewModel;
+        }
+
+        /// <summary>
+        /// Get All Search Filter
+        /// </summary>
+        /// <param name="searchFilterListViewModel"></param>
+        /// <returns></returns>
+        public SearchFilterListViewModel GetAllSearchFilter(SearchFilterListViewModel searchFilterListViewModel)
+        {
+            SearchFilterListViewModel searchFilterListModel = new SearchFilterListViewModel();
+            try
+            {
+
+                var searchFilterList = this.context?.SearchFilter.Where(x => x.TenantId == searchFilterListViewModel.TenantId && x.SchoolId == searchFilterListViewModel.SchoolId && x.Module.ToLower() == searchFilterListViewModel.Module.ToLower()).ToList();
+                
+                if (searchFilterList.Count > 0)
+                {
+                    searchFilterListModel.searchFilterList = searchFilterList;
+                    searchFilterListModel._tenantName = searchFilterListViewModel._tenantName;
+                    searchFilterListModel._token = searchFilterListViewModel._token;
+                    searchFilterListModel._failure = false;
+                }
+                else
+                {                    
+                    searchFilterListModel._tenantName = searchFilterListViewModel._tenantName;
+                    searchFilterListModel._token = searchFilterListViewModel._token;
+                    searchFilterListModel._failure = true;
+                    searchFilterListModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                searchFilterListModel._message = es.Message;
+                searchFilterListModel._failure = true;
+                searchFilterListModel._tenantName = searchFilterListViewModel._tenantName;
+                searchFilterListModel._token = searchFilterListViewModel._token;
+            }
+            return searchFilterListModel;
         }
     }
 }

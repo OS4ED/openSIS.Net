@@ -29,15 +29,14 @@ namespace opensis.data.ViewModels.ParentInfos
         public string UserProfile { get; set; }
         public bool IsPortalUser { get; set; }
         public bool IsCustodian { get; set; }
-        public string AddressLineOne { get; set; }
+        public string FullAddress { get; set; }
         public List<GetStudentForView> getStudentForView { get; set; }
         public string[] students { get; set; }
-
-
-
-        //public string Country { get; set; }
-        //public string City { get; set; }
-        //public string State { get; set; }
-        //public string Zip { get; set; }
+        public string AddressLineOne { get; set; }
+        public string AddressLineTwo { get; set; }
+        public string Country { get; set; }
+        public string City { get; set; }
+        public string State { get; set; }
+        public string Zip { get; set; }
     }
 }

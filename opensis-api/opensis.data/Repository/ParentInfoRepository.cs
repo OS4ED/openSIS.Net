@@ -14,7 +14,7 @@ namespace opensis.data.Repository
     public class ParentInfoRepository : IParentInfoRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public ParentInfoRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -340,6 +340,11 @@ namespace opensis.data.Repository
                             this.context?.SaveChanges();
                         }
                     }
+                    var associationshipData = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentAssociationship.TenantId && x.ParentId == parentInfoAddViewModel.parentAssociationship.ParentId && x.StudentId == parentInfoAddViewModel.parentAssociationship.StudentId);
+                    if (associationshipData != null)
+                    {
+                        associationshipData.IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian;
+                    }
                     this.context?.SaveChanges();
                     parentInfoAddViewModel._message = "Parent Updated Successfully";
                     parentInfoAddViewModel._failure = false;
@@ -422,8 +427,14 @@ namespace opensis.data.Repository
                     PersonalEmail=y.PersonalEmail,
                     Mobile=y.Mobile,
                     UserProfile=y.UserProfile,
-                    AddressLineOne = ToFullAddress(y.ParentAddress.FirstOrDefault().AddressLineOne, y.ParentAddress.FirstOrDefault().AddressLineTwo, y.ParentAddress.FirstOrDefault().City,
-                    y.ParentAddress.FirstOrDefault().State, y.ParentAddress.FirstOrDefault().Country, y.ParentAddress.FirstOrDefault().Zip)
+                    FullAddress = ToFullAddress(y.ParentAddress.FirstOrDefault().AddressLineOne, y.ParentAddress.FirstOrDefault().AddressLineTwo, y.ParentAddress.FirstOrDefault().City,
+                    y.ParentAddress.FirstOrDefault().State, y.ParentAddress.FirstOrDefault().Country, y.ParentAddress.FirstOrDefault().Zip),
+                    AddressLineOne= y.ParentAddress.FirstOrDefault().AddressLineOne,
+                    AddressLineTwo = y.ParentAddress.FirstOrDefault().AddressLineTwo,
+                    Country = y.ParentAddress.FirstOrDefault().Country,
+                    City = y.ParentAddress.FirstOrDefault().City,
+                    State = y.ParentAddress.FirstOrDefault().State,
+                    Zip = y.ParentAddress.FirstOrDefault().Zip,
                 }).ToList();                
                 parentInfoListModel.parentInfoForView = parentInfo;
                 foreach (var ParentInfo in parentInfoListModel.parentInfoForView)
@@ -437,7 +448,7 @@ namespace opensis.data.Repository
                             var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == studentAssociateWithParent.StudentId && x.SchoolId == studentAssociateWithParent.SchoolId && x.TenantId == studentAssociateWithParent.TenantId);
                             if (student != null)
                             {                               
-                                studentArray.Add(student.FirstGivenName + " " + student.LastFamilyName + "|" + student.StudentId);
+                                studentArray.Add(student.FirstGivenName + "|" + student.MiddleName + "|" + student.LastFamilyName + "|" + student.StudentId);
                                 ParentInfo.students = studentArray.ToArray();
                             }
                         }
@@ -453,6 +464,7 @@ namespace opensis.data.Repository
             }
             catch (Exception es)
             {
+                parentInfoListModel.parentInfoForView = null;
                 parentInfoListModel._message = es.Message;
                 parentInfoListModel._failure = true;
                 parentInfoListModel._tenantName = pageResult._tenantName;

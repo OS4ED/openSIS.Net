@@ -86,6 +86,7 @@ export class EditCourseSectionComponent implements OnInit {
   viewDate: Date = new Date();
   events: CalendarEvent[] = [];
   standardGradeScaleList = [];
+  gradeScaleStandardList= [];
   markingPeriodList = [];
   calendarId;
   courseSectionModalTitle="addNewCourseSection";
@@ -148,7 +149,6 @@ export class EditCourseSectionComponent implements OnInit {
     this.getAllCalendarList();
     this.getAllGradeScaleList();
     this.getAllAttendanceCategoryList();
-    this.getAllSchoolSpecificStandardList();
     this.getAllMarkingPeriodList();
   }
  
@@ -256,6 +256,9 @@ toggleUsStandards(event) {
         }
       } else {
         this.gradeScaleList = data.gradeScaleList;
+
+        this.gradeScaleStandardList= data.gradeScaleList.filter(x=>x.useAsStandardGradeScale);
+        console.log(this.gradeScaleStandardList);
       }
     });
   }
@@ -417,21 +420,6 @@ toggleUsStandards(event) {
         }
       }
     });
-  }
-
-
-  getAllSchoolSpecificStandardList(){
-    this.schoolSpecificStandardsList.courseId=+this.data.courseDetails.courseId;
-    this.courseSectionService.getAllCourseStandardForCourseSection(this.schoolSpecificStandardsList).subscribe(res => {
-      if (res._failure) {
-        this.snackbar.open('School Specific Standard List failed. ' + res._message, 'LOL THANKS', {
-          duration: 10000
-        });
-      } else {
-       this.schoolSpecificStandardsList.getCourseStandardForCourses= res.getCourseStandardForCourses
-      }
-    });
-    
   }
 
   openAddNewEvent(event) {

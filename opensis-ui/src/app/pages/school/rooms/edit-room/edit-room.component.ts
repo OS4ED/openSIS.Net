@@ -64,28 +64,28 @@ export class EditRoomComponent implements OnInit {
   }
   submit(){
     this.form.markAllAsTouched();
-    if (this.form.valid) { 
-    if(this.form.controls.roomId.value==0){
-      this.roomAddViewModel.tableRoom.title=this.form.controls.title.value
-      this.roomAddViewModel.tableRoom.capacity=this.form.controls.capacity.value
-      this.roomAddViewModel.tableRoom.sortOrder=this.form.controls.sortorder.value
-      this.roomAddViewModel.tableRoom.description=this.form.controls.description.value
-      this.roomAddViewModel.tableRoom.isActive=this.form.controls.isActive.value
+    if (this.form.valid) {
+    if (this.form.controls.roomId.value === 0){
+      this.roomAddViewModel.tableRoom.title = this.form.controls.title.value;
+      this.roomAddViewModel.tableRoom.capacity = this.form.controls.capacity.value;
+      this.roomAddViewModel.tableRoom.sortOrder = this.form.controls.sortorder.value;
+      this.roomAddViewModel.tableRoom.description = this.form.controls.description.value;
+      this.roomAddViewModel.tableRoom.isActive = this.form.controls.isActive.value;
       this.roomService.addRoom(this.roomAddViewModel).subscribe(
-        (res)=>{
-          if(typeof(res)=='undefined'){
+        (res) => {
+          if(typeof(res) === 'undefined'){
             this.snackbar.open('Room list failed. ' + sessionStorage.getItem("httpError"), '', {
               duration: 10000
             });
           }
           else{
             if (res._failure) {
-              this.snackbar.open('Room list failed. ' + res._message, '', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
             } 
-            else { 
-              this.snackbar.open('Room Created Successfully. ' + res._message, '', {
+            else {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
               this.dialogRef.close('submited');
@@ -111,12 +111,12 @@ export class EditRoomComponent implements OnInit {
           }
           else{
             if (res._failure) {
-              this.snackbar.open('Room list failed. ' + res._message, '', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
             } 
             else { 
-              this.snackbar.open('Room Edited Successfully. ' + res._message, '', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
               this.dialogRef.close('submited');
@@ -130,6 +130,6 @@ export class EditRoomComponent implements OnInit {
   cancel(){
     this.dialogRef.close();
   }
-  
+
 
 }

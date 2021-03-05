@@ -150,7 +150,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Cateogy list failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Cateogy list failed. ' + res._message, '', {
             duration: 10000
           });
         }
@@ -162,6 +162,10 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       }
     }
     );
+  }
+
+  changeTempCategory(){
+    this.currentCategory=100
   }
 
   getStudentDetailsUsingId() {

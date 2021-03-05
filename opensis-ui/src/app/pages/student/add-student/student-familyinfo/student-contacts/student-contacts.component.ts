@@ -116,7 +116,7 @@ export class StudentContactsComponent implements OnInit {
         else{
           if (data._failure) {  
             
-            this.snackbar.open('Parent Information failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Parent Information failed. ' + data._message, '', {
               duration: 10000
             });
           } 
@@ -144,7 +144,7 @@ export class StudentContactsComponent implements OnInit {
           this.parentListArray=[];
           this.contactType="Primary";  
           if (data._failure) {     
-            this.snackbar.open('Parent Information failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Parent Information failed. ' + data._message, '', {
               duration: 10000
             });
           } 

@@ -124,7 +124,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Address Updation failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Address Updation failed. ' + data._message, '', {
             duration: 10000
           });
         } else {

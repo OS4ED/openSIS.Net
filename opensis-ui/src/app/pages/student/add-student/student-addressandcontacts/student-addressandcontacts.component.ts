@@ -172,7 +172,7 @@ export class StudentAddressandcontactsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Student Updation failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Student Updation failed. ' + data._message, '', {
             duration: 10000
           });
         } else {    

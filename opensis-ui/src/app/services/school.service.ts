@@ -118,7 +118,12 @@ export class SchoolService {
     return this.http.put<SchoolAddViewModel>(apiurl, obj)
   }
 
+  private changeStatusTo = new BehaviorSubject(false);
+  schoolListCalled = this.changeStatusTo.asObservable();  
 
+  changeSchoolListStatus(message: boolean) {
+    this.changeStatusTo.next(message)
+  }
 
 
 }

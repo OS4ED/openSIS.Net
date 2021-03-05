@@ -95,7 +95,7 @@ export class AddSiblingComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Grade Level Information failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Grade Level Information failed. ' + res._message, '', {
             duration: 10000
           });
         } else {
@@ -126,7 +126,7 @@ export class AddSiblingComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Student Search failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Student Search failed. ' + res._message, '', {
               duration: 10000
             });
           } else {
@@ -193,7 +193,7 @@ export class AddSiblingComponent implements OnInit {
             else 
             {
               if (data._failure) {
-                this.snackbar.open('Parent Information Submission failed. ' + data._message, 'LOL THANKS', {
+                this.snackbar.open('Parent Information Submission failed. ' + data._message, '', {
                   duration: 10000
                 });
               }
@@ -239,7 +239,7 @@ export class AddSiblingComponent implements OnInit {
           else 
           {
             if (data._failure) {
-              this.snackbar.open('Parent Information Submission failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Parent Information Submission failed. ' + data._message, '', {
                 duration: 10000
               });
             }
@@ -269,7 +269,7 @@ export class AddSiblingComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Association failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Association failed. ' + res._message, '', {
               duration: 10000
             });
           } else {  

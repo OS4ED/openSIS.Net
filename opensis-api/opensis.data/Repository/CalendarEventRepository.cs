@@ -12,7 +12,7 @@ namespace opensis.data.Repository
     public class CalendarEventRepository : ICalendarEventRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
 
         public CalendarEventRepository(IDbContextFactory dbContextFactory)
         {

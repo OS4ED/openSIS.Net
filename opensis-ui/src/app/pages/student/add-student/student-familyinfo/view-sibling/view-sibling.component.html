@@ -25,7 +25,7 @@
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'gradeLevel' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{data.siblingDetails.studentEnrollment[0].gradeLevelTitle|EmtyValueCheckPipe}}</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{gradeLevelTitle|EmtyValueCheckPipe}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'school' | translate}}</label>
@@ -33,14 +33,13 @@
         </li>
         <li class="col-span-2">
             <label class="text-sm leading-5 text-gray">{{'Address' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2" >
+            <p *ngIf="address!= null" class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2" >
                 <a (click)="showOnGoogleMap()" class="text-blue cursor-pointer">
                     {{address+" " + countryName}}
 
                     <i class="icon icon-location4 ml-2" *ngIf="address!= null"></i>
                 </a>
-            </p>          
-            
+            </p>            
         </li>
        
     </ul>

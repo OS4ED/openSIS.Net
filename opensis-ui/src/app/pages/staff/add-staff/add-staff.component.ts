@@ -172,7 +172,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Cateogy list failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Cateogy list failed. ' + res._message, '', {
             duration: 10000
           });
         }

@@ -441,7 +441,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('General Info Submission failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('General Info Submission failed. ' + data._message, '', {
             duration: 10000
           });
         } else {
@@ -477,7 +477,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('General Info Updation failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('General Info Updation failed. ' + data._message, '', {
             duration: 10000
           });
         } else {

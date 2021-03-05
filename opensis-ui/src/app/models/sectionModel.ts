@@ -16,6 +16,7 @@ export class GetAllSectionModel extends CommonField{
     public tableSectionsList: [TableSectionList];
     public tenantId: string;
     public schoolId: number;
+    public isSectionAvailable:boolean;
     constructor() {
         super(); 
         this.tableSectionsList = null;      
@@ -23,6 +24,7 @@ export class GetAllSectionModel extends CommonField{
         this.schoolId= +sessionStorage.getItem("selectedSchoolId");
         this._tenantName= sessionStorage.getItem("tenant");
         this._token=sessionStorage.getItem("token");
+        this.isSectionAvailable=false;
     }
 }
 

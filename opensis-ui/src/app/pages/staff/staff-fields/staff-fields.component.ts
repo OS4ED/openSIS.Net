@@ -138,7 +138,7 @@ export class StaffFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Custom Field failed. ' + res._message, '', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           } 
@@ -183,7 +183,7 @@ export class StaffFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Field Category list failed. ' + res._message, '', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           } 
@@ -207,7 +207,7 @@ export class StaffFieldsComponent implements OnInit {
     );
   }
   editFieldCategory(element){
-    this.dialog.open(StaffFieldsCategoryComponent,{ 
+    this.dialog.open(StaffFieldsCategoryComponent, {
       data: element,
       width: '800px'
     }).afterClosed().subscribe((data)=>{
@@ -227,12 +227,12 @@ export class StaffFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Field Category delete failed. ' + res._message, '', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           }
           else{
-            this.snackbar.open('' + res._message, '', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
             if (element.categoryId === this.currentCategoryId){
@@ -270,7 +270,7 @@ export class StaffFieldsComponent implements OnInit {
           });
         }else{
           if (res._failure) {
-            this.snackbar.open('Custom Field Drag short failed. ' + res._message, '', {
+            this.snackbar.open(  res._message, '', {
               duration: 10000
             });
           } 

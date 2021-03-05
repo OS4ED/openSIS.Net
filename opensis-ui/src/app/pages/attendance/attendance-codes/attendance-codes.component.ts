@@ -253,7 +253,7 @@ export class AttendanceCodesComponent implements OnInit {
     if(res._failure){
       if(res._message==="NO RECORD FOUND"){
         this.attendanceCodeList = new MatTableDataSource([]);
-        this.attendanceCodeList.sort = this.sort;       
+        this.attendanceCodeList.sort = this.sort;
       } else{
         this.snackbar.open('Attendance Codes failed. ' + res._message, '', {
           duration: 10000

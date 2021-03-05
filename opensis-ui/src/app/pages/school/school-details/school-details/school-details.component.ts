@@ -189,7 +189,7 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     }
     this.schoolService.GetAllSchoolList(this.getAllSchool).subscribe(data => {
       if(data._failure){
-        this.snackbar.open('School information failed. '+ data._message, 'LOL THANKS', {
+        this.snackbar.open('School information failed. '+ data._message, '', {
         duration: 10000
         });
       }else{
@@ -229,7 +229,7 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     getAllSchool.sortingModel=null;
       this.schoolService.GetAllSchoolList(getAllSchool).subscribe(res => {
         if(res._failure){
-          this.snackbar.open('Failed to Export School List.'+ res._message, 'LOL THANKS', {
+          this.snackbar.open('Failed to Export School List.'+ res._message, '', {
           duration: 10000
           });
         }else{

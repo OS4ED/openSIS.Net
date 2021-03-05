@@ -91,7 +91,7 @@ export class StudentCommentsComponent implements OnInit {
               }
              
             } else{
-              this.snackbar.open('Student Comments Not Found. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open( res._message, '', {
                 duration: 10000
               });
             }
@@ -158,7 +158,7 @@ export class StudentCommentsComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            this.snackbar.open('Student Comments Not Found. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           }

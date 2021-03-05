@@ -123,11 +123,12 @@ export class EditCourseComponent implements OnInit {
             obj1["updatedOn"] =value.gradeUsStandard.updatedOn;
             obj1["courseId"] =value.courseId;
             this.updatedCheckedStandardList.push(obj1);
+            this.checkedStandardList.push(obj1);
             this.nonDuplicateCheckedStandardList.push(obj1);
           })
         }
       }
-    
+      
       
     }
     this.getAllProgramList();
@@ -286,13 +287,14 @@ export class EditCourseComponent implements OnInit {
   
   goToCourse(){
     this.addStandard = false;
+    console.log(this.checkedStandardList)
     this.nonDuplicateCheckedStandardList = this.checkedStandardList.reduce((unique, o) => {
       if(!unique.some(obj => obj.gradeStandardId === o.gradeStandardId)) {
         unique.push(o);
       }
       return unique;
   },[]);
-  
+   
   }
   removeStandard(checkedStandard){   
     let findIndexArray = this.nonDuplicateCheckedStandardList.findIndex(x => x.gradeStandardId === checkedStandard.gradeStandardId);
@@ -540,7 +542,6 @@ export class EditCourseComponent implements OnInit {
   }
 
   closeStandardsSelection(){
-    
     this.addStandard = false;
   }
 

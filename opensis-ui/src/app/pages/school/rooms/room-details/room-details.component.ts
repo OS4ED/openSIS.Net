@@ -21,7 +21,7 @@ export class RoomDetailsComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<RoomDetailsComponent>,
     @Inject(MAT_DIALOG_DATA) public data:any,
     ) {
-    this.roomDetails=data;
+    this.roomDetails = data;
    }
 
   ngOnInit(): void {

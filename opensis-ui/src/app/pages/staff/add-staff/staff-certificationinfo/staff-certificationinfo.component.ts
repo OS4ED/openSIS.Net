@@ -139,7 +139,7 @@ export class StaffCertificationinfoComponent implements OnInit {
               }
              
             } else{
-              this.snackbar.open('Staff Certificate List failed. ' + res._message, 'LOL THANKS', {
+              this.snackbar.open('Staff Certificate List failed. ' + res._message, '', {
                 duration: 10000
               });
             }  
@@ -168,7 +168,7 @@ export class StaffCertificationinfoComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Staff Certificate Delete failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Staff Certificate Delete failed. ' + res._message, '', {
               duration: 10000
             });
           } 

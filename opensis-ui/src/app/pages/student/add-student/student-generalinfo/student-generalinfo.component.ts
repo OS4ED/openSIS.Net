@@ -20,7 +20,7 @@ import { SharedFunction } from '../../../shared/shared-function';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import icEdit from '@iconify/icons-ic/edit';
 import { Subject } from 'rxjs/internal/Subject';
-import { auditTime, debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
+import { auditTime, debounceTime, distinctUntilChanged, takeUntil, shareReplay } from 'rxjs/operators';
 import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
 import { SectionService } from '../../../../services/section.service';
@@ -72,7 +72,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   studentAddModel: StudentAddModel = new StudentAddModel();
   checkStudentInternalIdViewModel: CheckStudentInternalIdViewModel = new CheckStudentInternalIdViewModel();
   checkUserEmailAddressViewModel: CheckUserEmailAddressViewModel = new CheckUserEmailAddressViewModel();
-  sectionList: [TableSectionList];
+  sectionList: GetAllSectionModel = new GetAllSectionModel();
   languages: LanguageModel = new LanguageModel();
   lovListViewModel: LovList = new LovList()
   module = 'Student';
@@ -92,6 +92,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   internalId: FormControl;
   loginEmail:FormControl;
   cloneStudentModel;
+
   @Output() dataAfterSavingGeneralInfo = new EventEmitter<any>();
   constructor(
     private el: ElementRef,
@@ -274,22 +275,25 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   }
 
   getAllSection() {
-    let section: GetAllSectionModel = new GetAllSectionModel();
-    this.sectionService.GetAllSection(section).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (data._failure) {
-      }
-      else {
-        this.sectionList = data.tableSectionsList;
-        if (this.studentCreateMode == this.studentCreate.VIEW) {
-         this.findSectionNameById();
+    if(!this.sectionList.isSectionAvailable){
+      this.sectionList.isSectionAvailable=true;
+      this.sectionService.GetAllSection(this.sectionList).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
+        if (data._failure) {
         }
-      }
-      
-    });
+        else {
+          this.sectionList.tableSectionsList = data.tableSectionsList;
+          if (this.studentCreateMode == this.studentCreate.VIEW) {
+           this.findSectionNameById();
+          }
+        }
+        
+      });
+    }
+   
   }
 
   findSectionNameById(){
-    this.sectionList.map((val) => {
+    this.sectionList?.tableSectionsList.map((val) => {
       var sectionNumber = +this.data.sectionId;
       if (val.sectionId === sectionNumber) {
         this.nameOfMiscValuesForView.sectionName = val.name;
@@ -322,21 +326,25 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
 
 
   getAllCountry() {
-    this.commonService.GetAllCountry(this.countryModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.countryListArr = [];
-      }
-      else {
-        if (data._failure) {
+    if(!this.countryModel.isCountryAvailable){
+      this.countryModel.isCountryAvailable=true;
+      this.commonService.GetAllCountry(this.countryModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
+        if (typeof (data) == 'undefined') {
           this.countryListArr = [];
-        } else {
-          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
-          if (this.studentCreateMode == this.studentCreate.VIEW) {
-           this.findCountryNationalityById();
+        }
+        else {
+          if (data._failure) {
+            this.countryListArr = [];
+          } else {
+            this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
+            if (this.studentCreateMode == this.studentCreate.VIEW) {
+             this.findCountryNationalityById();
+            }
           }
         }
-      }
-    })
+      })
+    }
+    
   }
 
   findCountryNationalityById(){
@@ -374,6 +382,8 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   }
 
   GetAllLanguage() {
+    if(!this.languages.isLanguageAvailable){
+    this.languages.isLanguageAvailable=true;
     this.languages._tenantName = sessionStorage.getItem("tenant");
     this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
@@ -386,6 +396,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
         }
       }
     })
+  }
   }
 
   findLanguagesById(){
@@ -452,7 +463,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Student Update failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Student Update failed. ' + data._message, '', {
             duration: 10000
           });
         } else {

@@ -133,12 +133,11 @@ export class SectionsComponent implements OnInit {
     }).afterClosed().subscribe((data) => {
       if(data){
         this.getSectiondetails();
-      }            
-    });   
-        
+      }
+    });
+
   }
   confirmDelete(deleteDetails){
-    
       // call our modal window
       const dialogRef = this.dialog.open(ConfirmDialogComponent, {
         maxWidth: "400px",

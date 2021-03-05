@@ -96,7 +96,7 @@ export class EditParentFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('School field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 
@@ -126,7 +126,7 @@ export class EditParentFieldsComponent implements OnInit {
         this.customFieldAddView.customFields.hide=this.form.controls.hide.value;
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
         this.customFieldService.updateCustomField(this.customFieldAddView).subscribe(
-          (res:CustomFieldAddView)=>{
+          (res: CustomFieldAddView)=>{
             if(typeof(res)=='undefined'){
               this.snackbar.open('School field failed. ' + sessionStorage.getItem("httpError"), '', {
                 duration: 10000
@@ -134,7 +134,7 @@ export class EditParentFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('School field failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open('School field failed. ' + res._message, '', {
                   duration: 10000
                 });
               } 

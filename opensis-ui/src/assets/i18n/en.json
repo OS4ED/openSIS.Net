@@ -703,5 +703,20 @@
     "startScheduling": "Start Scheduling",
     "addNewCertification":"Add New Certification",
     "editCertification":"Edit Certification",
-    "classDetails":"Class Details"
+    "classDetails":"Class Details",
+    "selectedCourseSection": "Selected Course Section",
+    "studentRequests": "Student Requests",
+    "teachers": "Teachers",
+    "mp": "MP",
+    "reqDate": "Req. Date",
+    "reject": "Reject",
+    "scheduledCourses": "Scheduled Courses",
+    "enrolledDate": "Enrolled Date",
+    "endDropDate": "End/DropDate",
+    "daysOfWeek": "Days of Week",
+    "assignCourseSection": "Assign Course Section",
+    "assignCourseSections": "Assign Course Section(s)",
+    "assignSelectedCourseSections": "Assign Selected Course Section(s)",
+    "printSchedule": "Print Schedule",
+    "exportToExcel": "Export to Excel"
 }

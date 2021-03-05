@@ -221,7 +221,7 @@ export class StudentComponent implements OnInit,OnDestroy {
         if(data._message==="NO RECORD FOUND"){
             this.StudentModelList = new MatTableDataSource([]);   
         } else{
-          this.snackbar.open('Student List failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Student List failed. ' + data._message, '', {
             duration: 10000
           });
         }
@@ -236,32 +236,32 @@ export class StudentComponent implements OnInit,OnDestroy {
   }
 
   exportStudentListToExcel(){
-    let getAllStudent: StudentListModel = new StudentListModel();
-    getAllStudent.pageNumber=0;
-    getAllStudent.pageSize=0;
-    getAllStudent.sortingModel=null;
-      this.studentService.GetAllStudentList(getAllStudent).subscribe(res => {
-        if(res._failure){
-          this.snackbar.open('Failed to Export School List.'+ res._message, 'LOL THANKS', {
+    const getAllStudent: StudentListModel = new StudentListModel();
+    getAllStudent.pageNumber = 0;
+    getAllStudent.pageSize = 0;
+    getAllStudent.sortingModel = null;
+    this.studentService.GetAllStudentList(getAllStudent).subscribe(res => {
+        if (res._failure){
+          this.snackbar.open('Failed to Export School List.'+ res._message, '', {
           duration: 10000
           });
         }else{
-          if(res.studentMaster.length>0){
+          if (res.studentMaster.length > 0){
             let studentList;
-            studentList=res.studentMaster?.map((x)=>{
-             let middleName=x.middleName==null?' ':' '+x.middleName+' ';
-               return {
-                Name: x.firstGivenName+middleName+x.lastFamilyName,
-                'Student Id': x.studentInternalId,
-                'Alternative Id': x.alternateId,
-                'Grade Level':x.studentEnrollment[0]?.gradeLevelTitle,
-                Email:x.schoolEmail,
+            studentList = res.studentMaster?.map((x)=>{
+             const middleName = x.middleName == null?' ':' '+x.middleName+' ';
+             return {
+                Name: x.firstGivenName + middleName + x.lastFamilyName,
+                'Student ID': x.studentInternalId,
+                'Alternate Id': x.alternateId,
+                'Grade Level': x.studentEnrollment[0]?.gradeLevelTitle,
+                Email: x.schoolEmail,
                 Telephone: x.mobilePhone
-              }
+              };
             });
             this.excelService.exportAsExcelFile(studentList,'Students_List_')
           }else{
-            this.snackbar.open('No Records Found. Failed to Export Students List','LOL THANKS', {
+            this.snackbar.open('No Records Found. Failed to Export Students List','', {
               duration: 5000
             });
           }

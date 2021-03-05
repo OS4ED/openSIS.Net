@@ -187,7 +187,7 @@ getAllCustomFieldCategory(){
             this.currentCategoryId=res.fieldsCategoryList[0].categoryId  
             this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[0].customFields) ;
             this.customFieldList.sort=this.sort;
-          }   
+          }
           else{
             let index = this.fieldsCategoryList.findIndex((x) => {
               return x.categoryId === this.currentCategoryId
@@ -205,26 +205,26 @@ editFieldCategory(element){
     data: element,
     width: '800px'
   }).afterClosed().subscribe((data)=>{
-    if(data==='submited'){
+    if (data === 'submited'){
       this.getAllCustomFieldCategory();
     }
   })
 }
 deleteFieldCategory(element){
-  this.fieldsCategoryAddView.fieldsCategory=element
+  this.fieldsCategoryAddView.fieldsCategory = element;
   this.customFieldservice.deleteFieldsCategory(this.fieldsCategoryAddView).subscribe(
-    (res:FieldsCategoryAddView)=>{
-      if(typeof(res)=='undefined'){
+    (res: FieldsCategoryAddView)=>{
+      if(typeof(res) === 'undefined'){
         this.snackbar.open('Field Category delete failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
       else{
         if (res._failure) {
-          this.snackbar.open('Field Category delete failed. ' + res._message, '', {
+          this.snackbar.open(  res._message, '', {
             duration: 10000
           });
-        } 
+        }
         else{
           this.snackbar.open('' + res._message, '', {
             duration: 10000
@@ -240,39 +240,39 @@ deleteFieldCategory(element){
 }
 confirmDeleteFieldCategory(element){
   const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-    maxWidth: "400px",
+    maxWidth: '400px',
     data: {
-        title: "Are you sure?",
-        message: "You are about to delete "+element.title+"."}
+        title: 'Are you sure?',
+        message: 'You are about to delete ' + element.title + '.' }
   });
   dialogRef.afterClosed().subscribe(dialogResult => {
-    if(dialogResult){
+    if (dialogResult){
       this.deleteFieldCategory(element);
     }
  });
 }
 
   drop(event: CdkDragDrop<string[]>) {
-    this.customFieldDragDropModel.categoryId=this.currentCategoryId
-    this.customFieldDragDropModel.currentSortOrder=this.customFieldList.data[event.currentIndex].sortOrder
-    this.customFieldDragDropModel.previousSortOrder=this.customFieldList.data[event.previousIndex].sortOrder
+    this.customFieldDragDropModel.categoryId = this.currentCategoryId;
+    this.customFieldDragDropModel.currentSortOrder = this.customFieldList.data[event.currentIndex].sortOrder;
+    this.customFieldDragDropModel.previousSortOrder = this.customFieldList.data[event.previousIndex].sortOrder;
     this.customFieldservice.updateCustomFieldSortOrder(this.customFieldDragDropModel).subscribe(
-      (res:CustomFieldDragDropModel)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Custom Field Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
+      (res: CustomFieldDragDropModel) => {
+        if (typeof(res) === 'undefined'){
+          this.snackbar.open('Custom Field Drag short failed. ' + sessionStorage.getItem('httpError'), '', {
             duration: 10000
           });
         }else{
           if (res._failure) {
-            this.snackbar.open('Custom Field Drag short failed. ' + res._message, '', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
-          } 
+          }
           else{
-            this.getAllCustomFieldCategory()
+            this.getAllCustomFieldCategory();
           }
         }
       }
-    ); 
+    );
   }
 }

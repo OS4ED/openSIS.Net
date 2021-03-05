@@ -332,5 +332,70 @@ namespace opensisAPI.Controllers
             }
             return releaseNumberView;
         }
+
+        [HttpPost("addSearchFilter")]
+        public ActionResult<SearchFilterAddViewModel> AddSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            SearchFilterAddViewModel searchFilterAdd = new SearchFilterAddViewModel();
+            try
+            {
+                searchFilterAdd = _commonService.AddSearchFilter(searchFilterAddViewModel);
+            }
+            catch (Exception es)
+            {
+                searchFilterAdd._failure = true;
+                searchFilterAdd._message = es.Message;
+            }
+            return searchFilterAdd;
+        }
+
+        [HttpPut("updateSearchFilter")]
+        public ActionResult<SearchFilterAddViewModel> UpdateSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            SearchFilterAddViewModel searchFilterUpdate = new SearchFilterAddViewModel();
+            try
+            {
+                searchFilterUpdate = _commonService.UpdateSearchFilter(searchFilterAddViewModel);
+            }
+            catch (Exception es)
+            {
+                searchFilterUpdate._failure = true;
+                searchFilterUpdate._message = es.Message;
+            }
+            return searchFilterUpdate;
+        }
+
+        [HttpPost("deleteSearchFilter")]
+        public ActionResult<SearchFilterAddViewModel> DeleteSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel)
+        {
+            SearchFilterAddViewModel searchFilterDelete = new SearchFilterAddViewModel();
+            try
+            {
+                searchFilterDelete = _commonService.DeleteSearchFilter(searchFilterAddViewModel);
+            }
+            catch (Exception es)
+            {
+                searchFilterDelete._failure = true;
+                searchFilterDelete._message = es.Message;
+            }
+            return searchFilterDelete;
+        }
+
+        [HttpPost("getAllSearchFilter")]
+        public ActionResult<SearchFilterListViewModel> GetAllSearchFilter(SearchFilterListViewModel searchFilterListViewModel)
+        {
+            SearchFilterListViewModel searchFilterList = new SearchFilterListViewModel();
+            try
+            {
+                searchFilterList = _commonService.GetAllSearchFilter(searchFilterListViewModel);
+
+            }
+            catch (Exception es)
+            {
+                searchFilterList._message = es.Message;
+                searchFilterList._failure = true;
+            }
+            return searchFilterList;
+        }
     }
 }

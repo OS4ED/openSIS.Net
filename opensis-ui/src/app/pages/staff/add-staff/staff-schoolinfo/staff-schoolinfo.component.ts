@@ -145,7 +145,7 @@ export class StaffSchoolinfoComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Staff School Info Failed to Fetch. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Staff School Info Failed to Fetch. ' + res._message, '', {
             duration: 10000
           });
         } else {
@@ -200,7 +200,7 @@ export class StaffSchoolinfoComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Staff School Info Update failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Staff School Info Update failed. ' + res._message, '', {
               duration: 10000
             });
           } else {

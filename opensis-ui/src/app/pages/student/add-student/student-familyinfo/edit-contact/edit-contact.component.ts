@@ -365,7 +365,7 @@ export class EditContactComponent implements OnInit,OnDestroy {
         else 
         {
           if (data._failure) {
-            this.snackbar.open('Parent Information Updation failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Parent Information Updation failed. ' + data._message, '', {
               duration: 10000
             });
           }
@@ -390,7 +390,7 @@ export class EditContactComponent implements OnInit,OnDestroy {
         else 
         {
           if (data._failure) {
-            this.snackbar.open('Parent Information Submission failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Parent Information Submission failed. ' + data._message, '', {
               duration: 10000
             });
           }
@@ -429,7 +429,7 @@ export class EditContactComponent implements OnInit,OnDestroy {
             else 
             {
               if (data._failure) {
-                this.snackbar.open('Search Parent Information failed. ' + data._message, 'LOL THANKS', {
+                this.snackbar.open('Search Parent Information failed. ' + data._message, '', {
                   duration: 10000
                 });
               }

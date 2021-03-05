@@ -7,6 +7,7 @@ namespace opensis.data.Models
     {
         public PermissionCategory()
         {
+            PermissionSubcategory = new HashSet<PermissionSubcategory>();
             RolePermission = new HashSet<RolePermission>();
         }
 
@@ -29,6 +30,7 @@ namespace opensis.data.Models
         public DateTime? UpdatedOn { get; set; }
 
         public virtual PermissionGroup PermissionGroup { get; set; }
+        public virtual ICollection<PermissionSubcategory> PermissionSubcategory { get; set; }
         public virtual ICollection<RolePermission> RolePermission { get; set; }
     }
 }

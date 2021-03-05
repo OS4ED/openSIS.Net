@@ -188,7 +188,7 @@
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.creditHours}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.creditHours | EmtyNumberCheckPipe}}</p>
                         </li>
                         <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'standards' | translate}}</label>

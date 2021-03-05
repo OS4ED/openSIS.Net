@@ -92,12 +92,12 @@ export class EditStaffFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Staff field failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Staff field Successful Created.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -129,12 +129,12 @@ export class EditStaffFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Staff field failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               } 
               else {
-                this.snackbar.open('Staff field Successful Edited.', '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

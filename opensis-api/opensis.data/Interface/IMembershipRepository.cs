@@ -8,6 +8,7 @@ namespace opensis.data.Interface
     public interface IMembershipRepository
     {
         GetAllMembersList GetAllMemberList(GetAllMembersList membersList);
-
+        public MembershipAddViewModel AddMembership(MembershipAddViewModel membershipAddViewModel);
+        public MembershipAddViewModel UpdateMembership(MembershipAddViewModel membershipAddViewModel);
     }
 }

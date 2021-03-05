@@ -21,9 +21,12 @@ import { DasboardService } from '../../../services/dasboard.service';
 import { CalendarDateFormatter, CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarMonthViewBeforeRenderEvent, CalendarMonthViewDay, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
 import { CalendarEventModel } from '../../../models/calendarEventModel';
 import { Observable, Subject } from 'rxjs';
-import { CalendarModel } from 'src/app/models/calendarModel';
+import { CalendarModel } from '../../../models/calendarModel';
 import { map, takeUntil, tap, shareReplay } from 'rxjs/operators';
 import { CustomDateFormatter } from '../../shared-module/user-defined-directives/custom-date-formatter.provider';
+import { ReleaseNumberAddViewModel } from '../../../models/releaseNumberModel';
+import { CommonService } from '../../../services/common.service';
+import { SchoolService } from '../../../services/school.service';
 
 
 @Component({
@@ -56,6 +59,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
   activeDayIsOpen = true;
   weekendDays: number[];
   filterDays = [];
+  releaseNumberAddViewModel : ReleaseNumberAddViewModel= new ReleaseNumberAddViewModel()
 
 
   tableColumns: TableColumn<Order>[] = [
@@ -149,7 +153,9 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
 
   constructor(private cd: ChangeDetectorRef, private layoutService: LayoutService,
     private snackbar: MatSnackBar,
-    private dasboardService: DasboardService,) {
+    private commonService: CommonService,
+    private dasboardService: DasboardService,
+    private schoolService:SchoolService) {
     if (localStorage.getItem("collapseValue") !== null) {
       if (localStorage.getItem("collapseValue") === "false") {
         this.layoutService.expandSidenav();
@@ -162,18 +168,19 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     this.dasboardService.getPageLoadEvent().pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
       if (message) {
         this.getDashboardView();
+        this.getReleaseNumber();
       }
     });
 
   }
- 
-  ngOnDestroy(): void {
-    this.destroySubject$.next();
-    this.destroySubject$.complete();
-  }
 
   ngOnInit() {
-    this.getDashboardView();
+    this.schoolService.schoolListCalled.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if(res){
+        this.getDashboardView();
+        this.getReleaseNumber();
+      }
+    })
     setTimeout(() => {
       const temp = [
         {
@@ -196,6 +203,27 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
         day.cssClass = this.cssClass;
       }
     });
+  }
+  getReleaseNumber(){
+    this.releaseNumberAddViewModel.releaseNumber.schoolId= +sessionStorage.getItem("selectedSchoolId");
+    this.releaseNumberAddViewModel.releaseNumber.tenantId= sessionStorage.getItem("tenantId");
+    this.commonService.getReleaseNumber(this.releaseNumberAddViewModel).subscribe(data => {
+      if (typeof (data) == 'undefined') {
+        this.snackbar.open('Release Number failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (data._failure) {
+          this.snackbar.open('Release Number failed. ' + data._message, '', {
+            duration: 10000
+          });
+        } else {
+          this.releaseNumberAddViewModel.releaseNumber.releaseNumber1 = data.releaseNumber.releaseNumber1;
+
+        }
+      }
+    })
   }
 
   getDashboardView() {
@@ -270,5 +298,12 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     this.cssClass = 'bg-aqua';
     this.refresh.next();
   }
+
+   
+  ngOnDestroy(): void {
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
+  }
+
 
 }

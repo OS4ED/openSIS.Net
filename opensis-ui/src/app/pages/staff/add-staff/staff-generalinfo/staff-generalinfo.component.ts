@@ -421,7 +421,7 @@ export class StaffGeneralinfoComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Staff Save failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Staff Save failed. ' + data._message, '', {
             duration: 10000
           });
         } else {
@@ -458,7 +458,7 @@ export class StaffGeneralinfoComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Staff Update failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Staff Update failed. ' + data._message, '', {
             duration: 10000
           });
         } else {

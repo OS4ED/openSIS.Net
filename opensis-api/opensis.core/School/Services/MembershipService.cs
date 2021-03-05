@@ -34,5 +34,61 @@ namespace opensis.core.School.Services
                 return getAllMembers;
             }
         }
+
+        /// <summary>
+        /// Add Member
+        /// </summary>
+        /// <param name="membershipAddViewModel"></param>
+        /// <returns></returns>
+        public MembershipAddViewModel AddMembership(MembershipAddViewModel membershipAddViewModel)
+        {
+            MembershipAddViewModel MembershipAddModel = new MembershipAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(membershipAddViewModel._tenantName, membershipAddViewModel._token))
+                {
+                    MembershipAddModel = this.membershipRepository.AddMembership(membershipAddViewModel);
+                }
+                else
+                {
+                    MembershipAddModel._failure = true;
+                    MembershipAddModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                MembershipAddModel._failure = true;
+                MembershipAddModel._message = es.Message;
+            }  
+            return MembershipAddModel;
+        }
+
+        /// <summary>
+        /// Update Member
+        /// </summary>
+        /// <param name="membershipAddViewModel"></param>
+        /// <returns></returns>
+        public MembershipAddViewModel UpdateMembership(MembershipAddViewModel membershipAddViewModel)
+        {
+            MembershipAddViewModel MembershipUpdateModel = new MembershipAddViewModel();
+            try
+            { 
+                if (TokenManager.CheckToken(membershipAddViewModel._tenantName, membershipAddViewModel._token))
+                {
+                    MembershipUpdateModel = this.membershipRepository.UpdateMembership(membershipAddViewModel);                    
+                }
+                else
+                {
+                    MembershipUpdateModel._failure = true;
+                    MembershipUpdateModel._message = TOKENINVALID;                    
+                }
+            }
+            catch (Exception es)
+            {
+                MembershipUpdateModel._failure = true;
+                MembershipUpdateModel._message = es.Message;
+            }
+            return MembershipUpdateModel;
+        }
     }
 }

@@ -9,17 +9,22 @@
 
         <div class="card overflow-auto -mt-16">
             <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
-                <div class="flex w-full justify-between">
-                    <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
+                <div class="md:flex w-full justify-between">
+                    <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
                         fxLayoutAlign="start center">
 
-                        <div class="flex">
-                            <input [formControl]="searchCtrl" class="px-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
+                        <div class="flex items-center">
+                            <input [formControl]="searchCtrl" 
+                            class="py-3 border-0 outline-none w-full bg-transparent table-search" placeholder="Search..."
                                 type="search">
                                 <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
                                 <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
+                            <a (click)="showAdvanceSearch()" class="text-primary cursor-pointer ml-3">
+                                <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
+                                | translate}}
+                            </a>
                         </div>
                     </div>
 
@@ -128,3 +133,10 @@
         </mat-checkbox>
     </button>
 </mat-menu>
+
+<div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
+    <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20" @fadeInRight>
+        <vex-search-staff (searchList)="getSearchResult($event)" (showHideAdvanceSearch)="hideAdvanceSearch($event)"></vex-search-staff>
+    </div>
+    <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
+</div>

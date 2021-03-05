@@ -57,6 +57,7 @@ namespace opensis.data.Models
         public virtual DbSet<ParentInfo> ParentInfo { get; set; }
         public virtual DbSet<PermissionCategory> PermissionCategory { get; set; }
         public virtual DbSet<PermissionGroup> PermissionGroup { get; set; }
+        public virtual DbSet<PermissionSubcategory> PermissionSubcategory { get; set; }
         public virtual DbSet<Plans> Plans { get; set; }
         public virtual DbSet<Programs> Programs { get; set; }
         public virtual DbSet<ProgressPeriods> ProgressPeriods { get; set; }
@@ -70,6 +71,7 @@ namespace opensis.data.Models
         public virtual DbSet<SchoolMaster> SchoolMaster { get; set; }
         public virtual DbSet<SchoolPeriodsObsolete> SchoolPeriodsObsolete { get; set; }
         public virtual DbSet<SchoolYears> SchoolYears { get; set; }
+        public virtual DbSet<SearchFilter> SearchFilter { get; set; }
         public virtual DbSet<Sections> Sections { get; set; }
         public virtual DbSet<Semesters> Semesters { get; set; }
         public virtual DbSet<StaffCertificateInfo> StaffCertificateInfo { get; set; }
@@ -2130,6 +2132,80 @@ namespace opensis.data.Models
                     .HasConstraintName("FK_permission_group_school_master");
             });
 
+            modelBuilder.Entity<PermissionSubcategory>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.PermissionCategoryId, e.PermissionSubcategoryId });
+
+                entity.ToTable("permission_subcategory");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.PermissionCategoryId).HasColumnName("permission_category_id");
+
+                entity.Property(e => e.PermissionSubcategoryId).HasColumnName("permission_subcategory_id");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.EnableAdd).HasColumnName("enable_add");
+
+                entity.Property(e => e.EnableDelete).HasColumnName("enable_delete");
+
+                entity.Property(e => e.EnableEdit).HasColumnName("enable_edit");
+
+                entity.Property(e => e.EnableView).HasColumnName("enable_view");
+
+                entity.Property(e => e.Path)
+                    .HasColumnName("path")
+                    .HasMaxLength(255)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PermissionGroupId).HasColumnName("permission_group_id");
+
+                entity.Property(e => e.PermissionSubcategoryName)
+                    .HasColumnName("permission_subcategory_name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ShortCode)
+                    .HasColumnName("short_code")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Title)
+                    .HasColumnName("title")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Type)
+                    .HasColumnName("type")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.PermissionCategory)
+                    .WithMany(p => p.PermissionSubcategory)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PermissionCategoryId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_permission_subcategory_permission_category");
+            });
+
             modelBuilder.Entity<Plans>(entity =>
             {
                 entity.ToTable("plans");
@@ -2388,6 +2464,8 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.PermissionCategoryId).HasColumnName("permission_category_id");
 
+                entity.Property(e => e.PermissionSubcategoryId).HasColumnName("permission_subcategory_id");
+
                 entity.Property(e => e.MembershipId).HasColumnName("membership_id");
 
                 entity.Property(e => e.UpdatedBy)
@@ -2408,6 +2486,11 @@ namespace opensis.data.Models
                     .WithMany(p => p.RolePermission)
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.MembershipId })
                     .HasConstraintName("FK_role_permission_membership");
+
+                entity.HasOne(d => d.PermissionSubcategory)
+                   .WithMany(p => p.RolePermission)
+                   .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.PermissionCategoryId, d.PermissionSubcategoryId })
+                   .HasConstraintName("FK_role_permission_permission_subcategory");
 
             });
 
@@ -2962,6 +3045,74 @@ namespace opensis.data.Models
                     .HasForeignKey(d => new { d.TenantId, d.SchoolId })
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_school_years_school_master");
+            });
+
+            modelBuilder.Entity<SearchFilter>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.Module, e.FilterId });
+
+                entity.ToTable("search_filter");
+
+                entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.FilterName })
+                    .HasName("IX_search_filter");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.Module)
+                    .HasColumnName("module")
+                    .HasMaxLength(15)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.FilterId).HasColumnName("filter_id");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.DateCreated)
+                    .HasColumnName("date_created")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.DateModifed)
+                    .HasColumnName("date_modifed")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Emailaddress)
+                    .HasColumnName("emailaddress")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.FilterName)
+                    .HasColumnName("filter_name")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.JsonList)
+                    .HasColumnName("json_list")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ModifiedBy)
+                    .HasColumnName("modified_by")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.HasOne(d => d.SchoolMaster)
+                    .WithMany(p => p.SearchFilter)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_search_filter_school_master");
+
+                entity.HasOne(d => d.UserMaster)
+                    .WithMany(p => p.SearchFilter)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.Emailaddress })
+                    .HasConstraintName("FK_search_filter_user_master");
             });
 
             modelBuilder.Entity<Sections>(entity =>

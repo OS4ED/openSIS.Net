@@ -65,7 +65,6 @@ export class LoginComponent implements OnInit {
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
     });
-
     this.GetAllLanguage();
     this.form = this.fb.group({
       email: ['', [Validators.required, ValidationService.emailValidator]],
@@ -114,7 +113,7 @@ export class LoginComponent implements OnInit {
         }
         else {
           if (data._failure) {
-            this.snackbar.open('Login failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Login failed. ' + data._message, '', {
               duration: 10000
             });
           } else {

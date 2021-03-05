@@ -30,6 +30,8 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   studentMasterSearchModel: StudentMasterSearchModel = new StudentMasterSearchModel();
   getAllStudent: StudentListModel = new StudentListModel();
+  dobEndDate : string;
+  dobStartDate : string;
   params = [];
   countryListArr = [];
   ethnicityList = [];
@@ -134,6 +136,8 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
     
     this.getAllStudent.filterParams = this.params;
     this.getAllStudent.sortingModel = null;
+    this.getAllStudent.dobStartDate = this.dobStartDate;
+    this.getAllStudent.dobEndDate= this.dobEndDate;
     this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if (data._failure) {
           this.searchList.emit([]);

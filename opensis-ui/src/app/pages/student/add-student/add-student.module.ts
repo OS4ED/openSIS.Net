@@ -51,6 +51,11 @@ import {MatTabsModule} from '@angular/material/tabs';
 import { ViewStudentGeneralinfoComponent } from './view-student-generalinfo/view-student-generalinfo.component';
 import { ViewStudentAddressandcontactsComponent } from './view-student-addressandcontacts/view-student-addressandcontacts.component';
 import { DatePipe } from '@angular/common';
+import { StudentCourseScheduleComponent } from '../add-student/student-course-schedule/student-course-schedule.component';
+import { AddAssignCourseComponent } from './student-course-schedule/add-assign-course/add-assign-course.component';
+import { MatDividerModule } from '@angular/material/divider';
+import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 @NgModule({
   declarations: [
@@ -67,10 +72,16 @@ import { DatePipe } from '@angular/common';
     SiblingsinfoComponent,
     ViewstudentLogininfoComponent,
     ViewStudentGeneralinfoComponent,
-    ViewStudentAddressandcontactsComponent
+    ViewStudentAddressandcontactsComponent,
+    StudentCourseScheduleComponent,
+    AddAssignCourseComponent
   ],
   imports: [
     CommonModule,
+    AngularCalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    }),
     MatIconModule,
     MatInputModule,
     MatSelectModule,
@@ -107,7 +118,8 @@ import { DatePipe } from '@angular/common';
     MatSlideToggleModule,
     CustomFieldModule,
     CustomFieldWithoutFormModule,
-    MatTabsModule
+    MatTabsModule,
+    MatDividerModule
   ],
   providers: [
     DatePipe

@@ -119,7 +119,7 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
         }
         else {
           if (data._failure) {
-            this.snackbar.open('Medical Information Updation failed. ' + data._message, 'LOL THANKS', {
+            this.snackbar.open('Medical Information Updation failed. ' + data._message, '', {
               duration: 10000
             });
           } else {

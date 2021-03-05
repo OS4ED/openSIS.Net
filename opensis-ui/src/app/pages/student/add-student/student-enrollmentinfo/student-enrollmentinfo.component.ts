@@ -232,7 +232,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Student Enrollments failed to fetch. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Student Enrollments failed to fetch. ' + res._message, '', {
             duration: 10000
           });
         } else {
@@ -332,7 +332,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Enrollment Update failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Enrollment Update failed. ' + res._message, '', {
             duration: 10000
           });
         } else {

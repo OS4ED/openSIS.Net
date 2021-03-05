@@ -1,4 +1,4 @@
-import { Component, Inject, LOCALE_ID, Renderer2 } from '@angular/core';
+import { Component, Inject, LOCALE_ID, OnDestroy, OnInit, Renderer2 } from '@angular/core';
 import { ConfigService } from '../@vex/services/config.service';
 import { Settings } from 'luxon';
 import { DOCUMENT } from '@angular/common';
@@ -21,20 +21,26 @@ import icparents from '@iconify/icons-ic/baseline-escalator-warning';
 import icbook from '@iconify/icons-ic/baseline-book';
 import { LayoutService } from '../@vex/services/layout.service';
 import { ActivatedRoute } from '@angular/router';
-import { filter, map } from 'rxjs/operators';
+import { filter, map, takeUntil } from 'rxjs/operators';
 import { coerceBooleanProperty } from '@angular/cdk/coercion';
 import { SplashScreenService } from '../@vex/services/splash-screen.service';
 import { Style, StyleService } from '../@vex/services/style.service';
 import { ConfigName } from '../@vex/interfaces/config-name.model';
+import { SchoolService } from './services/school.service';
+import { Subject } from 'rxjs';
+import { PermissionGroupListViewModel } from './models/rollBasedAccessModel';
+import { RollBasedAccessService } from './services/rollBasedAccess.service';
+import { MenuModel } from './models/menu.model';
 
 @Component({
   selector: 'vex-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   title = 'vex';
-
+  protected destroySubject$ = new Subject<void>();
+  menuList: MenuModel[] = [];
   constructor(private configService: ConfigService,
     private styleService: StyleService,
     private renderer: Renderer2,
@@ -44,7 +50,9 @@ export class AppComponent {
     private layoutService: LayoutService,
     private route: ActivatedRoute,
     private navigationService: NavigationService,
-    private splashScreenService: SplashScreenService) {
+    private schoolService: SchoolService,
+    private splashScreenService: SplashScreenService,
+    private rollBasedAccessService: RollBasedAccessService) {
     Settings.defaultLocale = this.localeId;
 
     if (this.platform.BLINK) {
@@ -155,7 +163,7 @@ export class AppComponent {
       { type: 'link',
         label: 'Parents',
         icon: icparents,
-        route: '/school/parents'       
+        route: '/school/parents'
       },
       { type: 'dropdown',
         label: 'Staff',
@@ -268,12 +276,12 @@ export class AppComponent {
       { type: 'link',
         label: 'Reports',
         icon: icreports,
-        route: '/school/progressreport'       
+        route: '/school/progressreport'
       },
       { type: 'link',
         label: 'Settings',
         icon: icsettings,
-        route: '/school/settings'       
+        route: '/school/settings'
       },
       { type: 'dropdown',
         label: 'Tools',
@@ -289,5 +297,90 @@ export class AppComponent {
       },
 
     ];
+
+
+  }
+
+  ngOnInit() {
+    // this.schoolService.schoolListCalled.pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+    //   if (res) {
+    //     let permissionGroupListView: PermissionGroupListViewModel = new PermissionGroupListViewModel();
+    //     this.rollBasedAccessService.getAllPermissionGroup(permissionGroupListView).subscribe((res: PermissionGroupListViewModel) => {
+    //       this.generateMenuBasedOnSchoolId(res);
+    //     });
+    //   }
+    // });
+  }
+
+  generateMenuBasedOnSchoolId(permissions: PermissionGroupListViewModel) {
+    // permissions.permissionGroupList?.map((item) => {
+    //   if (item.permissionGroupName === 'Add New') {
+
+    //   } else {
+    //     if (item.type === 'link') {
+    //       this.menuList.push({
+    //         type: 'link',
+    //         label: item.title,
+    //         icon: this.convertStringToIcon(item.icon),
+    //         route: item.path
+    //       });
+    //     } else if (item.type === 'sub') {
+              
+    //     }
+    //   }
+    // });
+    // this.navigationService.items=this.menuList;
+  }
+
+  // convertStringToIcon(icon: string) {
+  //   switch (icon) {
+  //     case 'icLayers': {
+  //       return icLayers;
+  //     }
+  //     case 'icschool': {
+  //       return icschool;
+  //     }
+  //     case 'icstudents': {
+  //       return icstudents;
+  //     }
+  //     case 'icparents': {
+  //       return icparents;
+  //     }
+  //     case 'icusers': {
+  //       return icusers;
+  //     }
+  //     case 'icbook': {
+  //       return icbook;
+  //     }
+  //     case 'icschedule': {
+  //       return icschedule;
+  //     }
+  //     case 'icgrade': {
+  //       return icgrade;
+  //     }
+  //     case 'icattendance': {
+  //       return icattendance;
+  //     }
+  //     case 'icmessage': {
+  //       return icmessage;
+  //     }
+  //     case 'icreports': {
+  //       return icreports;
+  //     }
+  //     case 'icsettings': {
+  //       return icsettings;
+  //     }
+  //     case 'ictools': {
+  //       return ictools;
+  //     }
+  //     default: {
+  //       return icinfo;
+  //     }
+  //   }
+  // }
+
+  ngOnDestroy() {
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 }

@@ -6,6 +6,7 @@ import { HttpClient} from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { LanguageModel,LanguageAddModel } from '../models/languageModel';
+import { ReleaseNumberAddViewModel } from '../models/releaseNumberModel';
 
 @Injectable({
   providedIn: 'root'
@@ -79,6 +80,11 @@ export class CommonService {
   deleteDropdownValue(obj:LovAddView){
     let apiurl =this.apiUrl + obj._tenantName+ "/Common/deleteDropdownValue"; 
     return this.http.post<LovAddView>(apiurl,obj);
+  }
+
+  getReleaseNumber(obj:ReleaseNumberAddViewModel){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/getReleaseNumber"; 
+    return this.http.post<ReleaseNumberAddViewModel>(apiurl,obj);
   }
 
 }

@@ -98,6 +98,7 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.VIEW});
     this.callLOVs();    
     this.parentInfo = {};
+    
     if(this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')){
       this.addParentInfoModel = this.parentDetailsForViewAndEdit;     
       this.parentInfo = this.addParentInfoModel.parentInfo;
@@ -183,7 +184,7 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
       else 
       {
         if (data._failure) {
-          this.snackbar.open('Parent Information Updation failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Parent Information Updation failed. ' + data._message, '', {
           duration: 10000
           });
         }
@@ -252,19 +253,18 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
           });
         }
         else{
-          if (data._failure) {  
-            
-            this.snackbar.open('Student Information failed. ' + data._message, 'LOL THANKS', {
+          if (data._failure) {
+            this.snackbar.open('Student Information failed. ' + data._message, '', {
               duration: 10000
             });
-          } 
-          else {       
+          }
+          else {
             this.snackbar.open('Student Deletion Successful.', '', {
               duration: 10000
             }).afterOpened().subscribe(data => {
-              this.router.navigateByUrl('/school/parents');   
+              this.router.navigateByUrl('/school/parents');
             });
-            
+
           }
         }
       })

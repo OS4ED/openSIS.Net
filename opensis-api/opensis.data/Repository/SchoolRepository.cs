@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
 using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
@@ -13,7 +14,7 @@ namespace opensis.data.Repository
     public class SchoolRepository : ISchoolRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public SchoolRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -358,46 +359,48 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public SchoolAddViewModel AddSchool(SchoolAddViewModel school)
         {
-            try
+            using (var transaction = this.context.Database.BeginTransaction())
             {
-                int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<SchoolMaster, int>(x => x.SchoolId));
-                //int? MemberShipId = Utility.GetMaxPK(this.context, new Func<Membership, int>(x => x.MembershipId));
-                //int? CategoryId = Utility.GetMaxPK(this.context, new Func<FieldsCategory, int>(x => x.CategoryId));
-                school.schoolMaster.SchoolId = (int)MasterSchoolId;
-                Guid GuidId = Guid.NewGuid();
-                var GuidIdExist = this.context?.SchoolMaster.FirstOrDefault(x => x.SchoolGuid == GuidId);
-                if (GuidIdExist != null)
+                try
                 {
-                    school._failure = true;
-                    school._message = "Guid is already exist, Please try again.";
-                    return school;
-                }
-                school.schoolMaster.SchoolGuid = GuidId;
-
-                if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
-                {
-                    school.schoolMaster.SchoolDetail.ToList().ForEach(p => p.Id = (int)Utility.GetMaxPK(this.context, new Func<SchoolDetail, int>(x => x.Id)));
-                }
-                school.schoolMaster.DateCreated = DateTime.UtcNow;
-                school.schoolMaster.TenantId = school.schoolMaster.TenantId;
-
-                if (!string.IsNullOrEmpty(school.schoolMaster.SchoolInternalId))
-                {
-                    bool checkInternalID = CheckInternalID(school.schoolMaster.TenantId, school.schoolMaster.SchoolInternalId);
-                    if (checkInternalID == false)
+                    int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<SchoolMaster, int>(x => x.SchoolId));
+                    //int? MemberShipId = Utility.GetMaxPK(this.context, new Func<Membership, int>(x => x.MembershipId));
+                    //int? CategoryId = Utility.GetMaxPK(this.context, new Func<FieldsCategory, int>(x => x.CategoryId));
+                    school.schoolMaster.SchoolId = (int)MasterSchoolId;
+                    Guid GuidId = Guid.NewGuid();
+                    var GuidIdExist = this.context?.SchoolMaster.FirstOrDefault(x => x.SchoolGuid == GuidId);
+                    if (GuidIdExist != null)
                     {
-                        school.schoolMaster = null;
                         school._failure = true;
-                        school._message = "School InternalID Already Exist";
+                        school._message = "Guid is already exist, Please try again.";
                         return school;
                     }
-                }
-                else
-                {
-                    school.schoolMaster.SchoolInternalId = MasterSchoolId.ToString();
-                }
+                    school.schoolMaster.SchoolGuid = GuidId;
 
-                school.schoolMaster.Membership = new List<Membership>() {
+                    if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
+                    {
+                        school.schoolMaster.SchoolDetail.ToList().ForEach(p => p.Id = (int)Utility.GetMaxPK(this.context, new Func<SchoolDetail, int>(x => x.Id)));
+                    }
+                    school.schoolMaster.DateCreated = DateTime.UtcNow;
+                    school.schoolMaster.TenantId = school.schoolMaster.TenantId;
+
+                    if (!string.IsNullOrEmpty(school.schoolMaster.SchoolInternalId))
+                    {
+                        bool checkInternalID = CheckInternalID(school.schoolMaster.TenantId, school.schoolMaster.SchoolInternalId);
+                        if (checkInternalID == false)
+                        {
+                            school.schoolMaster = null;
+                            school._failure = true;
+                            school._message = "School InternalID Already Exist";
+                            return school;
+                        }
+                    }
+                    else
+                    {
+                        school.schoolMaster.SchoolInternalId = MasterSchoolId.ToString();
+                    }
+
+                    school.schoolMaster.Membership = new List<Membership>() {
                     new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Super Administrator",MembershipId= 1},
                     new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Administrator",MembershipId= 2},
                     new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher",MembershipId= 3 },
@@ -408,8 +411,8 @@ namespace opensis.data.Repository
                     new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher w/Custom",MembershipId= 8},
                     new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent w/Custom",MembershipId= 9},
                 };
-                long? dpdownValueId = Utility.GetMaxLongPK(this.context, new Func<DpdownValuelist, long>(x => x.Id));
-                school.schoolMaster.DpdownValuelist = new List<DpdownValuelist>() {
+                    long? dpdownValueId = Utility.GetMaxLongPK(this.context, new Func<DpdownValuelist, long>(x => x.Id));
+                    school.schoolMaster.DpdownValuelist = new List<DpdownValuelist>() {
                     new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Grade Level",LovColumnValue="PK",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId},
                     new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Grade Level",LovColumnValue="K",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+1},
                     new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Grade Level",LovColumnValue="1",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+2},
@@ -498,7 +501,7 @@ namespace opensis.data.Repository
                      new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Field Type",LovColumnValue="Textarea",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+67},
                 };
 
-                school.schoolMaster.FieldsCategory = new List<FieldsCategory>()
+                    school.schoolMaster.FieldsCategory = new List<FieldsCategory>()
                 {
                     new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,IsSystemCategory=true,Search=true, Title="General Information",Module="School",SortOrder=1,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy,CategoryId=1},
                     new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,IsSystemCategory=true,Search=true, Title="Wash Information",Module="School",SortOrder=2,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy,CategoryId=2},
@@ -521,7 +524,7 @@ namespace opensis.data.Repository
 
 
                 };
-                school.schoolMaster.StudentEnrollmentCode = new List<StudentEnrollmentCode>()
+                    school.schoolMaster.StudentEnrollmentCode = new List<StudentEnrollmentCode>()
                 {
                      new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=1, Title="New", ShortName="NEW", SortOrder=1, Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
                      new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", SortOrder=2, Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy },
@@ -530,35 +533,104 @@ namespace opensis.data.Repository
                      new StudentEnrollmentCode(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", SortOrder=5, Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.schoolMaster.CreatedBy }
                 };
 
-                school.schoolMaster.Block = new List<Block>()
+                    school.schoolMaster.Block = new List<Block>()
                 {
                      new Block(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, BlockId=1, BlockTitle="All Day", BlockSortOrder=1, CreatedOn=DateTime.UtcNow, CreatedBy=school.schoolMaster.CreatedBy }
                 };
 
-                this.context?.SchoolMaster.Add(school.schoolMaster);
-                this.context?.SaveChanges();
-                school._failure = false;
-                school._message = "School Added Successfully";
+                    //insert into permission group
+                    var dataGroup = System.IO.File.ReadAllText(@"Group.json");
+                    JsonSerializerSettings settingGrp = new JsonSerializerSettings();
+                    List<PermissionGroup> objGroup = JsonConvert.DeserializeObject<List<PermissionGroup>>(dataGroup, settingGrp);
 
-                //school.schoolMaster.Membership.ToList().ForEach(x=>x.SchoolMaster=null);
-                /*if (school.schoolMaster.SchoolDetail.ToList().Count>0)
+                    foreach (PermissionGroup permisionGrp in objGroup)
+                    {
+
+                        permisionGrp.TenantId = school.schoolMaster.TenantId;
+                        permisionGrp.SchoolId = school.schoolMaster.SchoolId;
+                        permisionGrp.IsActive = true;
+                        permisionGrp.PermissionCategory = null;
+                        this.context?.PermissionGroup.Add(permisionGrp);
+                        //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                    }
+
+                    //insert into permission category
+                    var dataCategory = System.IO.File.ReadAllText(@"Category.json");
+                    JsonSerializerSettings settingCat = new JsonSerializerSettings();
+                    List<PermissionCategory> objCat = JsonConvert.DeserializeObject<List<PermissionCategory>>(dataCategory, settingCat);
+                    foreach (PermissionCategory permissionCate in objCat)
+                    {
+                        permissionCate.TenantId = school.schoolMaster.TenantId;
+                        permissionCate.SchoolId = school.schoolMaster.SchoolId;
+                        permissionCate.PermissionGroup = null;
+                        permissionCate.RolePermission = null;
+                        permissionCate.CreatedBy = school.schoolMaster.CreatedBy;
+                        permissionCate.CreatedOn = DateTime.UtcNow;
+                        this.context?.PermissionCategory.Add(permissionCate);
+                        //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                    }
+
+                    //insert into permission subcategory
+                    var dataSubCategory = System.IO.File.ReadAllText(@"SubCategory.json");
+                    JsonSerializerSettings settingSubCat = new JsonSerializerSettings();
+                    List<PermissionSubcategory> objSubCat = JsonConvert.DeserializeObject<List<PermissionSubcategory>>(dataSubCategory, settingSubCat);
+                    foreach (PermissionSubcategory permissionSubCate in objSubCat)
+                    {
+                        permissionSubCate.TenantId = school.schoolMaster.TenantId;
+                        permissionSubCate.SchoolId = school.schoolMaster.SchoolId;
+                        permissionSubCate.RolePermission = null;
+                        permissionSubCate.CreatedBy = school.schoolMaster.CreatedBy;
+                        permissionSubCate.CreatedOn = DateTime.UtcNow;
+                        this.context?.PermissionSubcategory.Add(permissionSubCate);
+                        //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                    }
+
+                    //insert into role permission
+                    var dataRolePermission = System.IO.File.ReadAllText(@"RolePermission.json");
+                    JsonSerializerSettings settingRole = new JsonSerializerSettings();
+                    List<RolePermission> objRole = JsonConvert.DeserializeObject<List<RolePermission>>(dataRolePermission, settingRole);
+                    foreach (RolePermission permissionRole in objRole)
+                    {
+                        permissionRole.TenantId = school.schoolMaster.TenantId;
+                        permissionRole.SchoolId = school.schoolMaster.SchoolId;
+                        permissionRole.PermissionCategory = null;
+                        permissionRole.Membership = null;
+                        permissionRole.CreatedBy = school.schoolMaster.CreatedBy;
+                        permissionRole.CreatedOn = DateTime.UtcNow;
+                        this.context?.RolePermission.Add(permissionRole);
+                        //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                    }
+
+                    this.context?.SchoolMaster.Add(school.schoolMaster);
+                    this.context?.SaveChanges();
+                    transaction.Commit();
+                    school._failure = false;
+                    school._message = "School Added Successfully";
+
+                    school.schoolMaster.Membership = null;
+                    school.schoolMaster.DpdownValuelist = null;
+                    school.schoolMaster.PermissionGroup = null;
+
+                    //school.schoolMaster.Membership.ToList().ForEach(x=>x.SchoolMaster=null);
+                    /*if (school.schoolMaster.SchoolDetail.ToList().Count>0)
+                    {
+                        school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
+                    }*/
+                    //school.schoolMaster.FieldsCategory.ToList().ForEach(x => x.SchoolMaster = null);
+                    /*if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
+                    {
+                        school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
+                    }*/                   
+
+                }
+                catch (Exception es)
                 {
-                    school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
-                }*/
-                //school.schoolMaster.FieldsCategory.ToList().ForEach(x => x.SchoolMaster = null);
-                /*if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
-                {
-                    school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
-                }*/
-                return school;
-
+                    transaction.Rollback();
+                    school._failure = true;
+                    school._message = es.Message;
+                }
             }
-            catch (Exception es)
-            {
-
-                throw;
-            }
-
+            return school;
         }
         private bool CheckInternalID(Guid TenantId, string InternalID)
         {

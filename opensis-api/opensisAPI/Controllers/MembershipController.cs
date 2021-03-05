@@ -49,5 +49,37 @@ namespace opensisAPI.Controllers
             }
             return getAllMembers;
         }
+
+        [HttpPost("addMembership")]
+        public ActionResult<MembershipAddViewModel> AddMembership(MembershipAddViewModel membershipAddViewModel)
+        {
+            MembershipAddViewModel MembershipAdd = new MembershipAddViewModel();
+            try
+            {
+                MembershipAdd = _membershipService.AddMembership(membershipAddViewModel);
+            }
+            catch (Exception es)
+            {
+                MembershipAdd._failure = true;
+                MembershipAdd._message = es.Message;
+            }
+            return MembershipAdd;
+        }
+
+        [HttpPut("updateMembership")]
+        public ActionResult<MembershipAddViewModel> UpdateMembership(MembershipAddViewModel membershipAddViewModel)
+        {
+            MembershipAddViewModel membershipUpdate = new MembershipAddViewModel();
+            try
+            {
+                membershipUpdate = _membershipService.UpdateMembership(membershipAddViewModel);
+            }
+            catch (Exception es)
+            {
+                membershipUpdate._failure = true;
+                membershipUpdate._message = es.Message;
+            }
+            return membershipUpdate;
+        }
     }
 }

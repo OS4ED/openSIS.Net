@@ -155,7 +155,7 @@ export class StudentDocumentsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('File Deletion failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('File Deletion failed. ' + data._message, '', {
             duration: 10000
           });
         } else {
@@ -200,7 +200,7 @@ export class StudentDocumentsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Student Document Upload failed. ' + data._message, 'LOL THANKS', {
+              this.snackbar.open('Student Document Upload failed. ' + data._message, '', {
                 duration: 10000
               });
             } else {          
@@ -221,7 +221,7 @@ export class StudentDocumentsComponent implements OnInit {
           }
         });
       } else{
-        this.snackbar.open('Please Select File', 'LOL THANKS', {
+        this.snackbar.open('Please Select File', '', {
           duration: 1000
         });
       }
@@ -248,7 +248,7 @@ export class StudentDocumentsComponent implements OnInit {
         this.StudentDocumentModelList.sort=this.sort;     
           }
         } else{
-          this.snackbar.open('Student Document failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open('Student Document failed. ' + data._message, '', {
             duration: 10000
           });
         }

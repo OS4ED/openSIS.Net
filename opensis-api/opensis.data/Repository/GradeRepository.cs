@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class GradeRepository : IGradeRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public GradeRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -303,15 +303,16 @@ namespace opensis.data.Repository
                     }
 
                     GradeScaleListModel.gradeScaleList = GradeScaleList;
-                    GradeScaleListModel._tenantName = gradeScaleListViewModel._tenantName;
-                    GradeScaleListModel._token = gradeScaleListViewModel._token;
                     GradeScaleListModel._failure = false;
                 }
                 else
                 {
+                    GradeScaleListModel.gradeScaleList = GradeScaleList;
                     GradeScaleListModel._message = NORECORDFOUND;
                     GradeScaleListModel._failure = true;
                 }
+                GradeScaleListModel._tenantName = gradeScaleListViewModel._tenantName;
+                GradeScaleListModel._token = gradeScaleListViewModel._token;
             }
             catch (Exception es)
             {
@@ -660,20 +661,16 @@ namespace opensis.data.Repository
                 if(effortGradeLlibraryCategoryList.Count >0)
                 {
                     effortGradeLlibraryCategoryListModel.effortGradeLibraryCategoryList = effortGradeLlibraryCategoryList;
-                    effortGradeLlibraryCategoryListModel._tenantName = effortGradeLlibraryCategoryListViewModel._tenantName;
-                    effortGradeLlibraryCategoryListModel._token = effortGradeLlibraryCategoryListViewModel._token;
                     effortGradeLlibraryCategoryListModel._failure = false;
                 }
                 else
                 {
-                    effortGradeLlibraryCategoryListModel.effortGradeLibraryCategoryList = null;
-                    effortGradeLlibraryCategoryListModel._tenantName = effortGradeLlibraryCategoryListViewModel._tenantName;
-                    effortGradeLlibraryCategoryListModel._token = effortGradeLlibraryCategoryListViewModel._token;
+                    effortGradeLlibraryCategoryListModel.effortGradeLibraryCategoryList = effortGradeLlibraryCategoryList;
                     effortGradeLlibraryCategoryListModel._failure = true;
                     effortGradeLlibraryCategoryListModel._message = NORECORDFOUND;
                 }
-
-                                    
+                effortGradeLlibraryCategoryListModel._tenantName = effortGradeLlibraryCategoryListViewModel._tenantName;
+                effortGradeLlibraryCategoryListModel._token = effortGradeLlibraryCategoryListViewModel._token;
             }
             catch (Exception es)
             {
@@ -1248,21 +1245,19 @@ namespace opensis.data.Repository
 
                     //subjectStandardList.getGradeUsStandardView = subjectList;
                     subjectStandardList.gradeUsStandardList = subjectList;
-                    subjectStandardList._tenantName = gradeUsStandardListModel._tenantName;
-                    subjectStandardList._token = gradeUsStandardListModel._token;
                     subjectStandardList._failure = false;
                 }
                 else
                 {
-                    subjectStandardList.getGradeUsStandardView = null;
-                    subjectStandardList._tenantName = gradeUsStandardListModel._tenantName;
-                    subjectStandardList._token = gradeUsStandardListModel._token;
                     subjectStandardList._failure = true;
                     subjectStandardList._message = NORECORDFOUND;
                 }
+                subjectStandardList._tenantName = gradeUsStandardListModel._tenantName;
+                subjectStandardList._token = gradeUsStandardListModel._token;
             }
             catch (Exception es)
             {
+                subjectStandardList.gradeUsStandardList = null;
                 subjectStandardList._message = es.Message;
                 subjectStandardList._failure = true;
                 subjectStandardList._tenantName = gradeUsStandardListModel._tenantName;
@@ -1293,21 +1288,19 @@ namespace opensis.data.Repository
                     }).ToList();
                     //courseStandardList.getGradeUsStandardView = courseList;
                     courseStandardList.gradeUsStandardList = courseList;
-                    courseStandardList._tenantName = gradeUsStandardListModel._tenantName;
-                    courseStandardList._token = gradeUsStandardListModel._token;
                     courseStandardList._failure = false;
                 }
                 else
                 {
-                    courseStandardList.getGradeUsStandardView = null;
-                    courseStandardList._tenantName = gradeUsStandardListModel._tenantName;
-                    courseStandardList._token = gradeUsStandardListModel._token;
                     courseStandardList._failure = true;
                     courseStandardList._message = NORECORDFOUND;
                 }
+                courseStandardList._tenantName = gradeUsStandardListModel._tenantName;
+                courseStandardList._token = gradeUsStandardListModel._token;
             }
             catch (Exception es)
             {
+                courseStandardList.gradeUsStandardList = null;
                 courseStandardList._message = es.Message;
                 courseStandardList._failure = true;
                 courseStandardList._tenantName = gradeUsStandardListModel._tenantName;

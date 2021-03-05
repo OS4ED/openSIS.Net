@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class CourseManagerRepository : ICourseManagerRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public CourseManagerRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -60,18 +60,17 @@ namespace opensis.data.Repository
             {
 
                 var programList = this.context?.Programs.Where(x => x.TenantId == programListViewModel.TenantId && x.SchoolId == programListViewModel.SchoolId).ToList();
+
+                programListModel.programList = programList;
+                programListModel._tenantName = programListViewModel._tenantName;
+                programListModel._token = programListViewModel._token;
+
                 if (programList.Count > 0)
                 {
-                    programListModel.programList = programList;
-                    programListModel._tenantName = programListViewModel._tenantName;
-                    programListModel._token = programListViewModel._token;
                     programListModel._failure = false;
                 }
                 else
                 {
-                    programListModel.programList = null;
-                    programListModel._tenantName = programListViewModel._tenantName;
-                    programListModel._token = programListViewModel._token;
                     programListModel._failure = true;
                     programListModel._message = NORECORDFOUND;
                 }
@@ -325,18 +324,16 @@ namespace opensis.data.Repository
             try
             {
                 var Subjectdata = this.context?.Subject.Where(x => x.TenantId == subjectListViewModel.TenantId && x.SchoolId == subjectListViewModel.SchoolId).ToList();
+                subjectList.subjectList = Subjectdata;
+                subjectList._tenantName = subjectListViewModel._tenantName;
+                subjectList._token = subjectListViewModel._token;
+
                 if (Subjectdata.Count > 0)
                 {
-                    subjectList.subjectList = Subjectdata;
-                    subjectList._tenantName = subjectListViewModel._tenantName;
-                    subjectList._token = subjectListViewModel._token;
                     subjectList._failure = false;
                 }
                 else
                 {
-                    subjectList.subjectList = null;
-                    subjectList._tenantName = subjectListViewModel._tenantName;
-                    subjectList._token = subjectListViewModel._token;
                     subjectList._failure = true;
                     subjectList._message = NORECORDFOUND;
                 }
@@ -636,22 +633,21 @@ namespace opensis.data.Repository
                         courseListModel.courseViewModelList.Add(courseViewModel);
                     }                    
                     courseListModel.CourseCount = courseRecords.Count();
-                    courseListModel._tenantName = courseListViewModel._tenantName;
-                    courseListModel._token = courseListViewModel._token;
+                    
                     courseListModel._failure = false;
                 }
                 else
                 {
-                    courseListModel.courseViewModelList = null;
                     courseListModel.CourseCount = null;
-                    courseListModel._tenantName = courseListViewModel._tenantName;
-                    courseListModel._token = courseListViewModel._token;
                     courseListModel._failure = true;
                     courseListModel._message = NORECORDFOUND;
                 }
+                courseListModel._tenantName = courseListViewModel._tenantName;
+                courseListModel._token = courseListViewModel._token;
             }
             catch (Exception es)
             {
+                courseListModel.courseViewModelList = null;
                 courseListModel._message = es.Message;
                 courseListModel._failure = true;
                 courseListModel._tenantName = courseListViewModel._tenantName;
@@ -873,20 +869,26 @@ namespace opensis.data.Repository
                 if (courseSectionData.Count() > 0)
                 {
                     string markingId = null;
-                    string standardRefNo = null;
+                    string standardGradeScaleName = null;
                     foreach (var courseSection in courseSectionData)
                     {
                         if (courseSection.UseStandards == true)
                         {
-                            var gradeUsStandardData = this.context?.GradeUsStandard.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.GradeStandardId == courseSection.StandardGradeScaleId).FirstOrDefault();
-                            if (gradeUsStandardData != null)
+                            //var gradeUsStandardData = this.context?.GradeUsStandard.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.GradeStandardId == courseSection.StandardGradeScaleId).FirstOrDefault();
+                            //if (gradeUsStandardData != null)
+                            //{
+                            //    standardRefNo = gradeUsStandardData.StandardRefNo;
+                            //}
+
+                            var StandardData = this.context?.GradeScale.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.GradeScaleId == courseSection.StandardGradeScaleId).FirstOrDefault();
+                            if (StandardData != null)
                             {
-                                standardRefNo = gradeUsStandardData.StandardRefNo;
+                                standardGradeScaleName = StandardData.GradeScaleName;
                             }
                         }
                         else
                         {
-                            standardRefNo = null;
+                            standardGradeScaleName = null;
                         }
                         if (courseSection.YrMarkingPeriodId != null)
                         {
@@ -916,7 +918,7 @@ namespace opensis.data.Repository
                                     courseFixedSchedule = fixedScheduleData,
                                     courseSection = courseSection,
                                     MarkingPeriod = markingId,
-                                    StandardRefNo = standardRefNo,
+                                    StandardGradeScaleName = standardGradeScaleName
 
                                 };
                                 courseSectionView.getCourseSectionForView.Add(getFixedSchedule);
@@ -935,7 +937,7 @@ namespace opensis.data.Repository
                                     courseVariableSchedule = variableScheduleData,
                                     courseSection = courseSection,
                                     MarkingPeriod = markingId,
-                                    StandardRefNo = standardRefNo,
+                                    StandardGradeScaleName = standardGradeScaleName
                                 };
                                 courseSectionView.getCourseSectionForView.Add(getVariableSchedule);
                             }
@@ -952,7 +954,7 @@ namespace opensis.data.Repository
                                     courseCalendarSchedule = calendarScheduleData,
                                     courseSection = courseSection,
                                     MarkingPeriod = markingId,
-                                    StandardRefNo = standardRefNo,
+                                    StandardGradeScaleName = standardGradeScaleName
                                 };
                                 courseSectionView.getCourseSectionForView.Add(getCalendarSchedule);
                             }
@@ -969,7 +971,7 @@ namespace opensis.data.Repository
                                     courseBlockSchedule = blockScheduleData,
                                     courseSection = courseSection,
                                     MarkingPeriod = markingId,
-                                    StandardRefNo = standardRefNo,
+                                    StandardGradeScaleName = standardGradeScaleName
                                 };
                                 courseSectionView.getCourseSectionForView.Add(getBlockSchedule);
                             }
@@ -993,6 +995,7 @@ namespace opensis.data.Repository
             }
             catch (Exception es)
             {
+                courseSectionView.getCourseSectionForView = null;
                 courseSectionView._failure = true;
                 courseSectionView._message = es.Message;
             }
@@ -2183,7 +2186,6 @@ namespace opensis.data.Repository
                 {
                     courseStandardForCourseView._failure = true;
                     courseStandardForCourseView._message = NORECORDFOUND;
-                    return courseStandardForCourseView;
                 }
                 courseStandardForCourseView.TenantId = courseStandardForCourseViewModel.TenantId;
                 courseStandardForCourseView.SchoolId = courseStandardForCourseViewModel.SchoolId;
@@ -2193,8 +2195,11 @@ namespace opensis.data.Repository
             }
             catch (Exception es)
             {
+                courseStandardForCourseView.getCourseStandardForCourses = null;
+                courseStandardForCourseView._tenantName = courseStandardForCourseViewModel._tenantName;
+                courseStandardForCourseView._token = courseStandardForCourseViewModel._token;
+                courseStandardForCourseView._failure = true;
                 courseStandardForCourseView._message = es.Message;
-                return courseStandardForCourseView;
             }
             return courseStandardForCourseView;
         }

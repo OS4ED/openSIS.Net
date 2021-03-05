@@ -127,7 +127,7 @@ export class StaffListModel {
 
 export class GetAllStaffModel {
     getStaffListForView: [StaffListModel];
-    staffMaster:[StaffMasterModel]
+    staffMaster:[]
     tenantId: string;
     schoolId: number;
     pageNumber: number;
@@ -135,11 +135,13 @@ export class GetAllStaffModel {
     _pageSize: number;
     totalCount: number;
     sortingModel: sorting;
-    filterParams: filterParams;
+    filterParams: filterParams[];
     _tenantName: string;
     _token: string;
     _failure: boolean;
     _message: string;
+    public dobStartDate : string;
+    public dobEndDate : string;
     constructor() {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
@@ -255,4 +257,83 @@ export class StaffSchoolInfoModel extends CommonField {
     }
 }
 
+export class StaffMasterSearchModel {
+    public tenantId: string;
+    public schoolId: number;
+    public staffId: number;
+    public staffPhoto: string;
+    public staffInternalId: string;
+    public alternateId: string;
+    public districtId: string;
+    public stateId: string;
+    public salutation: string;
+    public firstGivenName: string;
+    public middleName: string;
+    public lastFamilyName: string;
+    public suffix: string;
+    public preferredName: string;
+    public previousName: string;
+    public socialSecurityNumber: string;
+    public otherGovtIssuedNumber: string;
+    public studentPhoto: string;
+    public dob: string;
+    public gender: string;
+    public race: string;
+    public ethnicity: string;
+    public maritalStatus: string;
+    public countryOfBirth: number;
+    public nationality: number;
+    public firstLanguage: number;
+    public secondLanguage: number;
+    public thirdLanguage: number;
+    public physicalDisability: boolean;
+    public disabilityDescription: string;
+    public portalAccess: boolean;
+    public loginEmailAddress: string;
+    public profile: string;
+    public jobTitle: string;
+    public joiningDate: string;
+    public endDate: string;
+    public homeroomTeacher: boolean;
+    public primaryGradeLevelTaught: string;
+    public primarySubjectTaught: string;
+    public otherGradeLevelTaught: string;
+    public otherSubjectTaught: string;
+    public homePhone: string;
+    public mobilePhone: string;
+    public officePhone: string;
+    public personalEmail: string;
+    public schoolEmail: string;
+    public twitter: string;
+    public facebook: string;
+    public instagram: string;
+    public youtube: string;
+    public linkedin: string;
+    public homeAddressLineOne: string;
+    public homeAddressLineTwo: string;
+    public homeAddressCity: string;
+    public homeAddressState: string;
+    public homeAddressCountry: string | number;
+    public homeAddressZip: string;
+    public mailingAddressSameToHome: boolean;
+    public mailingAddressLineOne: string;
+    public mailingAddressLineTwo: string;
+    public mailingAddressCity: string;
+    public mailingAddressState: string;
+    public mailingAddressCountry: string | number;
+    public mailingAddressZip: string;
+    public busNo: string;
+    public busPickup : boolean;
+    public busDropoff : boolean;
+    public emergencyFirstName: string;
+    public emergencyLastName: string;
+    public relationshipToStaff: string;
+    public emergencyHomePhone: string;
+    public emergencyWorkPhone: string;
+    public emergencyMobilePhone: string;
+    public emergencyEmail: string;
+    public lastUpdatedBy: string;
+    public lastUpdated: string;
+    
+}
 

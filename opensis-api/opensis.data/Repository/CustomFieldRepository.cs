@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class CustomFieldRepository : ICustomFieldRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public CustomFieldRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -151,23 +151,117 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public FieldsCategoryAddViewModel AddFieldsCategory(FieldsCategoryAddViewModel fieldsCategoryAddViewModel)
         {
-            //int? CategoryId = Utility.GetMaxPK(this.context, new Func<FieldsCategory, int>(x => x.CategoryId));
-            int? CategoryId = 1;
+            using (var transaction = this.context.Database.BeginTransaction())
+            {                
+                try
+                {
+                    var checkFieldCategoryTitle = this.context?.FieldsCategory.Where(x => x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.Title.ToLower() == fieldsCategoryAddViewModel.fieldsCategory.Title.ToLower()).FirstOrDefault();
 
-            var FieldCategoryData = this.context?.FieldsCategory.Where(x => x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId).OrderByDescending(x => x.CategoryId).FirstOrDefault();
+                    if (checkFieldCategoryTitle != null)
+                    {
+                        fieldsCategoryAddViewModel._failure = true;
+                        fieldsCategoryAddViewModel._message = "Field Category Title Already Exists";
+                    }
+                    else
+                    {
+                        //int? CategoryId = Utility.GetMaxPK(this.context, new Func<FieldsCategory, int>(x => x.CategoryId));
+                        int? CategoryId = 1;
 
-            if (FieldCategoryData != null)
-            {
-                CategoryId = FieldCategoryData.CategoryId + 1;
+                        var FieldCategoryData = this.context?.FieldsCategory.Where(x => x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId).OrderByDescending(x => x.CategoryId).FirstOrDefault();
+
+                        if (FieldCategoryData != null)
+                        {
+                            CategoryId = FieldCategoryData.CategoryId + 1;
+                        }
+
+                        fieldsCategoryAddViewModel.fieldsCategory.CategoryId = (int)CategoryId;
+                        fieldsCategoryAddViewModel.fieldsCategory.LastUpdate = DateTime.UtcNow;
+                        this.context?.FieldsCategory.Add(fieldsCategoryAddViewModel.fieldsCategory);
+
+
+                        var permissionGroup = this.context?.PermissionGroup.FirstOrDefault(x => x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.PermissionGroupName.ToLower().Contains(fieldsCategoryAddViewModel.fieldsCategory.Module.ToLower()));
+
+                        if (permissionGroup != null)
+                        {
+                            var permissionCategory = this.context?.PermissionCategory.FirstOrDefault(e => e.PermissionGroupId == permissionGroup.PermissionGroupId && e.TenantId == permissionGroup.TenantId && e.SchoolId == permissionGroup.SchoolId && e.PermissionGroupId== permissionGroup.PermissionGroupId);
+
+                            if (permissionCategory != null)
+                            {
+                                var checkPermissionSubCategoryName = this.context?.PermissionSubcategory.Where(x => x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId && x.PermissionSubcategoryName.ToLower() == fieldsCategoryAddViewModel.fieldsCategory.Title.ToLower()).FirstOrDefault();
+
+                                if (checkPermissionSubCategoryName != null)
+                                {
+                                    fieldsCategoryAddViewModel._failure = true;
+                                    fieldsCategoryAddViewModel._message = "Permission Subcategory Name Already Exists";
+                                }
+                                else
+                                {
+                                    int? PermissionSubCategoryId = 1;
+
+                                    var permissionSubCategoryData = this.context?.PermissionSubcategory.Where(x => x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId).OrderByDescending(x => x.PermissionSubcategoryId).FirstOrDefault();
+
+                                    if (permissionSubCategoryData != null)
+                                    {
+                                        PermissionSubCategoryId = permissionSubCategoryData.PermissionSubcategoryId + 1;
+                                    }
+
+                                    var permissionSubCategory = new PermissionSubcategory()
+                                    {
+                                        TenantId = fieldsCategoryAddViewModel.fieldsCategory.TenantId,
+                                        SchoolId = fieldsCategoryAddViewModel.fieldsCategory.SchoolId,
+                                        PermissionSubcategoryId = (int)PermissionSubCategoryId,
+                                        PermissionGroupId = permissionCategory.PermissionGroupId,
+                                        PermissionCategoryId = permissionCategory.PermissionCategoryId,
+                                        PermissionSubcategoryName = fieldsCategoryAddViewModel.fieldsCategory.Title,
+                                        Title= fieldsCategoryAddViewModel.fieldsCategory.Title,
+                                        EnableView = true,
+                                        EnableAdd = true,
+                                        EnableEdit = true,
+                                        EnableDelete = true,
+                                        CreatedBy= fieldsCategoryAddViewModel.fieldsCategory.UpdatedBy,
+                                        CreatedOn=DateTime.UtcNow
+                                    };
+                                    this.context?.PermissionSubcategory.Add(permissionSubCategory);
+
+                                    int? rolePermissionId = 1;
+
+                                    var rolePermissionData = this.context?.RolePermission.Where(x => x.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && x.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId).OrderByDescending(x => x.RolePermissionId).FirstOrDefault();
+
+                                    if (rolePermissionData != null)
+                                    {
+                                        rolePermissionId = rolePermissionData.RolePermissionId + 1;
+                                    }
+                                    var rolePermission = new RolePermission()
+                                    {
+                                        TenantId = fieldsCategoryAddViewModel.fieldsCategory.TenantId,
+                                        SchoolId = fieldsCategoryAddViewModel.fieldsCategory.SchoolId,
+                                        RolePermissionId = (int)rolePermissionId,
+                                        PermissionCategoryId = permissionCategory.PermissionCategoryId,
+                                        CanView = true,
+                                        CanAdd = true,
+                                        CanEdit = true,
+                                        CanDelete = true,
+                                        CreatedBy = fieldsCategoryAddViewModel.fieldsCategory.UpdatedBy,
+                                        CreatedOn = DateTime.UtcNow,
+                                        MembershipId = this.context?.Membership.FirstOrDefault(e => e.SchoolId == fieldsCategoryAddViewModel.fieldsCategory.SchoolId && e.TenantId == fieldsCategoryAddViewModel.fieldsCategory.TenantId).MembershipId
+                                    };
+                                    this.context?.RolePermission.Add(rolePermission);
+                                }
+                            }
+                            this.context?.SaveChanges();
+                            transaction.Commit();
+                            fieldsCategoryAddViewModel._failure = false;
+                            fieldsCategoryAddViewModel._message = "Field Category Added Successfully";
+                        }
+                    }                    
+                }
+                catch (Exception es)
+                {
+                    transaction.Rollback();
+                    fieldsCategoryAddViewModel._failure = false;
+                    fieldsCategoryAddViewModel._message = es.Message;
+                }
             }
-
-            fieldsCategoryAddViewModel.fieldsCategory.CategoryId = (int)CategoryId;
-            fieldsCategoryAddViewModel.fieldsCategory.LastUpdate = DateTime.UtcNow;
-            this.context?.FieldsCategory.Add(fieldsCategoryAddViewModel.fieldsCategory);
-            this.context?.SaveChanges();
-            fieldsCategoryAddViewModel._failure = false;
-            fieldsCategoryAddViewModel._message = "Field Category Added Successfully";
-
             return fieldsCategoryAddViewModel;
         }
         
@@ -247,19 +341,24 @@ namespace opensis.data.Repository
                                 x.SchoolId == fieldsCategoryListViewModel.SchoolId && 
                                 x.Module== fieldsCategoryListViewModel.Module)
                     .OrderByDescending(x => x.IsSystemCategory).ThenBy(x=>x.SortOrder).ToList();
-                    
+
                 if (fieldsCategoryList.Count > 0)
                 {
                     foreach (var fieldsCategory in fieldsCategoryList)
                     {
                         fieldsCategory.CustomFields = fieldsCategory.CustomFields.OrderByDescending(y => y.SystemField).ThenBy(y => y.SortOrder).ToList();
                     }
-                    
+                    fieldsCategoryListModel._failure = false;
+                }
+                else
+                {
+                    fieldsCategoryListModel._failure = true;
+                    fieldsCategoryListModel._message = NORECORDFOUND;
                 }
                 fieldsCategoryListModel.fieldsCategoryList = fieldsCategoryList;
                 fieldsCategoryListModel._tenantName = fieldsCategoryListViewModel._tenantName;
                 fieldsCategoryListModel._token = fieldsCategoryListViewModel._token;
-                fieldsCategoryListModel._failure = false;
+                
             }
             catch (Exception es)
             {

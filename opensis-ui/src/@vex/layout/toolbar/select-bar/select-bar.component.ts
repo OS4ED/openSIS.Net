@@ -66,6 +66,7 @@ export class SelectBarComponent implements OnInit {
 
     this.schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
       this.schools = data.schoolMaster;
+    
       /** control for the selected School */
       this.schoolCtrl = new FormControl();
       this.schoolFilterCtrl = new FormControl();
@@ -85,7 +86,7 @@ export class SelectBarComponent implements OnInit {
       } else {
         this.selectSchoolOnLoad();
       }
-
+      this.schoolService.changeSchoolListStatus(true);
     });
   }
 

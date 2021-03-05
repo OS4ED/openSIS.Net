@@ -83,7 +83,6 @@ export class EditStudentFieldsComponent implements OnInit {
         this.customFieldAddView.customFields.systemField=this.form.controls.systemField.value;
         this.customFieldAddView.customFields.type=this.form.controls.fieldType.value;
         this.customFieldAddView.customFields.module=this.fieldCategoryModule.School;
-        //this.customFieldAddView.customFields.type="Custom";
          this.customFieldService.addCustomField(this.customFieldAddView).subscribe(
           (res:CustomFieldAddView)=>{
             if(typeof(res)=='undefined'){
@@ -93,12 +92,12 @@ export class EditStudentFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Student field failed. ' + res._message, '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Student field Successful Created.', '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -130,12 +129,12 @@ export class EditStudentFieldsComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Student field failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               } 
               else {
-                this.snackbar.open('Student field Successful Edited.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

@@ -5,6 +5,10 @@ namespace opensis.data.Models
 {
     public partial class UserMaster
     {
+        public UserMaster()
+        {
+            SearchFilter = new HashSet<SearchFilter>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int UserId { get; set; }
@@ -20,5 +24,6 @@ namespace opensis.data.Models
         public virtual Language Lang { get; set; }
         public virtual Membership Membership { get; set; }
         public virtual UserSecretQuestions UserSecretQuestions { get; set; }
+        public virtual ICollection<SearchFilter> SearchFilter { get; set; }
     }
 }

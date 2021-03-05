@@ -11,6 +11,7 @@ namespace opensis.data.Models
         public int RolePermissionId { get; set; }
         public int? MembershipId { get; set; }
         public int? PermissionCategoryId { get; set; }
+        public int? PermissionSubcategoryId { get; set; }
         public bool? CanView { get; set; }
         public bool? CanAdd { get; set; }
         public bool? CanEdit { get; set; }
@@ -22,5 +23,6 @@ namespace opensis.data.Models
 
         public virtual Membership Membership { get; set; }
         public virtual PermissionCategory PermissionCategory { get; set; }
+        public virtual PermissionSubcategory PermissionSubcategory { get; set; }
     }
 }

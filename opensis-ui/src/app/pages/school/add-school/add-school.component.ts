@@ -127,7 +127,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Custom Field list failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open('Custom Field list failed. ' + res._message, '', {
             duration: 10000
           });
         }

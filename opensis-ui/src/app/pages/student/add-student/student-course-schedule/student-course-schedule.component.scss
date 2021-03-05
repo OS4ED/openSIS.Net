@@ -1,0 +1,11 @@
+.schedule-table {
+    tr {
+        td, th {
+            @apply border-b;
+            border-color: rgba(0,0,0,0.1);
+            @apply px-4;
+            @apply py-2;
+            text-align: left;
+        }
+    }
+}

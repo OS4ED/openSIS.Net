@@ -1,7 +1,7 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
     <h2 class="headline m-0" fxFlex="auto" *ngIf="addStandard; else addNewCourseTitle">
         <a routerLink="" (click)="closeStandardsSelection()" class="text-primary cursor-pointer"><mat-icon [icIcon]="icBack" matTooltip="Back to Previous" class="mr-3 align-middle"></mat-icon></a>{{'addStandardTo'|translate}} <span class="text-green font-bold">{{addCourseModel.course.courseTitle}}</span></h2>
-    <ng-template #addNewCourseTitle><h2 class="headline m-0" fxFlex="auto">{{courseModalTitle | translate}}</h2></ng-template>
+    <ng-template #addNewCourseTitle><h2 [ngClass]="addStandard?'hidden':''" class="headline m-0" fxFlex="auto">{{courseModalTitle | translate}}</h2></ng-template>
         <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
             <mat-icon [icIcon]="icClose"></mat-icon>
         </button>
@@ -9,7 +9,7 @@
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
 
-<div *ngIf="addStandard; else addNewCourse">
+<div *ngIf="addStandard">
     <mat-dialog-content fxLayout="column" class="p-0">
         <div class="custom-tabs">
             <ul class="flex border-b">
@@ -126,8 +126,7 @@
     </mat-dialog-actions>
 </div>
 
-<ng-template #addNewCourse>
-    <form   #f="ngForm" appInvalidControlScroll novalidate>
+    <form  [ngClass]="addStandard?'hidden':''" #f="ngForm" appInvalidControlScroll novalidate>
     <mat-dialog-content fxLayout="column">
         <mat-form-field class="w-full mt-6" appearance="outline" color="primary">
             <mat-label>{{'title' | translate}}</mat-label>
@@ -154,7 +153,7 @@
                     </mat-select>            
                 </mat-form-field>
             </li>
-            <li class="mb-3">
+            <li class="mb-3" id="programMan">
                 <mat-form-field id="program" class="w-full mb-1" appearance="outline" color="primary">
                     <mat-label>{{'program' | translate}}</mat-label>
                     <mat-select  [(ngModel)]="addCourseModel.course.courseProgram" name="courseProgram">
@@ -168,7 +167,7 @@
                     <input [(ngModel)]="addCourseModel.course.courseProgram" name="courseProgram" id="courseProgram" matInput>                                
                 </mat-form-field>                    
               
-                <a class="cursor-pointer text-blue" *ngIf="addProgramMode === false" (click)="saveProgram()"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewProgram' | translate}}</a>
+                <a class="cursor-pointer text-blue" *ngIf="addNewProgramFlag === false" (click)="saveProgram()"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewProgram' | translate}}</a>
             </li>
             <li class="mb-3">
                 <mat-form-field id="subject" class="w-full mb-1" appearance="outline" color="primary">
@@ -189,7 +188,7 @@
                     </mat-form-field>                 
                
                 
-                <a class="cursor-pointer text-blue" *ngIf="addSubjectMode === false" (click)="saveSubject()"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewSubject' | translate}}</a>
+                <a class="cursor-pointer text-blue" *ngIf="addNewSubjectFlag === false" (click)="saveSubject()"><mat-icon [icIcon]="icAdd" class="mr-1 align-middle"></mat-icon>{{'addNewSubject' | translate}}</a>
             </li>
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
@@ -242,4 +241,4 @@
         <button color="primary" (click) ="submit()" mat-raised-button type="submit">{{courseModalActionTitle | translate}}</button>
     </mat-dialog-actions>
 </form>
-</ng-template>
+

@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class SectionRepository : ISectionRepositiory
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public SectionRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -149,18 +149,17 @@ namespace opensis.data.Repository
             try
             {
                 var sectionAll = this.context?.Sections.Where(x => x.TenantId == section.TenantId && x.SchoolId == section.SchoolId).OrderBy(x => x.SortOrder).ToList();
+
+                sectionList.tableSectionsList = sectionAll;
+                sectionList._tenantName = section._tenantName;
+                sectionList._token = section._token;
+
                 if (sectionAll.Count > 0)
                 {
-                    sectionList.tableSectionsList = sectionAll;
-                    sectionList._tenantName = section._tenantName;
-                    sectionList._token = section._token;
                     sectionList._failure = false;
                 }
                 else
                 {
-                    sectionList.tableSectionsList = null;
-                    sectionList._tenantName = section._tenantName;
-                    sectionList._token = section._token;
                     sectionList._failure = true;
                     sectionList._message = NORECORDFOUND;
                 }

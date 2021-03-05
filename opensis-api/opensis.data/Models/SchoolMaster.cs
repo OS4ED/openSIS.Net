@@ -22,6 +22,7 @@ namespace opensis.data.Models
             SchoolCalendars = new HashSet<SchoolCalendars>();
             SchoolDetail = new HashSet<SchoolDetail>();
             SchoolYears = new HashSet<SchoolYears>();
+            SearchFilter = new HashSet<SearchFilter>();
             Semesters = new HashSet<Semesters>();
             StaffMaster = new HashSet<StaffMaster>();
             StudentEnrollmentCode = new HashSet<StudentEnrollmentCode>();
@@ -76,6 +77,7 @@ namespace opensis.data.Models
         public virtual ICollection<SchoolDetail> SchoolDetail { get; set; }
         
         public virtual ICollection<SchoolYears> SchoolYears { get; set; }
+        public virtual ICollection<SearchFilter> SearchFilter { get; set; }
         public virtual ICollection<Semesters> Semesters { get; set; }
         public virtual ICollection<StaffMaster> StaffMaster { get; set; }
         public virtual ICollection<StudentEnrollmentCode> StudentEnrollmentCode { get; set; }

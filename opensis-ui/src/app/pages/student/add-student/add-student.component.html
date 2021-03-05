@@ -29,7 +29,7 @@
         </mat-accordion>
 
         <div class="px-gutter sm:px-0">
-                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple (click)="changeTempCategory()" >
                     <mat-icon [icIcon]="icCalendar" class="mr-3"></mat-icon> Course Schedule
                 </a>
                 <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
@@ -95,6 +95,9 @@
                         [studentDetailsForViewAndEdit]="studentAddModel">
                     </vex-student-documents>
 
+                    <vex-student-course-schedule *ngIf="currentCategory==100">
+
+                    </vex-student-course-schedule>
 
                     <div *ngFor="let field of fieldsCategory;let index=index">
                         <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 6" [categoryTitle]="field.title"

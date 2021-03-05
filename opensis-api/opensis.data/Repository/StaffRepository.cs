@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class StaffRepository : IStaffRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public StaffRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -730,24 +730,19 @@ namespace opensis.data.Repository
             try
             {
                 var staffCertificateInfoList = this.context?.StaffCertificateInfo.Where(x => x.TenantId == staffCertificateInfoListModel.TenantId && x.SchoolId == staffCertificateInfoListModel.SchoolId && x.StaffId == staffCertificateInfoListModel.StaffId).ToList();
+
+                staffCertificateInfoListView.staffCertificateInfoList = staffCertificateInfoList; staffCertificateInfoListView._tenantName = staffCertificateInfoListModel._tenantName;
+                staffCertificateInfoListView.TenantId = staffCertificateInfoListModel.TenantId;
+                staffCertificateInfoListView.SchoolId = staffCertificateInfoListModel.SchoolId;
+                staffCertificateInfoListView.StaffId = staffCertificateInfoListModel.StaffId;
+                staffCertificateInfoListView._token = staffCertificateInfoListModel._token;
+
                 if (staffCertificateInfoList.Count>0)
-                {
-                    staffCertificateInfoListView.staffCertificateInfoList = staffCertificateInfoList;
-                    staffCertificateInfoListView._tenantName = staffCertificateInfoListModel._tenantName;
-                    staffCertificateInfoListView.TenantId = staffCertificateInfoListModel.TenantId;
-                    staffCertificateInfoListView.SchoolId = staffCertificateInfoListModel.SchoolId;
-                    staffCertificateInfoListView.StaffId = staffCertificateInfoListModel.StaffId;
-                    staffCertificateInfoListView._token = staffCertificateInfoListModel._token;
+                {   
                     staffCertificateInfoListView._failure = false;
                 }
                 else
                 {
-                    staffCertificateInfoListView.staffCertificateInfoList = null;
-                    staffCertificateInfoListView._tenantName = staffCertificateInfoListModel._tenantName;
-                    staffCertificateInfoListView.TenantId = staffCertificateInfoListModel.TenantId;
-                    staffCertificateInfoListView.SchoolId = staffCertificateInfoListModel.SchoolId;
-                    staffCertificateInfoListView.StaffId = staffCertificateInfoListModel.StaffId;
-                    staffCertificateInfoListView._token = staffCertificateInfoListModel._token;
                     staffCertificateInfoListView._failure = true;
                     staffCertificateInfoListView._message = NORECORDFOUND;
                 }

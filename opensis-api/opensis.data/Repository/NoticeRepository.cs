@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class NoticeRepository : INoticeRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public NoticeRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -186,17 +186,17 @@ namespace opensis.data.Repository
                 }
                 else
                 {
-                    getAllNoticeList.NoticeList = null;
                     getAllNoticeList._failure = true;
                     getAllNoticeList._message = NORECORDFOUND;
                     return getAllNoticeList;
                 }
+
             }
             catch (Exception ex)
             {
-                getAllNoticeList = null;
+                getAllNoticeList.NoticeList = null;
                 getAllNoticeList._failure = true;
-                getAllNoticeList._message = NORECORDFOUND;
+                getAllNoticeList._message = ex.Message;
                 return getAllNoticeList;
             }
         }

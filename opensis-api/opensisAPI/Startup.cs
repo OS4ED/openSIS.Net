@@ -58,6 +58,8 @@ using opensis.core.Period.Interfaces;
 using opensis.core.Period.Services;
 using opensis.core.Grade.Interfaces;
 using opensis.core.Grade.Services;
+using opensis.core.RoleBasedAccess.Interfaces;
+using opensis.core.RoleBasedAccess.Services;
 
 namespace opensisAPI
 {
@@ -120,6 +122,8 @@ namespace opensisAPI
             services.AddScoped<IPeriodService, PeriodService>();
             services.AddScoped<IGradeRepository, GradeRepository>();
             services.AddScoped<IGradeService, GradeService>();
+            services.AddScoped<IRoleBasedAccessRepository, RoleBasedAccessRepository>();
+            services.AddScoped<IRoleBasedAccessService, RoleBasedAccessService>();
 
 
 

@@ -13,7 +13,7 @@ namespace opensis.data.Repository
     public class StudentRepository : IStudentRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public StudentRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -482,6 +482,10 @@ namespace opensis.data.Repository
                     {
                         transactionIQ = filterInDateRange;
                     }
+                    else
+                    {
+                        transactionIQ = null;
+                    }
                 }
 
                 if (pageResult.SortingModel != null)
@@ -608,18 +612,20 @@ namespace opensis.data.Repository
             try
             {
                 var StudentDocumentsAll = this.context?.StudentDocuments.Where(x => x.TenantId == studentDocumentListViewModel.TenantId && x.SchoolId == studentDocumentListViewModel.SchoolId && x.StudentId == studentDocumentListViewModel.StudentId).OrderByDescending(x=>x.DocumentId).ToList();
+
+                studentDocumentsList.studentDocumentsList = StudentDocumentsAll;
+                studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
+                studentDocumentsList._token = studentDocumentListViewModel._token;
+                studentDocumentsList.TenantId = studentDocumentListViewModel.TenantId;
+                studentDocumentsList.SchoolId = studentDocumentListViewModel.SchoolId;
+                studentDocumentsList.StudentId = studentDocumentListViewModel.StudentId;
+
                 if (StudentDocumentsAll.Count > 0)
-                {
-                    studentDocumentsList.studentDocumentsList = StudentDocumentsAll;
-                    studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
-                    studentDocumentsList._token = studentDocumentListViewModel._token;
+                { 
                     studentDocumentsList._failure = false;
                 }
                 else
                 {
-                    studentDocumentsList.studentDocumentsList = null;
-                    studentDocumentsList._tenantName = studentDocumentListViewModel._tenantName;
-                    studentDocumentsList._token = studentDocumentListViewModel._token;
                     studentDocumentsList._failure = true;
                     studentDocumentsList._message = NORECORDFOUND;
                 }
@@ -770,18 +776,20 @@ namespace opensis.data.Repository
             {
 
                 var StudentCommentsAll = this.context?.StudentComments.Where(x => x.TenantId == studentCommentListViewModel.TenantId && x.SchoolId == studentCommentListViewModel.SchoolId && x.StudentId == studentCommentListViewModel.StudentId).OrderByDescending(x => x.CommentId).ToList();
+
+                studentCommentsList.studentCommentsList = StudentCommentsAll;
+                studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
+                studentCommentsList.TenantId = studentCommentListViewModel.TenantId;
+                studentCommentsList.SchoolId = studentCommentListViewModel.SchoolId;
+                studentCommentsList.StudentId = studentCommentListViewModel.StudentId;
+                studentCommentsList._token = studentCommentListViewModel._token;
+
                 if (StudentCommentsAll.Count > 0)
                 {
-                    studentCommentsList.studentCommentsList = StudentCommentsAll;
-                    studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
-                    studentCommentsList._token = studentCommentListViewModel._token;
                     studentCommentsList._failure = false;
                 }
                 else
                 {
-                    studentCommentsList.studentCommentsList = null;
-                    studentCommentsList._tenantName = studentCommentListViewModel._tenantName;
-                    studentCommentsList._token = studentCommentListViewModel._token;
                     studentCommentsList._failure = true;
                     studentCommentsList._message = NORECORDFOUND;
                 }
@@ -1197,7 +1205,7 @@ namespace opensis.data.Repository
             try
             {
                 //fetch default calender id
-                int? calenderId = null;                
+                int? calenderId = null;
 
                 var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == studentEnrollmentListViewModel.TenantId && x.SchoolId == studentEnrollmentListViewModel.SchoolId && x.AcademicYear.ToString() == studentEnrollmentListViewModel.AcademicYear && x.DefaultCalender == true);
 
@@ -1208,7 +1216,7 @@ namespace opensis.data.Repository
 
                 var studentEnrollmentList = this.context?.StudentEnrollment.Where(x => x.TenantId == studentEnrollmentListViewModel.TenantId && x.StudentGuid == studentEnrollmentListViewModel.StudentGuid).OrderByDescending(x => x.EnrollmentId).ToList();
 
-                if(studentEnrollmentList.Count>0)
+                if (studentEnrollmentList.Count > 0)
                 {
                     var studentEnrollment = studentEnrollmentList.Select(y => new StudentEnrollmentListForView
                     {
@@ -1230,28 +1238,26 @@ namespace opensis.data.Repository
                         EnrollmentDate = y.EnrollmentDate,
                         ExitCode = y.ExitCode,
                         ExitDate = y.ExitDate,
-                        StudentGuid=y.StudentGuid,
-                        EnrollmentType=this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId==y.TenantId && s.SchoolId==y.SchoolId && s.Title == y.EnrollmentCode)?.Type,
+                        StudentGuid = y.StudentGuid,
+                        EnrollmentType = this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.Title == y.EnrollmentCode)?.Type,
                         ExitType = this.context?.StudentEnrollmentCode.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.Title == y.ExitCode)?.Type,
                         Type = this.context?.StudentMaster.FirstOrDefault(s => s.TenantId == y.TenantId && s.SchoolId == y.SchoolId && s.StudentId == y.StudentId)?.EnrollmentType
                     }).ToList();
                     studentEnrollmentListView.studentEnrollmentListForView = studentEnrollment;
-                    studentEnrollmentListView.TenantId = studentEnrollmentListViewModel.TenantId;
-                    studentEnrollmentListView.CalenderId = calenderId;
-                    studentEnrollmentListView.AcademicYear = studentEnrollmentListViewModel.AcademicYear;
                     studentEnrollmentListView.RollingOption = "Next Grade at Current School";
-                    studentEnrollmentListView.StudentId = studentEnrollmentListViewModel.StudentId;
-                    studentEnrollmentListView._tenantName = studentEnrollmentListViewModel._tenantName;
-                    studentEnrollmentListView._token = studentEnrollmentListViewModel._token;
                     studentEnrollmentListView._failure = false;
-                }               
-                 else
+                }
+                else
                 {
-                    studentEnrollmentListView.studentEnrollmentListForView = null;
-                    studentEnrollmentListView._tenantName = studentEnrollmentListViewModel._tenantName;
                     studentEnrollmentListView._failure = true;
                     studentEnrollmentListView._message = NORECORDFOUND;
-                }                
+                }
+                studentEnrollmentListView.StudentId = studentEnrollmentListViewModel.StudentId;
+                studentEnrollmentListView._tenantName = studentEnrollmentListViewModel._tenantName;
+                studentEnrollmentListView._token = studentEnrollmentListViewModel._token;
+                studentEnrollmentListView.TenantId = studentEnrollmentListViewModel.TenantId;
+                studentEnrollmentListView.CalenderId = calenderId;
+                studentEnrollmentListView.AcademicYear = studentEnrollmentListViewModel.AcademicYear;
             }
             catch (Exception es)
             {

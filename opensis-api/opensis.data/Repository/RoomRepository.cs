@@ -12,7 +12,7 @@ namespace opensis.data.Repository
     public class RoomRepository : IRoomRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public RoomRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -42,15 +42,15 @@ namespace opensis.data.Repository
                 {
                     //int? RoomlId = Utility.GetMaxPK(this.context, new Func<Rooms, int>(x => x.RoomId));
 
-                    int? RoomlId = 1;
+                    int? RoomId = 1;
 
-                    var RoomlIdData = this.context?.Rooms.Where(x => x.SchoolId == rooms.tableRoom.SchoolId && x.TenantId == rooms.tableRoom.TenantId).OrderByDescending(x => x.RoomId).FirstOrDefault();
+                    var RoomData = this.context?.Rooms.Where(x => x.SchoolId == rooms.tableRoom.SchoolId && x.TenantId == rooms.tableRoom.TenantId).OrderByDescending(x => x.RoomId).FirstOrDefault();
 
-                    if (RoomlIdData != null)
+                    if (RoomData != null)
                     {
-                        RoomlId = RoomlIdData.RoomId + 1;
+                        RoomId = RoomData.RoomId + 1;
                     }
-                    rooms.tableRoom.RoomId = (int)RoomlId;
+                    rooms.tableRoom.RoomId = (int)RoomId;
                     rooms.tableRoom.LastUpdated = DateTime.UtcNow;
                     rooms.tableRoom.TenantId = rooms.tableRoom.TenantId;
                     rooms.tableRoom.IsActive = rooms.tableRoom.IsActive;
@@ -151,23 +151,21 @@ namespace opensis.data.Repository
         /// <returns></returns>
         public RoomListModel GetAllRooms(RoomListModel roomList)
         {
-            RoomListModel roomListModel = new RoomListModel();
+            RoomListModel roomListModel = new RoomListModel(); 
             try
             {
-
                 var room = this.context?.Rooms.Where(x => x.TenantId == roomList.TenantId && x.SchoolId == roomList.SchoolId && x.IsActive == true).OrderBy(x => x.SortOrder).ToList();
+
+                roomListModel.TableroomList = room;
+                roomListModel._tenantName = roomList._tenantName;
+                roomListModel._token = roomList._token;
+
                 if (room.Count > 0)
                 {
-                    roomListModel.TableroomList = room;
-                    roomListModel._tenantName = roomList._tenantName;
-                    roomListModel._token = roomList._token;
                     roomListModel._failure = false;
                 }
                 else
                 {
-                    roomListModel.TableroomList = null;
-                    roomListModel._tenantName = roomList._tenantName;
-                    roomListModel._token = roomList._token;
                     roomListModel._failure = true;
                     roomListModel._message = NORECORDFOUND;
                 }

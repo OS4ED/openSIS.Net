@@ -14,7 +14,7 @@ namespace opensis.data.Repository
     public class GradeLevelRepository : IGradelevelRepository
     {
         private CRMContext context;
-        private static readonly string NORECORDFOUND = "NO RECORD FOUND";
+        private static readonly string NORECORDFOUND = "No Record Found";
         public GradeLevelRepository(IDbContextFactory dbContextFactory)
         {
             this.context = dbContextFactory.Create();
@@ -205,7 +205,6 @@ namespace opensis.data.Repository
                 }
                 else
                 {
-                    gradelevelListModel.TableGradelevelList = null;
                     gradelevelListModel._tenantName = gradelevelList._tenantName;
                     gradelevelListModel._token = gradelevelList._token;
                     gradelevelListModel._failure = true;
@@ -214,6 +213,7 @@ namespace opensis.data.Repository
             }
             catch (Exception es)
             {
+                gradelevelListModel.TableGradelevelList = null;
                 gradelevelListModel._message = es.Message;
                 gradelevelListModel._failure = true;
                 gradelevelListModel._tenantName = gradelevelList._tenantName;
@@ -232,15 +232,20 @@ namespace opensis.data.Repository
             GradeEquivalencyListViewModel gradeEquivalencyListModel = new GradeEquivalencyListViewModel();
             try
             {
-                gradeEquivalencyListModel.GradeEquivalencyList = null;
                 var gradeEquivalency = this.context?.GradeEquivalency.ToList();
-                if (gradeEquivalency.Count > 0)
-                {
-                    gradeEquivalencyListModel.GradeEquivalencyList = gradeEquivalency;
-                }
+                gradeEquivalencyListModel.GradeEquivalencyList = gradeEquivalency;
                 gradeEquivalencyListModel._tenantName = gradeEquivalencyList._tenantName;
                 gradeEquivalencyListModel._token = gradeEquivalencyList._token;
-                gradeEquivalencyListModel._failure = false;
+
+                if (gradeEquivalency.Count > 0)
+                {
+                    gradeEquivalencyListModel._failure = false;
+                }
+                else
+                {
+                    gradeEquivalencyListModel._failure = true;
+                    gradeEquivalencyListModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {

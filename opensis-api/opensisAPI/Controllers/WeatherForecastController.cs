@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Newtonsoft.Json;
 using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
@@ -405,6 +406,136 @@ namespace opensisAPI.Controllers
                 this.context?.StudentEnrollment.Add(StudentEnrollmentData);
             }
             this.context?.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost("insertReleaseNumberForSchool")]
+        public IActionResult InsertReleaseNumberForSchool()
+        {
+            try
+            {
+                var schoolData = this.context?.SchoolMaster.ToList();
+
+                if (schoolData.Count > 0)
+                {
+                    foreach (var school in schoolData)
+                    {
+                        var releaseData = this.context?.ReleaseNumber.Where(x => x.TenantId == school.TenantId && x.SchoolId == school.SchoolId).ToList();
+
+                        if (releaseData.Count == 0)
+                        {
+                            var releaseNumber = new List<ReleaseNumber>()
+                            {
+                              new ReleaseNumber()
+                              {
+                                TenantId=school.TenantId,
+                                SchoolId=school.SchoolId,
+                                ReleaseNumber1="v1.0.0",
+                                ReleaseDate=DateTime.UtcNow
+                              }
+                            }.ToList();
+                            this.context.ReleaseNumber.AddRange(releaseNumber);
+                        }
+                    }
+                    this.context?.SaveChanges();
+                }
+            }
+            catch (Exception)
+            {
+
+                throw;
+            }
+            return Ok();
+        }
+
+
+        [HttpPost("insertRollPermissionForSchool")]
+        public IActionResult InsertRollPermissionForSchool()
+        {
+            try
+            {
+                var allSchoolData = this.context?.SchoolMaster.ToList();
+
+                if (allSchoolData.Count > 0)
+                {
+                    foreach (var school in allSchoolData)
+                    {
+                        var permissionGroupData = this.context?.PermissionGroup.Where(x => x.SchoolId==school.SchoolId).ToList();
+
+                        if (permissionGroupData.Count() == 0)
+                        {
+                            var dataGroup = System.IO.File.ReadAllText(@"Group.json");
+                            JsonSerializerSettings settingGrp = new JsonSerializerSettings();
+                            List<PermissionGroup> objGroup = JsonConvert.DeserializeObject<List<PermissionGroup>>(dataGroup, settingGrp);
+
+                            foreach (PermissionGroup permisionGrp in objGroup)
+                            {
+
+                                permisionGrp.TenantId = school.TenantId;
+                                permisionGrp.SchoolId = school.SchoolId;
+                                permisionGrp.IsActive = true;
+                                permisionGrp.PermissionCategory = null;
+                                this.context?.PermissionGroup.Add(permisionGrp);
+                                //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                            }
+
+                            //insert into permission category
+                            var dataCategory = System.IO.File.ReadAllText(@"Category.json");
+                            JsonSerializerSettings settingCat = new JsonSerializerSettings();
+                            List<PermissionCategory> objCat = JsonConvert.DeserializeObject<List<PermissionCategory>>(dataCategory, settingCat);
+                            foreach (PermissionCategory permissionCate in objCat)
+                            {
+                                permissionCate.TenantId = school.TenantId;
+                                permissionCate.SchoolId = school.SchoolId;
+                                permissionCate.PermissionGroup = null;
+                                permissionCate.RolePermission = null;
+                                permissionCate.CreatedBy = school.CreatedBy;
+                                permissionCate.CreatedOn = DateTime.UtcNow;
+                                this.context?.PermissionCategory.Add(permissionCate);
+                                //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                            }
+
+                            //insert into permission subcategory
+                            var dataSubCategory = System.IO.File.ReadAllText(@"SubCategory.json");
+                            JsonSerializerSettings settingSubCat = new JsonSerializerSettings();
+                            List<PermissionSubcategory> objSubCat = JsonConvert.DeserializeObject<List<PermissionSubcategory>>(dataSubCategory, settingSubCat);
+                            foreach (PermissionSubcategory permissionSubCate in objSubCat)
+                            {
+                                permissionSubCate.TenantId = school.TenantId;
+                                permissionSubCate.SchoolId = school.SchoolId;
+                                permissionSubCate.RolePermission = null;
+                                permissionSubCate.CreatedBy = school.CreatedBy;
+                                permissionSubCate.CreatedOn = DateTime.UtcNow;
+                                this.context?.PermissionSubcategory.Add(permissionSubCate);
+                                //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                            }
+
+                            //insert into role permission
+                            var dataRolePermission = System.IO.File.ReadAllText(@"RolePermission.json");
+                            JsonSerializerSettings settingRole = new JsonSerializerSettings();
+                            List<RolePermission> objRole = JsonConvert.DeserializeObject<List<RolePermission>>(dataRolePermission, settingRole);
+                            foreach (RolePermission permissionRole in objRole)
+                            {
+                                permissionRole.TenantId = school.TenantId;
+                                permissionRole.SchoolId = school.SchoolId;
+                                permissionRole.MembershipId = this.context?.Membership.Where(x => x.SchoolId==school.SchoolId).Select(x=>x.MembershipId).FirstOrDefault();
+                                permissionRole.PermissionCategory = null;
+                                permissionRole.Membership = null;
+                                permissionRole.CreatedBy = school.CreatedBy;
+                                permissionRole.CreatedOn = DateTime.UtcNow;
+                                this.context?.RolePermission.Add(permissionRole);
+                                //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                            }
+
+                            this.context?.SaveChanges();
+                        }
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
             return Ok();
         }
     }

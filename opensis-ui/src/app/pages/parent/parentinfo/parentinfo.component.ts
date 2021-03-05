@@ -135,14 +135,13 @@ export class ParentinfoComponent implements OnInit {
                 this.parentFieldsModelList.sort = this.sort;
                 this.parentFieldsModelList.paginator = this.paginator;  
             } else {
-              this.snackbar.open('Parent list failed.' + res._message, 'LOL THANKS', {
+              this.snackbar.open('Parent list failed.' + res._message, '', {
                 duration: 10000
               });
             }
           }
           else {
             let parentList = res.parentInfoForView?.map(function (item) {
-              
               return {
                 parentId: item.parentId,
                 name: item.firstname + ' ' + item.lastname,
@@ -167,7 +166,7 @@ export class ParentinfoComponent implements OnInit {
     if(this.parentListForExcel.length!=0){
    let parentList=this.parentListForExcel?.map((item)=>{
      let students=item.students?.map((student)=>{
-       return student.split('|')[0]
+       return student.split('|')[0];
      });
      return{
                 ParentsName: item.firstname + ' ' + item.lastname,
@@ -177,9 +176,9 @@ export class ParentinfoComponent implements OnInit {
                 AssociatedStudents: students==undefined?'':students.toString()
      }
    });
-   this.excelService.exportAsExcelFile(parentList,'Parents_List_')
+   this.excelService.exportAsExcelFile(parentList, 'Parents_List_');
   }else{
-    this.snackbar.open('No Records Found. Failed to Export Parent List','LOL THANKS', {
+    this.snackbar.open('No Records Found. Failed to Export Parent List', '', {
       duration: 5000
     });
   }

@@ -6,29 +6,11 @@
             </div>
             <hr/>
             <h4 class="px-6 py-3 text-primary font-bold">Available Profiles</h4>
-            <div class="px-gutter sm:px-0 profile-list">
-                <div @fadeInRight class="list-item no-underline flex justify-between items-center active" matRipple>
-                    <a href=""><mat-icon [icIcon]="icSuperadmin" class="mr-3 align-middle"></mat-icon> Super Administrator</a>
-            </div>
-                <div @fadeInRight class="list-item no-underline flex justify-between items-center" matRipple>
-                    <a href=""><mat-icon [icIcon]="icAdmin" class="mr-3 align-middle"></mat-icon> Administrator</a>
-                </div>
-                <div @fadeInRight class="list-item no-underline flex justify-between items-center" matRipple>
-                    <a href=""><mat-icon [icIcon]="icAdmin" class="mr-3 align-middle"></mat-icon> Admin Asst</a>
-                    <a [matMenuTriggerFor]="addNewMenu"><mat-icon [icIcon]="icMoreVert"></mat-icon></a>
-                </div>
-                <div @fadeInRight class="list-item no-underline flex justify-between items-center" matRipple>
-                    <a href=""><i class="icon-teacher mr-3 align-middle"></i> Teacher</a>
-                </div>
-                <div @fadeInRight class="list-item no-underline flex justify-between items-center" matRipple>
-                    <a href=""><i class="icon-homeroom-teacher mr-3 align-middle"></i> Homeroom Teacher</a>
-                </div>
-                <div @fadeInRight class="list-item no-underline flex justify-between items-center" matRipple>
-                    <a href=""><mat-icon [icIcon]="icParent" class="mr-3 align-middle"></mat-icon> Parent</a>
-                </div>
-                <div @fadeInRight class="list-item no-underline flex justify-between items-center" matRipple>
-                    <a href=""><mat-icon [icIcon]="icStudent" class="mr-3 align-middle"></mat-icon> Student</a>
-                </div>
+            <div class="px-gutter sm:px-0 profile-list" *ngFor="let member of memberList;let index=index">
+                <div @fadeInRight [ngClass]="selectedMemeber == member.membershipId? 'list-item no-underline flex justify-between items-center active':'list-item no-underline flex justify-between items-center'"  matRipple>
+                    <a (click) = "getRolePermission(member.membershipId)"><mat-icon [icIcon]="member.icon" class="member.className"></mat-icon> {{member.profile}}</a>
+                </div> 
+                            
             </div>
             <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
                 <button mat-menu-item>
@@ -51,7 +33,7 @@
             </vex-page-layout-header>
             <vex-page-layout-content class="-mt-6">
                 <div class="w-full -mt-16">
-                            <vex-access-control></vex-access-control>
+                            <vex-access-control [data] = "permissionList"></vex-access-control>
                         </div>
             </vex-page-layout-content>
         </vex-page-layout>
@@ -68,7 +50,7 @@
         </vex-page-layout-header>
         <vex-page-layout-content class="-mt-6">
                         <div *ngIf="pageId === 'profiles-and-permissions'">
-                            <vex-access-control></vex-access-control>
+                            <vex-access-control [data] = "permissionList"></vex-access-control>
                         </div>
         </vex-page-layout-content>
     </vex-page-layout>

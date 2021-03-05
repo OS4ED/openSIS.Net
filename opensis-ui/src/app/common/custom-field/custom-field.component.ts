@@ -202,7 +202,7 @@ export class CustomFieldComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open(this.categoryTitle + ' Updation failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open(this.categoryTitle + ' Updation failed. ' + data._message, ' ', {
             duration: 10000
           });
         } else {
@@ -237,7 +237,7 @@ export class CustomFieldComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open(this.categoryTitle + ' ' + + data._message, 'LOL THANKS', {
+          this.snackbar.open(this.categoryTitle + ' ' + + data._message, ' ', {
             duration: 10000
           });
         } else {
@@ -245,7 +245,7 @@ export class CustomFieldComponent implements OnInit {
           this.snackbar.open(this.categoryTitle + " " + 'Updation Successful', '', {
             duration: 10000
           });
-          this.schoolCreateMode = this.SchoolCreate.VIEW
+          this.schoolCreateMode = this.SchoolCreate.VIEW;
           this.schoolService.changeMessage(true);
 
         }
@@ -271,7 +271,7 @@ export class CustomFieldComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open(this.categoryTitle + ' ' + + data._message, 'LOL THANKS', {
+          this.snackbar.open(this.categoryTitle + ' ' + + data._message, ' ', {
             duration: 10000
           });
         } else {
@@ -293,6 +293,6 @@ export class CustomFieldComponent implements OnInit {
     this.studentService.changePageMode(this.studentCreateMode);
     this.staffService.changePageMode(this.staffCreateMode);
     this.schoolService.changePageMode(this.schoolCreateMode);
-    this.formActionButtonTitle = "update";
+    this.formActionButtonTitle = 'update';
   }
 }

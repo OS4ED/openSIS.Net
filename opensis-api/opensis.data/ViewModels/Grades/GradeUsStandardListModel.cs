@@ -7,7 +7,10 @@ namespace opensis.data.ViewModels.Grades
 {
     public class GradeUsStandardListModel : CommonFields
     {
-        public List<GetGradeUsStandardForView> getGradeUsStandardView { get; set; }
+        public GradeUsStandardListModel()
+        {
+            gradeUsStandardList = new List<GradeUsStandard>();
+        }
         public List<GradeUsStandard> gradeUsStandardList { get; set; }
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }

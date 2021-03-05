@@ -8,6 +8,10 @@ namespace opensis.data.ViewModels.GradeLevel
 {
     public class GradelevelListViewModel : CommonFields
     {
+        public GradelevelListViewModel()
+        {
+            TableGradelevelList = new List<GradeLevelView>();
+        }
         public List<GradeLevelView> TableGradelevelList { get; set; }
         public Guid? TenantId { get; set; }
         public int? SchoolId { get; set; }

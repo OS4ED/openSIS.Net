@@ -81,12 +81,12 @@ export class EditCommentComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Commnet failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Comment successful created.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');
@@ -108,12 +108,12 @@ export class EditCommentComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Commnet failed. ' + res._message, 'LOL THANKS', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Comment successful updated.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 }); 
                 this.dialogRef.close('submited');

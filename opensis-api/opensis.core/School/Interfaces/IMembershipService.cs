@@ -8,6 +8,7 @@ namespace opensis.core.School.Interfaces
     public interface IMembershipService
     {
         GetAllMembersList GetAllMembersForNotice(GetAllMembersList allMembersList);
-
+        MembershipAddViewModel AddMembership(MembershipAddViewModel membershipAddViewModel);
+        public MembershipAddViewModel UpdateMembership(MembershipAddViewModel membershipAddViewModel);
     }
 }

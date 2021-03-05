@@ -106,8 +106,8 @@
                 <mat-label>{{'standardGradeScale' | translate}}</mat-label>
                 <mat-select formControlName="standardGradeScaleId" name="standardGradeScaleId" required>
                     <mat-option></mat-option>
-                    <mat-option *ngFor="let standardList of schoolSpecificStandardsList.getCourseStandardForCourses" [value]='standardList.gradeStandardId'>
-                        {{standardList.standardRefNo}} 
+                    <mat-option *ngFor="let standardList of gradeScaleStandardList" [value]='standardList.gradeScaleId'>
+                        {{standardList.gradeScaleName}}
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="form.get('standardGradeScaleId').hasError('required')">{{'standardGradeScaleIsRequired'|translate}}</mat-error>

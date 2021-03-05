@@ -197,12 +197,16 @@ export class StudentListModel extends CommonField {
     public pageSize: number;
     public sortingModel: sorting;
     public filterParams: filterParams[];
+    public dobStartDate : string;
+    public dobEndDate : string;
     constructor() {
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.pageNumber = 1;
         this.pageSize = 10;
+        this.dobStartDate = null;
+        this.dobEndDate = null;
         this.sortingModel = new sorting();
         this.filterParams = null;
         this._tenantName = sessionStorage.getItem("tenant");

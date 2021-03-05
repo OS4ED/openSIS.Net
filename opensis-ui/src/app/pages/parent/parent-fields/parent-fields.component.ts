@@ -139,7 +139,7 @@ export class ParentFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Custom Field failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Custom Field failed. ' + res._message, '', {
               duration: 10000
             });
           } 
@@ -184,7 +184,7 @@ export class ParentFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Field Category list failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Field Category list failed. ' + res._message, '', {
               duration: 10000
             });
           } 
@@ -222,21 +222,21 @@ export class ParentFieldsComponent implements OnInit {
     this.customFieldservice.deleteFieldsCategory(this.fieldsCategoryAddView).subscribe(
       (res:FieldsCategoryAddView)=>{
         if(typeof(res)=='undefined'){
-          this.snackbar.open('Field Category delete failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('Field Category delete failed. ' + sessionStorage.getItem('httpError'), '', {
             duration: 10000
           });
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Field Category delete failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open('Field Category delete failed. ' + res._message, '', {
               duration: 10000
             });
-          } 
+          }
           else{
-            this.snackbar.open('' + res._message, 'LOL THANKS', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
-            this.getAllCustomFieldCategory()
+            this.getAllCustomFieldCategory();
           }
         }
       }
@@ -244,13 +244,13 @@ export class ParentFieldsComponent implements OnInit {
   }
   confirmDeleteFieldCategory(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+element.title+"."}
+          title: 'Are you sure?',
+          message: 'You are about to delete ' + element.title + '.'}
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
-      if(dialogResult){
+      if (dialogResult){
         this.deleteFieldCategory(element);
       }
    });
