@@ -7,6 +7,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import {AddGradeLevelModel, GelAllGradeEquivalencyModel} from '../../../../models/gradeLevelModel';
 import { GradeLevelService } from '../../../../services/grade-level.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { AgeRangeList, EducationalStage } from '../../../../models/common.model';
 
 @Component({
   selector: 'vex-edit-grade-levels',
@@ -23,6 +24,8 @@ export class EditGradeLevelsComponent implements OnInit {
   addGradeLevelData:AddGradeLevelModel = new AddGradeLevelModel();
   updateGradeLevelData:AddGradeLevelModel = new AddGradeLevelModel();
   getGradeEquivalencyList:GelAllGradeEquivalencyModel = new GelAllGradeEquivalencyModel();
+  ageRangeList:AgeRangeList = new AgeRangeList();
+  educationStageList:EducationalStage = new EducationalStage();
   nextGradeLevelList:[];
   editMode:boolean;
   modalTitle="addGradeLevel";
@@ -38,6 +41,8 @@ export class EditGradeLevelsComponent implements OnInit {
 
   ngOnInit(): void {
       this.getGradeEquivalencyList=this.data.gradeLevelEquivalencyList;
+      this.ageRangeList=this.data.ageRangeList;
+      this.educationStageList=this.data.educationalStage;
       if(this.data.editMode){
       this.editMode = this.data.editMode;
       this.editDetails = this.data.editDetails;
@@ -51,8 +56,10 @@ export class EditGradeLevelsComponent implements OnInit {
         title: ['',Validators.required],
         shortName: ['',Validators.required],
         sortOrder: ['',[Validators.required,Validators.min(1)]],
-        iscedGradeLevel:["null",Validators.required],
-        nextGradeId: ["null",Validators.required],
+        equivalencyId:["null"],
+        ageRangeId:["null"],
+        iscedCode:["null"],
+        nextGradeId: ["null"],
       });
       
     if(this.editMode){
@@ -63,26 +70,14 @@ export class EditGradeLevelsComponent implements OnInit {
   }
 
   callGradeLevelView(){
-    let iscedGradeLevel=this.editDetails.iscedGradeLevel;
-    let nextGrade=this.editDetails.nextGradeId;
-    if(this.editDetails.iscedGradeLevel==null){
-      iscedGradeLevel="null"
-    }else{
-      iscedGradeLevel=this.editDetails.iscedGradeLevel
-    }
-
-    if(this.editDetails.nextGrade==null){
-      nextGrade="null"
-    }else{
-    nextGrade=this.editDetails.nextGradeId.toString(); 
-    }
-
       this.form.patchValue({
         title:this.editDetails.title,
         shortName:this.editDetails.shortName,
         sortOrder:this.editDetails.sortOrder,
-        iscedGradeLevel:iscedGradeLevel,
-        nextGradeId:nextGrade
+        equivalencyId:this.editDetails.equivalencyId?this.editDetails.equivalencyId.toString():'null',
+        ageRangeId:this.editDetails.ageRangeId?this.editDetails.ageRangeId.toString():'null',
+        iscedCode:this.editDetails.iscedCode?this.editDetails.iscedCode.toString():'null',
+        nextGradeId:this.editDetails.nextGradeId?this.editDetails.nextGradeId.toString():'null'
       })
    
   }
@@ -107,19 +102,21 @@ export class EditGradeLevelsComponent implements OnInit {
   addGradeLevel(){
     this.addGradeLevelData.tblGradelevel.schoolId=+sessionStorage.getItem("selectedSchoolId");;
     this.addGradeLevelData.tblGradelevel.title = this.form.value.title;
-  
     this.addGradeLevelData.tblGradelevel.shortName =this.form.value.shortName;
     this.addGradeLevelData.tblGradelevel.sortOrder=this.form.value.sortOrder;
-    if(this.form.value.iscedGradeLevel=="null"){
-      this.addGradeLevelData.tblGradelevel.iscedGradeLevel = null;
-    }else{
-      this.addGradeLevelData.tblGradelevel.iscedGradeLevel = this.form.value.iscedGradeLevel;
-    }
-    if(this.form.value.nextGrade=="null"){
-      this.addGradeLevelData.tblGradelevel.nextGrade = null;
-    }else{
-      this.addGradeLevelData.tblGradelevel.nextGradeId = +this.form.value.nextGradeId;
-    }
+
+    this.form.value.equivalencyId=='null'?
+    this.addGradeLevelData.tblGradelevel.equivalencyId = null:this.addGradeLevelData.tblGradelevel.equivalencyId = this.form.value.equivalencyId
+
+    this.form.value.ageRangeId=='null'?
+    this.addGradeLevelData.tblGradelevel.ageRangeId = null:this.addGradeLevelData.tblGradelevel.ageRangeId = +this.form.value.ageRangeId
+
+    this.form.value.iscedCode=='null'?
+    this.addGradeLevelData.tblGradelevel.iscedCode = null:this.addGradeLevelData.tblGradelevel.iscedCode = +this.form.value.iscedCode
+   
+    this.form.value.nextGradeId=='null'?
+    this.addGradeLevelData.tblGradelevel.nextGradeId = null:this.addGradeLevelData.tblGradelevel.nextGradeId = this.form.value.nextGradeId
+   
   
     this.addGradeLevelData._token=sessionStorage.getItem("token");
     this.addGradeLevelData._tenantName=sessionStorage.getItem("tenant");
@@ -130,11 +127,11 @@ export class EditGradeLevelsComponent implements OnInit {
         });
       }else
       if (res._failure) {
-        this.snackbar.open('Failed to Add Grade Level ' + res._message, '', {
+        this.snackbar.open( res._message, '', {
           duration: 10000
         });
       } else {
-        this.snackbar.open('Grade Level Added Successfully.', '', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
         this.dialogRef.close(true);
@@ -150,27 +147,29 @@ export class EditGradeLevelsComponent implements OnInit {
     this.updateGradeLevelData.tblGradelevel.title=this.form.value.title;
     this.updateGradeLevelData.tblGradelevel.shortName=this.form.value.shortName;
     this.updateGradeLevelData.tblGradelevel.sortOrder=this.form.value.sortOrder;
-    if(this.form.value.iscedGradeLevel=="null"){
-      this.updateGradeLevelData.tblGradelevel.iscedGradeLevel = null;
-    }else{
-      this.updateGradeLevelData.tblGradelevel.iscedGradeLevel = this.form.value.iscedGradeLevel;
-    }
-    if(this.form.value.nextGradeId=="null"){
-      this.updateGradeLevelData.tblGradelevel.nextGrade = null;
-    }else{
-      this.updateGradeLevelData.tblGradelevel.nextGradeId=+this.form.value.nextGradeId;
-    }
+    this.form.value.equivalencyId=='null'?
+    this.updateGradeLevelData.tblGradelevel.equivalencyId = null:this.updateGradeLevelData.tblGradelevel.equivalencyId = this.form.value.equivalencyId;
+
+    this.form.value.ageRangeId=='null'?
+    this.updateGradeLevelData.tblGradelevel.ageRangeId = null:this.updateGradeLevelData.tblGradelevel.ageRangeId = +this.form.value.ageRangeId;
+
+    this.form.value.iscedCode=='null'?
+    this.updateGradeLevelData.tblGradelevel.iscedCode = null:this.updateGradeLevelData.tblGradelevel.iscedCode = +this.form.value.iscedCode;
+   
+    this.form.value.nextGradeId=='null'?
+    this.updateGradeLevelData.tblGradelevel.nextGradeId = null:this.updateGradeLevelData.tblGradelevel.nextGradeId = this.form.value.nextGradeId;
+
     this.gradeLevelService.updateGradelevel(this.updateGradeLevelData).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Failed to Update Grade Level ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }else if(res._failure) {
-        this.snackbar.open('Failed to Update Grade Level ' + res._message, '', {
+        this.snackbar.open( res._message, '', {
           duration: 10000
         });
       } else {
-        this.snackbar.open('Grade Level Updated Successfully.', '', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         }
         );

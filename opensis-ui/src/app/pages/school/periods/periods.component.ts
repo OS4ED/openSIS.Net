@@ -21,7 +21,9 @@ import { LoaderService } from '../../../services/loader.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ExcelService } from '../../../services/excel.service';
 import * as moment from 'moment';
-
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { CryptoService } from '../../../services/Crypto.service';
 @Component({
   selector: 'vex-periods',
   templateUrl: './periods.component.html',
@@ -59,13 +61,19 @@ export class PeriodsComponent implements OnInit {
     { label: 'action', property: 'action', type: 'text', visible: true }
   ];
   searchKey: string;
-
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(public translateService: TranslateService, private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private layoutService: LayoutService,
     private schoolPeriodService: SchoolPeriodService,
     private excelService : ExcelService,
-    private loaderService: LoaderService) {
+    private loaderService: LoaderService,
+    public rollBasedAccessService: RollBasedAccessService,
+    private cryptoService: CryptoService) {
     translateService.use('en');
     if (localStorage.getItem("collapseValue") !== null) {
       if (localStorage.getItem("collapseValue") === "false") {
@@ -82,6 +90,13 @@ export class PeriodsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 22);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 17);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllBlockList();
   }
 
@@ -110,13 +125,13 @@ export class PeriodsComponent implements OnInit {
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(
       (res: BlockListViewModel) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Block/Rotation Days list failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Block/Rotation Days list failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }
@@ -167,11 +182,11 @@ export class PeriodsComponent implements OnInit {
 
       return {
         Title: item.periodTitle,
-        ShortName: item.periodShortName,
-        StartTime: moment(new Date("1900-01-01T" + item.periodStartTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
-        EndTime:  moment(new Date("1900-01-01T" + item.periodEndTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
+        'Short Name': item.periodShortName,
+        'Start Time': moment(new Date("1900-01-01T" + item.periodStartTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
+        'End Time':  moment(new Date("1900-01-01T" + item.periodEndTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
         Length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000),
-        CalculateAttendance: item.calculateAttendance?'Yes':'No'
+        'CalculateAttendance': item.calculateAttendance?'Yes':'No'
       };
     });
     return periodList;
@@ -193,13 +208,13 @@ export class PeriodsComponent implements OnInit {
     this.schoolPeriodService.deleteBlock(this.blockAddViewModel).subscribe(
       (res: BlockAddViewModel) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Block/Rotation Days deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Block/Rotation Days deletion failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }
@@ -249,13 +264,13 @@ export class PeriodsComponent implements OnInit {
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(
       (res: BlockListViewModel) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Period list failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Period list failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }
@@ -328,7 +343,7 @@ export class PeriodsComponent implements OnInit {
           });
         } else {
           if (res._failure) {
-            this.snackbar.open('Period Drag failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }
@@ -391,7 +406,7 @@ export class PeriodsComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Period deletion failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           }

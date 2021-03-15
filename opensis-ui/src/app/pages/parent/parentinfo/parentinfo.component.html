@@ -10,16 +10,20 @@
         <div class="card overflow-auto -mt-16">
             <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
-                    <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
-                        fxLayoutAlign="start center">
-                        <div class="flex">
-                            <input matInput [(ngModel)]="searchKey" (keyup)="applyFilter()"
-                                class="py-3 border-0 outline-none w-full bg-transparent" appearance="outline"
+                    <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
+                    fxLayoutAlign="start center">
+                        <div class="flex items-center">
+                            <input [(ngModel)]="searchKey" (keyup)="applyFilter()"
+                                class="py-3 border-0 outline-none w-full bg-transparent table-search" appearance="outline"
                                 color="primary" placeholder="Search..." type="search" (search)="onSearchClear()">
                                 <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
-                                <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                            <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
+                            <a (click)="showAdvanceSearch()" class="text-primary cursor-pointer ml-3">
+                                <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
+                                | translate}}
+                            </a>
                         </div>
                     </div>
 
@@ -46,17 +50,17 @@
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="profile">
+                <ng-container matColumnDef="userProfile">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'profile'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.profile}}
+                        {{element.userProfile}}
                     </td>
                 </ng-container>
 
-                <ng-container matColumnDef="email">
+                <ng-container matColumnDef="workEmail">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'emailAddress'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.email}}
+                        {{element.workEmail}}
                     </td>
                 </ng-container>
 
@@ -74,8 +78,8 @@
                     </th>
                     <td mat-cell *matCellDef="let element">
                         <span *ngFor="let student of element.students" class="students-list">
-                            <a (click)="goToStudentInformation(student.split('|')[1])"
-                                class="text-primary hover:underline cursor-pointer">{{student.split('|')[0]}}</a>
+                            <a (click)="goToStudentInformation(student.split('|')[3])"
+                                class="text-primary hover:underline cursor-pointer">{{student.split('|')[0]+' '+student.split('|')[2]}}</a>
                         </span>
                     </td>
                 </ng-container>
@@ -83,7 +87,7 @@
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef>{{'actions'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a routerLink="" matTooltip="Impersonate as Parent" class="mr-3 cursor-pointer">
+                        <a matTooltip="Impersonate as Parent" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icImpersonate"></mat-icon>
                         </a>
                     </td>
@@ -122,3 +126,9 @@
         </mat-checkbox>
     </button>
 </mat-menu>
+<div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
+    <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20" @fadeInRight>
+        <vex-search-parent (searchList)="getSearchResult($event)" (showHideAdvanceSearch)="hideAdvanceSearch($event)"></vex-search-parent>
+    </div>
+    <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
+</div>

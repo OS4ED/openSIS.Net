@@ -1,5 +1,5 @@
 export enum AttendanceCodeEnum{
-    "P"="Present",
-    "A"="Absent",
-    "H"="Half Day"
+    "Present"="Present",
+    "Absent"="Absent",
+    "Half Day"="Half Day"
 }

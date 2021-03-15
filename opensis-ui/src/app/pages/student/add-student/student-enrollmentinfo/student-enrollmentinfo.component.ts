@@ -27,7 +27,12 @@ import icDrop from '@iconify/icons-ic/vertical-align-bottom';
 import { EnrollmentCodeListView } from '../../../../models/enrollmentCodeModel';
 import { Router } from '@angular/router';
 import { SharedFunction} from '../../../shared/shared-function';
-
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
+import { GetAllSectionModel } from '../../../../models/sectionModel';
+import { SectionService } from '../../../../services/section.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'vex-student-enrollmentinfo',
   templateUrl: './student-enrollmentinfo.component.html',
@@ -76,15 +81,36 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   disableEditDueToActiveExitCode = false;
   cloneEnrollmentForCancel;
   cloneOfCloneEnrollmentForCancel;
-  cloneStudentEnrollment: StudentEnrollmentModel = new StudentEnrollmentModel();;
+  cloneStudentEnrollment: StudentEnrollmentModel = new StudentEnrollmentModel();
+  
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+  sectionList: GetAllSectionModel = new GetAllSectionModel();
+  destroySubject$: Subject<void> = new Subject();
+  sectionNameInViewMode:string='-';
   constructor(private calendarService: CalendarService,
     private studentService: StudentService,
     private snackbar: MatSnackBar,
+    private cryptoService:CryptoService,
     private router: Router,
-    private commonFunction:SharedFunction) {
+    private commonFunction:SharedFunction,
+    private sectionService:SectionService) {
   }
 
   ngOnInit(): void {
+    
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 4);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+
+    // this.getAllSection();
     if (this.studentCreateMode == this.studentCreate.EDIT) {
       this.studentCreateMode = this.studentCreate.ADD;
     }
@@ -179,6 +205,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
     this.studentService.changePageMode(this.studentCreateMode);
   }
+
   cancelEdit() {
     // if(this.studentEnrollmentModel!==this.cloneEnrollmentForCancel){
     //   this.studentEnrollmentModel=JSON.parse(this.cloneEnrollmentForCancel);
@@ -232,11 +259,13 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Student Enrollments failed to fetch. ' + res._message, '', {
+          this.snackbar.open( res._message, '', {
             duration: 10000
           });
         } else {
           this.studentEnrollmentModel = res;
+          this.getAllSection();
+          this.findSectionNameById();
           this.cloneStudentEnrollment.studentEnrollments = res.studentEnrollmentListForView.filter((item) => {
             return item.exitCode == null;
           });
@@ -292,6 +321,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments.length; i++) {
       this.selectedExitCodes[i] = null;
       this.cloneStudentEnrollment.studentEnrollments[i].schoolId = this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId.toString();
+      this.cloneStudentEnrollment.studentEnrollments[i].gradeId = this.studentEnrollmentModel.studentEnrollmentListForView[i].gradeId.toString();
     }
     this.findCalendarNameById();
   }
@@ -321,6 +351,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     } else {
       this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
     }
+    this.studentEnrollmentModel.estimatedGradDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.estimatedGradDate)
 
     this.studentEnrollmentModel.academicYear = sessionStorage.getItem("academicyear");
     this.studentEnrollmentModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
@@ -332,11 +363,11 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Enrollment Update failed. ' + res._message, '', {
+          this.snackbar.open( res._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Enrollment Update Successful.', '', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
           for (let i = 0; i < res.studentEnrollments?.length; i++) {
@@ -356,7 +387,42 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     })
   }
 
-  ngOnDestroy() {
-
+  getAllSection() {
+    if(!this.sectionList.isSectionAvailable){
+      this.sectionList.isSectionAvailable=true;
+      this.sectionService.GetAllSection(this.sectionList).pipe(takeUntil(this.destroySubject$)).subscribe(res => {
+        if (res._failure) {
+        }
+        else {
+          this.sectionList.tableSectionsList = res.tableSectionsList;
+          if (this.studentCreateMode == this.studentCreate.VIEW) {
+           this.findSectionNameById();
+          }
+        }
+      });
+    }
+   
   }
+
+  findSectionNameById(){
+    this.sectionList?.tableSectionsList?.map((item) => {
+      if (item.sectionId === +this.studentEnrollmentModel.sectionId) {
+        this.sectionNameInViewMode = item.name;
+      }
+    })
+  }
+
+  onGradeLevelChange(indexOfDynamicRow){
+    let indexOfGradeLevel=this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]]?.gradelevels.findIndex((item)=>{
+      return item.gradeId==+this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].gradeId;
+    });
+    this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].gradeLevelTitle=this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]]?.gradelevels[indexOfGradeLevel].title;
+  }
+
+  ngOnDestroy() {
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
+    
+  }
+
 }

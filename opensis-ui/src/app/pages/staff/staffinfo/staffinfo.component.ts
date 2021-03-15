@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, AfterViewInit } from '@angular/core';
+import { Component, OnInit, ViewChild, AfterViewInit} from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -11,7 +11,7 @@ import { Router } from '@angular/router';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
-import { StaffService } from 'src/app/services/staff.service';
+import { StaffService } from '../../../services/staff.service';
 import { LoaderService } from '../../../services/loader.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
@@ -26,6 +26,14 @@ import { Subject } from 'rxjs';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { SaveFilterComponent } from './save-filter/save-filter.component';
+import { MatDialog } from '@angular/material/dialog';
+import { SearchFilter, SearchFilterAddViewModel, SearchFilterListViewModel } from '../../../models/searchFilterModel';
+import { CommonService } from '../../../services/common.service';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-staffinfo',
@@ -37,7 +45,7 @@ import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
     fadeInRight400ms
   ]
 })
-export class StaffinfoComponent implements OnInit, AfterViewInit {
+export class StaffinfoComponent implements OnInit, AfterViewInit{
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort
 
@@ -70,14 +78,30 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
   destroySubject$: Subject<void> = new Subject();
   moduleIdentifier=ModuleIdentifier;
   createMode=SchoolCreate;
+  
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+  showSaveFilter:boolean=false;
+  searchFilterAddViewModel: SearchFilterAddViewModel = new SearchFilterAddViewModel();
+  searchFilterListViewModel: SearchFilterListViewModel= new SearchFilterListViewModel();
+  searchFilter: SearchFilter= new SearchFilter();
+  filterJsonParams;
+  showLoadFilter=true;
   constructor(private snackbar: MatSnackBar,
     private router: Router,
     private loaderService: LoaderService,
     public translateService: TranslateService,
     private staffService: StaffService,
     private imageCropperService:ImageCropperService,
+    public rollBasedAccessService: RollBasedAccessService,
     private layoutService: LayoutService,
-    private excelService:ExcelService) {
+    private excelService:ExcelService,
+    private dialog: MatDialog,
+    private commonService:CommonService,
+    private cryptoService: CryptoService) {
     translateService.use('en');
     if(localStorage.getItem("collapseValue") !== null){
       if( localStorage.getItem("collapseValue") === "false"){
@@ -92,11 +116,20 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
-    this.callStaffList();
   }
 
   ngOnInit(): void {
+    this.callStaffList();
+    this.getAllSearchFilter();
     this.searchCtrl = new FormControl();
+
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+
   }
 
   ngAfterViewInit() {
@@ -206,6 +239,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
     }
     this.staffService.getAllStaffList(this.getAllStaff).subscribe(res => {
       if (res._failure) {
+        this.staffList = new MatTableDataSource([]);
         this.snackbar.open('Staff information failed. ' + res._message, '', {
           duration: 10000
         });
@@ -272,11 +306,116 @@ export class StaffinfoComponent implements OnInit, AfterViewInit {
   }
 
   getSearchResult(res){
+    this.showSaveFilter=true;
     this.totalCount= res.totalCount;
     this.pageNumber = res.pageNumber;
     this.pageSize = res.pageSize;
     this.staffList = new MatTableDataSource(res.staffMaster);
     this.getAllStaff = new GetAllStaffModel();
+  }
+
+  openSaveFilter(){
+    this.dialog.open(SaveFilterComponent, {
+      width: '500px',
+      data: null
+    }).afterClosed().subscribe(res => {
+      if(res){
+       this.showSaveFilter=false;
+        this.getAllSearchFilter();
+      }
+    });
+  }
+
+  getAllSearchFilter(){
+    this.searchFilterListViewModel.module='Staff';
+    this.searchFilterListViewModel.schoolId = + sessionStorage.getItem('selectedSchoolId');
+    this.searchFilterListViewModel.tenantId = sessionStorage.getItem("tenantId");
+    this.commonService.getAllSearchFilter(this.searchFilterListViewModel).subscribe((res) => {
+      if (typeof (res) === 'undefined') {
+        this.snackbar.open('Filter list failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          this.searchFilterListViewModel.searchFilterList=[]
+        }
+        else {
+          this.searchFilterListViewModel= res;
+        }
+      }
+    }
+    );
+  }
+
+  editFilter(){
+    this.showAdvanceSearchPanel = true;
+    this.filterJsonParams = this.searchFilter;
+  }
+
+  deleteFilter(){
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '400px',
+      data: {
+          title: 'Are you sure?',
+          message: 'You are about to delete ' + this.searchFilter.filterName + '.'}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if (dialogResult){
+        this.deleteFilterdata(this.searchFilter);
+      }
+   });
+  }
+
+  deleteFilterdata(filterData){
+    this.searchFilterAddViewModel.searchFilter = filterData;
+    this.commonService.deleteSearchFilter(this.searchFilterAddViewModel).subscribe(
+      (res: SearchFilterAddViewModel) => {
+        if (typeof(res) === 'undefined'){
+          this.snackbar.open('' + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('' + res._message, '', {
+              duration: 10000
+            });
+          }
+          else {
+            this.searchFilter = new SearchFilter();
+            this.showLoadFilter=true;
+            this.getAllSearchFilter();
+          }
+        }
+      }
+    );
+  }
+
+  searchByFilterName(filter){
+    this.searchFilter= filter;
+    this.showLoadFilter=false;
+    this.showSaveFilter=false;
+    this.getAllStaff.filterParams = JSON.parse(filter.jsonList);
+    this.getAllStaff.sortingModel = null;
+    this.staffService.getAllStaffList(this.getAllStaff).subscribe(data => {
+      if(data._failure){
+        if(data.staffMaster===null){
+          this.staffList = new MatTableDataSource([]);   
+          this.snackbar.open( data._message, '', {
+            duration: 10000
+          });
+        } else{
+          this.staffList = new MatTableDataSource([]);
+        }
+      }else{
+        this.totalCount= data.totalCount;
+        this.pageNumber = data.pageNumber;
+        this.pageSize = data._pageSize;
+        this.staffList = new MatTableDataSource(data.staffMaster);      
+        this.getAllStaff = new GetAllStaffModel();    
+      }
+    });
   }
 
   ngOnDestroy(){

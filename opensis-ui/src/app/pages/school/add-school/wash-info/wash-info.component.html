@@ -215,7 +215,7 @@
 <mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == schoolCreate.VIEW">
     <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'washInformation'|translate}}</h3>
-        <button mat-raised-button color="primary" (click)="editWashInfo()">
+        <button  *ngIf="editPermission" mat-raised-button color="primary" (click)="editWashInfo()">
             <mat-icon [icIcon]="icEdit" style="font-size: 20px;" class="mr-1"></mat-icon> {{'editInformation'|translate}}
         </button>
     </div>

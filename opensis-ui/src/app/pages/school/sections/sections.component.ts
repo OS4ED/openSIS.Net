@@ -18,6 +18,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import {LayoutService} from 'src/@vex/services/layout.service';
+import { CryptoService } from 'src/app/services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
 @Component({
   selector: 'vex-sections',
   templateUrl: './sections.component.html',
@@ -46,6 +48,11 @@ export class SectionsComponent implements OnInit {
   totalCount:Number;pageNumber:Number;pageSize:Number;
   getAllSection: GetAllSectionModel = new GetAllSectionModel();  
   sectionAddModel:SectionAddModel= new SectionAddModel();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   SectionModelList: MatTableDataSource<any>;
   searchKey:string;
   @ViewChild(MatSort) sort: MatSort;
@@ -55,7 +62,8 @@ export class SectionsComponent implements OnInit {
     private loaderService:LoaderService,
     private sectionService:SectionService,
     private snackbar: MatSnackBar,
-    private layoutService:LayoutService    
+    private layoutService:LayoutService,
+    private cryptoService: CryptoService    
     ) 
   { 
     
@@ -78,6 +86,14 @@ export class SectionsComponent implements OnInit {
 }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 22);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 19);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+    console.log(this.permissionListViewModel);
   }
   getSectiondetails()
   {    
@@ -106,17 +122,17 @@ export class SectionsComponent implements OnInit {
   callAllSection(getAllSection){
     this.sectionService.GetAllSection(this.getAllSection).subscribe(data => {
       if(data._failure){
-        if(data._message==="NO RECORD FOUND"){
           if(data.tableSectionsList==null){
             this.SectionModelList = new MatTableDataSource([]);
             this.SectionModelList.sort=this.sort; 
+            this.snackbar.open( data._message, '', {
+              duration: 10000
+            });
           }
-         
-        } else{
-          this.snackbar.open('Section List failed. ' + data._message, '', {
-            duration: 10000
-          });
-        }
+          else{
+            this.SectionModelList = new MatTableDataSource([]);
+            this.SectionModelList.sort=this.sort;
+          }
       }else{     
         this.SectionModelList = new MatTableDataSource(data.tableSectionsList);
         this.SectionModelList.sort=this.sort;      
@@ -166,12 +182,12 @@ export class SectionsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Section Deletion failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {
        
-          this.snackbar.open('Section Deletion Successful.', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
             this.getSectiondetails();

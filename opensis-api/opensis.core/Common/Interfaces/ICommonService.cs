@@ -30,5 +30,7 @@ namespace opensis.core.Common.Interfaces
         public SearchFilterAddViewModel UpdateSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel);
         public SearchFilterAddViewModel DeleteSearchFilter(SearchFilterAddViewModel searchFilterAddViewModel);
         public SearchFilterListViewModel GetAllSearchFilter(SearchFilterListViewModel searchFilterListViewModel);
+        public GradeAgeRangeListViewModel GetAllGradeAgeRange(GradeAgeRangeListViewModel gradeAgeRangeListViewModel);
+        public GradeEducationalStageListViewModel GetAllGradeEducationalStage(GradeEducationalStageListViewModel gradeEducationalStageListViewModel);
     }
 }

@@ -12,15 +12,15 @@
                             <ng-template mat-tab-label class="tabl-list">
                    <span (click)="onClick(category.attendanceCategoryId)" class="custom-label"> {{category.title}}</span>
                     <div *ngIf="selectedAttendanceCategory==category.attendanceCategoryId">
-                        <a (click)="openEditCategory(category)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-                        <a (click)="openDeleteCategory(category)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
+                        <a *ngIf="editPermission" (click)="openEditCategory(category)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                        <a *ngIf="deletePermission" (click)="openDeleteCategory(category)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
                     </div>
                 </ng-template>
             </mat-tab>
         </mat-tab-group>
     </div>
     <div class="lg:w-3/12 lg:pr-4">
-        <button color="" class="w-full text-primary" mat-button type="button"
+        <button *ngIf="addPermission" color="" class="w-full text-primary" mat-button type="button"
         (click)='goToAddCategory()'>
         <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
             size="24px">
@@ -59,7 +59,7 @@
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
 
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                        <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
                             (click)='goToAddAttendanceCode()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
@@ -118,17 +118,17 @@
                         <th mat-header-cell *matHeaderCellDef mat-sort-header>
                             {{'stateCode'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.stateCode==null?'N/A':attedanceStateCode[element.stateCode]}}
+                        {{element.stateCode==null?'N/A':element.stateCode}}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="action">
                         <th mat-header-cell *matHeaderCellDef>{{'action'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a (click)="openEditAttendance(element)" class="mr-3 cursor-pointer">
+                        <a *ngIf="editPermission" (click)="openEditAttendance(element)" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a (click)="openDeleteAttendance(element)" class="cursor-pointer">
+                        <a *ngIf="deletePermission" (click)="openDeleteAttendance(element)" class="cursor-pointer">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                     </td>

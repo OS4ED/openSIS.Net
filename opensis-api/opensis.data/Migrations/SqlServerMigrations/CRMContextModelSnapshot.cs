@@ -2299,6 +2299,13 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("grade_scale_id")
                         .HasColumnType("int");
 
+                    b.Property<string>("GradeScaleType")
+                        .HasColumnName("grade_scale_type")
+                        .HasColumnType("varchar(13)")
+                        .HasComment("'Ungraded','Numeric','School_Scale','Teacher_Scale'")
+                        .HasMaxLength(13)
+                        .IsUnicode(false);
+
                     b.Property<bool?>("IsActive")
                         .HasColumnName("is_active")
                         .HasColumnType("bit");
@@ -3016,90 +3023,292 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("grade");
                 });
 
-            modelBuilder.Entity("opensis.data.Models.GradeEquivalency", b =>
+            modelBuilder.Entity("opensis.data.Models.GradeAgeRange", b =>
                 {
-                    b.Property<string>("IscedGradeLevel")
-                        .HasColumnName("isced_grade_level")
-                        .HasColumnType("varchar(8)")
-                        .HasMaxLength(8)
-                        .IsUnicode(false);
+                    b.Property<int>("AgeRangeId")
+                        .HasColumnName("age_range_id")
+                        .HasColumnType("int");
 
                     b.Property<string>("AgeRange")
                         .HasColumnName("age_range")
-                        .HasColumnType("varchar(5)")
-                        .HasMaxLength(5)
+                        .HasColumnType("varchar(10)")
+                        .HasMaxLength(10)
                         .IsUnicode(false);
 
-                    b.Property<string>("GradeDescription")
-                        .HasColumnName("grade_description")
-                        .HasColumnType("varchar(50)")
-                        .HasMaxLength(50)
+                    b.HasKey("AgeRangeId");
+
+                    b.ToTable("grade_age_range");
+
+                    b.HasData(
+                        new
+                        {
+                            AgeRangeId = 0,
+                            AgeRange = "Below 5"
+                        },
+                        new
+                        {
+                            AgeRangeId = 1,
+                            AgeRange = "5–6"
+                        },
+                        new
+                        {
+                            AgeRangeId = 2,
+                            AgeRange = "6–7"
+                        },
+                        new
+                        {
+                            AgeRangeId = 3,
+                            AgeRange = "7–8"
+                        },
+                        new
+                        {
+                            AgeRangeId = 4,
+                            AgeRange = "8–9"
+                        },
+                        new
+                        {
+                            AgeRangeId = 5,
+                            AgeRange = "9–10"
+                        },
+                        new
+                        {
+                            AgeRangeId = 6,
+                            AgeRange = "10–11"
+                        },
+                        new
+                        {
+                            AgeRangeId = 7,
+                            AgeRange = "11–12"
+                        },
+                        new
+                        {
+                            AgeRangeId = 8,
+                            AgeRange = "12–13"
+                        },
+                        new
+                        {
+                            AgeRangeId = 9,
+                            AgeRange = "13–14"
+                        },
+                        new
+                        {
+                            AgeRangeId = 10,
+                            AgeRange = "14–15"
+                        },
+                        new
+                        {
+                            AgeRangeId = 11,
+                            AgeRange = "15–16"
+                        },
+                        new
+                        {
+                            AgeRangeId = 12,
+                            AgeRange = "16–17"
+                        },
+                        new
+                        {
+                            AgeRangeId = 13,
+                            AgeRange = "17–18"
+                        },
+                        new
+                        {
+                            AgeRangeId = 14,
+                            AgeRange = "18+"
+                        });
+                });
+
+            modelBuilder.Entity("opensis.data.Models.GradeEducationalStage", b =>
+                {
+                    b.Property<int>("IscedCode")
+                        .HasColumnName("isced_code")
+                        .HasColumnType("int");
+
+                    b.Property<string>("EducationalStage")
+                        .HasColumnName("educational_stage")
+                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
                         .IsUnicode(false);
 
-                    b.HasKey("IscedGradeLevel");
+                    b.HasKey("IscedCode");
+
+                    b.ToTable("grade_educational_stage");
+
+                    b.HasData(
+                        new
+                        {
+                            IscedCode = 0,
+                            EducationalStage = "Early childhood Education"
+                        },
+                        new
+                        {
+                            IscedCode = 1,
+                            EducationalStage = "Primary education"
+                        },
+                        new
+                        {
+                            IscedCode = 2,
+                            EducationalStage = "Lower secondary education"
+                        },
+                        new
+                        {
+                            IscedCode = 3,
+                            EducationalStage = "Upper secondary education"
+                        },
+                        new
+                        {
+                            IscedCode = 4,
+                            EducationalStage = "Post-secondary non-tertiary education"
+                        },
+                        new
+                        {
+                            IscedCode = 5,
+                            EducationalStage = "Short-cycle tertiary education"
+                        },
+                        new
+                        {
+                            IscedCode = 6,
+                            EducationalStage = "Bachelor's degree or equivalent"
+                        },
+                        new
+                        {
+                            IscedCode = 7,
+                            EducationalStage = "Master's degree or equivalent"
+                        },
+                        new
+                        {
+                            IscedCode = 8,
+                            EducationalStage = "Doctoral degree or equivalent"
+                        });
+                });
+
+            modelBuilder.Entity("opensis.data.Models.GradeEquivalency", b =>
+                {
+                    b.Property<int>("EquivalencyId")
+                        .HasColumnName("equivalency_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("GradeLevelEquivalency")
+                        .IsRequired()
+                        .HasColumnName("grade_level_equivalency")
+                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .IsUnicode(false);
+
+                    b.HasKey("EquivalencyId")
+                        .HasName("PK_grade_equivalency_1");
 
                     b.ToTable("grade_equivalency");
 
                     b.HasData(
                         new
                         {
-                            IscedGradeLevel = "ISCED 01",
-                            AgeRange = "0-2",
-                            GradeDescription = "Early childhood education"
+                            EquivalencyId = -1,
+                            GradeLevelEquivalency = "Pre-Kindergarten"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 02",
-                            AgeRange = "0-2",
-                            GradeDescription = "Pre-primary education"
+                            EquivalencyId = 0,
+                            GradeLevelEquivalency = "Kindergarten"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 1",
-                            AgeRange = "5-7",
-                            GradeDescription = "Primary education"
+                            EquivalencyId = 1,
+                            GradeLevelEquivalency = "1st Grade"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 2",
-                            AgeRange = "6-10",
-                            GradeDescription = "Lower secondary education"
+                            EquivalencyId = 2,
+                            GradeLevelEquivalency = "2nd Grade"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 3",
-                            AgeRange = "9-12",
-                            GradeDescription = "Upper secondary education"
+                            EquivalencyId = 3,
+                            GradeLevelEquivalency = "3rd Grade"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 4",
-                            AgeRange = "10-11",
-                            GradeDescription = "Post-secondary non-tertiary education"
+                            EquivalencyId = 4,
+                            GradeLevelEquivalency = "4th Grade"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 5",
-                            AgeRange = "14-16",
-                            GradeDescription = "Short-cycle tertiary education"
+                            EquivalencyId = 5,
+                            GradeLevelEquivalency = "5th Grade"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 6",
-                            AgeRange = "17-23",
-                            GradeDescription = "Bachelor's or equivalent"
+                            EquivalencyId = 6,
+                            GradeLevelEquivalency = "6th Grade"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 7",
-                            AgeRange = "21-25",
-                            GradeDescription = "Master's or equivalent"
+                            EquivalencyId = 7,
+                            GradeLevelEquivalency = "7th Grade"
                         },
                         new
                         {
-                            IscedGradeLevel = "ISCED 8",
-                            AgeRange = "22-28",
-                            GradeDescription = "Doctoral or equivalent level"
+                            EquivalencyId = 8,
+                            GradeLevelEquivalency = "8th Grade"
+                        },
+                        new
+                        {
+                            EquivalencyId = 9,
+                            GradeLevelEquivalency = "9th Grade"
+                        },
+                        new
+                        {
+                            EquivalencyId = 10,
+                            GradeLevelEquivalency = "10th Grade"
+                        },
+                        new
+                        {
+                            EquivalencyId = 11,
+                            GradeLevelEquivalency = "11th Grade"
+                        },
+                        new
+                        {
+                            EquivalencyId = 12,
+                            GradeLevelEquivalency = "12th Grade"
+                        },
+                        new
+                        {
+                            EquivalencyId = 13,
+                            GradeLevelEquivalency = "1st Year College"
+                        },
+                        new
+                        {
+                            EquivalencyId = 14,
+                            GradeLevelEquivalency = "2nd Year College"
+                        },
+                        new
+                        {
+                            EquivalencyId = 15,
+                            GradeLevelEquivalency = "3rd Year College"
+                        },
+                        new
+                        {
+                            EquivalencyId = 16,
+                            GradeLevelEquivalency = "4th Year College"
+                        },
+                        new
+                        {
+                            EquivalencyId = 17,
+                            GradeLevelEquivalency = "5th Year College"
+                        },
+                        new
+                        {
+                            EquivalencyId = 18,
+                            GradeLevelEquivalency = "6th Year College"
+                        },
+                        new
+                        {
+                            EquivalencyId = 19,
+                            GradeLevelEquivalency = "7th Year College"
+                        },
+                        new
+                        {
+                            EquivalencyId = 20,
+                            GradeLevelEquivalency = "8th Year College"
                         });
                 });
 
@@ -3267,11 +3476,17 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("grade_id")
                         .HasColumnType("int");
 
-                    b.Property<string>("IscedGradeLevel")
-                        .HasColumnName("isced_grade_level")
-                        .HasColumnType("varchar(8)")
-                        .HasMaxLength(8)
-                        .IsUnicode(false);
+                    b.Property<int?>("AgeRangeId")
+                        .HasColumnName("age_range_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("EquivalencyId")
+                        .HasColumnName("equivalency_id")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("IscedCode")
+                        .HasColumnName("isced_code")
+                        .HasColumnType("int");
 
                     b.Property<DateTime?>("LastUpdated")
                         .HasColumnName("last_updated")
@@ -3306,7 +3521,11 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.HasKey("TenantId", "SchoolId", "GradeId")
                         .HasName("pk_gradelevels");
 
-                    b.HasIndex("IscedGradeLevel");
+                    b.HasIndex("AgeRangeId");
+
+                    b.HasIndex("EquivalencyId");
+
+                    b.HasIndex("IscedCode");
 
                     b.ToTable("gradelevels");
                 });
@@ -4584,6 +4803,12 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("created_on")
                         .HasColumnType("datetime");
 
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
+                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .IsUnicode(false);
+
                     b.Property<bool>("IsActive")
                         .HasColumnName("is_active")
                         .HasColumnType("bit");
@@ -4601,6 +4826,12 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("profile")
                         .HasColumnType("varchar(30)")
                         .HasComment("E.g. admin,student,teacher")
+                        .HasMaxLength(30)
+                        .IsUnicode(false);
+
+                    b.Property<string>("ProfileType")
+                        .HasColumnName("profile_type")
+                        .HasColumnType("varchar(30)")
                         .HasMaxLength(30)
                         .IsUnicode(false);
 
@@ -5132,10 +5363,6 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("school_id")
                         .HasColumnType("int");
 
-                    b.Property<int>("PermissionCategoryId")
-                        .HasColumnName("permission_category_id")
-                        .HasColumnType("int");
-
                     b.Property<int>("PermissionSubcategoryId")
                         .HasColumnName("permission_subcategory_id")
                         .HasColumnType("int");
@@ -5171,6 +5398,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnType("varchar(255)")
                         .HasMaxLength(255)
                         .IsUnicode(false);
+
+                    b.Property<int>("PermissionCategoryId")
+                        .HasColumnName("permission_category_id")
+                        .HasColumnType("int");
 
                     b.Property<int>("PermissionGroupId")
                         .HasColumnName("permission_group_id")
@@ -5210,7 +5441,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("updated_on")
                         .HasColumnType("datetime");
 
-                    b.HasKey("TenantId", "SchoolId", "PermissionCategoryId", "PermissionSubcategoryId");
+                    b.HasKey("TenantId", "SchoolId", "PermissionSubcategoryId")
+                        .HasName("PK_permission_subcategory_1");
+
+                    b.HasIndex("TenantId", "SchoolId", "PermissionCategoryId");
 
                     b.ToTable("permission_subcategory");
                 });
@@ -5544,6 +5778,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("permission_category_id")
                         .HasColumnType("int");
 
+                    b.Property<int?>("PermissionGroupId")
+                        .HasColumnName("permission_group_id")
+                        .HasColumnType("int");
+
                     b.Property<int?>("PermissionSubcategoryId")
                         .HasColumnName("permission_subcategory_id")
                         .HasColumnType("int");
@@ -5562,7 +5800,11 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.HasIndex("TenantId", "SchoolId", "MembershipId");
 
-                    b.HasIndex("TenantId", "SchoolId", "PermissionCategoryId", "PermissionSubcategoryId");
+                    b.HasIndex("TenantId", "SchoolId", "PermissionCategoryId");
+
+                    b.HasIndex("TenantId", "SchoolId", "PermissionGroupId");
+
+                    b.HasIndex("TenantId", "SchoolId", "PermissionSubcategoryId");
 
                     b.ToTable("role_permission");
                 });
@@ -7091,6 +7333,121 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.ToTable("student_comments");
                 });
 
+            modelBuilder.Entity("opensis.data.Models.StudentCoursesectionSchedule", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnName("student_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseSectionId")
+                        .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<decimal>("AcademicYear")
+                        .HasColumnName("academic_year")
+                        .HasColumnType("decimal(4, 0)");
+
+                    b.Property<string>("AlternateId")
+                        .HasColumnName("alternate_id")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int?>("CalendarId")
+                        .HasColumnName("calendar_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("CourseSectionName")
+                        .HasColumnName("course_section_name")
+                        .HasColumnType("varchar(200)")
+                        .HasMaxLength(200)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<string>("FirstGivenName")
+                        .IsRequired()
+                        .HasColumnName("first_given_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<int>("FirstLanguageId")
+                        .HasColumnName("first_language_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GradeId")
+                        .HasColumnName("grade_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("GradeScaleId")
+                        .HasColumnName("grade_scale_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LastFamilyName")
+                        .IsRequired()
+                        .HasColumnName("last_family_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("MiddleName")
+                        .HasColumnName("middle_name")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<Guid>("StudentGuid")
+                        .HasColumnName("student_guid")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<string>("StudentInternalId")
+                        .HasColumnName("student_internal_id")
+                        .HasColumnType("varchar(50)")
+                        .HasMaxLength(50)
+                        .IsUnicode(false);
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "StudentId", "CourseId", "CourseSectionId");
+
+                    b.HasIndex("TenantId", "SchoolId", "StudentId")
+                        .HasName("IX_student_coursesection_schedule");
+
+                    b.HasIndex("TenantId", "SchoolId", "CourseId", "CourseSectionId")
+                        .HasName("IX_student_coursesection_schedule_1");
+
+                    b.ToTable("student_coursesection_schedule");
+                });
+
             modelBuilder.Entity("opensis.data.Models.StudentDocuments", b =>
                 {
                     b.Property<Guid>("TenantId")
@@ -7182,6 +7539,10 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("exit_date")
                         .HasColumnType("date");
 
+                    b.Property<int?>("GradeId")
+                        .HasColumnName("grade_id")
+                        .HasColumnType("int");
+
                     b.Property<string>("GradeLevelTitle")
                         .HasColumnName("grade_level_title")
                         .HasColumnType("varchar(50)")
@@ -7236,6 +7597,8 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsUnicode(false);
 
                     b.HasKey("TenantId", "SchoolId", "StudentId", "EnrollmentId");
+
+                    b.HasIndex("TenantId", "SchoolId", "GradeId");
 
                     b.HasIndex("TenantId", "SchoolId", "StudentGuid");
 
@@ -7823,6 +8186,12 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(150)
                         .IsUnicode(false);
 
+                    b.Property<string>("Description")
+                        .HasColumnName("description")
+                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .IsUnicode(false);
+
                     b.Property<bool?>("IsActive")
                         .HasColumnName("is_active")
                         .HasColumnType("bit");
@@ -8173,10 +8542,20 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
             modelBuilder.Entity("opensis.data.Models.Gradelevels", b =>
                 {
-                    b.HasOne("opensis.data.Models.GradeEquivalency", "IscedGradeLevelNavigation")
+                    b.HasOne("opensis.data.Models.GradeAgeRange", "AgeRange")
                         .WithMany("Gradelevels")
-                        .HasForeignKey("IscedGradeLevel")
+                        .HasForeignKey("AgeRangeId")
+                        .HasConstraintName("FK_gradelevels_grade_age_range");
+
+                    b.HasOne("opensis.data.Models.GradeEquivalency", "Equivalency")
+                        .WithMany("Gradelevels")
+                        .HasForeignKey("EquivalencyId")
                         .HasConstraintName("FK_gradelevels_grade_equivalency");
+
+                    b.HasOne("opensis.data.Models.GradeEducationalStage", "IscedCodeNavigation")
+                        .WithMany("Gradelevels")
+                        .HasForeignKey("IscedCode")
+                        .HasConstraintName("FK_gradelevels_grade_educational_stage");
 
                     b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
                         .WithMany("Gradelevels")
@@ -8274,9 +8653,14 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasForeignKey("TenantId", "SchoolId", "PermissionCategoryId")
                         .HasConstraintName("FK_role_permission_permission_category");
 
+                    b.HasOne("opensis.data.Models.PermissionGroup", "PermissionGroup")
+                        .WithMany("RolePermission")
+                        .HasForeignKey("TenantId", "SchoolId", "PermissionGroupId")
+                        .HasConstraintName("FK_role_permission_permission_groupId");
+
                     b.HasOne("opensis.data.Models.PermissionSubcategory", "PermissionSubcategory")
                         .WithMany("RolePermission")
-                        .HasForeignKey("TenantId", "SchoolId", "PermissionCategoryId", "PermissionSubcategoryId")
+                        .HasForeignKey("TenantId", "SchoolId", "PermissionSubcategoryId")
                         .HasConstraintName("FK_role_permission_permission_subcategory");
                 });
 
@@ -8399,6 +8783,27 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("opensis.data.Models.StudentCoursesectionSchedule", b =>
+                {
+                    b.HasOne("opensis.data.Models.SchoolMaster", "SchoolMaster")
+                        .WithMany("StudentCoursesectionSchedule")
+                        .HasForeignKey("TenantId", "SchoolId")
+                        .HasConstraintName("FK_student_coursesection_schedule_school_master")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
+                        .WithMany("StudentCoursesectionSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "StudentId")
+                        .HasConstraintName("FK_student_coursesection_schedule_student_master")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.CourseSection", "CourseSection")
+                        .WithMany("StudentCoursesectionSchedule")
+                        .HasForeignKey("TenantId", "SchoolId", "CourseId", "CourseSectionId")
+                        .HasConstraintName("FK_student_coursesection_schedule_course_section")
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("opensis.data.Models.StudentDocuments", b =>
                 {
                     b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
@@ -8410,6 +8815,11 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
             modelBuilder.Entity("opensis.data.Models.StudentEnrollment", b =>
                 {
+                    b.HasOne("opensis.data.Models.Gradelevels", "Gradelevels")
+                        .WithMany("StudentEnrollment")
+                        .HasForeignKey("TenantId", "SchoolId", "GradeId")
+                        .HasConstraintName("FK_student_enrollment_gradelevels");
+
                     b.HasOne("opensis.data.Models.StudentMaster", "StudentMaster")
                         .WithMany("StudentEnrollment")
                         .HasForeignKey("TenantId", "SchoolId", "StudentGuid")

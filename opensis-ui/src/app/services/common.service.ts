@@ -7,12 +7,15 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { LanguageModel,LanguageAddModel } from '../models/languageModel';
 import { ReleaseNumberAddViewModel } from '../models/releaseNumberModel';
+import { SearchFilterAddViewModel, SearchFilterListViewModel } from '../models/searchFilterModel';
+import { AgeRangeList, EducationalStage } from '../models/common.model';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CommonService {
   apiUrl:string = environment.apiURL;
+  private searchResult;
   constructor(private http: HttpClient) { }
 
   GetAllCountry(obj: CountryModel){  
@@ -85,6 +88,43 @@ export class CommonService {
   getReleaseNumber(obj:ReleaseNumberAddViewModel){
     let apiurl =this.apiUrl + obj._tenantName+ "/Common/getReleaseNumber"; 
     return this.http.post<ReleaseNumberAddViewModel>(apiurl,obj);
+  }
+
+  addSearchFilter(obj:SearchFilterAddViewModel){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/addSearchFilter"; 
+    return this.http.post<SearchFilterAddViewModel>(apiurl,obj);
+  }
+
+  updateSearchFilter(obj:SearchFilterAddViewModel){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/updateSearchFilter"; 
+    return this.http.put<SearchFilterAddViewModel>(apiurl,obj);
+  }
+
+  deleteSearchFilter(obj:SearchFilterAddViewModel){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/deleteSearchFilter"; 
+    return this.http.post<SearchFilterAddViewModel>(apiurl,obj);
+  }
+
+  getAllSearchFilter(obj:SearchFilterListViewModel){
+    let apiurl =this.apiUrl + obj._tenantName+ "/Common/getAllSearchFilter"; 
+    return this.http.post<SearchFilterListViewModel>(apiurl,obj);
+  }
+  
+  getAllGradeAgeRange(obj:AgeRangeList){
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllGradeAgeRange";
+    return this.http.post<AgeRangeList>(apiurl,obj)
+  }
+
+ getAllGradeEducationalStage(obj:EducationalStage){
+    let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllGradeEducationalStage";
+    return this.http.post<EducationalStage>(apiurl,obj)
+  }
+
+  setSearchResult(result) {
+    this.searchResult = result;
+  }
+  getSearchResult() {
+    return this.searchResult;
   }
 
 }

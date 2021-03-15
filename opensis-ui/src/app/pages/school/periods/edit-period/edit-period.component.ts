@@ -91,12 +91,12 @@ export class EditPeriodComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Period Creation failed. ' + res._message, '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 });
               }
               else {
-                this.snackbar.open('Period Successfully Created', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');
@@ -126,12 +126,12 @@ export class EditPeriodComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Period Updation failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               }
               else {
-                this.snackbar.open('' +res._message+ '', '', {
+                this.snackbar.open(res._message+ '', '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

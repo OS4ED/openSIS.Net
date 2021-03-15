@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from 'src/app/services/Crypto.service';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 
 @Component({
@@ -10,34 +12,40 @@ import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.anim
   ]
 })
 export class LovSettingsComponent implements OnInit {
-  pages=['School Level', 'School Classification', 'Countries', 'Female Toilet Type', 'Female Toilet Accessibility', 'Male Toilet Type', 'Male Toilet Accessibility', 'Common Toilet Type', 'Common Toilet Accessibility', 'Race', 'Ethnicity', 'Language']
+  pages=[]
   parentSettings=true;
-  pageTitle = 'School Level';
+  pageTitle:string;
   pageId: string = '';
-  displaySchoolLevel = true;
-  displaySchoolClassification = false;
-  displayCountries = false;
-  displayFemaleToiletType = false;
-  displayMaleToiletType = false;
-  displayCommonToiletType = false;
-  displayRace = false;
-  displayEthnicity = false;
-  displayLanguage = false;
 
-  SchoolLevelFlag: boolean = true;
-  SchoolClassificationFlag: boolean = false;
-  CountriesFlag: boolean = false;
-  FemaleToiletTypeFlag: boolean = false;
-  MaleToiletTypeFlag: boolean = false;
-  CommonToiletTypeFlag: boolean = false;
-  RaceFlag: boolean = false;
-  EthnicityFlag: boolean = false;
-  LanguageFlag: boolean = false;
-
-  constructor() { }
+  constructor(private cryptoService:CryptoService) { }
 
   ngOnInit(): void {
+    let permissions:RolePermissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    let settingIndex = permissions?.permissionList?.findIndex((item) => {
+      return item.permissionGroup?.permissionGroupId == 12
+    });
+  
+    let lovMenu= permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory.findIndex((item)=>{
+      return item.permissionCategoryId==28;
+    });
+    permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory[lovMenu].permissionSubcategory.map((option)=>{
+      if(option.rolePermission[0].canView){
+        this.pages.push(option.title);
+      }
+    })
+
+    let availablePageId=localStorage.getItem("pageId");
+    if(availablePageId==null || !this.pages.includes(availablePageId)){
+      for(let item of permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory[lovMenu].permissionSubcategory){
+        if(item.rolePermission[0].canView){
+          localStorage.setItem("pageId",item.title);
+          break;
+        }
+      }
+    }
     this.pageId = localStorage.getItem("pageId");
+
+    
   }
 
   getSelectedPage(pageId){

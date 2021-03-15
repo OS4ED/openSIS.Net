@@ -22,6 +22,8 @@ import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
 @Component({
   selector: 'vex-staff-addressinfo',
   templateUrl: './staff-addressinfo.component.html',
@@ -39,7 +41,7 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   @Input() categoryId;
   @ViewChild('f') currentForm: NgForm;
   @Input() staffCreateMode: SchoolCreate;
-  nameOfMiscValuesForView:MiscModel = new MiscModel();
+  nameOfMiscValuesForView: MiscModel = new MiscModel();
   countryModel: CountryModel = new CountryModel();
   staffAddModel: StaffAddModel = new StaffAddModel();
   languages: LanguageModel = new LanguageModel();
@@ -52,20 +54,34 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   languageList;
   checkBoxChecked = false;
   icEdit = icEdit;
-  actionButton="submit"
+  actionButton = 'submit';
   cloneStaffAddModel;
   destroySubject$: Subject<void> = new Subject();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(public translateService: TranslateService,
-    private snackbar: MatSnackBar,
-    private staffService: StaffService,
-    private commonService: CommonService,
-    private imageCropperService: ImageCropperService,
-    private commonLOV:CommonLOV) {
+              private snackbar: MatSnackBar,
+              private staffService: StaffService,
+              private commonService: CommonService,
+              private imageCropperService: ImageCropperService,
+              public rollBasedAccessService: RollBasedAccessService,
+              private commonLOV: CommonLOV) {
     translateService.use('en');
   }
 
   ngOnInit(): void {
-    if (this.staffCreateMode == this.staffCreate.VIEW) {
+    this.permissionListViewModel = this.rollBasedAccessService.getPermission();
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 15);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+
+    if (this.staffCreateMode === this.staffCreate.VIEW) {
       this.data = this.staffDetailsForViewAndEdit?.staffMaster;
       this.staffAddModel = this.staffDetailsForViewAndEdit;
       this.cloneStaffAddModel = JSON.stringify(this.staffAddModel);
@@ -88,7 +104,7 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   editAddressContactInfo() {
     this.staffCreateMode = this.staffCreate.EDIT;
     this.staffService.changePageMode(this.staffCreateMode);
-    this.actionButton="update";
+    this.actionButton = 'update';
     this.staffAddModel.staffMaster.mailingAddressCountry =+this.staffAddModel.staffMaster.mailingAddressCountry ;
     this.staffAddModel.staffMaster.homeAddressCountry = +this.staffAddModel.staffMaster.homeAddressCountry;
 
@@ -190,11 +206,11 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Staff Updation failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Staff Update Successful.', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
           this.staffService.setStaffCloneImage(data.staffMaster.staffPhoto);

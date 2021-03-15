@@ -1,7 +1,7 @@
  <mat-card class="w-full" *ngIf="mode ==='view'; else add">
     <div class="flex justify-between mx-2">
         <h3>{{'generalInformation' | translate}}</h3>
-        <button mat-raised-button color="primary" (click)="editGeneralInfo()">
+        <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()">
                 <mat-icon  [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
             </button>
         </div>

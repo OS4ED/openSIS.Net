@@ -4,7 +4,7 @@
             <div class="relative cursor-pointer" fxFlex="none" (click)='openViewDetails(parent)'>
                 <img src="{{parent.parentPhoto?'data:image/png;base64,'+ parent.parentPhoto:'assets/img/default-person.jpg'}}" class="avatar">
             </div>
-            <div class="overflow-hidden cursor-pointer" fxFlex="auto" (click)='openViewDetails(parent)'>
+            <div class="overflow-hidden cursor-pointer" fxFlex="auto" *ngIf="viewPermission" (click)='openViewDetails(parent)'>
                 <div class="subheading-2 leading-snug text-primary">{{parent.firstname}} {{parent.lastname}}</div>
                 <div class="body-1 text-secondary truncate contact-type">{{parent.relationship}} 
                     <span class="separator"></span> 
@@ -26,10 +26,10 @@
                             matTooltip="No Custody of Student"
                             class="inline-block align-middle" /></span>
                    </ng-template>
-                    <button mat-icon-button matTooltip="Edit" type="button" class="text-gray">
+                    <button *ngIf="editPermission" mat-icon-button matTooltip="Edit" type="button" class="text-gray">
                     <mat-icon (click) = "editParentInfo(parent)" [icIcon]="icEdit" class="mr-2"></mat-icon>
                 </button>
-                    <button mat-icon-button matTooltip="Delete" type="button" class="text-gray">
+                    <button *ngIf="deletePermission" mat-icon-button matTooltip="Delete" type="button" class="text-gray">
                         <mat-icon (click)="confirmDelete(parent)" [icIcon]="icRemove"></mat-icon>
                     </button>
             </div>
@@ -39,7 +39,7 @@
 </div>
 
 <div class="text-center mt-6" *ngIf="contactType ==='Primary'; else secondary">
-    <button color="primary" mat-raised-button type="button" (click)='openAddNew("Primary")'>
+    <button *ngIf="addPermission" color="primary" mat-raised-button type="button" (click)='openAddNew("Primary")'>
         <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px"></ic-icon>
         <span>Add Primary Contact</span>
     </button>    
@@ -47,12 +47,12 @@
 <ng-template #secondary>
     <div *ngIf="contactType ==='Secondary'; else other">
         <div class="text-center mt-6" >
-            <button color="primary" class="mr-3" mat-raised-button type="button" (click)='openAddNew("Secondary")'>
+            <button *ngIf="addPermission" color="primary" class="mr-3" mat-raised-button type="button" (click)='openAddNew("Secondary")'>
                 <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                 </ic-icon>
                 <span>Add Secondary Contact</span>
             </button>    
-            <button color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
+            <button *ngIf="addPermission" color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
                 <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                 </ic-icon>
                 <span>Add Other Contact</span>
@@ -61,7 +61,7 @@
     </div>
     <ng-template #other>
         <div class="text-center mt-6">
-            <button color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
+            <button *ngIf="addPermission" color="primary" mat-raised-button type="button" (click)='openAddNew("Other")'>
                 <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                 </ic-icon>
                 <span>Add Other Contact</span>

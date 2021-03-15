@@ -172,7 +172,7 @@ namespace opensis.data.Repository
             try
             {
 
-                var gradelevelsList = this.context?.Gradelevels.Include(x=>x.IscedGradeLevelNavigation)
+                var gradelevelsList = this.context?.Gradelevels.Include(x=>x.Equivalency)
                     .Where(x => x.TenantId == gradelevelList.TenantId && x.SchoolId==gradelevelList.SchoolId).OrderBy(x=>x.SortOrder).ToList();
 
                 if (gradelevelsList.Count > 0)
@@ -189,8 +189,11 @@ namespace opensis.data.Repository
                                           ShortName = gradelevel.ShortName,
                                           SortOrder = gradelevel.SortOrder,
                                           TenantId = gradelevel.TenantId,
-                                          IscedGradeLevel = gradelevel.IscedGradeLevel,
-                                          GradeDescription = gradelevel.IscedGradeLevelNavigation != null ? gradelevel.IscedGradeLevelNavigation.GradeDescription : null,
+                                          GradeLevelEquivalency = gradelevel.Equivalency != null?gradelevel.Equivalency.GradeLevelEquivalency : null,
+                                          EquivalencyId = gradelevel.EquivalencyId,
+                                          AgeRangeId = gradelevel.AgeRangeId,
+                                          IscedCode = gradelevel.IscedCode,
+                                          //GradeDescription = gradelevel.IscedGradeLevelNavigation != null ? gradelevel.IscedGradeLevelNavigation.GradeDescription : null,
                                           //AgeRange=gradelevel.AgeRange,
                                           //EducationalStage=gradelevel.EducationalStage,
                                           //GradeLevelEquivalency=gradelevel.GradeLevelEquivalency,

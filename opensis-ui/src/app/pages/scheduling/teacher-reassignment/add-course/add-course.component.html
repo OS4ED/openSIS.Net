@@ -1,0 +1,73 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "searchselectCourse" | translate }}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 row-gap-2 mt-4">
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "subject" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="mbathemaicst">Mathemaicst</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "program" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="allProgram">All Program</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li>
+            <button color="primary" mat-raised-button type="submit" class="mt-2">Search</button>
+        </li>
+    </ul>
+</mat-dialog-content>
+<div class="-mx-4 border-t overflow-x-auto overflow-y-hidden">
+    <table class="w-full schedule-table">
+        <thead>
+            <tr>
+                <th>{{ "subject" | translate }}</th>
+                <th>{{ "program" | translate }}</th>
+                <th>{{ "course" | translate }}</th>
+                <th>{{ "gradeLevel" | translate }}</th>
+                <th>{{ "courseCategory" | translate }}</th>
+                <th>{{ "creditHours" | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Mathematics</td>
+                <td>-</td>
+                <td class="text-primary"><a href="javascript:void(0);">Algebra</a></td>
+                <td>Grade 6</td>
+                <td>Core</td>
+                <td>4.00</td>
+            </tr>
+            <tr>
+                <td>Mathematics</td>
+                <td>-</td>
+                <td class="text-primary"><a href="javascript:void(0);">Algebra 2</a></td>
+                <td>Grade 6</td>
+                <td>Core</td>
+                <td>3.00</td>
+            </tr>
+            <tr>
+                <td>Mathematics</td>
+                <td>-</td>
+                <td class="text-primary"><a href="javascript:void(0);">AP Calculus</a></td>
+                <td>Grade 8</td>
+                <td>Core</td>
+                <td>4.00</td>
+            </tr>
+        </tbody>
+    </table>
+</div>

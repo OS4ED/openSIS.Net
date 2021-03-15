@@ -23,6 +23,8 @@ import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ExcelService } from '../../../services/excel.service';
 import { LoaderService } from '../../../services/loader.service';
+import { CryptoService } from 'src/app/services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-honor-roll-setup',
@@ -62,7 +64,11 @@ export class HonorRollSetupComponent implements OnInit,AfterViewInit {
   pageSize: number;
   searchCtrl: FormControl;
   totalCount: any;
-
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel()
   constructor(
     private router: Router,
     private dialog: MatDialog,
@@ -70,7 +76,8 @@ export class HonorRollSetupComponent implements OnInit,AfterViewInit {
     private snackbar: MatSnackBar,
     private excelService:ExcelService,
     private loaderService:LoaderService,
-    public translateService:TranslateService) {
+    public translateService:TranslateService,
+    private cryptoService: CryptoService) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
@@ -147,6 +154,13 @@ export class HonorRollSetupComponent implements OnInit,AfterViewInit {
   ngOnInit(): void {
     this.searchCtrl=new FormControl();
     this.getAllHonorRollList();
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 26);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 31);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
   }
 
   getPageEvent(event){
@@ -251,9 +265,14 @@ export class HonorRollSetupComponent implements OnInit,AfterViewInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
+            if (res.honorRollList == null) {
+              this.honorROllModList= new MatTableDataSource([]);
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.honorROllModList= new MatTableDataSource([]);
+            }
           }
           else{
             this.totalCount=res.totalCount;

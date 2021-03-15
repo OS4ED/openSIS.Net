@@ -114,7 +114,7 @@ export class EditAttendanceCodeComponent implements OnInit {
           duration: 10000
         });
       } else {
-        this.snackbar.open('Attendance Code Submitted Successfully.', '', {
+        this.snackbar.open('' + res._message, '', {
           duration: 10000
         });
         this.dialogRef.close(true);
@@ -155,7 +155,7 @@ export class EditAttendanceCodeComponent implements OnInit {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Attendance Code Updated Successfully.', '', {
+          this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
           this.dialogRef.close(true);

@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from 'src/app/services/Crypto.service';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 
 @Component({
@@ -10,14 +12,37 @@ import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.anim
   ]
 })
 export class GradeSettingsComponent implements OnInit {
-  pages=['Standard Grade Setup', 'Effort Grade Setup', 'Report Card Grades', 'Honor Roll Setup']
+  pages=[]
   parentSettings=true;
   pageTitle = 'US Common Core Standards';
   pageId: string = '';
 
-  constructor() { }
+  constructor(private cryptoService:CryptoService) { }
 
   ngOnInit(): void {
+    let permissions:RolePermissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    let settingIndex = permissions?.permissionList?.findIndex((item) => {
+      return item.permissionGroup?.permissionGroupId == 12
+    });
+  
+    let gradeMenu= permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory.findIndex((item)=>{
+      return item.permissionCategoryId==26;
+    });
+    permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory[gradeMenu].permissionSubcategory.map((option)=>{
+      if(option.rolePermission[0].canView){
+        this.pages.push(option.title);
+      }
+    })
+
+    let availablePageId=localStorage.getItem("pageId");
+    if(availablePageId==null || !this.pages.includes(availablePageId)){
+      for(let item of permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory[gradeMenu].permissionSubcategory){
+        if(item.rolePermission[0].canView){
+          localStorage.setItem("pageId",item.title);
+          break;
+        }
+      }
+    }
     this.pageId = localStorage.getItem("pageId");
   }
 

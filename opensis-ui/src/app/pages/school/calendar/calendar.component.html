@@ -24,15 +24,15 @@
             </mat-form-field>
           </div>
 
-          <button type="button" [disabled]="isMarkingPeriod=='null'" color="primary" mat-raised-button class="mr-3" (click)="openAddNewCalendar()">
+          <button type="button" *ngIf="addPermission" [disabled]="isMarkingPeriod=='null'" color="primary" mat-raised-button class="mr-3" (click)="openAddNewCalendar()">
             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon>
             {{'addCalendar' | translate}}
           </button>
-          <a *ngIf="showCalendarView" class="mx-3" href="javascript:void(0)"
+          <a *ngIf="showCalendarView && editPermission" class="mx-3" href="javascript:void(0)"
             (click)="openEditCalendar(this.selectedCalendar)">
             <ic-icon [icon]="icEdit" inline="true" class="text-2xl"></ic-icon>
           </a>
-          <a *ngIf="showCalendarView" class="mx-3" href="javascript:void(0)"
+          <a *ngIf="showCalendarView && deletePermission" class="mx-3" href="javascript:void(0)"
             (click)="deleteCalendarConfirm(this.selectedCalendar)">
             <ic-icon [icon]="icDelete" class="text-2xl" inline="true"></ic-icon>
           </a>

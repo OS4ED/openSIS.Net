@@ -12,11 +12,11 @@
     </div>
 
     <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-        <button (click)="editCalendarEvent()" mat-menu-item>
+        <button *ngIf="editPermission" (click)="editCalendarEvent()" mat-menu-item>
             <span>{{'editEvent' |translate}}</span>
         </button>
 
-        <button (click)="deleteCalendarConfirm()" mat-menu-item>
+        <button *ngIf="deletePermission" (click)="deleteCalendarConfirm()" mat-menu-item>
             <span>{{'deleteEvent' |translate}}</span>
         </button>
     </mat-menu>

@@ -21,6 +21,8 @@ import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from './../../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
 @Component({
   selector: 'vex-wash-info',
   templateUrl: './wash-info.component.html',
@@ -38,12 +40,15 @@ export class WashInfoComponent implements OnInit,OnDestroy {
   icEdit = icEdit;
   @Input() schoolDetailsForViewAndEdit;
   @Input() categoryId;
-  form: FormGroup
+  form: FormGroup;
   washinfo = WashInfoEnum;
   @ViewChild('f') currentForm: NgForm;
   f: NgForm;
   module = "School";
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
+  editPermission: boolean = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   loading: boolean;
   formActionButtonTitle = "submit";
   femaleToiletTypeList;
@@ -58,34 +63,41 @@ export class WashInfoComponent implements OnInit,OnDestroy {
     public translateService: TranslateService,
     private imageCropperService: ImageCropperService,
     private commonService: CommonService,
+    public rollBasedAccessService: RollBasedAccessService,
     private commonLOV:CommonLOV) {
     translateService.use('en');
 
   }
   ngOnInit(): void {
-    if (this.schoolCreateMode == this.schoolCreate.VIEW) {
+
+    if (this.schoolCreateMode === this.schoolCreate.VIEW) {
+      this.permissionListViewModel = this.rollBasedAccessService.getPermission();
+      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 2);
+      const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 1);
+      const permissionSubCategory = permissionCategory.permissionSubcategory.find(x => x.permissionSubcategoryId === 2);
+      this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
       this.schoolService.changePageMode(this.schoolCreateMode);
-      this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
+      this.imageCropperService.enableUpload({module: this.moduleIdentifier.SCHOOL, upload: true, mode: this.schoolCreate.VIEW});
       this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
-      this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
+      this.cloneSchool = JSON.stringify(this.schoolAddViewModel);
     } else {
       this.initializeDropdownValues();
       this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.EDIT});
       this.schoolService.changePageMode(this.schoolCreateMode);
       this.schoolAddViewModel = this.schoolService.getSchoolDetails();
-      this.cloneSchool=JSON.stringify(this.schoolAddViewModel);
+      this.cloneSchool = JSON.stringify(this.schoolAddViewModel);
     }
   }
 
   initializeDropdownValues() {
-    this.commonLOV.getLovByName("Female Toilet Type").pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.femaleToiletTypeList=res;  
+    this.commonLOV.getLovByName('Female Toilet Type').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.femaleToiletTypeList=res;
     });
-    this.commonLOV.getLovByName("Male Toilet Type").pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.maleToiletTypeList=res;  
+    this.commonLOV.getLovByName('Male Toilet Type').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.maleToiletTypeList=res;
     });
-    this.commonLOV.getLovByName("Common Toilet Type").pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.commonToiletTypeList=res;  
+    this.commonLOV.getLovByName('Common Toilet Type').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.commonToiletTypeList=res;
     });
   }
 
@@ -106,7 +118,7 @@ export class WashInfoComponent implements OnInit,OnDestroy {
     }
     this.schoolCreateMode = this.schoolCreate.VIEW;
     this.schoolService.changePageMode(this.schoolCreateMode);
-    
+
   }
 
   submit() {
@@ -116,7 +128,7 @@ export class WashInfoComponent implements OnInit,OnDestroy {
         this.modifyCustomFields();
       }
       this.schoolService.UpdateSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-        if (typeof (data) == 'undefined') {
+        if (typeof (data) === 'undefined') {
           this.snackbar.open(`Wash Info Updation failed` + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
@@ -146,9 +158,9 @@ export class WashInfoComponent implements OnInit,OnDestroy {
 
   modifyCustomFields(){
     this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
-        for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
-          if (schoolCustomField.type === "Multiple SelectBox" && this.schoolService.getSchoolMultiselectValue() !== undefined) {
-            schoolCustomField.customFieldsValue[0].customFieldValue = this.schoolService.getSchoolMultiselectValue().toString().replaceAll(",", "|");
+    for (const schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          if (schoolCustomField.type === 'Multiple SelectBox' && this.schoolService.getSchoolMultiselectValue() !== undefined) {
+            schoolCustomField.customFieldsValue[0].customFieldValue = this.schoolService.getSchoolMultiselectValue().toString().replaceAll(',', '|');
           }
         }
   }

@@ -13,18 +13,19 @@
 </div>
 
 <div class="flex py-3 border-t border-normal" *ngFor="let row of divCount;let index=index">
-    <div class="w-1/12 text-center pt-2" *ngIf="blockScheduleAddModel.courseBlockScheduleList[index].courseSectionId==null;else dontDelete">
+    <div class="w-1/12 text-center pt-2" >
         <a class="cursor-pointer" (click)="deleteRow(index)">
             <mat-icon [icIcon]="icClose"></mat-icon>
         </a>
     </div>
+    <!-- *ngIf="blockScheduleAddModel.courseBlockScheduleList[index].courseSectionId==null;else dontDelete"
     <ng-template #dontDelete>
         <div class="w-1/12 text-center pt-2">
             <a class="cursor-pointer text-gray">
                 <mat-icon [icIcon]="icClose"></mat-icon>
             </a>
         </div>
-    </ng-template>
+    </ng-template> -->
    
     <div class="w-3/12 pr-6">
         <select #block="ngModel" name="{{'rotationDay'+index}}" class="border border-normal rounded px-3 py-2 w-full"

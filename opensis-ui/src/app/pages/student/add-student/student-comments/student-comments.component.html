@@ -5,7 +5,7 @@
         <div>
             <a (click)="exportCommentsToExcel()" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Export as Excel"><i class="icon icon-file-excel text-lg"></i></a>
             <a routerLink="" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Print"><mat-icon [icIcon]="icPrint"></mat-icon></a>
-            <button mat-raised-button color="primary" class="align-middle" (click)='openAddNew()'>
+            <button *ngIf="addPermission" mat-raised-button color="primary" class="align-middle" (click)='openAddNew()'>
                 <mat-icon [icIcon]="icAdd"></mat-icon> {{'addComment' |translate}}
             </button>
         </div>
@@ -21,10 +21,10 @@
                                     <div class="flex w-full justify-between items-center h-full">
                                         <h5 class="inline-block font-medium"><mat-icon [icIcon]="icComment" class="inline-block align-middle mr-3"></mat-icon><span class="text-primary font-medium">{{studentComment.updatedBy}}</span> Commented on {{studentComment.lastUpdated|date:'MMM d, y, h:mm a'}}</h5>
                                         <div class="font-normal pt-1">
-                                            <button mat-icon-button matTooltip="Filter Columns" (click)="editComment(studentComment)" type="button">
+                                            <button *ngIf="editPermission" mat-icon-button matTooltip="Filter Columns" (click)="editComment(studentComment)" type="button">
                                                 <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
                                             </button>
-                                            <button mat-icon-button matTooltip="Delete Column" (click)="confirmDelete(studentComment)"type="button">
+                                            <button *ngIf="deletePermission" mat-icon-button matTooltip="Delete Column" (click)="confirmDelete(studentComment)"type="button">
                                                 <mat-icon [icIcon]="icDelete"></mat-icon>
                                             </button>
                                         </div>

@@ -1,7 +1,7 @@
-import { Component, ElementRef, HostBinding, Input, OnInit } from '@angular/core';
+import { Component, ElementRef, HostBinding, Input, OnDestroy, OnInit } from '@angular/core';
 import { LayoutService } from '../../services/layout.service';
 import { ConfigService } from '../../services/config.service';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import icBookmarks from '@iconify/icons-ic/twotone-bookmarks';
 import emojioneUS from '@iconify/icons-emojione/flag-for-flag-united-states';
 import emojioneDE from '@iconify/icons-emojione/flag-for-flag-germany';
@@ -21,16 +21,19 @@ import { PopoverService } from '../../components/popover/popover.service';
 import { MegaMenuComponent } from '../../components/mega-menu/mega-menu.component';
 import { fadeInUp400ms } from '../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../@vex/animations/stagger.animation';
+import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from 'src/app/services/Crypto.service';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'vex-toolbar',
   templateUrl: './toolbar.component.html',
   styleUrls: ['./toolbar.component.scss'],
-   animations: [
+  animations: [
     fadeInUp400ms,
     stagger40ms
   ],
 })
-export class ToolbarComponent implements OnInit {
+export class ToolbarComponent implements OnInit,OnDestroy {
 
   @Input() mobileQuery: boolean;
 
@@ -59,14 +62,35 @@ export class ToolbarComponent implements OnInit {
   icDoneAll = icDoneAll;
   icArrowDropDown = icArrowDropDown;
   icAdd = icAdd;
+  // addNewMenu=[];
+  // private destroySubject$ = new Subject<void>();
 
   constructor(private layoutService: LayoutService,
-              private configService: ConfigService,
-              private navigationService: NavigationService,
-              private popoverService: PopoverService) { }
+    private configService: ConfigService,
+    private navigationService: NavigationService,
+    private popoverService: PopoverService,
+    private cryptoService:CryptoService) {
+    //  this.navigationService.menuItems.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+    //    if(res){
+    //     this.renderAddNew();
+    //    }
+    //  })
+      
+  }
 
   ngOnInit() {
+    // this.renderAddNew();
   }
+
+  // renderAddNew(){
+  // let permissions = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+  // if(permissions){
+  //   this.addNewMenu = permissions?.permissionList?.filter((item) => {
+  //     return item.permissionGroup.permissionGroupId === 2;
+  //   });
+  // }
+ 
+  // }
 
   openQuickpanel() {
     this.layoutService.openQuickpanel();
@@ -100,4 +124,9 @@ export class ToolbarComponent implements OnInit {
   /*openSearch() {
     this.layoutService.openSearch();
   }*/
+
+  ngOnDestroy(){
+    // this.destroySubject$.next();
+    // this.destroySubject$.complete();
+  }
 }

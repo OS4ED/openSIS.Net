@@ -60,7 +60,7 @@
                                 <h3 >{{totalCourse}} Course Found</h3>
                             </ng-template>
                         </ng-template>
-                        <button mat-raised-button color="primary" (click)="openModalEditCourse()">
+                        <button *ngIf="addPermission" mat-raised-button color="primary" (click)="openModalEditCourse()">
                             <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon>{{'addNewCourse'|translate}}
                         </button>
                     </div>
@@ -79,11 +79,11 @@
                                         <ng-template #notSelected>
                                             <h4 class="font-bold">{{course.courseTitle}}</h4>
                                         </ng-template>
-                                        <p>{{course.courseSubject}}<span class="dot-separator"></span>{{course.courseProgram}}</p>
+                                        <p>{{course.courseSubject}}<span class="dot-separator" *ngIf="course.courseProgram"></span>{{course.courseProgram}}</p>
                                     </a>
                                     <div>
                                         <span (click)="courseSections(course)" class="mr-4 text-blue cursor-pointer">Sections
-                                            (4)</span>
+                                            (0)</span>
                                         <a [matMenuTriggerFor]="addNewMenu"
                                             class="cursor-pointer inline-block ml-3 pt-1 align-middle">
                                             <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
@@ -91,10 +91,10 @@
                                     </div>
                                 </div>
                                 <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                                    <button mat-menu-item (click) = "editCourse(course)">
+                                    <button *ngIf="editPermission" mat-menu-item (click) = "editCourse(course)">
                                         <span>{{'editItem' | translate}}</span>
                                     </button>
-                                    <button mat-menu-item (click) = "confirmDelete(course,index)">
+                                    <button *ngIf="deletePermission" mat-menu-item (click) = "confirmDelete(course,index)">
                                         <span>{{'deleteItem' | translate}}</span>
                                     </button>
                                 </mat-menu>
@@ -112,7 +112,7 @@
                                         <ng-template #notSelected>
                                             <h4 class="font-bold">{{course.course.courseTitle}}</h4>
                                         </ng-template>
-                                        <p>{{course.course.courseSubject}}<span class="dot-separator"></span>{{course.course.courseProgram}}</p>
+                                        <p>{{course.course.courseSubject}}<span class="dot-separator" *ngIf="course.course.courseProgram"></span>{{course.course.courseProgram}}</p>
                                     </a>
                                     <div>
                                         <span (click)="courseSections(course)" class="mr-4 text-blue cursor-pointer">Sections
@@ -124,10 +124,10 @@
                                     </div>
                                 </div>
                                 <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                                    <button mat-menu-item (click) = "editCourse(course.course)">
+                                    <button *ngIf="editPermission" mat-menu-item (click) = "editCourse(course.course)">
                                         <span>{{'editItem' | translate}}</span>
                                     </button>
-                                    <button mat-menu-item (click) = "confirmDelete(course.course,index)">
+                                    <button *ngIf="deletePermission" mat-menu-item (click) = "confirmDelete(course.course,index)">
                                         <span>{{'deleteItem' | translate}}</span>
                                     </button>
                                 </mat-menu>
@@ -153,10 +153,10 @@
                         </div>
                     </div>
                     <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                        <button mat-menu-item (click) = "editCourse(selectedCourseObj)">
+                        <button *ngIf="editPermission" mat-menu-item (click) = "editCourse(selectedCourseObj)">
                             <span>{{'editItem' | translate}}</span>
                         </button>
-                        <button mat-menu-item (click) = "confirmDelete(selectedCourseObj,0)">
+                        <button *ngIf="deletePermission" mat-menu-item (click) = "confirmDelete(selectedCourseObj,0)">
                             <span>{{'deleteItem' | translate}}</span>
                         </button>
                     </mat-menu>
@@ -188,7 +188,7 @@
                         </li>
                         <li>
                             <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
-                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.creditHours | EmtyNumberCheckPipe}}</p>
+                            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseObj.creditHours?(selectedCourseObj.creditHours | number:'0.2'):selectedCourseObj.creditHours==0?'0.00':'-'}}</p>
                         </li>
                         <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'standards' | translate}}</label>

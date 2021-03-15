@@ -8,6 +8,7 @@ namespace opensis.data.ViewModels
     {
         public string ColumnName { get; set; } = string.Empty;
         public string FilterValue { get; set; } = string.Empty;
+        public string JoinCondition { get; set; } 
         public FilterOptions FilterOption { get; set; } = FilterOptions.Contains;
     }
 }

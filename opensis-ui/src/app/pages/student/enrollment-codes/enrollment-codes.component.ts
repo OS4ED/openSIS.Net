@@ -19,6 +19,8 @@ import { EnrollmentCodeAddView, EnrollmentCodeListView } from '../../../models/e
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ExcelService } from '../../../services/excel.service';
+import { CryptoService } from '../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-enrollment-codes',
@@ -49,13 +51,20 @@ export class EnrollmentCodesComponent implements OnInit {
   enrollmentCodelistView:EnrollmentCodeListView=new EnrollmentCodeListView();
   enrollmentAddView:EnrollmentCodeAddView=new EnrollmentCodeAddView()
   enrollmentListForExcel:EnrollmentCodeListView;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+
   constructor(private router: Router,
     private dialog: MatDialog,
     private snackbar: MatSnackBar,
     private enrollmentCodeService:EnrollmentCodesService,
     private loaderService:LoaderService,
     private translateService : TranslateService,
-    private excelService:ExcelService
+    private excelService:ExcelService,
+    private cryptoService: CryptoService
     ) {
       translateService.use('en')
       this.loaderService.isLoading.subscribe((val) => {
@@ -67,6 +76,13 @@ export class EnrollmentCodesComponent implements OnInit {
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 23);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 25);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllStudentEnrollmentCode();
   }
   getAllStudentEnrollmentCode(){
@@ -79,20 +95,16 @@ export class EnrollmentCodesComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            if (res._message === "NO RECORD FOUND") {
-              if (res.studentEnrollmentCodeList == null) {
-                this.enrollmentList=new MatTableDataSource([]) ;
-                this.enrollmentList.sort=this.sort; 
-              }
-              else {
-                this.enrollmentList=new MatTableDataSource(res.studentEnrollmentCodeList) ;
-                this.enrollmentList.sort=this.sort;  
-              }
-  
-            } else {
+            if (res.studentEnrollmentCodeList == null) {
+              this.enrollmentList=new MatTableDataSource([]) ;
+              this.enrollmentList.sort=this.sort; 
               this.snackbar.open( res._message, '', {
                 duration: 10000
               });
+            }
+            else {
+              this.enrollmentList=new MatTableDataSource([]) ;
+              this.enrollmentList.sort=this.sort;  
             }
           } 
           else { 

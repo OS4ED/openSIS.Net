@@ -10,14 +10,14 @@
         <div class="card overflow-auto -mt-16">
             <div class="bg-white px-6 md:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
                 <div class="md:flex w-full justify-between">
-                    <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
-                        fxLayoutAlign="start center">
+                    <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
 
                         <div class="flex items-center">
                             <input [formControl]="searchCtrl"
                                 class="py-3 border-0 outline-none w-full bg-transparent table-search"
                                 placeholder="Search..." type="search">
-                            <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                            <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button
+                                type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
                             <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
@@ -30,64 +30,84 @@
 
 
                     <div class="pt-3">
-                            <a (click)="exportStudentListToExcel()"
+                        <a (click)="exportStudentListToExcel()"
                             class="cursor-pointer p-1 mt-1 inline-block align-middle" matTooltip="Export to Excel"><i
                                 class="icon icon-file-excel text-lg"></i></a>
-                        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-2 inline-block align-middle" fxFlex="none" mat-icon-button
-                            matTooltip="Filter Columns" type="button">
+                        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-2 inline-block align-middle"
+                            fxFlex="none" mat-icon-button matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
 
-                        <!-- When a fresh search happens, shoe this button -->
-                        <div class="inline-block align-middle ml-4">
+                        <!-- When a fresh search happens, sho this button -->
+                        <div *ngIf="showSaveFilter" class="inline-block align-middle ml-4">
                             <div class="border flex rounded">
-                                <a matRipple (click)="saveFilter()" class="bg-primary cursor-pointer px-3 pt-2 pb-1 text-white rounded-l">Save Filter</a>
-                                <a [matMenuTriggerFor]="loadfilter" matRipple class="cursor-pointer px-2 pt-1 border-l"><mat-icon>arrow_drop_down</mat-icon></a>
-                                </div>
+                                <a matRipple (click)="saveFilter()"
+                                    class="bg-primary cursor-pointer px-3 pt-2 pb-1 text-white rounded-l">Save
+                                    Filter</a>
+                                <a [matMenuTriggerFor]="loadfilter" matRipple class="cursor-pointer px-2 pt-1 border-l">
+                                    <mat-icon>arrow_drop_down</mat-icon>
+                                </a>
                             </div>
+                        </div>
 
                         <!-- When loading a Saved filter show this block -->
-                        <!-- <div class="inline-block align-middle ml-4">
+                        <div *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && !showLoadFilter"
+                            class="inline-block align-middle ml-4">
                             <div class="border flex rounded">
-                                <a [matMenuTriggerFor]="loadfilteraction" matRipple class="cursor-pointer pl-3 pr-2 pt-2 pb-1">Grade 9 Students<mat-icon class="ml-2 text-sm align-middle h-4 inline-block">settings</mat-icon></a>
-                                <a [matMenuTriggerFor]="loadfilter" matRipple class="cursor-pointer px-2 pt-1 border-l"><mat-icon>arrow_drop_down</mat-icon></a>
+                                <a [matMenuTriggerFor]="loadfilteraction" matRipple
+                                    class="cursor-pointer pl-3 pr-2 pt-2 pb-1">{{searchFilter?.filterName}}<mat-icon
+                                        class="ml-2 text-sm align-middle h-4 inline-block">settings</mat-icon></a>
+                                <a [matMenuTriggerFor]="loadfilter" matRipple class="cursor-pointer px-2 pt-1 border-l">
+                                    <mat-icon>arrow_drop_down</mat-icon>
+                                </a>
                             </div>
-                        </div> -->
+                        </div>
 
                         <!-- Show this block if there are already saved filters -->
-                        <button [matMenuTriggerFor]="loadfilter" fxFlex="none" mat-stroked-button type="button" class="inline-block align-middle ml-4">
+                        <button *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && showLoadFilter"
+                            [matMenuTriggerFor]="loadfilter" fxFlex="none" mat-stroked-button type="button"
+                            class="inline-block align-middle ml-4">
                             <span>{{'loadFilter' | translate}}</span>
                             <mat-icon>arrow_drop_down</mat-icon>
                         </button>
 
-                        <button color="primary" class="ml-4 inline-block align-middle" fxFlex="none" mat-raised-button type="button"
-                        (click)='goToAdd()'>
-                        <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
-                            size="24px">
-                        </ic-icon>
+                        <button *ngIf="addPermission" color="primary" class="ml-4 inline-block align-middle rounded-r-none"
+                            fxFlex="none" mat-raised-button type="button" (click)='goToAdd()'>
+                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
+                                size="24px">
+                            </ic-icon>
                             <span>{{'addNew' | translate}}</span>
-                    </button>
+                        </button>
+                        <button [matMenuTriggerFor]="importStudents" class="align-middle w-8 h-9 p-0 pt-1 border border-gray rounded rounded-l-none">
+                            <i class="icon icon-arrow-down5 text-lg"></i>
+                        </button>
+                        <mat-menu #importStudents="matMenu">
+                            <button mat-menu-item>
+                                <a href="/school/studentdataimport">{{'importStudents' | translate}}</a>
+                            </button>
+                        </mat-menu>
+                    </div>
                 </div>
-            </div>
                 <mat-menu #loadfilter="matMenu" xPosition="before">
-                    <button mat-menu-item disabled>Load Filter</button>
-                    <button mat-menu-item>Grade 9 Students</button>
-                    <button mat-menu-item>Married Students</button>
+                    <button *ngFor="let filter of searchFilterListViewModel?.searchFilterList" mat-menu-item
+                        (click)="searchByFilterName(filter)">{{filter.filterName}}
+                    </button>
+
                 </mat-menu>
                 <mat-menu #loadfilteraction="matMenu">
-                    <button mat-menu-item>Edit Filter</button>
-                    <button mat-menu-item>Delete Filter</button>
+                    <button mat-menu-item (click)="editFilter()">Edit Filter</button>
+                    <button mat-menu-item (click)="deleteFilter()">Delete Filter</button>
                 </mat-menu>
             </div>
 
-            <table @stagger mat-table [dataSource]="StudentModelList" class="table-auto w-full"
-                matSort>
-               
+            <table @stagger mat-table [dataSource]="StudentModelList" class="table-auto w-full" matSort>
+
                 <ng-container matColumnDef="firstGivenName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>Name</th>
                     <td mat-cell *matCellDef="let element">
-                        <a (click) ="viewStudentDetails(element.studentId)" class="text-blue cursor-pointer">
-                            {{element.lastFamilyName+", "+element.firstGivenName}}{{element.middleName!=null?" "+element.middleName:''}}</a>
+                        <a (click)="viewStudentDetails(element.studentId)" class="text-blue cursor-pointer">
+                            {{element.lastFamilyName+", "+element.firstGivenName}}{{element.middleName!=null?"
+                            "+element.middleName:''}}</a>
                     </td>
                 </ng-container>
 
@@ -116,14 +136,14 @@
                     <td mat-cell *matCellDef="let element">
                         {{element.schoolEmail}}
                     </td>
-                </ng-container>  
+                </ng-container>
 
                 <ng-container matColumnDef="homePhone">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'telephone' | translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         {{element.homePhone}}
                     </td>
-                </ng-container>              
+                </ng-container>
                 <ng-container matColumnDef="action">
                     <th mat-header-cell *matHeaderCellDef>{{'action' | translate}}</th>
                     <td mat-cell *matCellDef="let element">
@@ -132,23 +152,24 @@
                         </a>
                     </td>
                 </ng-container>
-                  <ng-container matColumnDef="loading">
+                <ng-container matColumnDef="loading">
                     <mat-footer-cell *matFooterCellDef colspan="7">
-                      <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
+                        <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
                     </mat-footer-cell>
-                  </ng-container>
-                  <ng-container matColumnDef="noData">
+                </ng-container>
+                <ng-container matColumnDef="noData">
                     <td mat-footer-cell *matFooterCellDef colspan="7">
                         {{loading?('fetchingData' | translate):('noData' | translate) }}
                     </td>
-                  </ng-container>
-                  
-                  <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-                  <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-                  <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
-                  <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
+                </ng-container>
+
+                <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+                <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
             </table>
-            <mat-paginator [length]="totalCount" [class.hide]="totalCount==0" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
+            <mat-paginator [length]="totalCount" [class.hide]="totalCount==0" [pageSize]="pageSize"
+                [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
         </div>
 
     </vex-page-layout-content>
@@ -165,7 +186,9 @@
 
 <div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
     <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20" @fadeInRight>
-        <vex-search-student (searchList)="getSearchResult($event)" (showHideAdvanceSearch)="hideAdvanceSearch($event)"></vex-search-student>
+        <vex-search-student (searchList)="getSearchResult($event)" [filterJsonParams]="filterJsonParams"
+            (showHideAdvanceSearch)="hideAdvanceSearch($event)">
+        </vex-search-student>
     </div>
     <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
 </div>

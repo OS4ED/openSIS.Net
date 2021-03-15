@@ -534,5 +534,53 @@ namespace opensis.core.Common.Services
             }
             return searchFilterListModel;
         }
+
+        public GradeAgeRangeListViewModel GetAllGradeAgeRange(GradeAgeRangeListViewModel gradeAgeRangeListViewModel)
+        {
+            GradeAgeRangeListViewModel gradeAgeRangelListModel = new GradeAgeRangeListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(gradeAgeRangeListViewModel._tenantName, gradeAgeRangeListViewModel._token))
+                {
+                    gradeAgeRangelListModel = this.commonRepository.GetAllGradeAgeRange(gradeAgeRangeListViewModel);
+                }
+                else
+                {
+                    gradeAgeRangelListModel._failure = true;
+                    gradeAgeRangelListModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                gradeAgeRangelListModel._failure = true;
+                gradeAgeRangelListModel._message = es.Message;
+            }
+
+            return gradeAgeRangelListModel;
+        }
+
+        public GradeEducationalStageListViewModel GetAllGradeEducationalStage(GradeEducationalStageListViewModel gradeEducationalStageListViewModel)
+        {
+            GradeEducationalStageListViewModel gradeEducationalStagelListModel = new GradeEducationalStageListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(gradeEducationalStageListViewModel._tenantName, gradeEducationalStageListViewModel._token))
+                {
+                    gradeEducationalStagelListModel = this.commonRepository.GetAllGradeEducationalStage(gradeEducationalStageListViewModel);
+                }
+                else
+                {
+                    gradeEducationalStagelListModel._failure = true;
+                    gradeEducationalStagelListModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                gradeEducationalStagelListModel._failure = true;
+                gradeEducationalStagelListModel._message = es.Message;
+            }
+
+            return gradeEducationalStagelListModel;
+        }
     }
 }

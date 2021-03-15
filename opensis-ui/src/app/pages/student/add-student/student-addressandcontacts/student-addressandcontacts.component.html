@@ -228,7 +228,7 @@
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressAndContact' | translate}}</h3>
-        <button mat-button (click)= "editAddressContactInfo()" color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button *ngIf="editPermission" mat-button (click)= "editAddressContactInfo()" color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
     </div>
     <vex-view-student-addressandcontacts
     [studentCreateMode]="studentCreateMode"

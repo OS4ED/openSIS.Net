@@ -30,6 +30,8 @@ import { LovList } from './../../../../models/lovModel';
 import { CommonService } from '../../../../services/common.service';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-editparent-generalinfo',
@@ -78,6 +80,11 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   suffix;
   moduleIdentifier = ModuleIdentifier;
   destroySubject$: Subject<void> = new Subject();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(
     public translateService:TranslateService, 
@@ -88,13 +95,21 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
     private dialog: MatDialog,
     private imageCropperService:ImageCropperService,
     private commonService:CommonService,
-    private commonLOV:CommonLOV
+    private commonLOV:CommonLOV,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
     
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 4);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 8);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+    
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.VIEW});
     this.callLOVs();    
     this.parentInfo = {};
@@ -184,13 +199,13 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
       else 
       {
         if (data._failure) {
-          this.snackbar.open('Parent Information Updation failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
           duration: 10000
           });
         }
         else 
         {
-          this.snackbar.open('Parent Information Updation Successful.', '', {
+          this.snackbar.open(data._message, '', {
           duration: 10000
           });
           this.router.navigateByUrl('/school/parents');        
@@ -254,12 +269,12 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
         }
         else{
           if (data._failure) {
-            this.snackbar.open('Student Information failed. ' + data._message, '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
           }
           else {
-            this.snackbar.open('Student Deletion Successful.', '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             }).afterOpened().subscribe(data => {
               this.router.navigateByUrl('/school/parents');

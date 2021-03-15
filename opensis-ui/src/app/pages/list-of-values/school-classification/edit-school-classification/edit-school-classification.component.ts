@@ -48,7 +48,6 @@ export class EditSchoolClassificationComponent implements OnInit {
       this.classificationModalActionTitle="update";
     //  this.raceAddViewModel.dropdownValue = data;
       this.form.controls.id.patchValue(data.id)
-      console.log(data);
       this.form.controls.lovColumnValue.patchValue(data.lovColumnValue);
       this.form.controls.lovName.patchValue(data.lovName)
 
@@ -73,11 +72,11 @@ export class EditSchoolClassificationComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Classification Submission failed. ' + data._message, '', {
+              this.snackbar.open('' + data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('School Classification Inserted Successfully.', '', {
+              this.snackbar.open(''+ data._message, '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);
@@ -98,11 +97,11 @@ export class EditSchoolClassificationComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Classification Updation failed. '+ data._message, '', {
+              this.snackbar.open(''+ data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('School Classification Updated Successfully.', '', {
+              this.snackbar.open(''+ data._message, '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);

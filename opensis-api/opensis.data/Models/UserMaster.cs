@@ -18,6 +18,7 @@ namespace opensis.data.Models
         public int LangId { get; set; }
         public int MembershipId { get; set; }
         public bool? IsActive { get; set; }
+        public string Description { get; set; }
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
 

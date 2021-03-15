@@ -7,85 +7,30 @@
 
     <vex-page-layout-content class="-mt-6">
         <div class="card overflow-auto -mt-16 px-gutter pt-0 pb-5">
-            
+
             <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-5 mt-6">
-                <li class="hover:bg-primary-light p-5 rounded">
-                    <div class="flex">
-                        <mat-icon [icIcon]="icSchool" size="30px" class="text-primary"></mat-icon>
-                        <div class="ml-8">
-                            <h4 class="font-bold">
-                                <a (click) = "setPageId('Period')" routerLink="/school/settings/school-settings">{{'school'|translate}}</a></h4>
-                            <p>
-                                <a (click) = "setPageId('Period')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">{{'periods'|translate}}</a>,
-                                <a (click) = "setPageId('Grade Levels')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">{{'gradeLevels'|translate}}</a>, 
-                                <a (click) = "setPageId('Sections')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">{{'sections'|translate}}</a>,
-                                <a (click) = "setPageId('Rooms')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">{{'rooms'|translate}}</a>,
-                                <a (click) = "setPageId('School Fields')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">{{'schoolFields'|translate}}</a>,
-                                <a (click) = "setPageId('Hierarchy')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">{{'hierarchy'|translate}}</a>,
-                                <a (click) = "setPageId('Preference')" routerLink="/school/settings/school-settings" class="hover:text-primary hover:underline">{{'preference'|translate}}</a>
-                            </p>
+                <ng-container *ngFor="let submenu of settingSubmenu?.permissionCategory;let index=index">
+                    <li class="hover:bg-primary-light p-5 rounded"
+                        *ngIf="submenu.permissionSubcategory?.length>0 && submenu.rolePermission[0].canView">
+                        <div class="flex">
+                            <mat-icon [icIcon]="submenu.icon" size="30px" class="text-primary"></mat-icon>
+                            <div class="ml-8">
+                                <h4 class="font-bold">
+                                    <a  (click)="setParentId(index)"
+                                        [routerLink]="submenu.path">{{submenu.title}}</a>
+                                </h4>
+                                <p>
+                                    <ng-container *ngFor="let option of submenu.permissionSubcategory;let index=index">
+                                    <a *ngIf="option.rolePermission[0].canView"
+                                        (click)="setPageId(option.title)" [routerLink]="submenu.path"
+                                        class="hover:text-primary hover:underline">{{option.title}}{{index!=submenu.permissionSubcategory.length-1?',
+                                        ':''}}</a>
+                                    </ng-container>
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                </li>
-                <li class="hover:bg-primary-light p-5 rounded">
-                    <div class="flex">
-                        <mat-icon [icIcon]="icStudents" size="30px" class="text-primary"></mat-icon>
-                        <div class="ml-8">
-                            <h4 class="font-bold">
-                                <a (click)="setPageId('Student Fields')" routerLink="/school/settings/student-settings">{{'student'|translate}}</a></h4>
-                            <p>
-                                <a (click)="setPageId('Student Fields')" routerLink="/school/settings/student-settings" class="hover:text-primary hover:underline">{{'studentFields'|translate}}</a>,
-                                <a (click)="setPageId('Enrollment Codes')" routerLink="/school/settings/student-settings" class="hover:text-primary hover:underline">{{'enrollmentCodes'|translate}}</a>
-                            </p>
-                        </div>
-                    </div>
-                </li>
-                <li class="hover:bg-primary-light p-5 rounded">
-                    <div class="flex">
-                        <mat-icon [icIcon]="icUsers" size="30px" class="text-primary"></mat-icon>
-                        <div class="ml-8">
-                            <h4 class="font-bold"><a (click)="setPageId('Staff Fields')" routerLink="/school/settings/staff-settings">{{'staff'|translate}}</a></h4>
-                            <p><a (click)="setPageId('Staff Fields')" routerLink="/school/settings/staff-settings" class="hover:text-primary hover:underline">{{'staffFields'|translate}}</a></p>
-                        </div>
-                    </div>
-                </li>
-                <li class="hover:bg-primary-light p-5 rounded">
-                    <div class="flex">
-                        <mat-icon [icIcon]="icAttendance" size="30px" class="text-primary"></mat-icon>
-                        <div class="ml-8">
-                            <h4 class="font-bold">
-                                <a (click)="setPageId('Attendance Codes')" routerLink="/school/settings/attendance-settings">{{'attendance'|translate}}</a></h4>
-                            <p><a (click)="setPageId('Attendance Codes')" routerLink="/school/settings/attendance-settings" class="hover:text-primary hover:underline">{{'attendanceCodes'|translate}}</a></p>
-                        </div>
-                    </div>
-                </li>
-                <li class="hover:bg-primary-light p-5 rounded">
-                    <div class="flex">
-                        <mat-icon [icIcon]="icGrade" size="30px" class="text-primary"></mat-icon>
-                        <div class="ml-8">
-                            <h4 class="font-bold"><a (click)="setPageId('US Common Core Standards')" routerLink="/school/settings/grade-settings">{{'grades'|translate}}</a></h4>
-                            <p><a (click)="setPageId('Standard Grade Setup')" routerLink="/school/settings/grade-settings" class="hover:text-primary hover:underline">{{'standardGradeSetup'|translate}}</a>, <a (click)="setPageId('Effort Grade Setup')" routerLink="/school/settings/grade-settings" class="hover:text-primary hover:underline">{{'effortGradeSetup'|translate}}</a>, <a  (click)="setPageId('Report Card Grades')" routerLink="/school/settings/grade-settings" class="hover:text-primary hover:underline">{{'reportCardGrades'|translate}}</a>, <a  (click)="setPageId('Honor Roll Setup')" routerLink="/school/settings/grade-settings" class="hover:text-primary hover:underline">{{'honorRollSetup'|translate}}</a></p>
-                        </div>
-                    </div>
-                </li>
-                <li class="hover:bg-primary-light p-5 rounded">
-                    <div class="flex">
-                        <mat-icon [icIcon]="icGrade" size="30px" class="text-primary"></mat-icon>
-                        <div class="ml-8">
-                            <h4 class="font-bold"><a (click)="setPageId('Profiles & Permissions')" routerLink="/school/settings/administration-settings">{{'administration'|translate}}</a></h4>
-                            <p><a (click)="setPageId('Profiles & Permissions')" routerLink="/school/settings/administration-settings" class="hover:text-primary hover:underline">{{'profilesAndPermissions'|translate}}</a></p>
-                        </div>
-                    </div>
-                </li>
-                <li class="hover:bg-primary-light p-5 rounded">
-                    <div class="flex">
-                        <mat-icon [icIcon]="icListOfValues" size="30px" class="text-primary"></mat-icon>
-                        <div class="ml-8">
-                            <h4 class="font-bold"><a (click)="setPageId('School Level')" routerLink="/school/settings/lov-settings">{{'listOfValues'|translate}}</a></h4>
-                            <p><a (click)="setPageId('School Level')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'schoolLevel'|translate}}</a>, <a (click)="setPageId('School Classification')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'schoolClassification'|translate}}</a>, <a (click)="setPageId('Countries')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'countries'|translate}}</a>, <a (click)="setPageId('Female Toilet Type')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'femaleToiletType'|translate}}</a>, <a (click)="setPageId('Female Toilet Accessibility')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'femaleToiletAccessibility'|translate}}</a>, <a (click)="setPageId('Male Toilet Type')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'maleToiletType'|translate}}</a>, <a (click)="setPageId('Male Toilet Accessibility')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'maleToiletAccessibility'|translate}}</a>, <a (click)="setPageId('Common Toilet Type')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'commonToiletType'|translate}}</a>, <a (click)="setPageId('Common Toilet Accessibility')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'commonToiletAccessibility'|translate}}</a>, <a (click)="setPageId('Race')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'race'|translate}}</a>, <a (click)="setPageId('Ethnicity')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'ethnicity'|translate}}</a>, <a (click)="setPageId('Language')" routerLink="/school/settings/lov-settings" class="hover:text-primary hover:underline">{{'language'|translate}}</a></p>
-                        </div>
-                    </div>
-                </li>
+                    </li>
+                </ng-container>
             </ul>
 
         </div>

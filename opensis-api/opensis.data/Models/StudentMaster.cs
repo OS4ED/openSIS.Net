@@ -12,7 +12,7 @@ namespace opensis.data.Models
             StudentComments = new HashSet<StudentComments>();
             StudentDocuments = new HashSet<StudentDocuments>();
             StudentEnrollment = new HashSet<StudentEnrollment>();
-
+            StudentCoursesectionSchedule = new HashSet<StudentCoursesectionSchedule>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -104,6 +104,7 @@ namespace opensis.data.Models
         public virtual Sections Sections { get; set; }
 
         //public virtual ICollection<ParentAddress> ParentAddress { get; set; }
+        public virtual ICollection<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
         public virtual ICollection<StudentComments> StudentComments { get; set; }
         public virtual ICollection<StudentDocuments> StudentDocuments { get; set; }
         public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }

@@ -16,15 +16,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCourseSectionComponent } from '../edit-course-section/edit-course-section.component';
 import { CourseSectionService } from '../../../../services/course-section.service';
-import { CourseSectionAddViewModel, GetAllCourseSectionModel } from '../../../../models/courseSectionModel';
+import { CourseSectionAddViewModel, CourseSectionDataTransferModel, GetAllCourseSectionModel } from '../../../../models/courseSectionModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from '../../../../services/loader.service';
 import { takeUntil } from 'rxjs/operators';
 import { CalendarEvent, CalendarMonthViewBeforeRenderEvent, CalendarView } from 'angular-calendar';
-import { Observable, of, Subject } from 'rxjs';
+import { Subject } from 'rxjs';
 import { SchoolPeriodService } from '../../../../services/school-period.service';
 import { BlockListViewModel } from '../../../../models/schoolPeriodModel';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
+import { CryptoService } from '../../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-course-section',
@@ -54,15 +56,13 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   icCheckboxUnchecked = icCheckboxUnchecked;
   icFilterList = icFilterList;
   icSearch = icSearch;
-  periodList=[];
   courseDetails = 0;
   selectedTab = 'overview';
   @Input() courseDetailsFromParent;
-  @Output() backToCourseFromCourseSection = new EventEmitter<boolean>();
+  @Output() backToCourseFromCourseSection = new EventEmitter<CourseSectionDataTransferModel>();
   getAllCourseSectionModel:GetAllCourseSectionModel=new GetAllCourseSectionModel();
   selectedSectionDetails:CourseSectionAddViewModel;
   selectedCourseSection:number=0;
-  blockListViewModel: BlockListViewModel = new BlockListViewModel();
   nameSearch:string=''
   classRoomName:string;
   classPeriodName:string;
@@ -81,6 +81,11 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   cssClass: string;
   standardGradeTitle=[];
   courseSectionAddViewModel: CourseSectionAddViewModel = new CourseSectionAddViewModel();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(public translateService:TranslateService,
     private dialog: MatDialog,
@@ -88,7 +93,8 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
     private snackbar: MatSnackBar,
     private cdr: ChangeDetectorRef,
     private loaderService:LoaderService,
-    private schoolPeriodService: SchoolPeriodService) {
+    private schoolPeriodService: SchoolPeriodService,
+    private cryptoService:CryptoService) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
@@ -97,7 +103,12 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
  
    visibleColumns=''
   ngOnInit(): void {
-   
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 6);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 12);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
     this.getAllCourseSection();    
   }
   ngAfterViewChecked(){
@@ -105,7 +116,7 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
  }
 
   backToCourse() {
-    this.backToCourseFromCourseSection.emit();
+    this.backToCourseFromCourseSection.emit({courseSectionCount:this.getAllCourseSectionModel.getCourseSectionForView?.length,showCourse:true,courseId:this.courseDetailsFromParent.courseId});
   }
   
   addCourseSection() {
@@ -166,7 +177,6 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
           this.getAllCourseSectionModel = res;
           this.findMarkingPeriodTitle()
           this.selectedSectionDetails = res.getCourseSectionForView[this.selectedCourseSection];
-          this.showPeriodTitle();
           let days = this.selectedSectionDetails.courseSection.schoolCalendars.days;
           if (days !== null && days !== undefined) {
             this.getDays(days);
@@ -221,33 +231,7 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
     });
         
   }
-  showPeriodTitle(){
-    for(var i=0;i<this.selectedSectionDetails.courseVariableSchedule.length;i++){    
-      this.periodList.map(val=>{
-        if(this.selectedSectionDetails.courseVariableSchedule[i].periodId === val.periodId){                
-          this.selectedSectionDetails.courseVariableSchedule[i].blockPeriod.periodTitle = val.periodTitle;
-          
-        }
-      }) 
-    }
-  }
  
-  getAllBlockList() {
-    this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(data => {
-      if(data._failure){
-        if(data._message==="NO RECORD FOUND"){
-          this.periodList=[];      
-          this.snackbar.open('NO RECORD FOUND. ', '', {
-            duration: 1000
-          });        
-        }
-      }else{       
-        if(data.getBlockListForView.length >0){
-          this.periodList = data.getBlockListForView[0].blockPeriod;                 
-        }        
-      }
-    });
-  }
   findMarkingPeriodTitle(){
     this.getAllCourseSectionModel.getCourseSectionForView?.map((item)=>{
       if(item.courseSection.durationBasedOnPeriod){
@@ -271,7 +255,6 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   changeRightSectionDetails(sectionDetails: CourseSectionAddViewModel, index) {
     this.selectedSectionDetails = sectionDetails;
     this.selectedCourseSection = index;
-    this.showPeriodTitle();
     let days = this.selectedSectionDetails.courseSection.schoolCalendars.days;
       if (days !== null && days !== undefined) {
         this.getDays(days);
@@ -315,8 +298,8 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   deleteCourseSection(selectedCourseSection){
     this.courseSectionAddViewModel.courseSection.tenantId=sessionStorage.getItem("tenantId");
     this.courseSectionAddViewModel.courseSection.schoolId=+sessionStorage.getItem("selectedSchoolId");
+    this.courseSectionAddViewModel.courseSection.courseId=selectedCourseSection.courseSection.courseId;
     this.courseSectionAddViewModel.courseSection.courseSectionId=selectedCourseSection.courseSection.courseSectionId;
-
     this.courseSectionService.deleteCourseSection(this.courseSectionAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Course Section Delete failed. ' + sessionStorage.getItem("httpError"), '', {

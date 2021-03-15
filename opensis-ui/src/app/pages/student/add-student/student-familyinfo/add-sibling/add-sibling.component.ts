@@ -95,7 +95,7 @@ export class AddSiblingComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Grade Level Information failed. ' + res._message, '', {
+          this.snackbar.open( res._message, '', {
             duration: 10000
           });
         } else {
@@ -126,7 +126,7 @@ export class AddSiblingComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Student Search failed. ' + res._message, '', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           } else {
@@ -193,14 +193,14 @@ export class AddSiblingComponent implements OnInit {
             else 
             {
               if (data._failure) {
-                this.snackbar.open('Parent Information Submission failed. ' + data._message, '', {
+                this.snackbar.open( data._message, '', {
                   duration: 10000
                 });
               }
               else 
               {
-                this.snackbar.open('Parent Information Submission Successful.', '', {
-                duration: 10000
+                this.snackbar.open( data._message, '', {
+                  duration: 10000
                 });
                 
                 this.dialogRef.close(true); 
@@ -239,13 +239,13 @@ export class AddSiblingComponent implements OnInit {
           else 
           {
             if (data._failure) {
-              this.snackbar.open('Parent Information Submission failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             }
             else 
             {
-              this.snackbar.open('Parent Information Submission Successful.', '', {
+              this.snackbar.open(data._message, '', {
               duration: 10000
               });
               
@@ -269,12 +269,12 @@ export class AddSiblingComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.snackbar.open('Association failed. ' + res._message, '', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           } else {  
             this.dialogRef.close(true);  
-            this.snackbar.open('Sibling has been associated','Thanks', {
+            this.snackbar.open( res._message,'', {
               duration: 10000
             });
           }

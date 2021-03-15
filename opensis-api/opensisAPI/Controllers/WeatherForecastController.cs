@@ -187,15 +187,13 @@ namespace opensisAPI.Controllers
                 var school = new List<SchoolMaster>()
                 { new SchoolMaster() {TenantId=tenantId,SchoolId=(int)schoolId,SchoolInternalId="SC-00"+i,SchoolGuid=GuidId,SchoolName="Test School"+i,SchoolAltId="SAC-OO"+i,SchoolStateId="California",SchoolDistrictId="Sacramento",SchoolLevel="1",AlternateName="TS"+i,StreetAddress1="XYZ",StreetAddress2="ABC",City="Compton",Country="USA",County="Los Angeles County",SchoolClassification="Primary",Division="1ST",State="California",District="Sacramento",Zip="90224",CurrentPeriodEnds=Convert.ToDateTime("2021-01-15"),MaxApiChecks=1,Features="Feature 1",CreatedBy="Sayan Das",DateCreated=DateTime.UtcNow,ModifiedBy="Sayan Das",DateModifed=DateTime.UtcNow,Longitude=00.00,Latitude=11.00,Membership=new List<Membership>()
                     {
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Super Administrator",MembershipId= 1},
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Administrator",MembershipId= 2},
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Teacher",MembershipId= 3 },
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Student",MembershipId= 4},
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Parent",MembershipId= 5},
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Admin Assistant",MembershipId= 6},
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Administrator w/Custom",MembershipId= 7},
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Teacher w/Custom",MembershipId= 8},
-                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Sayan Das", TenantId= tenantId,Profile= "Parent w/Custom",MembershipId= 9}
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Admin", TenantId= tenantId,Profile= "Super Administrator", IsActive= true, IsSuperadmin= true, IsSystem= true, MembershipId= 1, ProfileType= "Super Administrator"},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Admin", TenantId= tenantId,Profile= "School Administrator", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 2, ProfileType= "School Administrator"},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Admin", TenantId= tenantId,Profile= "Admin Assistant", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 3, ProfileType= "Admin Assistant"},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Admin", TenantId= tenantId,Profile= "Teacher", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 4, ProfileType= "Teacher"},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Admin", TenantId= tenantId,Profile= "Homeroom Teacher", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 5, ProfileType= "Homeroom Teacher"},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Admin", TenantId= tenantId,Profile= "Parent", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 6, ProfileType= "Parent"},
+                        new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy="Admin", TenantId= tenantId,Profile= "Student", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 7, ProfileType= "Student"}
                     },
                     SchoolDetail =new List<SchoolDetail>()
                     {
@@ -325,11 +323,11 @@ namespace opensisAPI.Controllers
             },
                 }.ToList();
                 this.context?.SchoolMaster.AddRange(school);
-
+              
                 var gradelevels = new List<Gradelevels>()
                 {
-                    new Gradelevels(){TenantId=tenantId,SchoolId=(int)schoolId,GradeId=(int)gradeId,ShortName="G-6",Title="Grade-6",SortOrder=1,LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das",IscedGradeLevel="ISCED 2"},
-                    new Gradelevels(){TenantId=tenantId,SchoolId=(int)schoolId,GradeId=(int)gradeId+1,ShortName="G-11",Title="Grade-11",SortOrder=2,LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das",IscedGradeLevel="ISCED 3"},
+                    new Gradelevels(){TenantId=tenantId,SchoolId=(int)schoolId,GradeId=(int)gradeId,ShortName="G-6",Title="Grade-6",SortOrder=1,LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das",EquivalencyId=6,AgeRangeId=4,IscedCode=1},
+                    new Gradelevels(){TenantId=tenantId,SchoolId=(int)schoolId,GradeId=(int)gradeId+1,ShortName="G-11",Title="Grade-11",SortOrder=2,LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das",EquivalencyId=11,AgeRangeId=6,IscedCode=3},
                 }.ToList();
                 this.context?.Gradelevels.AddRange(gradelevels);
                 this.context?.SaveChanges();
@@ -518,7 +516,7 @@ namespace opensisAPI.Controllers
                             {
                                 permissionRole.TenantId = school.TenantId;
                                 permissionRole.SchoolId = school.SchoolId;
-                                permissionRole.MembershipId = this.context?.Membership.Where(x => x.SchoolId==school.SchoolId).Select(x=>x.MembershipId).FirstOrDefault();
+                                //permissionRole.MembershipId = this.context?.Membership.Where(x => x.SchoolId==school.SchoolId).Select(x=>x.MembershipId).FirstOrDefault();
                                 permissionRole.PermissionCategory = null;
                                 permissionRole.Membership = null;
                                 permissionRole.CreatedBy = school.CreatedBy;

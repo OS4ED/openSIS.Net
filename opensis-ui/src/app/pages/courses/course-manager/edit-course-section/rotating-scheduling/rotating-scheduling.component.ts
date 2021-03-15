@@ -6,7 +6,7 @@ import { SchoolPeriodService } from '../../../../../services/school-period.servi
 import { RoomService } from '../../../../../services/room.service';
 import { RoomListViewModel } from '../../../../../models/roomModel';
 import icPlusCircle from '@iconify/icons-ic/add-circle-outline';
-import { BlockedSchedulingCourseSectionAddModel, OutputEmitDataFormat, CourseBlockSchedule } from '../../../../../models/courseSectionModel';
+import { BlockedSchedulingCourseSectionAddModel, OutputEmitDataFormat, CourseBlockSchedule, DeleteCourseSectionSchedule } from '../../../../../models/courseSectionModel';
 import { map } from 'rxjs/operators';
 import { CourseSectionService } from '../../../../../services/course-section.service';
 import { NgForm } from '@angular/forms';
@@ -72,10 +72,41 @@ export class RotatingSchedulingComponent implements OnInit {
   }
 
   deleteRow(indexOfDynamicRow) {
+    if (this.blockScheduleAddModel.courseBlockScheduleList[indexOfDynamicRow]?.serial > 0) {
+      this.deleteCourseSchedule(indexOfDynamicRow);
+    }
     this.divCount.splice(indexOfDynamicRow, 1);
     this.blockScheduleAddModel.courseBlockScheduleList.splice(indexOfDynamicRow, 1);
     this.selectedBlocks.splice(indexOfDynamicRow, 1);
     this.selectedPeriod.splice(indexOfDynamicRow, 1);
+  }
+
+  deleteCourseSchedule(index){
+    let deleteVariableSchedule=new DeleteCourseSectionSchedule()
+    deleteVariableSchedule.scheduleType='blockSchedule';
+    deleteVariableSchedule.serial=this.blockScheduleAddModel.courseBlockScheduleList[index]?.serial;
+    deleteVariableSchedule.courseId=this.blockScheduleAddModel.courseBlockScheduleList[index]?.courseId;
+    deleteVariableSchedule.courseSectionId=this.blockScheduleAddModel.courseBlockScheduleList[index]?.courseSectionId;
+
+    this.courseSectionService.deleteSchedule(deleteVariableSchedule).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Block Schedule Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 5000
+        });
+      }
+      else {
+        if (res._failure) {
+            this.snackbar.open(res._message, '', {
+              duration: 5000
+            });
+        }
+        else {
+          this.snackbar.open(res._message, '', {
+            duration: 5000
+          });
+        }
+      }
+    })
   }
 
   getAllBlockList() {

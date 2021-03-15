@@ -20,6 +20,8 @@ import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confi
 import { AttendanceCodeService } from '../../../services/attendance-code.service';
 import { AttendanceCodeCategoryModel, AttendanceCodeModel, GetAllAttendanceCategoriesListModel, GetAllAttendanceCodeModel } from '../../../models/attendanceCodeModel';
 import {AttendanceCodeEnum} from '../../../enums/attendance-code.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-attendance-codes',
@@ -63,11 +65,18 @@ export class AttendanceCodesComponent implements OnInit {
   getAllAttendanceCodeModel:GetAllAttendanceCodeModel=new GetAllAttendanceCodeModel()
   attendanceCategories=[]
   attendanceCodeList:MatTableDataSource<GetAllAttendanceCodeModel>;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+  
   constructor(private dialog: MatDialog,
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private attendanceCodeService:AttendanceCodeService,
-    private snackbar: MatSnackBar) {
+    private snackbar: MatSnackBar,
+    private cryptoService: CryptoService) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
@@ -77,6 +86,13 @@ export class AttendanceCodesComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllAttendanceCategory();
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 25);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 27);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
   }
 
   onClick(id) {
@@ -187,16 +203,13 @@ export class AttendanceCodesComponent implements OnInit {
     this.getAllAttendanceCategoriesListModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.attendanceCodeService.getAllAttendanceCodeCategories(this.getAllAttendanceCategoriesListModel).subscribe((res)=>{
       if(res._failure){
-        if(res._message==="NO RECORD FOUND"){
+        if(res.attendanceCodeCategoriesList===null){
           this.attendanceCategories=[];
           this.snackbar.open(res._message, '', {
             duration: 10000
           });
-         
         } else{
-          this.snackbar.open('Attendance Category List failed. ' + res._message, '', {
-            duration: 10000
-          });
+          this.attendanceCategories=[];
         }
       }else{     
         this.attendanceCategories = res.attendanceCodeCategoriesList;
@@ -232,7 +245,7 @@ export class AttendanceCodesComponent implements OnInit {
           duration: 10000
         });
       } else {
-        this.snackbar.open('Attendance Category is Deleted!', '', {
+        this.snackbar.open(''+ res._message, '', {
           duration: 10000
         });
         if(indexNeedToBeSelectAfterDelete!=-1){
@@ -251,19 +264,19 @@ export class AttendanceCodesComponent implements OnInit {
   this.getAllAttendanceCodeModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
   this.attendanceCodeService.getAllAttendanceCode(this.getAllAttendanceCodeModel).subscribe((res)=>{
     if(res._failure){
-      if(res._message==="NO RECORD FOUND"){
+      if(res.attendanceCodeList===null){
         this.attendanceCodeList = new MatTableDataSource([]);
         this.attendanceCodeList.sort = this.sort;
-      } else{
-        this.snackbar.open('Attendance Codes failed. ' + res._message, '', {
+        this.snackbar.open('' + res._message, '', {
           duration: 10000
         });
+      } else{
+        this.attendanceCodeList = new MatTableDataSource([]);
       }
     }else{
       this.attendanceCodeList = new MatTableDataSource(res.attendanceCodeList);
       this.attendanceCodeList.sort = this.sort;
     }
-   
   })
   }
 
@@ -283,7 +296,7 @@ export class AttendanceCodesComponent implements OnInit {
           duration: 10000
         });
       } else {
-        this.snackbar.open('Attendance Code is Deleted!', '', {
+        this.snackbar.open(''+ res._message, '', {
           duration: 10000
         });
         this.getAllAttendanceCode();
@@ -307,9 +320,7 @@ export class AttendanceCodesComponent implements OnInit {
     this.searchKey="";
     this.applyFilter();
   }
-
   applyFilter(){
     this.attendanceCodeList.filter = this.searchKey.trim().toLowerCase()
   }
-
 }

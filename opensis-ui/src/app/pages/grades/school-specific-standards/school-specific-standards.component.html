@@ -63,7 +63,7 @@
                     matTooltip="Filter Columns" type="button">
                     <mat-icon [icIcon]="icFilterList"></mat-icon>
                 </button>
-                <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
                 (click)='openAdd()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                         size="24px">
@@ -131,10 +131,10 @@
             <th mat-header-cell *matHeaderCellDef>{{'action'|translate}}
             </th>
             <td mat-cell *matCellDef="let element">
-                <a (click)="openEdit(element)" matTooltip="Edit Item" class="mr-3 cursor-pointer">
+                <a *ngIf="editPermission" (click)="openEdit(element)" matTooltip="Edit Item" class="mr-3 cursor-pointer">
                     <mat-icon [icIcon]="icEdit"></mat-icon>
                 </a>
-                <a (click)="confirmDelete(element)" matTooltip="Delete Item" class="mr-3 cursor-pointer">
+                <a *ngIf="deletePermission" (click)="confirmDelete(element)" matTooltip="Delete Item" class="mr-3 cursor-pointer">
                     <mat-icon [icIcon]="icDelete"></mat-icon>
                 </a>
             </td>

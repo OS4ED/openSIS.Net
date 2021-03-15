@@ -35,7 +35,35 @@
                             matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                     <!-- When a fresh search happens, show this button -->
+                     <div *ngIf="showSaveFilter" class="inline-block align-middle ml-4">
+                        <div class="border flex rounded">
+                            <a matRipple (click)="openSaveFilter()"
+                                class="bg-primary cursor-pointer px-3 pt-2 pb-1 text-white rounded-l">Save
+                                Filter</a>
+                            <a [matMenuTriggerFor]="loadfilter" matRipple class="cursor-pointer px-2 pt-1 border-l">
+                                <mat-icon>arrow_drop_down</mat-icon>
+                            </a>
+                        </div>
+                    </div>
+
+                    <!-- When loading a Saved filter show this block -->
+                    <div *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && !showLoadFilter" class="inline-block align-middle ml-4">
+                        <div class="border flex rounded">
+                            <a [matMenuTriggerFor]="loadfilteraction" matRipple class="cursor-pointer pl-3 pr-2 pt-2 pb-1">{{searchFilter?.filterName}}<mat-icon class="ml-2 text-sm align-middle h-4 inline-block">settings</mat-icon></a>
+                            <a [matMenuTriggerFor]="loadfilter" matRipple class="cursor-pointer px-2 pt-1 border-l"><mat-icon>arrow_drop_down</mat-icon></a>
+                        </div>
+                    </div>
+
+                    <!-- Show this block if there are already saved filters -->
+                    <button *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && showLoadFilter"
+                        [matMenuTriggerFor]="loadfilter" fxFlex="none" mat-stroked-button type="button"
+                        class="inline-block align-middle ml-4">
+                        <span>{{'loadFilter' | translate}}</span>
+                        <mat-icon>arrow_drop_down</mat-icon>
+                    </button>
+
+                        <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
                             (click)='goToAdd()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
@@ -44,6 +72,16 @@
                         </button>
                     </div>
                 </div>
+                <mat-menu #loadfilter="matMenu" xPosition="before">
+                    <button *ngFor="let filter of searchFilterListViewModel?.searchFilterList"
+                        mat-menu-item (click)="searchByFilterName(filter)">{{filter.filterName}}
+                    </button>
+
+                </mat-menu>
+                <mat-menu #loadfilteraction="matMenu">
+                    <button mat-menu-item (click)="editFilter()">Edit Filter</button>
+                    <button mat-menu-item (click)="deleteFilter()">Delete Filter</button>
+                </mat-menu>
             </div>
 
             <table @stagger mat-table [dataSource]="staffList" class="mat-elevation-z8 table-auto w-full"

@@ -36,8 +36,6 @@ export class WidgetTableComponent<T> implements OnInit, OnChanges, AfterViewInit
     if (changes.columns) {
       this.visibleColumns = this.columns.map(column => column.property);
     }
-    this.calendarEvents.toPromise().then( data => {
-    });
     if (changes.data) {
       this.dataSource.data = this.data;
     }

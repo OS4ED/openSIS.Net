@@ -466,6 +466,34 @@ namespace opensis.core.CourseManager.Services
             }
             return courseStandardForCourseView;
         }
+
+        /// <summary>
+        /// Delete Course Section  For Specific Schedule Type
+        /// </summary>
+        /// <param name="deleteScheduleViewModel"></param>
+        /// <returns></returns>
+        public DeleteScheduleViewModel DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel)
+        {
+            DeleteScheduleViewModel deleteSchedule = new DeleteScheduleViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(deleteScheduleViewModel._tenantName, deleteScheduleViewModel._token))
+                {
+                    deleteSchedule = this.courseManagerRepository.DeleteSchedule(deleteScheduleViewModel);
+                }
+                else
+                {
+                    deleteSchedule._failure = true;
+                    deleteSchedule._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                deleteSchedule._failure = true;
+                deleteSchedule._message = es.Message;
+            }
+            return deleteSchedule;
+        }
     }
 }
  

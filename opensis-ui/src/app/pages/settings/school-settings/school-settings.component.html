@@ -8,19 +8,19 @@
         <div class="bg-transparent flex-auto flex -mt-16">
             <div class="flex-auto flex items-start">
                 <div  class="w-full p-0">
-                    <div *ngIf="displayPeriod">
+                    <div *ngIf="pageId === 'Periods'">
                         <vex-periods></vex-periods>
                     </div>
-                    <div *ngIf="displayGradeLevels">
+                    <div *ngIf="pageId === 'Grade Levels'">
                         <vex-grade-levels></vex-grade-levels>
                     </div>
-                    <div *ngIf="displaySections">
+                    <div *ngIf="pageId === 'Sections'">
                         <vex-sections></vex-sections>
                     </div>
-                    <div *ngIf="displayRooms">
+                    <div *ngIf="pageId === 'Rooms'">
                         <vex-rooms></vex-rooms>
                     </div>
-                    <div *ngIf="displaySchoolFields">
+                    <div *ngIf="pageId === 'School Fields'">
                         <vex-school-fields></vex-school-fields>
                     </div>
                 </div>

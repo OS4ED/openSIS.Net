@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { NavigationDropdown, NavigationItem, NavigationLink, NavigationSubheading } from '../interfaces/navigation-item.interface';
-import { Subject } from 'rxjs';
+import { BehaviorSubject, Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -12,7 +12,20 @@ export class NavigationService {
   private _openChangeSubject = new Subject<NavigationDropdown>();
   openChange$ = this._openChangeSubject.asObservable();
 
-  constructor() {}
+  private changeMenuStatusTo = new BehaviorSubject<boolean>(false);
+  menuItems = this.changeMenuStatusTo.asObservable();
+
+  changeMenuItemsStatus(message:boolean) {
+    this.changeMenuStatusTo.next(message)
+  }
+
+  // private menuItems = new BehaviorSubject(null);
+  // menuStorage = this.menuItems.asObservable();
+
+  // menuListStorage(list) {
+  //   this.menuItems.next(list);
+  // }
+  constructor() { }
 
   triggerOpenChange(item: NavigationDropdown) {
     this._openChangeSubject.next(item);

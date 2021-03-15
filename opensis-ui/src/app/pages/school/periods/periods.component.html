@@ -10,14 +10,14 @@
                 <div *ngFor="let block of blockListViewModel.getBlockListForView" class="flex items-center justify-between px-6 py-1">
                     <a class="cursor-pointer" [ngClass]="{'font-bold':currentBlockId === block.blockId}" (click)="selectBlock(block)">{{block.blockTitle}} </a>
                     <div>
-                        <a class="cursor-pointer mr-3" (click)="editBlock(block)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                        <a class="cursor-pointer mr-3" *ngIf="editPermission" (click)="editBlock(block)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
                         <a *ngIf="block.blockId === 1" ><mat-icon ></mat-icon></a>
-                        <a *ngIf="block.blockId !== 1" class="cursor-pointer" (click)="confirmDeleteBlock(block)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
+                        <a *ngIf="block.blockId !== 1 && deletePermission" class="cursor-pointer" (click)="confirmDeleteBlock(block)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
                     </div>
                 </div> 
                
                 <hr class="mb-3" />
-                <button color="" class="w-full text-primary" mat-button type="button" (click)='goToAddBlock()'>
+                <button *ngIf="addPermission" color="" class="w-full text-primary" mat-button type="button" (click)='goToAddBlock()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                     </ic-icon>
                     <span>{{'addBlockRotationDay'|translate}}</span>
@@ -30,7 +30,7 @@
         <mat-card class="w-full p-0" fxFlex="auto">
             <div *ngIf="2 > blockCount" class="flex items-center mx-6 py-4">
                 <h4>Showing {{currentBlockName}} Rotation</h4>
-                <button color="primary" class="ml-4" mat-raised-button type="button" (click)='goToAddBlock()'>
+                <button *ngIf="addPermission" color="primary" class="ml-4" mat-raised-button type="button" (click)='goToAddBlock()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                     </ic-icon>
                     <span>{{'addBlockRotationDay'|translate}}</span>
@@ -67,7 +67,8 @@
                             matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='goToAddPeriod()'>
+
+                        <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)='goToAddPeriod()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
                             </ic-icon>
@@ -129,25 +130,17 @@
                     <mat-header-cell *matHeaderCellDef class="text-center">{{'calculateAttendance'|translate}}
                     </mat-header-cell>
                     <mat-cell *matCellDef="let element" class="text-center">
-                        No
-                    </mat-cell>
-                </ng-container>
-        
-                <ng-container matColumnDef="ignoreForScheduling">
-                    <mat-header-cell *matHeaderCellDef class="text-center">{{'ignoreForScheduling'|translate}}
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let element" class="text-center">
-                        Yes
+                        {{element.calculateAttendance? 'Yes': 'No'}}
                     </mat-cell>
                 </ng-container>
         
                 <ng-container matColumnDef="action">
                     <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                        <a (click)="editPeriod(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
+                        <a *ngIf="editPermission" (click)="editPeriod(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a (click)="confirmDeletePeriod(element)" matTooltip="Delete Info" class="mr-3 cursor-pointer">
+                        <a *ngIf="deletePermission" (click)="confirmDeletePeriod(element)" matTooltip="Delete Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                     </mat-cell>

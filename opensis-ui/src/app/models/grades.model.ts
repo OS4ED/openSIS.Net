@@ -291,7 +291,7 @@ export class GradeStandardSubjectCourseListModel extends CommonField{
 
 }
 
-class StandardView{
+export class StandardView{
     tenantId: string;
     schoolId: number;
     standardRefNo: string;

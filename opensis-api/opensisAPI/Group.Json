@@ -21,24 +21,6 @@
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
     "PermissionGroupId": "2",
-    "PermissionGroupName": "Add New",
-    "ShortName": "an",
-    "IsActive": true,
-    "IsSystem": true,
-    "Title": "Add New",
-    "Icon": "icAdd",
-    "IconType": "class",
-    "SortOrder": "2",
-    "Type": "sub",
-    "Path": "",
-    "BadgeType": "",
-    "BadgeValue": "",
-    "Active": true
-  },
-  {
-    "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
-    "SchoolId": "1",
-    "PermissionGroupId": "3",
     "PermissionGroupName": "Schools",
     "ShortName": "schl",
     "IsActive": true,
@@ -56,7 +38,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "4",
+    "PermissionGroupId": "3",
     "PermissionGroupName": "Students",
     "ShortName": "stud",
     "IsActive": true,
@@ -74,7 +56,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "5",
+    "PermissionGroupId": "4",
     "PermissionGroupName": "Parents",
     "ShortName": "prnt",
     "IsActive": true,
@@ -92,7 +74,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "6",
+    "PermissionGroupId": "5",
     "PermissionGroupName": "Staff",
     "ShortName": "stf",
     "IsActive": true,
@@ -110,7 +92,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "7",
+    "PermissionGroupId": "6",
     "PermissionGroupName": "Courses",
     "ShortName": "cou",
     "IsActive": true,
@@ -128,7 +110,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "8",
+    "PermissionGroupId": "7",
     "PermissionGroupName": "Scheduling",
     "ShortName": "sch",
     "IsActive": true,
@@ -146,7 +128,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "9",
+    "PermissionGroupId": "8",
     "PermissionGroupName": "Grades",
     "ShortName": "grd",
     "IsActive": true,
@@ -164,7 +146,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "10",
+    "PermissionGroupId": "9",
     "PermissionGroupName": "Attendance",
     "ShortName": "atdns",
     "IsActive": true,
@@ -182,7 +164,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "11",
+    "PermissionGroupId": "10",
     "PermissionGroupName": "Messaging",
     "ShortName": "msg",
     "IsActive": true,
@@ -200,7 +182,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "12",
+    "PermissionGroupId": "11",
     "PermissionGroupName": "Reports",
     "ShortName": "rpt",
     "IsActive": true,
@@ -218,7 +200,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "13",
+    "PermissionGroupId": "12",
     "PermissionGroupName": "Settings",
     "ShortName": "stng",
     "IsActive": true,
@@ -236,7 +218,7 @@
   {
     "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
     "SchoolId": "1",
-    "PermissionGroupId": "14",
+    "PermissionGroupId": "13",
     "PermissionGroupName": "Tools",
     "ShortName": "tls",
     "IsActive": true,

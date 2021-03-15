@@ -4,6 +4,7 @@ import { HttpClient } from '@angular/common/http';
 import { CheckSchoolInternalIdViewModel, SchoolAddViewModel } from '../models/schoolMasterModel';
 import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/getAllSchoolModel';
 import { BehaviorSubject, Subject } from 'rxjs';
+import { DataAvailablity } from '../models/userModel';
 
 @Injectable({
   providedIn: 'root'
@@ -118,10 +119,10 @@ export class SchoolService {
     return this.http.put<SchoolAddViewModel>(apiurl, obj)
   }
 
-  private changeStatusTo = new BehaviorSubject(false);
+  private changeStatusTo = new BehaviorSubject<DataAvailablity>({schoolChanged:false,schoolLoaded:false,dataFromUserLogin:false});
   schoolListCalled = this.changeStatusTo.asObservable();  
 
-  changeSchoolListStatus(message: boolean) {
+  changeSchoolListStatus(message: DataAvailablity) {
     this.changeStatusTo.next(message)
   }
 

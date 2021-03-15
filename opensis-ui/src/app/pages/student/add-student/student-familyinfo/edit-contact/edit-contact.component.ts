@@ -365,13 +365,13 @@ export class EditContactComponent implements OnInit,OnDestroy {
         else 
         {
           if (data._failure) {
-            this.snackbar.open('Parent Information Updation failed. ' + data._message, '', {
+            this.snackbar.open( data._message, '', {
               duration: 10000
             });
           }
           else 
           {
-            this.snackbar.open('Parent Information Updation Successful.', '', {
+            this.snackbar.open(data._message, '', {
             duration: 10000
             });
             this.dialogRef.close(true);            
@@ -390,13 +390,13 @@ export class EditContactComponent implements OnInit,OnDestroy {
         else 
         {
           if (data._failure) {
-            this.snackbar.open('Parent Information Submission failed. ' + data._message, '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
           }
           else 
           {
-            this.snackbar.open('Parent Information Submission Successful.', '', {
+            this.snackbar.open(data._message, '', {
             duration: 10000
             });
             
@@ -429,7 +429,7 @@ export class EditContactComponent implements OnInit,OnDestroy {
             else 
             {
               if (data._failure) {
-                this.snackbar.open('Search Parent Information failed. ' + data._message, '', {
+                this.snackbar.open( data._message, '', {
                   duration: 10000
                 });
               }

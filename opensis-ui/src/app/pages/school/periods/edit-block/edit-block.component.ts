@@ -68,12 +68,12 @@ export class EditBlockComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Block/Rotation Days Creation failed. ' + res._message, '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               }
               else {
-                this.snackbar.open('Block/Rotation Days Successfully Created', '', {
+                this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close({mode:'submited', currentBlockId:res.block.blockId});
@@ -97,12 +97,12 @@ export class EditBlockComponent implements OnInit {
             }
             else {
               if (res._failure) {
-                this.snackbar.open('Block/Rotation Days Updation failed. ' + res._message, '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 });
               }
               else {
-                this.snackbar.open('Block/Rotation Days Successfully Updated.', '', {
+                this.snackbar.open(res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

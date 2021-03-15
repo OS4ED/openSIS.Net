@@ -1,3 +1,4 @@
+<vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
 <div class="flex container-sidenav-secondary" *ngIf="pageId === 'Profiles & Permissions'; else otherPages">
     <div class="sidenav-secondary">
         <vex-scrollbar class="flex-auto">
@@ -7,19 +8,29 @@
             <hr/>
             <h4 class="px-6 py-3 text-primary font-bold">Available Profiles</h4>
             <div class="px-gutter sm:px-0 profile-list" *ngFor="let member of memberList;let index=index">
-                <div @fadeInRight [ngClass]="selectedMemeber == member.membershipId? 'list-item no-underline flex justify-between items-center active':'list-item no-underline flex justify-between items-center'"  matRipple>
-                    <a (click) = "getRolePermission(member.membershipId)"><mat-icon [icIcon]="member.icon" class="member.className"></mat-icon> {{member.profile}}</a>
+                <div @fadeInRight (click) = "getRolePermission(member.membershipId,member.profile,member.description)" [ngClass]="selectedMemeber == member.membershipId? 'list-item no-underline flex justify-between items-center active':'list-item no-underline flex justify-between items-center'"  matRipple>
+                    <a>
+                        <span *ngIf="member.icon === null;else className">
+                        <i [ngClass]="member.className"></i>{{member.profile}}  
+                        </span>                        
+                        <ng-template #className>                           
+                            <mat-icon  [icIcon]="member.icon"></mat-icon>
+                            {{member.profile}}
+                        </ng-template>
+                        </a>
+                        <a *ngIf="member.isSystem === false"[matMenuTriggerFor]="addNewMenu"><mat-icon [icIcon]="icMoreVert"></mat-icon></a> 
                 </div> 
-                            
+                
+                <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
+                    <button mat-menu-item (click) ="editMember(member)">
+                        <span>{{'editItem' | translate}}</span>
+                    </button>
+                    <button mat-menu-item (click) ="deleteMember(member)">
+                        <span>{{'deleteItem' | translate}}</span>
+                    </button>
+                </mat-menu>       
             </div>
-            <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                <button mat-menu-item>
-                    <span>{{'editItem' | translate}}</span>
-                </button>
-                <button mat-menu-item>
-                    <span>{{'deleteItem' | translate}}</span>
-                </button>
-            </mat-menu>
+            
         </vex-scrollbar>
     </div>
     <div class="right-content">
@@ -33,7 +44,7 @@
             </vex-page-layout-header>
             <vex-page-layout-content class="-mt-6">
                 <div class="w-full -mt-16">
-                            <vex-access-control [data] = "permissionList"></vex-access-control>
+                            <vex-access-control></vex-access-control>
                         </div>
             </vex-page-layout-content>
         </vex-page-layout>
@@ -50,7 +61,7 @@
         </vex-page-layout-header>
         <vex-page-layout-content class="-mt-6">
                         <div *ngIf="pageId === 'profiles-and-permissions'">
-                            <vex-access-control [data] = "permissionList"></vex-access-control>
+                            <vex-access-control></vex-access-control>
                         </div>
         </vex-page-layout-content>
     </vex-page-layout>

@@ -247,50 +247,6 @@
 
                 <hr class="-mx-4 mt-6">
 
-
-                <h4 class="text-blue font-medium pt-6 pb-2 px-2">{{'schoolInformation'|translate}}</h4>
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
-                    <li>
-                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'section'|translate}}</mat-label>
-                            <mat-select [(ngModel)]="studentAddModel.studentMaster.sectionId" name="sectionId">
-                                <mat-option value="" *ngIf="sectionList?.tableSectionsList?.length==0">No Sections Found</mat-option>
-                                <mat-option *ngFor="let section of sectionList.tableSectionsList" [value]='section.sectionId'>
-                                    {{section.name}}</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'estimatedGraduationDate'|translate}}</mat-label>
-                            <input name="estimatedGradDate"
-                                [(ngModel)]="studentAddModel.studentMaster.estimatedGradDate"
-                                [matDatepicker]="estimatedGradDate" matInput>
-                            <mat-datepicker-toggle [for]="estimatedGradDate" matSuffix></mat-datepicker-toggle>
-                            <mat-datepicker #estimatedGradDate></mat-datepicker>
-                        </mat-form-field>
-                    </li>
-                    <li class="col-span-2">
-                        <mat-checkbox name="eligibility504" [(ngModel)]="studentAddModel.studentMaster.eligibility504"
-                            color="primary" class="mr-6">
-                            {{'504Eligibility' | translate}}</mat-checkbox>
-                        <mat-checkbox name="economicDisadvantage"
-                            [(ngModel)]="studentAddModel.studentMaster.economicDisadvantage" color="primary"
-                            class="mr-6">
-                            {{'economicDisadvantage' | translate}}</mat-checkbox>
-                        <mat-checkbox name="freeLunchEligibility"
-                            [(ngModel)]="studentAddModel.studentMaster.freeLunchEligibility" color="primary"
-                            class="mr-6">
-                            {{'freeLunchEligibility' | translate}}</mat-checkbox>
-                        <mat-checkbox name="specialEducationIndicator"
-                            [(ngModel)]="studentAddModel.studentMaster.specialEducationIndicator" color="primary"
-                            class="mr-6">
-                            {{'specialEducationIndicator' | translate}}</mat-checkbox>
-                        <mat-checkbox name="lepIndicator" [(ngModel)]="studentAddModel.studentMaster.lepIndicator"
-                            color="primary">{{'lepIndicator' | translate}}
-                        </mat-checkbox>
-                    </li>
-                </ul>
                 <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
                     [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
                 
@@ -351,7 +307,7 @@
 <mat-card class="w-full" *ngIf="studentCreateMode == studentCreate.VIEW">
     <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation'|translate}}</h3>
-        <button mat-raised-button color="primary" (click)="editGeneralInfo()">
+        <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()">
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
     </div>

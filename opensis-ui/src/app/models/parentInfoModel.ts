@@ -23,8 +23,19 @@ export class ParentInfoModel {
     public busDropoff: boolean;       
     public lastUpdated: string;
     public updatedBy: string;
+    public fullAddress:string;
+    public addressLineOne:string;
+    public addressLineTwo:string;
+    public country:string;
+    public state:string;
+    public city:string;
+    public zip:string;
+    public studentFirstName:string | any;
+    public studentMiddleName:string | any;
+    public studentLastName:string | any;
+    public studentFullName:string|any;
     public parentAddress:[parentAddressModel];
-    public students:[];
+    public students:any[];
     constructor() {
         this.parentAddress = [new parentAddressModel];
         this.tenantId = sessionStorage.getItem("tenantId");
@@ -179,3 +190,45 @@ export class RemoveAssociateParent extends CommonField{
 
     }
 } 
+
+export class ParentAdvanceSearchModel{
+    public firstname:string;
+    public middlename:string;
+    public lastname:string;
+    public userProfile:string;
+    public personalEmail:string;
+    public workEmail:string;
+    public homePhone:string;
+    public mobile:string;
+    public workPhone:string;
+    public studentFirstName:string;
+    public studentMiddleName:string;
+    public studentLastName:string;
+    public addressLineOne: string;
+    public addressLineTwo: string;
+    public country:string;
+    public state: string;
+    public city: string;
+    public zip: string;
+
+    constructor(){
+        this.firstname='';
+        this.middlename='';
+        this.lastname='';
+        this.userProfile='';
+        this.personalEmail='';
+        this.workEmail='';
+        this.homePhone='';
+        this.mobile='';
+        this.workPhone=''
+        this.studentFirstName='';
+        this.studentMiddleName='';
+        this.studentLastName='';
+        this.addressLineOne='';
+        this.addressLineTwo='';
+        this.country='';
+        this.state='';
+        this.city='';
+        this.zip='';
+    }
+}

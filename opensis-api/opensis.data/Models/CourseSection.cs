@@ -5,12 +5,18 @@ namespace opensis.data.Models
 {
     public partial class CourseSection
     {
+        public CourseSection()
+        {
+            StudentCoursesectionSchedule = new HashSet<StudentCoursesectionSchedule>();
+        }
+
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int CourseId { get; set; }
         public int CourseSectionId { get; set; }
         public decimal? AcademicYear { get; set; }
-        public int GradeScaleId { get; set; }
+        public int? GradeScaleId { get; set; }
+        public string GradeScaleType { get; set; }
         public string CourseSectionName { get; set; }
         public int? CalendarId { get; set; }
         public int? AttendanceCategoryId { get; set; }
@@ -38,7 +44,6 @@ namespace opensis.data.Models
         public DateTime? CreatedOn { get; set; }
         public string UpdatedBy { get; set; }
         public DateTime? UpdatedOn { get; set; }
-
         public virtual AttendanceCodeCategories AttendanceCodeCategories { get; set; }
         public virtual Course Course { get; set; }
         public virtual GradeScale GradeScale { get; set; }
@@ -47,5 +52,6 @@ namespace opensis.data.Models
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual SchoolYears SchoolYears { get; set; }
         public virtual Semesters Semesters { get; set; }
+        public virtual ICollection<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
     }
 }

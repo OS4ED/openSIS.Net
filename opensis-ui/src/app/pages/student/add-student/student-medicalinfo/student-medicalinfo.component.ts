@@ -16,6 +16,8 @@ import { ViewParentInfoModel } from '../../../../models/parentInfoModel';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-student-medicalinfo',
   templateUrl: './student-medicalinfo.component.html',
@@ -43,18 +45,32 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
   icComment = icComment;
   parentsFullName = [];
   cloneStudentAddModel;
+  
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(private fb: FormBuilder,
     public translateService: TranslateService,
     private studentService: StudentService,
     private snackbar: MatSnackBar,
     private parentInfoService: ParentInfoService,
-    private imageCropperService: ImageCropperService) {
+    private imageCropperService: ImageCropperService,
+    private cryptoService: CryptoService) {
     translateService.use('en');
 
   }
 
   ngOnInit(): void {
     if (this.studentCreateMode == this.studentCreate.VIEW) {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 7);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
       this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.cloneStudentAddModel = JSON.stringify(this.studentAddModel);
@@ -119,11 +135,11 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
         }
         else {
           if (data._failure) {
-            this.snackbar.open('Medical Information Updation failed. ' + data._message, '', {
+            this.snackbar.open( data._message, '', {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Medical Information Update Successful.', '', {
+            this.snackbar.open( data._message, '', {
               duration: 10000
             });
           this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);

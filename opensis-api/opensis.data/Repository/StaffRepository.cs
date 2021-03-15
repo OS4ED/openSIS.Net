@@ -104,7 +104,7 @@ namespace opensis.data.Repository
                         //Insert data into StaffSchoolInfo table            
                         int? Id = Utility.GetMaxPK(this.context, new Func<StaffSchoolInfo, int>(x => (int)x.Id));
                         var schoolName = this.context?.SchoolMaster.Where(x => x.TenantId == staffAddViewModel.staffMaster.TenantId && x.SchoolId == staffAddViewModel.staffMaster.SchoolId).Select(s => s.SchoolName).FirstOrDefault();
-                        var StaffSchoolInfoData = new StaffSchoolInfo() { TenantId = staffAddViewModel.staffMaster.TenantId, SchoolId = staffAddViewModel.staffMaster.SchoolId, StaffId = staffAddViewModel.staffMaster.StaffId, SchoolAttachedId = staffAddViewModel.staffMaster.SchoolId, Id = (int)Id, SchoolAttachedName = schoolName, StartDate = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, UpdatedBy = staffAddViewModel.staffMaster.LastUpdatedBy };
+                        var StaffSchoolInfoData = new StaffSchoolInfo() { TenantId = staffAddViewModel.staffMaster.TenantId, SchoolId = staffAddViewModel.staffMaster.SchoolId, StaffId = staffAddViewModel.staffMaster.StaffId, SchoolAttachedId = staffAddViewModel.staffMaster.SchoolId, Id = (int)Id, SchoolAttachedName = schoolName, StartDate = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, UpdatedBy = staffAddViewModel.staffMaster.LastUpdatedBy,Profile= "Teacher" };
                         this.context?.StaffSchoolInfo.Add(StaffSchoolInfoData);
                         this.context?.SaveChanges();
 
@@ -186,7 +186,7 @@ namespace opensis.data.Repository
             StaffListModel staffListModel = new StaffListModel();
             IQueryable<StaffMaster> transactionIQ = null;
 
-            var StaffMasterList = this.context?.StaffMaster.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);
+            var StaffMasterList = this.context?.StaffMaster.Include(x => x.StaffSchoolInfo).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);
             try
             {
                 if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
@@ -203,28 +203,69 @@ namespace opensis.data.Repository
                                                                     x.MiddleName != null && x.MiddleName.ToLower().Contains(Columnvalue.ToLower()) ||
                                                                     x.LastFamilyName != null && x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) ||
                                                                     x.StaffInternalId != null && x.StaffInternalId.ToLower().Contains(Columnvalue.ToLower()) ||
-                                                                    x.Profile != null && x.Profile.Contains(Columnvalue) ||
                                                                     x.JobTitle != null && x.JobTitle.Contains(Columnvalue) ||
                                                                     x.SchoolEmail != null && x.SchoolEmail.Contains(Columnvalue) ||
                                                                     x.MobilePhone != null && x.MobilePhone.Contains(Columnvalue));
+                        var ProfileFilter = StaffMasterList.Where(x => x.StaffSchoolInfo.FirstOrDefault() != null ? x.StaffSchoolInfo.FirstOrDefault().Profile.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
+
+                        if (ProfileFilter.ToList().Count() > 0)
+                        {
+                            transactionIQ = transactionIQ.Concat(ProfileFilter);
+                        }
                     }
                     else
                     {
+                        if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "profile"))
+                        {
+                            var filterValue = pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "profile").Select(x => x.FilterValue).FirstOrDefault();
+                            var profileFilterData = StaffMasterList.Where(x => x.StaffSchoolInfo.FirstOrDefault().Profile.ToLower() == filterValue.ToLower());
+
+                            if (profileFilterData.ToList().Count() > 0)
+                            {
+                                //transactionIQ = transactionIQ.Concat(a);
+                                StaffMasterList = profileFilterData;
+                                var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "profile");
+                                pageResult.FilterParams.RemoveAt(indexValue);
+                            }
+                        }
+
                         transactionIQ = Utility.FilteredData(pageResult.FilterParams, StaffMasterList).AsQueryable();
                     }
                     //transactionIQ = transactionIQ.Distinct();
                 }
+
                 if (pageResult.DobStartDate != null && pageResult.DobEndDate != null)
                 {
                     var filterInDateRange = transactionIQ.Where(x => x.Dob >= pageResult.DobStartDate && x.Dob <= pageResult.DobEndDate).AsQueryable();
+
                     if (filterInDateRange.ToList().Count() > 0)
                     {
                         transactionIQ = filterInDateRange;
                     }
                 }
+
                 if (pageResult.SortingModel != null)
                 {
-                    transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                    switch (pageResult.SortingModel.SortColumn.ToLower())
+                    {
+                        case "profile":
+
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
+                            {
+
+                                transactionIQ = transactionIQ.OrderBy(a => a.StaffSchoolInfo.Count > 0 ? a.StaffSchoolInfo.FirstOrDefault().Profile : null);
+                            }
+                            else
+                            {
+                                transactionIQ = transactionIQ.OrderByDescending(a => a.StaffSchoolInfo.Count > 0 ? a.StaffSchoolInfo.FirstOrDefault().Profile : null);
+                            }
+                            break;
+
+                        default:
+                            transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                            break;
+                    }
+
                 }
 
                 int totalCount = transactionIQ.Count();
@@ -238,7 +279,7 @@ namespace opensis.data.Repository
                         FirstGivenName = e.FirstGivenName,
                         MiddleName = e.MiddleName,
                         LastFamilyName = e.LastFamilyName,
-                        Profile = e.Profile,
+                        Profile = e.StaffSchoolInfo != null ? e.StaffSchoolInfo.FirstOrDefault().Profile : null,
                         JobTitle = e.JobTitle,
                         SchoolEmail = e.SchoolEmail,
                         MobilePhone = e.MobilePhone,
@@ -289,9 +330,13 @@ namespace opensis.data.Repository
             StaffAddViewModel staffView = new StaffAddViewModel();
             try
             {
-                var staffData = this.context?.StaffMaster.FirstOrDefault(x => x.TenantId == staffAddViewModel.staffMaster.TenantId && x.SchoolId==staffAddViewModel.staffMaster.SchoolId &&  x.StaffId == staffAddViewModel.staffMaster.StaffId);
+                var staffData = this.context?.StaffMaster.Include(x=>x.StaffSchoolInfo).FirstOrDefault(x => x.TenantId == staffAddViewModel.staffMaster.TenantId && x.SchoolId==staffAddViewModel.staffMaster.SchoolId &&  x.StaffId == staffAddViewModel.staffMaster.StaffId);
                 if (staffData != null)
                 {
+                    if (staffData.StaffSchoolInfo.Count() > 0)
+                    {
+                        staffData.Profile = staffData.StaffSchoolInfo.FirstOrDefault().Profile;
+                    }
                     staffView.staffMaster = staffData;
 
                     var customFields = this.context?.FieldsCategory.Where(x => x.TenantId == staffAddViewModel.staffMaster.TenantId && x.SchoolId == staffAddViewModel.staffMaster.SchoolId && x.Module == "Staff").OrderByDescending(x => x.IsSystemCategory).ThenBy(x => x.SortOrder)
@@ -545,7 +590,7 @@ namespace opensis.data.Repository
                     var staffMaster = this.context?.StaffMaster.FirstOrDefault(x => x.TenantId == staffSchoolInfoAddViewModel.TenantId && x.StaffId == staffSchoolInfoAddViewModel.StaffId && x.SchoolId == staffSchoolInfoAddViewModel.SchoolId);
                     if (staffMaster != null)
                     {
-                        staffMaster.Profile = staffSchoolInfoAddViewModel.Profile;
+                        //staffMaster.Profile = staffSchoolInfoAddViewModel.Profile;
                         staffMaster.JobTitle = staffSchoolInfoAddViewModel.JobTitle;
                         staffMaster.JoiningDate = staffSchoolInfoAddViewModel.JoiningDate;
                         staffMaster.EndDate = staffSchoolInfoAddViewModel.EndDate;

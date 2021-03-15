@@ -13,7 +13,7 @@
                     </a>
                 </div>
                 <div>
-                    <button mat-raised-button color="primary" (click)="addCourseSection()">
+                    <button *ngIf="addPermission" mat-raised-button color="primary" (click)="addCourseSection()">
                         <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon>
                         {{'addNewCourseSection'|translate}}
                     </button>
@@ -39,7 +39,7 @@
                                 <p class="text-lg text-green font-bold"
                                     matTooltip="{{section.courseSection.seats+' Seats Available'}}">
                                     {{section.courseSection.seats}} /
-                                    20</p>
+                                    0</p>
                                 <span [ngClass]="section.courseSection.isActive?'bg-green':'bg-gray-light'"
                                     class="w-3 h-3 ml-4 rounded-full inline-block"
                                     matTooltip="{{section.courseSection.isActive?'Active':'Inactive'}}"></span>
@@ -50,10 +50,10 @@
                             </div>
                             <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
                                 yPosition="below">
-                                <button mat-menu-item (click)="editCourseSection(section)">
+                                <button *ngIf="editPermission" mat-menu-item (click)="editCourseSection(section)">
                                     <span>{{'editItem' | translate}}</span>
                                 </button>
-                                <button mat-menu-item (click)="confirmDelete(section)">
+                                <button *ngIf="deletePermission" mat-menu-item (click)="confirmDelete(section)">
                                     <span>{{'deleteItem' | translate}}</span>
                                 </button>
                             </mat-menu>
@@ -79,10 +79,10 @@
                         <mat-icon [icIcon]="icClose"></mat-icon>
                     </button>
                     <mat-menu #addNewMenu1="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                        <button mat-menu-item (click)="editCourseSection(selectedSectionDetails)">
+                        <button *ngIf="editPermission" mat-menu-item (click)="editCourseSection(selectedSectionDetails)">
                             <span>{{'editItem' | translate}}</span>
                         </button>
-                        <button mat-menu-item (click)="confirmDelete(selectedSectionDetails)">
+                        <button *ngIf="deletePermission" mat-menu-item (click)="confirmDelete(selectedSectionDetails)">
                             <span>{{'deleteItem' | translate}}</span>
                         </button>
                     </mat-menu>
@@ -99,11 +99,11 @@
                     <li [ngClass]="selectedTab === 'scheduled_students'?'active' : ''"><a
                             class="cursor-pointer px-6 py-4 inline-block hover:bg-skyblue-light"
                             (click)="changeTab('scheduled_students')">{{'scheduledStudents'|translate}}
-                            (20)</a></li>
+                            (0)</a></li>
                     <li [ngClass]="selectedTab === 'scheduled_teachers'?'active' : ''"><a
                             class="cursor-pointer px-6 py-4 inline-block hover:bg-skyblue-light"
                             (click)="changeTab('scheduled_teachers')">{{'scheduledTeachers'|translate}}
-                            (2)</a></li>
+                            (0)</a></li>
                 </ul>
             </div>
 
@@ -129,13 +129,13 @@
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
                         <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                            {{selectedSectionDetails.courseSection.creditHours}}</p>
+                            {{selectedSectionDetails.courseSection.creditHours | number:'0.2'}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'seats' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">20 <span
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedSectionDetails.courseSection.seats}} <span
                                 class="inline-block align-middle mx-2 text-gray-light">|</span> <span
-                                class="text-green font-bold">{{20-selectedSectionDetails.courseSection.seats}}
+                                class="text-green font-bold">{{selectedSectionDetails.courseSection.seats}}
                                 Available</span></p>
                     </li>
                     <li>
@@ -192,7 +192,7 @@
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'standardGradeScale' | translate}}</label>
                         <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                            {{selectedSectionDetails.standardRefNo|EmtyValueCheckPipe}}</p>
+                            {{selectedSectionDetails.standardGradeScaleName|EmtyValueCheckPipe}}</p>
                     </li>
                     <!-- <li>
                     <label class="text-sm leading-5 text-gray">{{'duration' | translate}} (Marking Period)</label>

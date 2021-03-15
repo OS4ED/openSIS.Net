@@ -14,6 +14,8 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewDetailsComponent } from './view-details/view-details.component';
+import { CryptoService } from 'src/app/services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-us-common-core-standards',
@@ -49,8 +51,14 @@ export class UsCommonCoreStandardsComponent implements OnInit {
   icUpdate = icUpdate;
   selectedOption = '1';
   loading:Boolean;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
-  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService) {
+  constructor(private router: Router,private dialog: MatDialog,public translateService:TranslateService,
+    private cryptoService: CryptoService) {
     translateService.use('en');
     this.CommonCoreStandardsModelList = [
       {subject: 'Mathematics', grade: 'Kindergarten', course: 'General Maths', domain: 'Counting and Cardinality', topic: 'Know number names and the count sequence.', standard_ref_no: 'CCSS.Math.Content.K.CC.A.1', standard_details: 'Count to 100 by ones and by tens.'},
@@ -69,6 +77,13 @@ export class UsCommonCoreStandardsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 26);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 28);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
   }
 
 

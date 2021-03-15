@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
 import { StudentService } from '../../../../services/student.service';
@@ -13,6 +13,7 @@ import { LoginService } from '../../../../services/login.service';
 import { CountryModel } from '../../../../models/countryModel';
 import { LanguageModel } from '../../../../models/languageModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
 
 @Component({
   selector: 'vex-search-student',
@@ -24,15 +25,18 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Output() showHideAdvanceSearch = new EventEmitter<boolean>();
   @Output() searchList = new EventEmitter<any>();
+  @Input() filterJsonParams;
   countryModel: CountryModel = new CountryModel();
   languages: LanguageModel = new LanguageModel();
   @ViewChild('f') currentForm: NgForm;
   destroySubject$: Subject<void> = new Subject();
   studentMasterSearchModel: StudentMasterSearchModel = new StudentMasterSearchModel();
   getAllStudent: StudentListModel = new StudentListModel();
-  dobEndDate : string;
-  dobStartDate : string;
+  searchFilterAddViewModel : SearchFilterAddViewModel= new SearchFilterAddViewModel();
+  dobEndDate: string;
+  dobStartDate: string;
   params = [];
+  updateFilter: boolean = false;
   countryListArr = [];
   ethnicityList = [];
   raceList = [];
@@ -52,6 +56,14 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    if (this.filterJsonParams !== null && this.filterJsonParams !== undefined) {
+      this.updateFilter = true;
+      let jsonResponse = JSON.parse(this.filterJsonParams.jsonList);
+      for (let json of jsonResponse) {
+        this.studentMasterSearchModel[json.columnName] = json.filterValue;
+      }
+    }
+
     this.initializeDropdownsInAddMode();
   }
 
@@ -133,23 +145,56 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.studentMasterSearchModel[key] })
         }
     }
-    
+
+
+
+    if (this.updateFilter) {
+      this.searchFilterAddViewModel.searchFilter.filterId = this.filterJsonParams.filterId;
+      this.searchFilterAddViewModel.searchFilter.module = 'Student';
+      this.searchFilterAddViewModel.searchFilter.jsonList = JSON.stringify(this.params);
+      this.searchFilterAddViewModel.searchFilter.filterName = this.filterJsonParams.filterName;
+      this.searchFilterAddViewModel.searchFilter.modifiedBy = sessionStorage.getItem('email');
+      this.commonService.updateSearchFilter(this.searchFilterAddViewModel).subscribe((res) => {
+        if (typeof (res) === 'undefined') {
+          this.snackbar.open('Search filter updated failed' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (res._failure) {
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+          }
+          else {
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+            
+          }
+        }
+      }
+      );
+    }
     this.getAllStudent.filterParams = this.params;
     this.getAllStudent.sortingModel = null;
     this.getAllStudent.dobStartDate = this.dobStartDate;
-    this.getAllStudent.dobEndDate= this.dobEndDate;
+    this.getAllStudent.dobEndDate = this.dobEndDate;
+    this.commonService.setSearchResult(this.params);
     this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if (data._failure) {
-          this.searchList.emit([]);
-          this.snackbar.open('Student List failed. ' + data._message, '', {
-            duration: 10000
-          });
-        
+        this.searchList.emit([]);
+        this.snackbar.open('' + data._message, '', {
+          duration: 10000
+        });
+
       } else {
         this.searchList.emit(data);
         this.showHideAdvanceSearch.emit(false);
       }
     });
+    
+   
   }
 
   resetData() {

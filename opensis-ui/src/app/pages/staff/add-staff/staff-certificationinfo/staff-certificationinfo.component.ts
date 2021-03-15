@@ -20,6 +20,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RollBasedAccessService } from 'src/app/services/rollBasedAccess.service';
 
 @Component({
   selector: 'vex-staff-certificationinfo',
@@ -49,26 +51,38 @@ export class StaffCertificationinfoComponent implements OnInit {
   icSearch = icSearch;
   icImpersonate = icImpersonate;
   icFilterList = icFilterList;
-  loading:Boolean;
-  staffCertificateListModel:StaffCertificateListModel= new StaffCertificateListModel();
-  staffCertificateModel:StaffCertificateModel= new StaffCertificateModel();
+  loading: boolean;
+  staffCertificateListModel: StaffCertificateListModel = new StaffCertificateListModel();
+  staffCertificateModel: StaffCertificateModel = new StaffCertificateModel();
   staffid;
   staffCertificateList: MatTableDataSource<any>;
-  @ViewChild(MatPaginator) paginator:MatPaginator
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort;
   searchKey: string;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(private router: Router,
-    private dialog: MatDialog,
-    public translateService:TranslateService,
-    private snackbar: MatSnackBar,
-    private staffService:StaffService
-    ) {
+              private dialog: MatDialog,
+              public translateService: TranslateService,
+              private snackbar: MatSnackBar,
+              public rollBasedAccessService: RollBasedAccessService,
+              private staffService: StaffService
+              ) {
     translateService.use('en');
-    
   }
 
   ngOnInit(): void {
-    this.staffid=this.staffService.getStaffId();
+    this.permissionListViewModel = this.rollBasedAccessService.getPermission();
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 16);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+    this.staffid = this.staffService.getStaffId();
     this.getAllStaffCertificateInfo();
   }
 
@@ -128,21 +142,17 @@ export class StaffCertificationinfoComponent implements OnInit {
         }
         else{
           if (res._failure) {  
-            if(res._message==="NO RECORD FOUND"){
               if(res.staffCertificateInfoList==null){
                 this.staffCertificateList=new MatTableDataSource([]) ;
                 this.staffCertificateList.sort=this.sort;
+                this.snackbar.open(res._message, '', {
+                  duration: 10000
+                });
               }
               else{
                 this.staffCertificateList=new MatTableDataSource(res.staffCertificateInfoList) ;
                 this.staffCertificateList.sort=this.sort; 
               }
-             
-            } else{
-              this.snackbar.open('Staff Certificate List failed. ' + res._message, '', {
-                duration: 10000
-              });
-            }  
             
           } 
           else { 
@@ -168,7 +178,7 @@ export class StaffCertificationinfoComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Staff Certificate Delete failed. ' + res._message, '', {
+            this.snackbar.open(res._message, '', {
               duration: 10000
             });
           } 

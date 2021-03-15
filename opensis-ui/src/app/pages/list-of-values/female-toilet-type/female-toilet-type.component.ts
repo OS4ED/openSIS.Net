@@ -124,7 +124,7 @@ export class FemaleToiletTypeComponent implements OnInit {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
   deleteFemaleToiletTypedata(element){
-    this.lovAddView.dropdownValue=element
+    this.lovAddView.dropdownValue.id=element.id
     this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
       (res:LovAddView)=>{
         if(typeof(res)=='undefined'){
@@ -134,12 +134,12 @@ export class FemaleToiletTypeComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Female Toilet Type Deletion failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Female Toilet Type ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
             this.getAllFemaleToiletType()
@@ -173,11 +173,16 @@ export class FemaleToiletTypeComponent implements OnInit {
         }
         else{
           if (res._failure) {  
-            this.femaleToiletTypeList=new MatTableDataSource(res.dropdownList) ;
-            this.listCount=this.femaleToiletTypeList.data;
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
+            if (res.dropdownList == null) {
+              this.femaleToiletTypeList= new MatTableDataSource(null);
+              this.listCount=this.femaleToiletTypeList.data;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.femaleToiletTypeList= new MatTableDataSource(null);
+              this.listCount=this.femaleToiletTypeList.data;
+            }
           } 
           else { 
             this.femaleToiletTypeList=new MatTableDataSource(res.dropdownList) ;

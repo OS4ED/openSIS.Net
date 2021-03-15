@@ -9,7 +9,7 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
         public int CourseId { get; set; }
         public int CourseSectionId { get; set; }
-        public int GradeScaleId { get; set; }
+        public int? GradeScaleId { get; set; }
         public int Serial { get; set; }
         public int? RoomId { get; set; }
         public int? BlockId { get; set; }

@@ -29,6 +29,10 @@ import { LovList } from './../../../../models/lovModel';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { Router } from '@angular/router';
+import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-general-info',
@@ -53,7 +57,10 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   @Input() schoolCreateMode: SchoolCreate;
   @Input() schoolDetailsForViewAndEdit;
   @Input() categoryId;
-
+  editPermission:boolean= false;
+  permissionList= [];
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup:RolePermissionViewModel= new RolePermissionViewModel();
   moduleIdentifier=ModuleIdentifier;
   cityName:string;
   stateName:string
@@ -95,7 +102,10 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     private commonService: CommonService,
     private commonFunction: SharedFunction,
     private imageCropperService: ImageCropperService,
-    private commonLOV:CommonLOV
+    private commonLOV:CommonLOV,
+    private router:Router,
+    public rollBasedAccessService: RollBasedAccessService,
+    private cryptoService: CryptoService
   ) {
     translateService.use('en');
     this.schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
@@ -107,11 +117,30 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.internalId = new FormControl('',Validators.required);
-    this.genderOptions = ["Male","Female","Co-education"];
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+
+    if (this.schoolCreateMode == this.schoolCreate.VIEW){
+      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
+      let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
+      let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryId == 1);
+     
+      this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+      }
+
+
+    this.internalId = new FormControl('', Validators.required);
+    this.genderOptions = ['Male', 'Female', 'Co-education'];
     if (this.schoolCreateMode == this.schoolCreate.ADD) {
       this.initializeDropdownsForSchool();
       this.getAllCountry();
+      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
+      const permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
+      const permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryId == 1);
+     
+      if(permissionSubCategory.rolePermission[0].canAdd===false){
+        this.router.navigate(['/']);
+      }
+      
     }
     else if (this.schoolCreateMode == this.schoolCreate.VIEW) {
       this.schoolService.changePageMode(this.schoolCreateMode);
@@ -441,7 +470,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('General Info Submission failed. ' + data._message, '', {
+          this.snackbar.open('General Info Submission failed. ' + data._message, 'LOL THANKS', {
             duration: 10000
           });
         } else {
@@ -477,7 +506,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('General Info Updation failed. ' + data._message, '', {
+          this.snackbar.open('General Info Updation failed. ' + data._message, 'LOL THANKS', {
             duration: 10000
           });
         } else {

@@ -10,5 +10,6 @@ namespace opensis.data.Interface
         GetAllMembersList GetAllMemberList(GetAllMembersList membersList);
         public MembershipAddViewModel AddMembership(MembershipAddViewModel membershipAddViewModel);
         public MembershipAddViewModel UpdateMembership(MembershipAddViewModel membershipAddViewModel);
+        public MembershipAddViewModel DeleteMembership(MembershipAddViewModel membershipAddViewModel);
     }
 }

@@ -90,5 +90,33 @@ namespace opensis.core.School.Services
             }
             return MembershipUpdateModel;
         }
+
+        /// <summary>
+        /// Delete Membership
+        /// </summary>
+        /// <param name="membershipAddViewModel"></param>
+        /// <returns></returns>
+        public MembershipAddViewModel DeleteMembership(MembershipAddViewModel membershipAddViewModel)
+        {
+            MembershipAddViewModel MembershipDeleteModel = new MembershipAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(membershipAddViewModel._tenantName, membershipAddViewModel._token))
+                {
+                    MembershipDeleteModel = this.membershipRepository.DeleteMembership(membershipAddViewModel);
+                }
+                else
+                {
+                    MembershipDeleteModel._failure = true;
+                    MembershipDeleteModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                MembershipDeleteModel._failure = true;
+                MembershipDeleteModel._message = es.Message;
+            }
+            return MembershipDeleteModel;
+        }
     }
 }

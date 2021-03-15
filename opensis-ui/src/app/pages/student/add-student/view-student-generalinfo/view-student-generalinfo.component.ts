@@ -1,8 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { StudentAddModel } from '../../../../models/studentModel';
-import icCheckbox from '@iconify/icons-ic/baseline-check-box';
-import icCheckboxOutline from '@iconify/icons-ic/baseline-check-box-outline-blank';
 import { SharedFunction } from '../../../shared/shared-function';
 import { TranslateService } from '@ngx-translate/core';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -16,8 +14,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
   ]
 })
 export class ViewStudentGeneralinfoComponent implements OnInit {
-  icCheckbox = icCheckbox;
-  icCheckboxOutline = icCheckboxOutline;
+
 
   studentCreate = SchoolCreate;
   @Input() studentCreateMode: SchoolCreate;

@@ -8,8 +8,9 @@ import icExpandSidebar from '@iconify/icons-ic/twotone-switch-right';
 import icArrowDropDown from '@iconify/icons-ic/arrow-drop-down';
 import { LayoutService } from '../../services/layout.service';
 import { ConfigService } from '../../services/config.service';
-import { map } from 'rxjs/operators';
+import { map, takeUntil } from 'rxjs/operators';
 import { Router, ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'vex-sidenav',
@@ -32,17 +33,23 @@ export class SidenavComponent implements OnInit {
   icCollapseSidebar = icCollapseSidebar;
   icExpandSidebar = icExpandSidebar;
   icArrowDropDown = icArrowDropDown;
-  userName :string;
-  membershipName:string;
-
+  userName: string;
+  membershipName: string;
+   destroySubject$ = new Subject<void>();
   constructor(private navigationService: NavigationService,
-              private layoutService: LayoutService,
-              private configService: ConfigService,
-              private router:Router) { }
+    private layoutService: LayoutService,
+    private configService: ConfigService,
+    private router: Router) {
+    this.navigationService.menuItems.pipe(takeUntil(this.destroySubject$ )).subscribe((res) => {
+      if (res) {
+        this.items = this.navigationService.items;
+      }
+    })
+  }
 
   ngOnInit() {
-    this.userName= sessionStorage.getItem('user');
-    this.membershipName= sessionStorage.getItem('membershipName');
+    this.userName = sessionStorage.getItem('user');
+    this.membershipName = sessionStorage.getItem('membershipName');
   }
 
   onMouseEnter() {
@@ -53,19 +60,32 @@ export class SidenavComponent implements OnInit {
     this.layoutService.collapseCloseSidenav();
   }
 
-  toggleCollapse() { 
-    if(this.collapsed){
-      localStorage.setItem("collapseValue","false");
+  toggleCollapse() {
+    if (this.collapsed) {
+      localStorage.setItem("collapseValue", "false");
       this.layoutService.expandSidenav()
-    }else{
+    } else {
       this.layoutService.collapseSidenav();
-      localStorage.setItem("collapseValue","true");
-    }   
-    
+      localStorage.setItem("collapseValue", "true");
+    }
+
   }
-  logOut(){
-    localStorage.removeItem("collapseValue");
-    sessionStorage.removeItem("token");    
+  logOut() {
+    // localStorage.removeItem("collapseValue");
+    localStorage.clear();
+    let schoolId = sessionStorage.getItem('selectedSchoolId');
+    sessionStorage.clear();
+    if(schoolId){
+    sessionStorage.setItem('selectedSchoolId',schoolId);
+    }
+
+
     this.router.navigate(["/"]);
+  }
+
+  ngOnDestroy(){
+    this.navigationService.changeMenuItemsStatus(false);
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 }

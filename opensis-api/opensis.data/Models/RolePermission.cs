@@ -10,6 +10,7 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
         public int RolePermissionId { get; set; }
         public int? MembershipId { get; set; }
+        public int? PermissionGroupId { get; set; }
         public int? PermissionCategoryId { get; set; }
         public int? PermissionSubcategoryId { get; set; }
         public bool? CanView { get; set; }
@@ -22,6 +23,7 @@ namespace opensis.data.Models
         public DateTime? UpdatedOn { get; set; }
 
         public virtual Membership Membership { get; set; }
+        public virtual PermissionGroup PermissionGroup { get; set; }
         public virtual PermissionCategory PermissionCategory { get; set; }
         public virtual PermissionSubcategory PermissionSubcategory { get; set; }
     }

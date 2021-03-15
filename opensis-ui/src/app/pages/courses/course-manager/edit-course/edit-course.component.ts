@@ -20,7 +20,7 @@ import {GradeLevelService} from '../../../../services/grade-level.service';
 import {GetAllGradeLevelsModel } from '../../../../models/gradeLevelModel';
 import {MassUpdateProgramModel,MassUpdateSubjectModel} from '../../../../models/courseManagerModel';
 import { MatDialog } from '@angular/material/dialog';
-import { GetAllSchoolSpecificListModel, GradeStandardSubjectCourseListModel, SchoolSpecificStandarModel } from '../../../../models/grades.model';
+import { GetAllSchoolSpecificListModel, GradeStandardSubjectCourseListModel, SchoolSpecificStandarModel, StandardView } from '../../../../models/grades.model';
 import { GradesService } from '../../../../services/grades.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
 @Component({
@@ -199,17 +199,15 @@ export class EditCourseComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          if (res._message === "NO RECORD FOUND") {
             if (res.gradeUsStandardList == null) {
-              this.gradeStandardSubjectList.gradeUsStandardList=null
+              this.gStdSubjectList=[];
+              this.snackbar.open(res._message, '', {
+                duration: 10000
+              });
             }
-
-          } else {
-            this.snackbar.open('Standard Subject List failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+           else {
+            this.gStdSubjectList=[];
           }
-
         }
         else {
           this.gStdSubjectList=res.gradeUsStandardList;         
@@ -226,15 +224,15 @@ export class EditCourseComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          if (res._message === "NO RECORD FOUND") {
+     
             if (res.gradeUsStandardList == null) {
-              this.gradeStandardCourseList.gradeUsStandardList=null
-            }
-
-          } else {
-            this.snackbar.open('Standard Course List failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
+              this.gStdCourseList=[];
+              this.snackbar.open(res._message, '', {
+                duration: 10000
+              });
+            }else {
+              this.gStdCourseList=[];
+           
           }
 
         }
@@ -287,7 +285,6 @@ export class EditCourseComponent implements OnInit {
   
   goToCourse(){
     this.addStandard = false;
-    console.log(this.checkedStandardList)
     this.nonDuplicateCheckedStandardList = this.checkedStandardList.reduce((unique, o) => {
       if(!unique.some(obj => obj.gradeStandardId === o.gradeStandardId)) {
         unique.push(o);

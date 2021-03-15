@@ -124,7 +124,7 @@ export class SchoolLevelComponent implements OnInit {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
   deleteSchoolLeveldata(element){
-    this.lovAddView.dropdownValue=element
+    this.lovAddView.dropdownValue.id=element.id
     this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
       (res:LovAddView)=>{
         if(typeof(res)=='undefined'){
@@ -134,12 +134,12 @@ export class SchoolLevelComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('School Level Deletion failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('School Level Deleted Successfully' , '', {
+            this.snackbar.open(''+ res._message , '', {
               duration: 10000
             });
             this.getAllSchoolLevel()
@@ -173,11 +173,16 @@ export class SchoolLevelComponent implements OnInit {
         }
         else{
           if (res._failure) {  
-            this.schoolLevelList=new MatTableDataSource(res.dropdownList) ;
-            this.listCount=this.schoolLevelList.data;
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
+            if (res.dropdownList == null) {
+              this.schoolLevelList= new MatTableDataSource(null);
+              this.listCount=this.schoolLevelList.data;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.schoolLevelList= new MatTableDataSource(null);
+              this.listCount=this.schoolLevelList.data;
+            }
           } 
           else { 
             this.schoolLevelList=new MatTableDataSource(res.dropdownList) ;

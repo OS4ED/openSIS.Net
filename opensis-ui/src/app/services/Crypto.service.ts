@@ -37,4 +37,33 @@ decrypt(value){
   var decryptedData = JSON.parse(bytes.toString(CryptoJS.enc.Utf8));
   return decryptedData;
 }
+
+dataEncrypt(value) {
+
+  var key = CryptoJS.enc.Utf8.parse(environment.dataEncryptionKey);
+  var iv = CryptoJS.enc.Utf8.parse(environment.dataEncryptionKey)
+
+  var encrypted = CryptoJS.AES.encrypt(CryptoJS.enc.Utf8.parse(value), key,
+    {
+      keySize: 128 / 8,
+      iv: iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    });
+  return encrypted.toString();
+}
+
+dataDecrypt(value) {
+  if(value){
+    var key = CryptoJS.enc.Utf8.parse(environment.dataEncryptionKey);
+    var iv = CryptoJS.enc.Utf8.parse(environment.dataEncryptionKey);
+    var decrypted = CryptoJS.AES.decrypt(value?.toString(), key, {
+      keySize: 128 / 8,
+      iv: iv,
+      mode: CryptoJS.mode.CBC,
+      padding: CryptoJS.pad.Pkcs7
+    });
+    return decrypted.toString(CryptoJS.enc.Utf8);
+  }
+}
 }

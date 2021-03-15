@@ -58,7 +58,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   icCustomCategory = icCustomCategory;
   loading: boolean;
   moduleIdentifier=ModuleIdentifier;
-  pageId = 'General Info';
+  profile:string;
 
   constructor(private layoutService: LayoutService, public translateService: TranslateService,
     private staffService: StaffService,
@@ -120,6 +120,10 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     
   }
 
+  profileFromSchoolInfo(data){
+    this.profile=data;
+  }
+
   changeCategory(field, index) {
     let staffDetails = this.staffService.getStaffDetails();
     if (staffDetails != undefined || staffDetails != null) {
@@ -138,7 +142,6 @@ export class AddStaffComponent implements OnInit, OnDestroy {
 
   showPage(pageId) {
     localStorage.setItem("pageId", pageId);
-    this.pageId = localStorage.getItem("pageId");
     //this.disableSection();
   }
 
@@ -147,6 +150,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     this.staffService.viewStaff(this.staffAddModel).subscribe(data => {
       this.staffAddModel = data;
       this.fieldsCategory = data.fieldsCategoryList;
+      this.profileFromSchoolInfo(data.staffMaster.profile)
       this.responseImage = this.staffAddModel.staffMaster.staffPhoto;
       this.staffService.setStaffCloneImage(this.staffAddModel.staffMaster.staffPhoto);
       this.staffAddModel.staffMaster.staffPhoto=null;
@@ -172,7 +176,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Cateogy list failed. ' + res._message, '', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
         }

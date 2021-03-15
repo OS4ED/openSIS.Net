@@ -6,6 +6,9 @@
         <mat-card-content>
 
             <div @stagger fxLayout="column">
+                <!-- <h4 class="text-blue font-medium pt-6 pb-2 px-2">{{'schoolInformation'|translate}}</h4> -->
+                
+
                 <h4 class="text-primary px-4 pb-2">{{'schoolInformation'|translate}}</h4>
                 <div class="mb-2 md:flex md:flex-wrap">
                     <div class="flex flex-1 mx-4 md:w-1/2">
@@ -33,6 +36,50 @@
                         </mat-form-field>
                     </div>
                 </div>
+                <div class="mb-2 md:flex md:flex-wrap">
+                    <div class="flex flex-1 mx-4 md:w-1/2">
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'section'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="studentEnrollmentModel.sectionId" name="sectionId">
+                                <mat-option value="" *ngIf="sectionList?.tableSectionsList?.length==0">No Sections Found</mat-option>
+                                <mat-option *ngFor="let section of sectionList.tableSectionsList" [value]='section.sectionId'>
+                                    {{section.name}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </div>
+                    <div class="flex flex-1 mx-4 md:w-1/2">
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'estimatedGraduationDate'|translate}}</mat-label>
+                            <input name="estimatedGradDate"
+                                [(ngModel)]="studentEnrollmentModel.estimatedGradDate"
+                                [matDatepicker]="estimatedGradDate" matInput>
+                            <mat-datepicker-toggle [for]="estimatedGradDate" matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #estimatedGradDate></mat-datepicker>
+                        </mat-form-field>
+                    </div>
+                </div>
+                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
+                    <li class="col-span-2">
+                        <mat-checkbox name="eligibility504" [(ngModel)]="studentEnrollmentModel.eligibility504"
+                            color="primary" class="mr-6">
+                            {{'504Eligibility' | translate}}</mat-checkbox>
+                        <mat-checkbox name="economicDisadvantage"
+                            [(ngModel)]="studentEnrollmentModel.economicDisadvantage" color="primary"
+                            class="mr-6">
+                            {{'economicDisadvantage' | translate}}</mat-checkbox>
+                        <mat-checkbox name="freeLunchEligibility"
+                            [(ngModel)]="studentEnrollmentModel.freeLunchEligibility" color="primary"
+                            class="mr-6">
+                            {{'freeLunchEligibility' | translate}}</mat-checkbox>
+                        <mat-checkbox name="specialEducationIndicator"
+                            [(ngModel)]="studentEnrollmentModel.specialEducationIndicator" color="primary"
+                            class="mr-6">
+                            {{'specialEducationIndicator' | translate}}</mat-checkbox>
+                        <mat-checkbox name="lepIndicator" [(ngModel)]="studentEnrollmentModel.lepIndicator"
+                            color="primary">{{'lepIndicator' | translate}}
+                        </mat-checkbox>
+                    </li>
+                </ul>
 
 
                 <hr class="-mx-3 mt-6" />
@@ -79,11 +126,12 @@
                                                 color="primary" floatLabel="never">
                                                 <mat-label>{{'gradeLevel'|translate}}</mat-label>
                                                 <mat-select #gradeLevel="ngModel" name="{{'gradeLevel'+index}}"
-                                                    [(ngModel)]="this.cloneStudentEnrollment.studentEnrollments[index].gradeLevelTitle"
+                                                    [(ngModel)]="this.cloneStudentEnrollment.studentEnrollments[index].gradeId"
+                                                    (selectionChange)="onGradeLevelChange(index)"
                                                     required>
                                                     <mat-option
                                                         *ngFor="let gradeLevel of schoolListWithGradeLevelsAndEnrollCodes[selectedSchoolIndex[index]]?.gradelevels"
-                                                        value="{{gradeLevel.title}}">{{gradeLevel.title}}</mat-option>
+                                                        value="{{gradeLevel.gradeId}}">{{gradeLevel.title}}</mat-option>
                                                 </mat-select>
                                                 <mat-error *ngIf="gradeLevel.errors?.required">
                                                     {{'gradeLevelIsRequired'|translate}}
@@ -246,7 +294,7 @@
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'schoolAndEnrollmentInfo' | translate}}</h3>
-        <button mat-button color="primary" (click)="editEnrollmentInfo()">
+        <button *ngIf="editPermission" mat-button color="primary" (click)="editEnrollmentInfo()">
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
     </div>
@@ -263,8 +311,77 @@
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{studentEnrollmentModel?.rollingOption}}
                     </p>
                 </li>
+            
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'section' | translate}}</label>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{sectionNameInViewMode}}</p>
+                </li>
+                <li>
+                    <label class="text-sm leading-5 text-gray">{{'estimatedGraduationDate' | translate}}</label>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{studentEnrollmentModel?.estimatedGradDate |date:'mediumDate' |EmtyValueCheckPipe}}</p>
+                </li>
+                <li class="col-span-3">
+                    <div class="flex items-center">
+                        <div class="mr-6" *ngIf="studentEnrollmentModel?.eligibility504; else NOTEligibility">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
+                    <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
+                </div>
+                <ng-template #NOTEligibility>
+                            <div class="mr-6">
+                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
+                        <span class="inline-block text-base align-middle">{{'504Eligibility' |translate}}</span>
+                    </div>
+                </ng-template>
+    
+    
+                        <div class="mr-6" *ngIf="studentEnrollmentModel?.economicDisadvantage; else economicadvantage">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
+                    <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
+                </div>
+                <ng-template #economicadvantage>
+                            <div class="mr-6">
+                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
+                        <span class="inline-block text-base align-middle">{{'economicDisadvantage' |translate}}</span>
+                    </div>
+                </ng-template>
+    
+                        <div class="mr-6" *ngIf="studentEnrollmentModel?.freeLunchEligibility; else LunchEligibility">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
+                    <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
+                </div>
+                <ng-template #LunchEligibility>
+                            <div class="mr-6">
+                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
+                        <span class="inline-block text-base align-middle">{{'freeLunchEligibility' |translate}}</span>
+                    </div>
+                </ng-template>
+    
+                        <div class="mr-6" *ngIf="studentEnrollmentModel?.specialEducationIndicator; else nonSpecialEducationIndicator">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
+                    <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
+                </div>
+                <ng-template #nonSpecialEducationIndicator>
+                            <div class="mr-6">
+                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
+                        <span class="inline-block text-base align-middle">{{'specialEducationIndicator' |translate}}</span>
+                    </div>
+                </ng-template>
+    
+    
+                        <div class="mr-6" *ngIf="studentEnrollmentModel.lepIndicator; else Indicator">
+                    <mat-icon [icIcon]="icCheckbox" class="inline-block align-middle mr-2"></mat-icon>
+                    <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
+                </div>
+                <ng-template #Indicator>
+                            <div class="mr-6">
+                        <mat-icon [icIcon]="icCheckboxOutline" class="inline-block align-middle mr-2"></mat-icon>
+                        <span class="inline-block text-base align-middle">{{'lepIndicator' |translate}}</span>
+                    </div>
+                </ng-template>
+                    </div>
+                </li>
             </ul>
-
 
             <hr class="-mx-3 mt-6" />
 

@@ -70,12 +70,12 @@ export class EditFemaleToiletTypeComponent implements OnInit {
             }
             else{
               if (res._failure) {
-                this.snackbar.open('Female Toilet Type insertion failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
-                this.snackbar.open('Female Toilet Type inserted Successfully.' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');
@@ -99,13 +99,13 @@ export class EditFemaleToiletTypeComponent implements OnInit {
             else{
              
               if (res._failure) {
-                this.snackbar.open('Female Toilet Type Update failed. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
               } 
               else { 
                
-                this.snackbar.open('Female Toilet Type Updated Successfully.' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

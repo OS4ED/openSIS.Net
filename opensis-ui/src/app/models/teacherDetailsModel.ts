@@ -1,5 +1,5 @@
 export interface TeacherDetails {
-    staffSelected: boolean;
+    staffSelected?: boolean;
     staffName: string;
     staffId: string;
     primaryGrade: string;

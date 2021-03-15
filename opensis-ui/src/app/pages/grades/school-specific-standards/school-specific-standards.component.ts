@@ -27,6 +27,8 @@ import { GetAllGradeLevelsModel } from '../../../models/gradeLevelModel';
 import { GradeLevelService } from '../../../services/grade-level.service';
 import { Subject } from 'rxjs';
 import { LoaderService } from '../../../services/loader.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from 'src/app/services/Crypto.service';
 
 @Component({
   selector: 'vex-school-specific-standards',
@@ -74,6 +76,12 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
   searchCtrl: FormControl;
   updateExistingData=false;
   destroySubject$: Subject<void> = new Subject();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+
   constructor(private router: Router,
     private dialog: MatDialog,
     public translateService:TranslateService,
@@ -82,7 +90,8 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
     private loaderService: LoaderService,
     private excelService:ExcelService,
     private fb: FormBuilder,
-    private gradeLevelService: GradeLevelService,) {
+    private gradeLevelService: GradeLevelService,
+    private cryptoService: CryptoService) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
@@ -100,6 +109,13 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
     this.getAllGradeLevel();
     this.getAllSubjectStandardList();
     this.getAllCourseStandardList();
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 26);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 28);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
   }
   ngAfterViewInit() {
     //  Sorting
@@ -363,16 +379,15 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
       }
       else {
         if (res._failure) {
-          if (res._message === "NO RECORD FOUND") {
             if (res.tableGradelevelList == null) {
               this.gradeLevelList.tableGradelevelList=[]
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
             }
-
-          } else {
-            this.snackbar.open('Grade Level List failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
-          }
+            else{
+              this.gradeLevelList.tableGradelevelList=[]
+            }
 
         }
         else {
@@ -392,17 +407,15 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
       }
       else {
         if (res._failure) {
-          if (res._message === "NO RECORD FOUND") {
             if (res.gradeUsStandardList == null) {
-              this.subjectList.gradeUsStandardList=null
+              this.subjectList.gradeUsStandardList = null
+              this.snackbar.open(res._message, '', {
+                duration: 10000
+              });
             }
-
-          } else {
-            this.snackbar.open('Standard Subject List failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
-          }
-
+            else{
+              this.subjectList.gradeUsStandardList = null
+            }
         }
         else {
           this.subjectList=res;
@@ -421,17 +434,15 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
       }
       else {
         if (res._failure) {
-          if (res._message === "NO RECORD FOUND") {
             if (res.gradeUsStandardList == null) {
               this.courseList.gradeUsStandardList=null
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
             }
-
-          } else {
-            this.snackbar.open('Standard Course List failed. ' + res._message, 'LOL THANKS', {
-              duration: 10000
-            });
-          }
-
+            else{
+              this.courseList.gradeUsStandardList=null
+            }
         }
         else {
           this.courseList=res;

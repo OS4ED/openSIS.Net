@@ -25,6 +25,8 @@ import { LoaderService } from '../../../services/loader.service';
 import { ExcelService } from '../../../services/excel.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Subject } from 'rxjs';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-effort-grade-scale',
@@ -60,6 +62,11 @@ export class EffortGradeScaleComponent implements OnInit,OnDestroy {
   pageNumber: number;
   pageSize: number;
   destroySubject$: Subject<void> = new Subject();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   effortGradeScaleDragAndDrop: UpdateEffortGradeScaleSortOrderModel = new UpdateEffortGradeScaleSortOrderModel()
   constructor(private router: Router,
     private dialog: MatDialog,
@@ -67,7 +74,8 @@ export class EffortGradeScaleComponent implements OnInit,OnDestroy {
     private gradesService: GradesService,
     private loaderService: LoaderService,
     private snackbar: MatSnackBar,
-    private excelService: ExcelService) {
+    private excelService: ExcelService,
+    private cryptoService: CryptoService) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
@@ -78,6 +86,13 @@ export class EffortGradeScaleComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 26);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 29);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.searchCtrl = new FormControl();
   }
 
@@ -244,9 +259,14 @@ export class EffortGradeScaleComponent implements OnInit,OnDestroy {
 
     this.gradesService.getAllEffortGradeScaleList(this.getEffortGradeScaleList).subscribe(data => {
       if (data._failure) {
-        this.snackbar.open('Effort Grade Scale failed. ' + data._message, '', {
-          duration: 10000
-        });
+        if(data.effortGradeScaleList==null){
+          this.effortGradeScaleModelList = new MatTableDataSource([]);
+          this.snackbar.open( data._message, '', {
+            duration: 10000
+          });
+        }else{
+          this.effortGradeScaleModelList = new MatTableDataSource([]);
+        }
       } else {
         this.totalCount = data.totalCount;
         this.pageNumber = data.pageNumber;

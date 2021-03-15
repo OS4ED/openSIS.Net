@@ -15,9 +15,11 @@ namespace opensis.data.Models
         public int SchoolId { get; set; }
         public int MembershipId { get; set; }
         public string Profile { get; set; }
+        public string ProfileType { get; set; }
         public bool IsActive { get; set; }
         public bool? IsSystem { get; set; }
         public bool? IsSuperadmin { get; set; }
+        public string Description { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string UpdatedBy { get; set; }

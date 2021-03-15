@@ -309,5 +309,21 @@ namespace opensisAPI.Controllers
             }
             return courseStandardForCourseView;
         }
+
+        [HttpPost("deleteSchedule")]
+        public ActionResult<DeleteScheduleViewModel> DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel)
+        {
+            DeleteScheduleViewModel deleteSchedule = new DeleteScheduleViewModel();
+            try
+            {
+                deleteSchedule = _courseManagerService.DeleteSchedule(deleteScheduleViewModel);
+            }
+            catch (Exception es)
+            {
+                deleteSchedule._failure = true;
+                deleteSchedule._message = es.Message;
+            }
+            return deleteSchedule;
+        }
     }
 }

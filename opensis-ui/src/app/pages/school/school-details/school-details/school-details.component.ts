@@ -26,6 +26,9 @@ import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../../services/excel.service';
 import { Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
+import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { PermissionGroup, RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-school-details',
   templateUrl: './school-details.component.html',
@@ -49,11 +52,14 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
   pageNumber:number;
   pageSize:number;
   searchCtrl: FormControl;
+  addPermission: boolean= false;
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icSearch = icSearch;
   icFilterList = icFilterList;
   fapluscircle = "fa-plus-circle";
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup:RolePermissionViewModel= new RolePermissionViewModel(); 
   tenant = "";
   loading:boolean;
   getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
@@ -71,6 +77,8 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     private layoutService: LayoutService,
     private excelService:ExcelService,
     public translateService: TranslateService,
+    public rollBasedAccessService: RollBasedAccessService,
+    private cryptoService: CryptoService
     ) 
     { translateService.use('en');
       if(localStorage.getItem("collapseValue") !== null){
@@ -92,6 +100,11 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
 
   ngOnInit(): void {
     this.searchCtrl = new FormControl();
+    this.permissionListViewModel= JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
+    let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
+    
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
   }
   ngAfterViewInit() {
     //  Sorting
@@ -189,7 +202,7 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     }
     this.schoolService.GetAllSchoolList(this.getAllSchool).subscribe(data => {
       if(data._failure){
-        this.snackbar.open('School information failed. '+ data._message, '', {
+        this.snackbar.open(data._message, '', {
         duration: 10000
         });
       }else{

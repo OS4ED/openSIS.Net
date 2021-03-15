@@ -14,6 +14,7 @@ namespace opensis.data.Models
         public int? CalenderId { get; set; }
         public string RollingOption { get; set; }
         public string SchoolName { get; set; }
+        public int? GradeId { get; set; }
         public string GradeLevelTitle { get; set; }
         public DateTime? EnrollmentDate { get; set; }
         public string EnrollmentCode { get; set; }
@@ -26,6 +27,7 @@ namespace opensis.data.Models
         public DateTime? LastUpdated { get; set; }
         public string UpdatedBy { get; set; }
         public bool? IsActive { get; set; }
+        public virtual Gradelevels Gradelevels { get; set; }
         public virtual StudentMaster StudentMaster { get; set; }
 
     }

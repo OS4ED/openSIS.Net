@@ -14,6 +14,8 @@ import { StudentService } from '../../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StudentSiblingAssociation, StudentViewSibling } from '../../../../../models/studentModel';
 import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog/confirm-dialog.component';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-siblingsinfo',
@@ -32,11 +34,29 @@ export class SiblingsinfoComponent implements OnInit {
 
   removeStudentSibling:StudentSiblingAssociation = new StudentSiblingAssociation();
   studentViewSibling:StudentViewSibling=new StudentViewSibling();
-  constructor(private fb: FormBuilder, private dialog: MatDialog,
-    public translateService:TranslateService, private studentService:StudentService,
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  viewPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+  constructor(private fb: FormBuilder,
+    private dialog: MatDialog,
+    public translateService:TranslateService,
+    private cryptoService:CryptoService,
+    private studentService:StudentService,
     private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 6);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+    this.viewPermission = permissionSubCategory.rolePermission[0].canView;
+
     this.getAllSiblings()
   }
 
@@ -70,17 +90,15 @@ export class SiblingsinfoComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          if(res._message==="NO RECORD FOUND"){
             if(res.studentMaster==null){
-              this.studentViewSibling.studentMaster=res.studentMaster;
-
+              this.studentViewSibling.studentMaster=null;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
             }
-           
-          } else{
-            this.snackbar.open('Siblings failed to fetch.' + res._message, '', {
-              duration: 10000
-            });
-          }
+            else{
+              this.studentViewSibling.studentMaster=null;
+            }
         } else {  
           this.studentViewSibling.studentMaster=res.studentMaster;
         }
@@ -115,12 +133,12 @@ export class SiblingsinfoComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Sibling is failed to remove.' + res._message, '', {
+          this.snackbar.open( res._message, '', {
             duration: 10000
           });
         } else {  
           this.getAllSiblings();
-          this.snackbar.open('Association has been removed','Thanks', {
+          this.snackbar.open(res._message,'', {
             duration: 10000
           });
         }

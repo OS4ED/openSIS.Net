@@ -9,18 +9,27 @@ import { Observable, throwError } from 'rxjs';
 import { catchError, retry } from 'rxjs/operators';
 import { ResponseMessageService } from './response-message.service';
 import { Injector,Injectable } from '@angular/core';
+import { LoginService } from './login.service';
+import { Router } from '@angular/router';
+import { environment } from '../../environments/environment';
+import { LoaderService } from './loader.service';
 
 @Injectable()
 
 export class ErrorIntercept implements HttpInterceptor {
-    constructor(private injector: Injector) { 
-
+    private requests: HttpRequest<any>[] = [];
+    apiUrl: string = environment.apiURL;
+    tenant: string='opensisv2';
+    constructor(private injector: Injector,private loginService:LoginService,private router:Router) { 
     }
+
     intercept(
         request: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
-
+        if (!this.loginService.isAuthenticated()) {
+            this.router.navigate(['/']);
+          }
         return next.handle(request)
             .pipe(
                 retry(1),
@@ -42,4 +51,5 @@ export class ErrorIntercept implements HttpInterceptor {
                 })
             )
     }
+      
 }

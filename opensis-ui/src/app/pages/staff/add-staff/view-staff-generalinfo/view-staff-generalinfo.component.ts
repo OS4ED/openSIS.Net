@@ -13,20 +13,20 @@ import { SharedFunction } from '../../../shared/shared-function';
   ]
 })
 export class ViewStaffGeneralinfoComponent implements OnInit {
-  @Input() staffCreateMode
-  @Input() categoryId
-  @Input() staffViewDetails:StaffAddModel
-  @Input() nameOfMiscValues
+  @Input() staffCreateMode;
+  @Input() categoryId;
+  @Input() staffViewDetails: StaffAddModel;
+  @Input() nameOfMiscValues;
   module = 'Staff';
-  staffPortalAccess:string;
+  staffPortalAccess: string;
   constructor(public translateService: TranslateService,
-    private commonFunction: SharedFunction
-  ) { 
+              private commonFunction: SharedFunction
+              ) {
     translateService.use('en');
   }
 
   ngOnInit(): void {
-this.viewPortalAccess();
+    this.viewPortalAccess();
   }
 
   viewPortalAccess() {

@@ -5,17 +5,20 @@ import { MatDialog } from '@angular/material/dialog';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
 import { EditNoticeComponent } from '../notices/edit-notice/edit-notice.component';
-import { NoticeService } from '../../../../app/services/notice.service';
-import { NoticeListViewModel } from '../../../../app/models/noticeModel';
+import { NoticeService } from '../../../services/notice.service';
+import { NoticeListViewModel } from '../../../models/noticeModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
-import { MembershipService } from '../../../../app/services/membership.service';
-import { GetAllMembersList } from '../../../../app/models/membershipModel';
+import { MembershipService } from '../../../services/membership.service';
+import { GetAllMembersList } from '../../../models/membershipModel';
 import moment from 'moment';
 import { LoaderService } from '../../../services/loader.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LayoutService } from 'src/@vex/services/layout.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { CryptoService } from '../../../services/Crypto.service';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-notices',
@@ -38,22 +41,29 @@ export class NoticesComponent implements OnInit, OnDestroy {
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   loading:boolean;
   destroySubject$: Subject<void> = new Subject();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
-  constructor(private dialog: MatDialog, 
-    public translateService: TranslateService, 
-    private noticeService: NoticeService,
-    private membershipService:MembershipService, 
-    private snackbar: MatSnackBar,
-    private loaderService: LoaderService,
-    private cdr: ChangeDetectorRef,
-    private layoutService: LayoutService) {
+  constructor(private dialog: MatDialog,
+              public translateService: TranslateService,
+              private noticeService: NoticeService,
+              private membershipService: MembershipService,
+              private snackbar: MatSnackBar,
+              private loaderService: LoaderService,
+              private cdr: ChangeDetectorRef,
+              public rollBasedAccessService: RollBasedAccessService,
+              private layoutService: LayoutService,
+              private cryptoService: CryptoService) {
     translateService.use('en');
-    if(localStorage.getItem("collapseValue") !== null){
-      if( localStorage.getItem("collapseValue") === "false"){
+    if (localStorage.getItem('collapseValue') !== null){
+      if ( localStorage.getItem('collapseValue') === 'false'){
         this.layoutService.expandSidenav();
       }else{
         this.layoutService.collapseSidenav();
-      } 
+      }
     }else{
       this.layoutService.expandSidenav();
     }
@@ -61,16 +71,23 @@ export class NoticesComponent implements OnInit, OnDestroy {
       this.loading = v;
     });
     this.noticeService.currentNotice.pipe(takeUntil(this.destroySubject$)).subscribe(
-      res=>{
-        if(res){
+      res => {
+        if (res){
           this.showRecords('All');
         }
       }
-    )
+    );
 
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 2);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 4);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+
     this.showRecords('All');
     this.getMemberList();
   }

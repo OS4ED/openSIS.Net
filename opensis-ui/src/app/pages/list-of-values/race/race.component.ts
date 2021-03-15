@@ -120,11 +120,16 @@ export class RaceComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.raceListModel=new MatTableDataSource(res.dropdownList) ;
-            this.listCount=this.raceListModel.data;
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
+            if (res.dropdownList == null) {
+              this.raceListModel= new MatTableDataSource(null);
+              this.listCount=this.raceListModel.data;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.raceListModel= new MatTableDataSource(null);
+              this.listCount=this.raceListModel.data;
+            }
           }
           else {
             this.raceListModel = new MatTableDataSource(res.dropdownList);
@@ -165,7 +170,7 @@ export class RaceComponent implements OnInit {
   }
 
   deleteRaceData(element){
-    this.lovAddView.dropdownValue=element
+    this.lovAddView.dropdownValue.id=element.id
     this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
       (res:LovAddView)=>{
         if(typeof(res)=='undefined'){
@@ -175,12 +180,12 @@ export class RaceComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Race Deletion failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Race Deleted Successfully. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
             this.getAllRace()

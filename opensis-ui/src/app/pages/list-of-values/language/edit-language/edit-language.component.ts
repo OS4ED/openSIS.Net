@@ -69,11 +69,11 @@ export class EditLanguageComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Language Submission failed. ' + data._message, '', {
+              this.snackbar.open('' + data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Language Submission Successful.', '', {
+              this.snackbar.open(''+ data._message, '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);
@@ -96,11 +96,11 @@ export class EditLanguageComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Language Updation failed. ' + data._message, '', {
+              this.snackbar.open('' + data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Language Updation Successful.', '', {
+              this.snackbar.open('' + data._message, '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);

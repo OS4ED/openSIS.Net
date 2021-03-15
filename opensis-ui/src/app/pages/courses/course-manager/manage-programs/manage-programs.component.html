@@ -39,7 +39,7 @@
             <form (ngSubmit)="update.form.valid && submit()" #update="ngForm" novalidate>
                 <div class="flex my-3 px-6 items-center">
                     <div class="w-3/4 pr-4">
-                        <input type="text"  [(ngModel)]="addProgramModel.programList[0].programName" name="programName"  #programName="ngModel"  placeholder="Program Name" class="border rounded p-3 w-full box-border focus:border-0 focus:border-none focus:outline-none border-gray-light" matInput
+                        <input type="text"  [(ngModel)]="addProgramModel.programList[0].programName" name="programName"  #programName="ngModel"  placeholder="Program Name" class="border rounded w-full box-border focus:border-0 focus:border-none focus:outline-none border-gray-light" matInput
                         required>                   
                     </div>
                     <div class="w-1/4">

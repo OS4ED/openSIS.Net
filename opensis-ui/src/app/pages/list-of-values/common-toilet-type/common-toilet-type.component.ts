@@ -123,7 +123,7 @@ export class CommonToiletTypeComponent implements OnInit {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
   deleteCommonToiletTypedata(element){
-    this.lovAddView.dropdownValue=element
+    this.lovAddView.dropdownValue.id=element.id
     this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
       (res:LovAddView)=>{
         if(typeof(res)=='undefined'){
@@ -173,11 +173,16 @@ export class CommonToiletTypeComponent implements OnInit {
         }
         else{
           if (res._failure) { 
-            this.commonToiletTypeList=new MatTableDataSource(res.dropdownList) ;
-            this.listCount=this.commonToiletTypeList.data 
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
+            if (res.dropdownList == null) {
+              this.commonToiletTypeList= new MatTableDataSource(null);
+              this.listCount=this.commonToiletTypeList.data;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.commonToiletTypeList= new MatTableDataSource(null);
+              this.listCount=this.commonToiletTypeList.data;
+            }
           } 
           else { 
             this.commonToiletTypeList=new MatTableDataSource(res.dropdownList) ;

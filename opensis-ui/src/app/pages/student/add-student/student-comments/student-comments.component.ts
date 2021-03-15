@@ -19,6 +19,8 @@ import { ConfirmDialogComponent } from '../../../../pages/shared-module/confirm-
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { SharedFunction } from '../../../../pages/shared/shared-function';
 import { DatePipe } from '@angular/common';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 
 
 @Component({
@@ -45,6 +47,11 @@ export class StudentCommentsComponent implements OnInit {
   @Input() studentDetailsForViewAndEdit;
   studentCommentsListViewModel:StudentCommentsListViewModel= new StudentCommentsListViewModel();
   studentCommentsAddView:StudentCommentsAddView=new StudentCommentsAddView();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(
     private fb: FormBuilder, 
@@ -54,12 +61,21 @@ export class StudentCommentsComponent implements OnInit {
     private studentService:StudentService,
     private commonFunction:SharedFunction,
     private excelService:ExcelService,
-    private datePipe: DatePipe
+    private datePipe: DatePipe,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
   }
 
   ngOnInit(): void {
+
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 8);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllComments();
   }
 
@@ -84,17 +100,21 @@ export class StudentCommentsComponent implements OnInit {
         }
         else{
           if (res._failure) {     
-            if(res._message==="NO RECORD FOUND"){
+          
               if(res.studentCommentsList==null){
+                this.listCount =null;
+                this.studentCommentsListViewModel.studentCommentsList=null ;
+                this.snackbar.open( res._message, '', {
+                  duration: 10000
+                });
+              }else{
                 this.listCount =null;
                 this.studentCommentsListViewModel.studentCommentsList=null ;
               }
              
-            } else{
-              this.snackbar.open( res._message, '', {
-                duration: 10000
-              });
-            }
+            /* else{
+              
+            } */
           }
           else {       
             this.studentCommentsListViewModel.studentCommentsList=res.studentCommentsList

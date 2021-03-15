@@ -8,7 +8,7 @@
         </div>
         <div class="flex py-3 border-t border-normal" *ngFor="let row of divCount;let index=index">
             <div class="w-1/12 text-center pt-2" >
-                <a class="cursor-pointer" (click)="deleteRow(index)" *ngIf="!detailsFromParentModal.editMode">
+                <a class="cursor-pointer" (click)="deleteRow(index)">
                     <mat-icon [icIcon]="icClose"></mat-icon>
                 </a>
             </div>
@@ -58,7 +58,7 @@
                 <mat-slide-toggle color="primary" name="{{'takeAttendance'+index}}" [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].takeAttendance"></mat-slide-toggle>
             </div>
         </div> 
-        <div class="border-t border-normal px-6 py-3" *ngIf="!detailsFromParentModal.editMode">
+        <div class="border-t border-normal px-6 py-3">
             <a class="text-blue cursor-pointer" (click)="addMoreRotatingScheduleRow()">
                 <mat-icon [icIcon]="icPlusCircle" class="mr-2 align-middle"></mat-icon>{{'addAnotherDay' |
                 translate}}

@@ -8,6 +8,7 @@ namespace opensis.data.Models
         public PermissionGroup()
         {
             PermissionCategory = new HashSet<PermissionCategory>();
+            RolePermission = new HashSet<RolePermission>();
         }
 
         public Guid TenantId { get; set; }
@@ -28,5 +29,6 @@ namespace opensis.data.Models
         public bool? Active { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual ICollection<PermissionCategory> PermissionCategory { get; set; }
+        public virtual ICollection<RolePermission> RolePermission { get; set; }
     }
 }

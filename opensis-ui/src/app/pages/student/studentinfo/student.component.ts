@@ -27,6 +27,12 @@ import { MatDialog } from '@angular/material/dialog';
 import { SaveFilterComponent } from './save-filter/save-filter.component';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 import { SchoolCreate } from '../../../enums/school-create.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RollBasedAccessService } from 'src/app/services/rollBasedAccess.service';
+import { CryptoService } from 'src/app/services/Crypto.service';
+import { CommonService } from '../../../services/common.service';
+import { SearchFilter, SearchFilterAddViewModel, SearchFilterListViewModel } from '../../../models/searchFilterModel';
+import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 
 @Component({
   selector: 'vex-student',
@@ -60,29 +66,42 @@ export class StudentComponent implements OnInit,OnDestroy {
   icFilterList = icFilterList;
   fapluscircle = "fa-plus-circle";
   tenant = "";
+  filterValue:number;
+  searchFilter: SearchFilter= new SearchFilter();
+  filterJsonParams;
   loading:boolean;
+  showSaveFilter:boolean = false;
   allStudentList=[];
   destroySubject$: Subject<void> = new Subject();
-  getAllStudent: StudentListModel = new StudentListModel(); 
+  getAllStudent: StudentListModel = new StudentListModel();
+  searchFilterAddViewModel: SearchFilterAddViewModel = new SearchFilterAddViewModel();
+  searchFilterListViewModel: SearchFilterListViewModel= new SearchFilterListViewModel();
   StudentModelList: MatTableDataSource<any>;
   showAdvanceSearchPanel: boolean = false;
-  
   moduleIdentifier=ModuleIdentifier;
   createMode=SchoolCreate;
   
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort
-
+  showLoadFilter=true;
   constructor(
-    private studentService: StudentService,
-    private snackbar: MatSnackBar,
-    private router: Router,
-    private loaderService:LoaderService,
-    private imageCropperService:ImageCropperService,
-    private layoutService: LayoutService,
-    private excelService: ExcelService,
-    public translateService: TranslateService,
-    private dialog: MatDialog
+              private studentService: StudentService,
+              private snackbar: MatSnackBar,
+              private router: Router,
+              private loaderService:LoaderService,
+              private imageCropperService:ImageCropperService,
+              private layoutService: LayoutService,
+              private excelService: ExcelService,
+              private cryptoService: CryptoService,
+              public translateService: TranslateService,
+              public rollBasedAccessService: RollBasedAccessService,
+      private dialog: MatDialog,
+      private commonService: CommonService
   ) {
     translateService.use('en');
      this.getAllStudent.filterParams=null;
@@ -102,10 +121,18 @@ export class StudentComponent implements OnInit,OnDestroy {
     }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
     this.searchCtrl = new FormControl();
+    this.getAllSearchFilter();
   }
 
   getSearchResult(res){
+    this.showSaveFilter= true;
     this.totalCount= res.totalCount;
     this.pageNumber = res.pageNumber;
     this.pageSize = res.pageSize;
@@ -182,9 +209,109 @@ export class StudentComponent implements OnInit,OnDestroy {
 
   saveFilter(){
     this.dialog.open(SaveFilterComponent, {
-      width: '500px'
-    })
+      width: '500px',
+      data: null
+    }).afterClosed().subscribe(data => {
+      if(data==='submited'){
+        this.showSaveFilter=false;
+        this.getAllSearchFilter();
+      }
+    });
   }
+
+  getAllSearchFilter(){
+    this.searchFilterListViewModel.module='Student';
+    this.searchFilterListViewModel.schoolId = + sessionStorage.getItem('selectedSchoolId');
+    this.searchFilterListViewModel.tenantId = sessionStorage.getItem("tenantId");
+    this.commonService.getAllSearchFilter(this.searchFilterListViewModel).subscribe((res) => {
+      if (typeof (res) === 'undefined') {
+        this.snackbar.open('Filter list failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          this.searchFilterListViewModel.searchFilterList=[]
+        }
+        else {
+          this.searchFilterListViewModel= res;
+        }
+      }
+    }
+    );
+  }
+
+  editFilter(){
+    this.showAdvanceSearchPanel = true;
+    this.filterJsonParams = this.searchFilter;
+  }
+
+  deleteFilter(){
+   
+    const dialogRef = this.dialog.open(ConfirmDialogComponent, {
+      maxWidth: '400px',
+      data: {
+          title: 'Are you sure?',
+          message: 'You are about to delete ' + this.searchFilter.filterName + '.'}
+    });
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if (dialogResult){
+        this.deleteFilterdata(this.searchFilter);
+      }
+   });
+  }
+
+  deleteFilterdata(filterData){
+    this.searchFilterAddViewModel.searchFilter = filterData;
+    this.commonService.deleteSearchFilter(this.searchFilterAddViewModel).subscribe(
+      (res: SearchFilterAddViewModel) => {
+        if (typeof(res) === 'undefined'){
+          this.snackbar.open('' + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
+        else{
+          if (res._failure) {
+            this.snackbar.open('' + res._message, '', {
+              duration: 10000
+            });
+          }
+          else {
+            this.getAllSearchFilter();
+            this.showLoadFilter=true;
+            this.searchFilter = new SearchFilter();
+          }
+        }
+      }
+    );
+  }
+
+  searchByFilterName(filter){
+    this.searchFilter= filter;
+    this.showLoadFilter=false;
+    this.showSaveFilter=false;
+    this.getAllStudent.filterParams = JSON.parse(filter.jsonList);
+    this.getAllStudent.sortingModel = null;
+    this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
+      if(data._failure){
+        if(data.studentMaster===null){
+            this.StudentModelList = new MatTableDataSource([]);  
+            this.snackbar.open(data._message, '', {
+              duration: 10000
+            }); 
+        } else{
+          this.StudentModelList = new MatTableDataSource([]);
+        }
+      }else{
+        this.totalCount= data.totalCount;
+        this.pageNumber = data.pageNumber;
+        this.pageSize = data._pageSize;
+        this.StudentModelList = new MatTableDataSource(data.studentMaster);      
+        this.getAllStudent=new StudentListModel();     
+      }
+    });
+  }
+
 
   viewStudentDetails(id){  
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.createMode.VIEW});
@@ -218,12 +345,13 @@ export class StudentComponent implements OnInit,OnDestroy {
     }
     this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if(data._failure){
-        if(data._message==="NO RECORD FOUND"){
+        if(data.studentMaster===null){
             this.StudentModelList = new MatTableDataSource([]);   
+            this.snackbar.open( data._message, '', {
+              duration: 10000
+            });
         } else{
-          this.snackbar.open('Student List failed. ' + data._message, '', {
-            duration: 10000
-          });
+          this.StudentModelList = new MatTableDataSource([]);   
         }
       }else{
         this.totalCount= data.totalCount;
@@ -275,6 +403,8 @@ export class StudentComponent implements OnInit,OnDestroy {
 
   hideAdvanceSearch(event){
     this.showAdvanceSearchPanel = false;
+    this.getAllSearchFilter();
+    this.searchFilter = new SearchFilter();
   }
 
 

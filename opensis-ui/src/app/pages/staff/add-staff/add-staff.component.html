@@ -9,30 +9,9 @@
             </div>
             <div class="text-center px-4">
                 <h5 class="text-primary font-semibold mb-0">{{staffTitle}}</h5>
-                <div class="rounded-full py-1 px-3 bg-gray text-white inline-block mt-3">{{'teacher'|translate}}</div>
+                <div class="rounded-full py-1 px-3 bg-gray text-white inline-block mt-3" *ngIf="profile">{{profile}}</div>
             </div>
             <hr class="mt-4" />
-
-            <!-- <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header>
-                        <mat-panel-title>
-                            <mat-icon class="mr-3"></mat-icon> Staff Details
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <div class="px-gutter sm:px-0">
-                       
-                                <a @fadeInRight *ngFor="let field of fieldsCategory; let index =index"
-                                (click)="changeCategory(field,index)"
-                                class="list-item mt-2 no-underline flex items-center rounded-none" matRipple
-                                 [ngClass]="currentCategory==field.categoryId?'text-primary active' : ''"
-                                    >
-                                    <mat-icon *ngIf="currentCategory==12" [icIcon]="icGeneralInfo" class="mr-3"></mat-icon>
-                                    {{field.title}}</a>
-                         
-                    </div>
-                </mat-expansion-panel>
-            </mat-accordion> -->
             <div class="px-gutter sm:px-0">
                 <a @fadeInRight *ngFor="let field of fieldsCategory; let index =index"
                     (click)="changeCategory(field,index)"
@@ -45,38 +24,8 @@
                     <mat-icon *ngIf="field.categoryId>15" [icIcon]="icCustomCategory" class="mr-3"></mat-icon>
                     {{field.title}}
                 </a>
-
             </div>
-            <!-- <div class="px-gutter sm:px-0">
-                <a @fadeInRight routerLink="" (click)='showPage("General Info")'
-                    [ngClass]=" pageId =='General Info' ? 'text-primary active' : ''"
-                    class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
-                    <mat-icon [icIcon]="icGeneralInfo" class="mr-3"></mat-icon> {{'generalInfo'|translate}}
-                </a>
-                <a @fadeInRight routerLink="" (click)='showPage("School Info")'
-                    [ngClass]=" pageId =='School Info' ? 'text-primary active' : ''"
-                    class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
-                    <mat-icon [icIcon]="icSchoolInfo" class="mr-3"></mat-icon> {{'schoolInfo'|translate}}
-                </a>
-                <a @fadeInRight routerLink="" (click)='showPage("Address & Contact Info")'
-                    [ngClass]=" pageId =='Address & Contact Info' ? 'text-primary active' : ''"
-                    class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
-                    <mat-icon [icIcon]="icAddressInfo" class="mr-3"></mat-icon> {{'addressContactInfo'|translate}}
-                </a>
-                <a @fadeInRight routerLink="" (click)='showPage("Certification Info")'
-                    [ngClass]=" pageId =='Certification Info' ? 'text-primary active' : ''"
-                    class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
-                    <mat-icon [icIcon]="icCertificationInfo" class="mr-3"></mat-icon> {{'certificationInfo'|translate}}
-                </a>
-                <a @fadeInRight routerLink="" (click)='showPage("Login Info")' [ngClass]=" pageId =='Login Info' ? 'text-primary active' : ''" class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
-                    <mat-icon [icIcon]="icLoginInfo" class="mr-3"></mat-icon> Login Info
-                </a>
-                <a @fadeInRight routerLink="" (click)='showPage("Schedule")'
-                    [ngClass]=" pageId =='Schedule' ? 'text-primary active' : ''"
-                    class="list-item mt-2 no-underline flex items-center rounded-none" matRipple>
-                    <mat-icon [icIcon]="icSchedule" class="mr-3"></mat-icon> {{'schedule'|translate}}
-                </a>
-            </div> -->
+           
         </vex-scrollbar>
     </div>
     <div class="right-content">
@@ -98,7 +47,7 @@
                             </vex-staff-generalinfo>
 
                             <vex-staff-schoolinfo *ngIf="currentCategory==13" [staffCreateMode]="staffCreateMode"
-                                [staffDetailsForViewAndEdit]="staffAddModel"></vex-staff-schoolinfo>
+                                [staffDetailsForViewAndEdit]="staffAddModel" (checkUpdatedProfileName)="profileFromSchoolInfo($event)"></vex-staff-schoolinfo>
 
 
                             <vex-staff-addressinfo *ngIf="currentCategory==14" [staffCreateMode]="staffCreateMode"

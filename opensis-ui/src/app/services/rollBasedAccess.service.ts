@@ -3,18 +3,21 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { PermissionGroupListViewModel, RolePermissionListViewModel } from '../models/rollBasedAccessModel';
 import { BehaviorSubject } from 'rxjs';
+import { CryptoService } from './Crypto.service';
 
 @Injectable({
     providedIn: 'root'
 })
 export class RollBasedAccessService {
     private permissionList = new BehaviorSubject([]);
+    private permission;
     currentpermissionList= this.permissionList.asObservable();
-    private member = new BehaviorSubject([]);
+    private obj={"memberId": 0, "memberTitle":"","memberDescription":""}
+    private member = new BehaviorSubject(this.obj);
     selectedMember= this.member.asObservable();
 
     apiUrl: string = environment.apiURL;
-    constructor(private http: HttpClient) { }
+    constructor(private http: HttpClient, private cryptoService: CryptoService) { }
     getAllPermissionGroup(permission: PermissionGroupListViewModel) {
         let apiurl = this.apiUrl + permission._tenantName + "/RoleBasedAccess/getAllPermissionGroup";
         return this.http.post<PermissionGroupListViewModel>(apiurl, permission)
@@ -25,6 +28,14 @@ export class RollBasedAccessService {
         return this.http.post<RolePermissionListViewModel>(apiurl, permission)
     }
 
+    getPermission(){
+      return this.permission;
+    }
+
+    setPermission(){
+        this.permission = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')))
+    }
+    
     updateRolePermission(permission: PermissionGroupListViewModel) {
         let apiurl = this.apiUrl + permission._tenantName + "/RoleBasedAccess/updateRolePermission";
         return this.http.put<PermissionGroupListViewModel>(apiurl, permission)
@@ -35,4 +46,12 @@ export class RollBasedAccessService {
     sendSelectedMember(member){
         this.member.next(member)
     }
+
+    private accessControlStatus = new BehaviorSubject<boolean>(false);
+    permissionsChanged = this.accessControlStatus.asObservable();
+  
+    changeAccessControl(message:boolean) {
+      this.accessControlStatus.next(message)
+    }
+
 }

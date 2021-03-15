@@ -18,7 +18,7 @@
                             <mat-button-toggle value="past">{{'past' | translate}}</mat-button-toggle>
                         </mat-button-toggle-group>
                     </div>
-                    <button (click)="openAddNew()" type="button" color="primary" mat-raised-button>
+                    <button *ngIf="addPermission" (click)="openAddNew()" type="button" color="primary" mat-raised-button>
                         <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true">
                         </ic-icon>{{'addNotice' | translate}} 
                     </button>

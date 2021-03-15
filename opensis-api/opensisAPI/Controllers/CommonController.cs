@@ -397,5 +397,37 @@ namespace opensisAPI.Controllers
             }
             return searchFilterList;
         }
+
+        [HttpPost("getAllGradeAgeRange")]
+        public ActionResult<GradeAgeRangeListViewModel> GetAllGradeAgeRange(GradeAgeRangeListViewModel gradeAgeRangeListViewModel)
+        {
+            GradeAgeRangeListViewModel gradeAgeRangeList = new GradeAgeRangeListViewModel();
+            try
+            {
+                gradeAgeRangeList = _commonService.GetAllGradeAgeRange(gradeAgeRangeListViewModel);
+            }
+            catch (Exception es)
+            {
+                gradeAgeRangeList._message = es.Message;
+                gradeAgeRangeList._failure = true;
+            }
+            return gradeAgeRangeList;
+        }
+
+        [HttpPost("getAllGradeEducationalStage")]
+        public ActionResult<GradeEducationalStageListViewModel> GetAllGradeEducationalStage(GradeEducationalStageListViewModel gradeEducationalStageListViewModel)
+        {
+            GradeEducationalStageListViewModel gradeEducationalStageList = new GradeEducationalStageListViewModel();
+            try
+            {
+                gradeEducationalStageList = _commonService.GetAllGradeEducationalStage(gradeEducationalStageListViewModel);
+            }
+            catch (Exception es)
+            {
+                gradeEducationalStageList._message = es.Message;
+                gradeEducationalStageList._failure = true;
+            }
+            return gradeEducationalStageList;
+        }
     }
 }

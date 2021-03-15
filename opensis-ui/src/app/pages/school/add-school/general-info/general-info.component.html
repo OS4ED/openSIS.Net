@@ -469,7 +469,7 @@
 <mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == schoolCreate.VIEW">
     <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto font-medium">{{'generalInformation' | translate}}</h3>
-        <button mat-raised-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit" style="font-size: 20px;" class="mr-1"></mat-icon>{{'editInformation' |translate}}</button>
+        <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit" style="font-size: 20px;" class="mr-1"></mat-icon>{{'editInformation' |translate}}</button>
     </div>
     <vex-view-general-info [schoolCreateMode]="schoolCreateMode"
      [categoryId]="categoryId"

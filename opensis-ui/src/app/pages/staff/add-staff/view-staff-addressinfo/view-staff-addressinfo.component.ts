@@ -33,39 +33,32 @@ export class ViewStaffAddressinfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-  }
-  showHomeAddressOnGoogleMap(){
-    const stAdd1 = this.staffViewDetails.staffMaster.homeAddressLineOne;
-    const stAdd2 = this.staffViewDetails.staffMaster.homeAddressLineTwo;
-    const city = this.staffViewDetails.staffMaster.homeAddressCity;
-    const country = this.nameOfMiscValues.countryName;
-    const state = this.staffViewDetails.staffMaster.homeAddressState;
-    const zip = this.staffViewDetails.staffMaster.homeAddressZip;
-    if (stAdd1 && country && city && zip){
-      this.homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1},${stAdd2},${city},${state},${zip},${country}`;
-      window.open(this.homeAddressMapUrl, '_blank');
-    }else{
-      this.snackbar.open('Invalid home address', 'Ok', {
-        duration: 5000
-      });
-    }
+    this.nameOfMiscValues.countryName=this.nameOfMiscValues.countryName=='-'?'':this.nameOfMiscValues.countryName;
+    this.nameOfMiscValues.mailingAddressCountry=this.nameOfMiscValues.mailingAddressCountry=='-'?'':this.nameOfMiscValues.mailingAddressCountry;
 
   }
+  showHomeAddressOnGoogleMap(){
+    let stAdd1 = this.staffViewDetails.staffMaster.homeAddressLineOne;
+    let stAdd2 = this.staffViewDetails.staffMaster.homeAddressLineTwo;
+    let city = this.staffViewDetails.staffMaster.homeAddressCity;
+    let country = this.nameOfMiscValues.countryName;
+    let state = this.staffViewDetails.staffMaster.homeAddressState;
+    let zip = this.staffViewDetails.staffMaster.homeAddressZip;
+
+      this.homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${country?','+country:''}${zip?','+zip:''}`;
+      window.open(this.homeAddressMapUrl, '_blank');
+    
+  }
   showMailingAddressOnGoogleMap(){
-    const stAdd1 = this.staffViewDetails.staffMaster.mailingAddressLineOne;
-    const stAdd2 = this.staffViewDetails.staffMaster.mailingAddressLineTwo;
-    const city = this.staffViewDetails.staffMaster.mailingAddressCity;
-    const country = this.nameOfMiscValues.mailingAddressCountry;
-    const state = this.staffViewDetails.staffMaster.mailingAddressState;
-    const zip = this.staffViewDetails.staffMaster.mailingAddressZip;
-    if (stAdd1 && country && city && zip){
-      this.mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1},${stAdd2},${city},${state},${zip},${country}`;
+    let stAdd1 = this.staffViewDetails.staffMaster.mailingAddressLineOne;
+    let stAdd2 = this.staffViewDetails.staffMaster.mailingAddressLineTwo;
+    let city = this.staffViewDetails.staffMaster.mailingAddressCity;
+    let country = this.nameOfMiscValues.mailingAddressCountry;
+    let state = this.staffViewDetails.staffMaster.mailingAddressState;
+    let zip = this.staffViewDetails.staffMaster.mailingAddressZip;
+      this.mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${country?','+country:''}${zip?','+zip:''}`;
       window.open(this.mailingAddressMapUrl, '_blank');
-    }else{
-      this.snackbar.open('Invalid mailing address', 'Ok', {
-        duration: 5000
-      });
-    }
+    
   }
 
 }

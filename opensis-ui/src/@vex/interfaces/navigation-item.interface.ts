@@ -1,6 +1,7 @@
 import { Icon } from '@visurel/iconify-angular';
+import { MenuModel } from 'src/app/models/menu.model';
 
-export type NavigationItem = NavigationLink | NavigationDropdown | NavigationSubheading;
+export type NavigationItem = NavigationLink | NavigationDropdown | NavigationSubheading | MenuModel;
 
 export interface NavigationLink {
   type: 'link';

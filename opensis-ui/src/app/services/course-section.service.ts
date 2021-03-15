@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { CourseSectionAddViewModel, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel} from '../models/courseSectionModel';
+import { CourseSectionAddViewModel, DeleteCourseSectionSchedule, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel} from '../models/courseSectionModel';
 import { CryptoService } from './Crypto.service';
 
 @Injectable({
@@ -40,6 +40,11 @@ export class CourseSectionService {
     getAllCourseStandardForCourseSection(courseSection : GetAllCourseStandardForCourseSectionModel){
       let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllCourseStandardForCourseSection";
       return this.http.post<GetAllCourseStandardForCourseSectionModel>(apiurl, courseSection)
+    }
+
+    deleteSchedule(courseSection : DeleteCourseSectionSchedule){
+      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/deleteSchedule";
+      return this.http.post<DeleteCourseSectionSchedule>(apiurl, courseSection)
     }
     
 }

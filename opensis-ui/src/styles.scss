@@ -329,13 +329,16 @@
 }
 
 .ql-toolbar{
-
   &.ql-snow {
     box-shadow: none ;
     border-bottom: 1px solid var(--foreground-divider);
   }
-
 }
+
+.mat-drawer.mat-drawer-side {
+    z-index: 4 !important;
+}
+
 
 .border-normal {
   border-color: rgba(0,0,0,0.1);
@@ -984,5 +987,8 @@ table {
   }
   &.spinner-green circle {
     stroke: #4caf50;
+  }
+  &.spinner-blue circle {
+    stroke: #0C3F8A;
   }
 }

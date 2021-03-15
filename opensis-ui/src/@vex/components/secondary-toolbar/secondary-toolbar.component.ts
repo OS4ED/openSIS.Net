@@ -27,10 +27,10 @@ export class SecondaryToolbarComponent implements OnInit {
   );
 
   constructor(private configService: ConfigService) {
-    this.selectedValue=localStorage.getItem("pageId");
    }
-
+  
   ngOnInit() {
+    this.selectedValue=localStorage.getItem("pageId");
   }
 
   changePage(pageName){

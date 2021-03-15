@@ -14,9 +14,9 @@
         <mat-error *ngIf="form.get('gradeScaleName').hasError('whitespace')">{{'gradeScaleNameIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
-    <mat-form-field class="w-full" appearance="outline" color="primary">
+    <mat-form-field *ngIf="form.controls?.gradeScaleValue" class="w-full" appearance="outline" color="primary">
         <mat-label>{{'scaleValue' | translate}}</mat-label>
-        <input type="text" matInput formControlName="gradeScaleValue" required >
+        <input type="number" matInput formControlName="gradeScaleValue" required >
         <mat-error *ngIf="form.get('gradeScaleValue').hasError('whitespace')">{{'scaleValueIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
@@ -28,7 +28,7 @@
 
     <div class="flex">
         <mat-slide-toggle class="mr-4" formControlName="calculateGpa" color="primary">{{'calculateGPA' | translate}}</mat-slide-toggle>
-        <mat-slide-toggle formControlName="useAsStandardGradeScale" color="primary">{{'useAsStandardGradeScale' | translate}}</mat-slide-toggle>
+        <mat-slide-toggle (change)="onStandardGradeScaleChange($event.checked)" formControlName="useAsStandardGradeScale" color="primary">{{'useAsStandardGradeScale' | translate}}</mat-slide-toggle>
     </div>
 
 </mat-dialog-content>

@@ -401,15 +401,13 @@ namespace opensis.data.Repository
                     }
 
                     school.schoolMaster.Membership = new List<Membership>() {
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Super Administrator",MembershipId= 1},
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Administrator",MembershipId= 2},
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher",MembershipId= 3 },
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Student",MembershipId= 4},
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent",MembershipId= 5},
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Admin Assistant",MembershipId= 6},
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Administrator w/Custom",MembershipId= 7},
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher w/Custom",MembershipId= 8},
-                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent w/Custom",MembershipId= 9},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Super Administrator", IsActive= true, IsSuperadmin= true, IsSystem= true, MembershipId= 1, ProfileType= "Super Administrator"},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "School Administrator", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 2, ProfileType= "School Administrator"},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Admin Assistant", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 3, ProfileType= "Admin Assistant"},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Teacher", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 4, ProfileType= "Teacher"},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Homeroom Teacher", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 5, ProfileType= "Homeroom Teacher"},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 6, ProfileType= "Parent"},
+                    new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Student", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 7, ProfileType= "Student"},
                 };
                     long? dpdownValueId = Utility.GetMaxLongPK(this.context, new Func<DpdownValuelist, long>(x => x.Id));
                     school.schoolMaster.DpdownValuelist = new List<DpdownValuelist>() {
@@ -538,6 +536,15 @@ namespace opensis.data.Repository
                      new Block(){TenantId=school.schoolMaster.TenantId, SchoolId=school.schoolMaster.SchoolId, BlockId=1, BlockTitle="All Day", BlockSortOrder=1, CreatedOn=DateTime.UtcNow, CreatedBy=school.schoolMaster.CreatedBy }
                 };
 
+                ReleaseNumber releaseNumber = new ReleaseNumber();
+                {
+                        releaseNumber.TenantId = school.schoolMaster.TenantId;
+                        releaseNumber.SchoolId = school.schoolMaster.SchoolId;
+                        releaseNumber.ReleaseNumber1 = "v1.0.0";
+                        releaseNumber.ReleaseDate = DateTime.UtcNow;
+                }
+                
+
                     //insert into permission group
                     var dataGroup = System.IO.File.ReadAllText(@"Group.json");
                     JsonSerializerSettings settingGrp = new JsonSerializerSettings();
@@ -602,6 +609,7 @@ namespace opensis.data.Repository
                     }
 
                     this.context?.SchoolMaster.Add(school.schoolMaster);
+                    this.context?.ReleaseNumber.Add(releaseNumber);
                     this.context?.SaveChanges();
                     transaction.Commit();
                     school._failure = false;

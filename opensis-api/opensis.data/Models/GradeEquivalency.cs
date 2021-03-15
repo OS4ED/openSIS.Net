@@ -11,9 +11,8 @@ namespace opensis.data.Models
             Gradelevels = new HashSet<Gradelevels>();
         }
 
-        public string IscedGradeLevel { get; set; }
-        public string GradeDescription { get; set; }
-        public string AgeRange { get; set; }
+        public int EquivalencyId { get; set; }
+        public string GradeLevelEquivalency { get; set; }
 
         public virtual ICollection<Gradelevels> Gradelevels { get; set; }
     }

@@ -29,7 +29,7 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { ScrollbarModule } from '../../../../@vex/components/scrollbar/scrollbar.module';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 
 
@@ -67,7 +67,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatCheckboxModule,
     ScrollbarModule,
     MatExpansionModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    SharedModuleModule
   ]
 })
 export class AdministrationSettingsModule { }

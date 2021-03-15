@@ -22,6 +22,8 @@ import { LoaderService } from '../../../services/loader.service';
 import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
 import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum';
 import { CdkDragDrop} from '@angular/cdk/drag-drop';
+import { CryptoService } from '../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
 
 
 @Component({
@@ -62,6 +64,11 @@ export class StudentFieldsComponent implements OnInit {
   fieldsCategoryListView:FieldsCategoryListView= new FieldsCategoryListView();
   fieldsCategoryAddView:FieldsCategoryAddView= new FieldsCategoryAddView();
   customFieldDragDropModel:CustomFieldDragDropModel= new CustomFieldDragDropModel();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(
     private router: Router,
@@ -69,7 +76,8 @@ export class StudentFieldsComponent implements OnInit {
     private dialog: MatDialog,
     public translateService:TranslateService,
     private customFieldservice:CustomFieldService,
-    private loaderService:LoaderService
+    private loaderService:LoaderService,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -89,6 +97,13 @@ export class StudentFieldsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 23);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 24);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllCustomFieldCategory()
   }
   selectCategory(element){
@@ -190,9 +205,14 @@ export class StudentFieldsComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open( res._message, '', {
-              duration: 10000
-            });
+            if (res.fieldsCategoryList == null) {
+              this.fieldsCategoryList = [];
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.fieldsCategoryList = []
+            }
           } 
           else{
             this.fieldsCategoryList= res.fieldsCategoryList 

@@ -18,6 +18,8 @@ import icEdit from '@iconify/icons-ic/edit';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { MiscModel } from '../../../../models/misc-data-student.model';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-student-addressandcontacts',
   templateUrl: './student-addressandcontacts.component.html',
@@ -49,15 +51,28 @@ export class StudentAddressandcontactsComponent implements OnInit {
   checkBoxChecked = false; 
   actionButtonTitle="submit" 
   cloneStudentAddModel;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
     private studentService:StudentService,
     private commonService:CommonService,
+    private cryptoService:CryptoService,
     private imageCropperService:ImageCropperService) { 
       translateService.use('en');
     }
 
   ngOnInit(): void {  
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 5);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllCountry();
     if(this.studentCreateMode==this.studentCreate.VIEW){
       this.studentService.changePageMode(this.studentCreateMode);
@@ -172,11 +187,11 @@ export class StudentAddressandcontactsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Student Updation failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {    
-          this.snackbar.open('Student Update Successful.', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
         this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);

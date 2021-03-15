@@ -89,12 +89,18 @@ export class SchoolClassificationComponent implements OnInit {
         });
       }else{
         if(data._failure){
-          this.ClassificationModelList=new MatTableDataSource(data.dropdownList) ;
+          if (data.dropdownList == null) {
+            this.ClassificationModelList= new MatTableDataSource(null);
             this.listCount=this.ClassificationModelList.data;
-            this.snackbar.open('' + data._message, '', {
+            this.snackbar.open( data._message, '', {
               duration: 10000
             });
-        }else{     
+          } else {
+            this.ClassificationModelList= new MatTableDataSource(null);
+            this.listCount=this.ClassificationModelList.data;
+          }
+        }
+        else {     
           this.ClassificationModelList=new MatTableDataSource(data.dropdownList) ;
           this.schoolClassificationListForExcel = data.dropdownList;
           this.ClassificationModelList.sort=this.sort;           
@@ -142,12 +148,12 @@ export class SchoolClassificationComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('School Classification Deletion failed. ' + data._message, '', {
+          this.snackbar.open('' + data._message, '', {
             duration: 10000
           });
         } else {
        
-          this.snackbar.open('School Classification Deleted Successfully.', '', {
+          this.snackbar.open(''+ data._message, '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
             this.getSchoolClassificationList();

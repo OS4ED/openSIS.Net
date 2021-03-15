@@ -21,6 +21,8 @@ import { LoaderService } from '../../../services/loader.service';
 import { FieldsCategoryListView, FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
 import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum';
 import { CdkDragDrop} from '@angular/cdk/drag-drop';
+import { CryptoService } from '../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-school-fields',
@@ -60,13 +62,19 @@ export class SchoolFieldsComponent implements OnInit {
   fieldsCategoryListView:FieldsCategoryListView= new FieldsCategoryListView();
   fieldsCategoryAddView:FieldsCategoryAddView= new FieldsCategoryAddView();
   customFieldDragDropModel:CustomFieldDragDropModel= new CustomFieldDragDropModel();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
     public translateService:TranslateService,
     private customFieldservice:CustomFieldService,
-    private loaderService:LoaderService
+    private loaderService:LoaderService,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -83,6 +91,13 @@ export class SchoolFieldsComponent implements OnInit {
     this.customFieldList.filter = this.searchKey.trim().toLowerCase()
   }
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 22);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 21);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllCustomFieldCategory()
   }
   selectCategory(element){
@@ -92,7 +107,7 @@ export class SchoolFieldsComponent implements OnInit {
   }
    goToAdd(){   
     this.dialog.open(EditSchoolFieldsComponent, {
-      data: {categoryID:this.currentCategoryId},
+      data: {information: null,categoryID:this.currentCategoryId},
       width: '600px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
@@ -177,9 +192,14 @@ getAllCustomFieldCategory(){
       }
       else{
         if (res._failure) {
-          this.snackbar.open('Field Category list failed. ' + res._message, '', {
-            duration: 10000
-          });
+          if (res.fieldsCategoryList == null) {
+            this.fieldsCategoryList = [];
+            this.snackbar.open( res._message, '', {
+              duration: 10000
+            });
+          } else {
+            this.fieldsCategoryList = []
+          }
         } 
         else{
           this.fieldsCategoryList= res.fieldsCategoryList

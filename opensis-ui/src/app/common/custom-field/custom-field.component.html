@@ -88,7 +88,7 @@
             <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
                 <h3 class="flex-auto">{{ categoryTitle }}</h3>
                 <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
-                <button mat-button color="primary" (click)="editOtherInfo()">
+                <button *ngIf="editSchoolPermission" mat-button color="primary" (click)="editOtherInfo()">
                     <mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}
                 </button>
                 </div>
@@ -217,7 +217,7 @@
             <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
                 <h3 class="flex-auto">{{ categoryTitle }}</h3>
                 <div *ngIf="studentAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
-                <button mat-button color="primary" (click)="editOtherInfo()">
+                <button *ngIf="editStudentPermission" mat-button color="primary" (click)="editOtherInfo()">
                     <mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}
                 </button>
                 </div>
@@ -347,7 +347,7 @@
             <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
                 <h3 class="flex-auto">{{ categoryTitle }}</h3>
                 <div *ngIf="staffAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
-                <button mat-button color="primary" (click)="editOtherInfo()">
+                <button *ngIf="editStaffPermission" mat-button color="primary" (click)="editOtherInfo()">
                     <mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}
                 </button>
                 </div>

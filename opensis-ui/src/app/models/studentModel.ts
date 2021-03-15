@@ -350,6 +350,7 @@ export class StudentEnrollmentDetails extends CommonField{
     calenderId: number;
     rollingOption: string;
     schoolName: string;
+    gradeId:number | string;
     gradeLevelTitle: string;
     enrollmentDate: string;
     enrollmentCode: string;
@@ -381,6 +382,13 @@ export class StudentEnrollmentModel extends CommonField{
     schoolId:number;
     academicYear:string;
     studentGuid:string;
+    sectionId: number;
+    estimatedGradDate: string;
+    eligibility504: boolean;
+    economicDisadvantage: boolean;
+    freeLunchEligibility: boolean;
+    specialEducationIndicator: boolean;
+    lepIndicator: boolean;
     constructor(){
         super();
         this.studentEnrollments=[new StudentEnrollmentDetails];

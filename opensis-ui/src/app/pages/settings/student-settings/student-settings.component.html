@@ -8,10 +8,10 @@
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
             <mat-drawer-content class="flex-auto flex items-start">
                 <div  class="w-full p-0">
-                    <div *ngIf="displayStudentFields">
+                    <div *ngIf="pageId=='Student Fields'">
                         <vex-student-fields></vex-student-fields>
                     </div>
-                    <div *ngIf="displayEnrollmentCodes">
+                    <div *ngIf="pageId=='Enrollment Codes'">
                         <vex-enrollment-codes></vex-enrollment-codes>
                     </div>
                 </div>

@@ -13,8 +13,10 @@ import { CountryModel } from '../../../../models/countryModel';
 import { CommonService } from '../../../../services/common.service';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ImageCropperService } from 'src/app/services/image-cropper.service';
+import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-editparent-addressinfo',
@@ -43,6 +45,11 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
   country = '-';
   data;
   parentInfo;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   moduleIdentifier = ModuleIdentifier;
   mapUrl: string;
   constructor(private fb: FormBuilder,
@@ -50,12 +57,19 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
               public translateService: TranslateService,
               private commonService: CommonService,
               private parentInfoService: ParentInfoService,
-              private imageCropperService: ImageCropperService) {
+              private imageCropperService: ImageCropperService,
+              private cryptoService: CryptoService) {
     translateService.use('en');
 
   }
 
   ngOnInit(): void {   
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 4);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 9);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.VIEW});
     this.parentCreateMode = this.parentCreate.VIEW;
     this.parentInfo = {};
@@ -124,11 +138,11 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Address Updation failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Address Update Successful.', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
           this.viewCountryName();

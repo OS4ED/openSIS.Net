@@ -29,6 +29,8 @@ import {GradeLevelService} from '../../../services/grade-level.service';
 import {GetAllGradeLevelsModel } from '../../../models/gradeLevelModel';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LayoutService } from 'src/@vex/services/layout.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-course-manager',
@@ -116,6 +118,12 @@ export class CourseManagerComponent implements OnInit {
   selectedCourses:number=0;
   filterFlag:boolean=false;
   deletedCourse:number=0;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+  
   constructor(
     public translateService:TranslateService,
     private dialog: MatDialog,
@@ -123,7 +131,8 @@ export class CourseManagerComponent implements OnInit {
     private courseManager:CourseManagerService,
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
-    private layoutService: LayoutService) {
+    private layoutService: LayoutService,
+    private cryptoService: CryptoService) {
       this.getAllCourse();
       translateService.use('en');
       if(localStorage.getItem("collapseValue") !== null){
@@ -139,6 +148,13 @@ export class CourseManagerComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 6);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 12);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+
     this.searchCtrl = new FormControl();
     this.form = this.fb.group({
       subject:['all',[Validators.required]],
@@ -284,7 +300,13 @@ export class CourseManagerComponent implements OnInit {
       }
     }
   backToCourse(event) {
-    this.showCourses = true;
+      this.showCourses = true;
+      let courseIndex=this.courseList.findIndex((item)=>{
+        return item.course.courseId==event.courseId;
+      });
+      if(courseIndex!=-1){
+        this.courseList[courseIndex].courseSectionCount=event.courseSectionCount;
+      }
   }
 
   courseSections(selectedCourseDetails) {

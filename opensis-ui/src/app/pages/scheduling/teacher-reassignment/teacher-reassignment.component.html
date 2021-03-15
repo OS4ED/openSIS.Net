@@ -1,0 +1,390 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Teacher Reassignment" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Scheduling']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+        <div class="card -mt-16">
+            <div class="p-6 text-center">To reassign a course section, either start with the teacher or the course.
+            </div>
+            <hr class="border-normal">
+            <div class="flex w-full">
+                <div class="w-1/2 border-r border-normal cursor-pointer relative bg-green text-white triangle-left"
+                    (click)="selectTeacher()">
+                    <div class="flex items-center">
+                        <div class="w-2/12 text-center py-6">
+                            <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
+                        </div>
+                        <div class="w-10/12 lg:pl-6">
+                            <h2 class="text-lg md:text-2xl">Select Current Teacher</h2>
+                            <p class="pr-8">Click here to Select the Current Teacher to Reassign</p>
+                        </div>
+                    </div>
+                    <div class="schedule-icon bg-white text-black font-medium">
+                        or
+                    </div>
+                </div>
+                <div class="w-1/2 cursor-pointer bg-primary text-white triangle-right relative" (click)="selectCourse()">
+                    <div class="flex items-center">
+                        <div class="w-10/12 text-right lg:pr-6">
+                            <h2 class="text-lg md:text-2xl">Select Course</h2>
+                            <p class="pl-8">Click here to Select a Course to Reassign Teacher</p>
+                        </div>
+                        <div class="w-2/12 text-center py-6">
+                            <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- start teacher wise Reassigning -->
+        <div class="teacher-reassignment-timeline">
+            <div class="card p-4">
+                <h4 class="text-primary text-xl font-medium">Scheduled Courses of <span class="text-green">Anthony
+                        Hopkins</span></h4>
+                <p class="text-gray">Showing the scheduled courses of the current teacher. You can select/deselect
+                    course
+                    section occurrences and remove a course section to assign to a new teacher.</p>
+                <div class="border-t border-normal -mx-4 mt-4">
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <table class="w-full schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="1%">
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </th>
+                                    <th>{{ "course" | translate }}</th>
+                                    <th>{{ "courseSection" | translate }}</th>
+                                    <th>{{ "markingPeriod" | translate }}</th>
+                                    <th>{{ "startDate" | translate }}</th>
+                                    <th>{{ "endDate" | translate }}</th>
+                                    <th>{{ "meetingDays" | translate }}</th>
+                                    <th>{{ "teachers" | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM001</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
+                                    </td>
+                                    <td>
+                                        <button matTooltip="Jolly Holmes"
+                                            aria-label="Button that displays a tooltip when focused or hovered over"
+                                            [matTooltipPosition]="'above'">
+                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM002</td>
+                                    <td>Custom</td>
+                                    <td>Feb 01, 2021</td>
+                                    <td>Jun 10, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
+                                    </td>
+                                    <td>
+                                        <button matTooltip="Jolly Holmes"
+                                            aria-label="Button that displays a tooltip when focused or hovered over"
+                                            [matTooltipPosition]="'above'">
+                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                                        </button>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM003</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
+                                        <span
+                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
+                                    </td>
+                                    <td>
+                                        -
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Geometry</td>
+                                    <td>GEOM004</td>
+                                    <td>Quarter 1</td>
+                                    <td>Jan 01, 2021</td>
+                                    <td>Mar 31, 2021</td>
+                                    <td>N/A</td>
+                                    <td>-</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="flex w-full cursor-pointer" (click)="selectTeacher()">
+                <div class="relative">
+                    <div class="flex items-center">
+                        <div
+                            class="w-2/12 bg-green text-white text-center py-4 rounded-tl rounded-bl relative arrow-right">
+                            <img src="assets/img/icons/reassign-new-teacher.svg" width="50%" class="inline-block">
+                        </div>
+                        <div class="w-10/12 pl-6">
+                            <h2 class="font-medium">John Smith</h2>
+                            <p class="text-gray">Click here to Select a New Teacher to Reassign</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="cursor-pointer ml-auto">
+                    <div class="w-full text-right py-6 px-6">
+                        <i class="icon icon-notification2 sm:text-2xl lg:text-3xl text-warn"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- end teacher wise Reassigning -->
+
+        <!-- start Course Wise Reassignment -->
+        <!-- <div class="course-reassignment-timeline pt-6">
+            <h4 class="text-primary text-xl font-medium">Showing Course Sections of <span
+                    class="text-green">Geometry</span></h4>
+            <p class="mb-4 text-gray">Showing the scheduled courses of the current teacher. You can select/deselect
+                course
+                section occurrences and remove a course section to assign to a new teacher.</p>
+            <div class="card mb-6 p-4">
+                <div class="teacher-info mb-2">
+                    <span class="text-lg inline-block align-middle text-green font-bold">GEOM0001</span>
+                    <span class="dot-separator"></span>
+                    <span class="font-semibold">QT3</span>
+                    <span class="mx-1">-</span>
+                    <span>Mar 01, 2021 to May 31, 2021</span>
+                </div>
+                <div class="border-t border-normal -mx-4 mt-4">
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <table class="w-full schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="1%">
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </th>
+                                    <th>{{ "teacherName" | translate }}</th>
+                                    <th>{{ "staffId" | translate }}</th>
+                                    <th>{{ "jobTitle" | translate }}</th>
+                                    <th>{{ "gradeLevelsTaught" | translate }}</th>
+                                    <th>{{ "subjectsTaught" | translate }}</th>
+                                    <th>{{ "language" | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Daniel Boucher</td>
+                                    <td>ST4562</td>
+                                    <td>High School Teacher</td>
+                                    <td>9, 10, 11, 12</td>
+                                    <td>Mathematics</td>
+                                    <td>English, French</td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Andrew Brown</td>
+                                    <td>ST756</td>
+                                    <td>High School Teacher</td>
+                                    <td>Grade 10</td>
+                                    <td>Science, Mathematics</td>
+                                    <td>English, French, Flemish</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-6 p-4">
+                <div class="teacher-info mb-2">
+                    <span class="text-lg inline-block align-middle text-green font-bold">GEOM0002</span>
+                    <span class="dot-separator"></span>
+                    <span class="font-semibold">QT3</span>
+                    <span class="mx-1">-</span>
+                    <span>Mar 01, 2021 to May 31, 2021</span>
+                </div>
+                <div class="border-t border-normal -mx-4 mt-4">
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <table class="w-full schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="1%">
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </th>
+                                    <th>{{ "teacherName" | translate }}</th>
+                                    <th>{{ "staffId" | translate }}</th>
+                                    <th>{{ "jobTitle" | translate }}</th>
+                                    <th>{{ "gradeLevelsTaught" | translate }}</th>
+                                    <th>{{ "subjectsTaught" | translate }}</th>
+                                    <th>{{ "language" | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Daniel Boucher</td>
+                                    <td>ST3251</td>
+                                    <td>High School Teacher</td>
+                                    <td>9, 10, 11, 12</td>
+                                    <td>Mathematics</td>
+                                    <td>English, French</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+            <div class="card mb-6 p-4">
+                <div class="teacher-info mb-2">
+                    <span class="text-lg inline-block align-middle text-green font-bold">GEOM0003</span>
+                    <span class="dot-separator"></span>
+                    <span class="font-semibold">QT3</span>
+                    <span class="mx-1">-</span>
+                    <span>Mar 01, 2021 to May 31, 2021</span>
+                </div>
+                <div class="border-t border-normal -mx-4 mt-4">
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <table class="w-full schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="1%">
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </th>
+                                    <th>{{ "teacherName" | translate }}</th>
+                                    <th>{{ "staffId" | translate }}</th>
+                                    <th>{{ "jobTitle" | translate }}</th>
+                                    <th>{{ "gradeLevelsTaught" | translate }}</th>
+                                    <th>{{ "subjectsTaught" | translate }}</th>
+                                    <th>{{ "language" | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                    </td>
+                                    <td>Lian Fang</td>
+                                    <td>ST4562</td>
+                                    <td>High School Teacher</td>
+                                    <td>9, 10, 11, 12</td>
+                                    <td>Mathematics</td>
+                                    <td>English, French</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="flex w-full cursor-pointer" (click)="selectCourse()">
+                <div class="relative">
+                    <div class="flex items-center">
+                        <div class="w-2/12 bg-green text-white text-center py-4 rounded-tl rounded-bl relative arrow-right">
+                            <img src="assets/img/icons/reassign-new-teacher.svg" width="50%" class="inline-block">
+                        </div>
+                        <div class="w-10/12 pl-6">
+                            <h2 class="font-medium text-xl md:text-2xl">John Smith</h2>
+                            <p class="text-gray">Click here to Select a New Teacher to Reassign</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="cursor-pointer ml-auto">
+                    <div class="w-full text-right py-6 px-8">
+                        <i class="icon icon-notification2 sm:text-2xl md:text-3xl text-warn -mr-1"></i>
+                    </div>
+                </div>
+            </div>
+        </div> -->
+        <!-- end Course Wise Reassignment -->
+
+        <!-- start submit button and conflict text -->
+        <div class="flex mt-4 items-end flex-wrap">
+            <p class="text-base mt-2 mr-10">
+                <i class="icon icon-notification2 mr-2 text-warn text-lg"></i>
+                The selected teacher is unavailable. Change your selection and try again.
+            </p>
+            <!-- After completed conflicts below success message is seen -->
+            <!-- <p class="text-base mt-2 mr-10">
+                <i class="icon icon-checkmark-circle mr-2 text-green"></i>There are no conflicts detected. You may proceed to reassignment.
+            </p> -->
+
+            <div class="ml-auto mt-2">
+                <button color="primary" mat-raised-button type="submit">
+                    <i class="icon icon-loop3 mr-2"></i>{{ 'checkAvailability' | translate }}
+                </button>
+                <!-- when success message is seen then below buttion is occured -->
+                <!-- <button mat-raised-button type="submit" class="bg-green text-white">
+                    {{ 'reassignTeacher' | translate }}
+                </button> -->
+            </div>
+        </div> <!-- end button and info text -->
+
+        <!-- start Reassigning teacher with lodar icon -->
+        <!-- <div class="card mt-6 p-4">
+            <div class="flex">
+                <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
+                <div class="ml-4">
+                    <span class="text-lg inline-block align-middle text-primary font-bold">Reassigning Teacher</span>
+                    <p class="">Please do not refresh the page or click back button.</p>
+                </div>
+            </div>
+        </div> -->
+
+    </vex-page-layout-content>
+</vex-page-layout>

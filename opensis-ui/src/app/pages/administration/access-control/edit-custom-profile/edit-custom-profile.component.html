@@ -1,7 +1,7 @@
 <form [formGroup]="form">
 
     <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-        <h2 class="headline m-0"  fxFlex="auto">{{'addCustomProfile' | translate}}</h2>
+        <h2 class="headline m-0"  fxFlex="auto">{{customProfileModalTitle |translate}}</h2>
    
         <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
             <mat-icon [icIcon]="icClose"></mat-icon>
@@ -12,23 +12,25 @@
     <mat-dialog-content fxLayout="column">
         <mat-form-field class="mt-6" appearance="outline" color="primary">
             <mat-label>{{'title' | translate}}</mat-label>
-            <input name="name" matInput required>
+            <input type="text" formControlName="title" name="title" matInput required>
+            <mat-error *ngIf="form.get('title').hasError('required')">{{'titleIsRequired'|translate}}</mat-error>
         </mat-form-field>
         <mat-form-field class="w-full" appearance="outline" color="primary">
             <mat-label>{{'userType' | translate}}</mat-label>
-            <mat-select required>
-                <mat-option value="Administrator">Administrator</mat-option>
-                <mat-option value="Teacher">Teacher</mat-option>
-                <mat-option value="Homeroom Teacher">Homeroom Teacher</mat-option>
-                <mat-option value="Parent">Parent</mat-option>
-                <mat-option value="Student">Student</mat-option>
+            <mat-select   formControlName="userType" [disabled]="data=== null?false:true" required>
+                <mat-option></mat-option>       
+                <mat-option *ngFor="let profiles of profileList"  [value]="profiles.label">{{profiles.label}}</mat-option>               
             </mat-select>
+            <mat-error *ngIf="form.get('userType').hasError('required')">{{'userTypeIsRequired'|translate}}</mat-error>
         </mat-form-field>
-    
+        <mat-form-field class="w-full" appearance="outline" color="primary">
+            <mat-label>{{'description' | translate}}</mat-label>
+            <textarea formControlName="description"  name="courseDescription" matInput></textarea>
+        </mat-form-field>
     </mat-dialog-content>
     
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
         <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-        <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+        <button color="primary" mat-raised-button type="submit" (click) = "submit()">{{customProfileModalActionTitle | translate}}</button>
     </mat-dialog-actions>
     </form>

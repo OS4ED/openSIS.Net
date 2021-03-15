@@ -14,5 +14,12 @@ namespace opensis.data.ViewModels.Student
         public string RollingOption { get; set; }
         public int? SchoolId { get; set; }
         public Guid? StudentGuid { get; set; }
+        public int? SectionId { get; set; }
+        public DateTime? EstimatedGradDate { get; set; }
+        public bool? Eligibility504 { get; set; }
+        public bool? EconomicDisadvantage { get; set; }
+        public bool? FreeLunchEligibility { get; set; }
+        public bool? SpecialEducationIndicator { get; set; }
+        public bool? LepIndicator { get; set; }
     }
 }

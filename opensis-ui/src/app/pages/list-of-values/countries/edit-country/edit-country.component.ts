@@ -66,11 +66,11 @@ export class EditCountryComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Country Submission failed. ' + data._message, '', {
+              this.snackbar.open('' + data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Country Submission Successful.', '', {
+              this.snackbar.open(''+ data._message, '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);
@@ -91,11 +91,11 @@ export class EditCountryComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Country Updation failed. ' + data._message, '', {
+              this.snackbar.open('' + data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Country Updation Successful.', '', {
+              this.snackbar.open('' + data._message, '', {
                 duration: 10000
               });              
               this.dialogRef.close(true);

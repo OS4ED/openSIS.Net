@@ -20,6 +20,8 @@ import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { GradesService } from '../../../services/grades.service';
 import { ExcelService } from '../../../services/excel.service';
 import { LoaderService } from '../../../services/loader.service';
+import { CryptoService } from '../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-report-card-grades',
@@ -52,7 +54,7 @@ export class ReportCardGradesComponent implements OnInit {
   icFilterList = icFilterList;
   loading:Boolean;
   @ViewChild(MatSort) sort: MatSort;
-  gradeScaleList;
+  gradeScaleList=[];
   searchKey:string;
   currentGradeScaleId =null;
   gradeScaleAddViewModel:GradeScaleAddViewModel =new GradeScaleAddViewModel();
@@ -60,8 +62,14 @@ export class ReportCardGradesComponent implements OnInit {
   gradeDragDropModel:GradeDragDropModel =new GradeDragDropModel()
   gradeScaleListView:GradeScaleListView =new GradeScaleListView();
   gradeList: MatTableDataSource<any>;
-  
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel()
   gradeScaleListForExcel =[];
+  gradeListValue;
+  totalCount;
 
   constructor(
     private router: Router,
@@ -70,7 +78,8 @@ export class ReportCardGradesComponent implements OnInit {
     private snackbar: MatSnackBar,
     private gradesService:GradesService,
     private loaderService:LoaderService,
-    private excelService:ExcelService
+    private excelService:ExcelService,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -79,7 +88,17 @@ export class ReportCardGradesComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.getAllGradeScale();
+    this.getAllGradeScale(0);
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 26);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 30);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+
+    
+
   }
 
   getPageEvent(event){    
@@ -101,7 +120,7 @@ export class ReportCardGradesComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data === 'submited'){
-        this.getAllGradeScale();
+        this.getAllGradeScale(this.currentGradeScaleId);
       }
     });
   }
@@ -111,7 +130,7 @@ export class ReportCardGradesComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data === 'submited'){
-        this.getAllGradeScale();
+        this.getAllGradeScale(this.currentGradeScaleId);
       }
     })
   }
@@ -127,7 +146,7 @@ export class ReportCardGradesComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data === 'submited'){
-        this.getAllGradeScale();
+        this.getAllGradeScale(this.currentGradeScaleId);
       }
     });
   }
@@ -137,7 +156,7 @@ export class ReportCardGradesComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if(data === 'submited'){
-        this.getAllGradeScale();
+        this.getAllGradeScale(element.gradeScaleId);
       }
     })
   }
@@ -150,7 +169,7 @@ export class ReportCardGradesComponent implements OnInit {
     this.gradeList = new MatTableDataSource(element.grade) ;
   }
   deleteGradeScale(element){
-    this.gradeScaleAddViewModel.gradeScale = element;
+    this.gradeScaleAddViewModel.gradeScale.gradeScaleId=element.gradeScaleId
     this.gradesService.deleteGradeScale(this.gradeScaleAddViewModel).subscribe(
      (res: GradeScaleAddViewModel) => {
       if (typeof(res) === 'undefined'){
@@ -171,7 +190,7 @@ export class ReportCardGradesComponent implements OnInit {
           if (element.gradeScaleId === this.currentGradeScaleId){
             this.currentGradeScaleId = null;
           }
-          this.getAllGradeScale();
+          this.getAllGradeScale(element.gradeScaleId);
         }
       }
      }
@@ -192,7 +211,7 @@ export class ReportCardGradesComponent implements OnInit {
   }
 
   deleteGrade(element){
-    this.gradeAddViewModel.grade = element;
+    this.gradeAddViewModel.grade.gradeId=element.gradeId
     this.gradesService.deleteGrade(this.gradeAddViewModel).subscribe(
      (res: GradeAddViewModel) => {
       if (typeof(res) === 'undefined'){
@@ -210,7 +229,7 @@ export class ReportCardGradesComponent implements OnInit {
           this.snackbar.open('' + res._message, '', {
             duration: 10000
           });
-          this.getAllGradeScale();
+          this.getAllGradeScale(element.gradeScaleId);
         }
       }
      }
@@ -221,7 +240,7 @@ export class ReportCardGradesComponent implements OnInit {
       maxWidth: '400px',
       data: {
           title: 'Are you sure?',
-          message: 'You are about to delete ' + element.tite + '.'}
+          message: 'You are about to delete report card grade ' + element.title + '.'}
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
       if (dialogResult){
@@ -230,7 +249,7 @@ export class ReportCardGradesComponent implements OnInit {
    });
   }
 
-  getAllGradeScale(){
+  getAllGradeScale( selectedGradeScaleId : number){
     this.gradesService.getAllGradeScaleList(this.gradeScaleListView).subscribe(
       (res: GradeScaleListView) => {
         if (typeof(res) === 'undefined'){
@@ -240,25 +259,41 @@ export class ReportCardGradesComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
-            this.gradeScaleList = res.gradeScaleList;
+            if (res.gradeScaleList == null) {
+              this.gradeScaleList = [];
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.gradeScaleList = []
+            }
+            
           }
           else{
             this.gradeScaleList = res.gradeScaleList;
+            let index =0;
             if (this.currentGradeScaleId == null){
-              this.currentGradeScaleId = res.gradeScaleList[0].gradeScaleId;
-              this.gradeList = new MatTableDataSource(res.gradeScaleList[0].grade) ;
-              this.gradeScaleListForExcel = res.gradeScaleList[0].grade;
+              this.currentGradeScaleId = res.gradeScaleList[index].gradeScaleId;
             } 
             else{
-              const index = this.gradeScaleList.findIndex((x) => {
+              index = this.gradeScaleList.findIndex((x) => {
                 return x.gradeScaleId === this.currentGradeScaleId;
               });
-              this.gradeList = new MatTableDataSource(res.gradeScaleList[index].grade) ;
-              this.gradeScaleListForExcel = res.gradeScaleList[0].grade;
-            }
+            } 
+            this.gradeListValue=res.gradeScaleList[index].grade.map((item)=>{
+              return ({
+                gradeScaleId:item.gradeScaleId,
+                gradeId:item.gradeId,      
+                title: item.title,
+                breakoff: item.breakoff,
+                weightedGpValue: item.weightedGpValue,
+                unweightedGpValue: item.unweightedGpValue,
+                comment:item.comment
+              })
+            })
+            this.totalCount=this.gradeListValue.length
+            this.gradeList = new MatTableDataSource(this.gradeListValue) ;
+            this.gradeScaleListForExcel = res.gradeScaleList[index].grade;
           }
         }
       }
@@ -282,7 +317,7 @@ export class ReportCardGradesComponent implements OnInit {
             });
           } 
           else{
-            this.getAllGradeScale()
+            this.getAllGradeScale(this.currentGradeScaleId )
           }
         }
       }
@@ -295,7 +330,8 @@ export class ReportCardGradesComponent implements OnInit {
         Title: item.tite,
         Breakoff: item.breakoff,
         'Weighted Gp Value': item.weightedGpValue,
-        'Unweighted Gp Value': item.unweightedGpValue
+        'Unweighted Gp Value': item.unweightedGpValue,
+        Comment:item.comment
       };
     });
     return reportCardGradeList;
@@ -311,7 +347,8 @@ export class ReportCardGradesComponent implements OnInit {
               Title: x.title,
               Breakoff: x.breakoff,
               'Weighted Gp Value': x.weightedGpValue,
-              'Unweighted Gp Value': x.unweightedGpValue
+              'Unweighted Gp Value': x.unweightedGpValue,
+              comment:x.comment
             };
           });
           this.excelService.exportAsExcelFile(reportList, 'Report_Card_Grade_List_');

@@ -91,11 +91,16 @@ export class EthnicityComponent implements OnInit {
         }
         else {
           if (res._failure) {
-            this.ethnicityListModel=new MatTableDataSource(res.dropdownList) ;
-            this.listCount=this.ethnicityListModel.data;
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
+            if (res.dropdownList == null) {
+              this.ethnicityListModel= new MatTableDataSource(null);
+              this.listCount=this.ethnicityListModel.data;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.ethnicityListModel= new MatTableDataSource(null);
+              this.listCount=this.ethnicityListModel.data;
+            }
           }
           else {
             this.ethnicityListModel = new MatTableDataSource(res.dropdownList);
@@ -136,7 +141,7 @@ export class EthnicityComponent implements OnInit {
   }
 
   deleteEthnicityData(element){
-    this.lovAddView.dropdownValue=element
+    this.lovAddView.dropdownValue.id=element.id
     this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
       (res:LovAddView)=>{
         if(typeof(res)=='undefined'){
@@ -146,12 +151,12 @@ export class EthnicityComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('Ethnicity Deletion failed. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
           } 
           else { 
-            this.snackbar.open('Ethnicity Deleted Successfully. ' + res._message, '', {
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
             this.getAllEthnicity()

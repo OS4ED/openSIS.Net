@@ -8,7 +8,7 @@ import icNotice from '@iconify/icons-ic/twotone-assignment';
 import { PopoverRef } from '../popover/popover-ref';
 
 export interface MegaMenuFeature {
-  icon: Icon;
+  icon?: Icon;
   label: string;
   route: string;
 }
@@ -95,8 +95,40 @@ export class MegaMenuComponent implements OnInit {
     }
   ];
 
-  constructor(private popoverRef: PopoverRef<MegaMenuComponent>) { }
+  constructor(private popoverRef: PopoverRef<MegaMenuComponent>) {
+    // popoverRef.data[0]?.permissionGroup?.permissionCategory?.map((item) => {
+    //   if(item.rolePermission[0].canView){
+    //     this.features.push({
+    //       icon: this.pickIcon(item.permissionCategoryName),
+    //       label: item.title,
+    //       route: item.path
+    //     });
+    //   }
+    // });
+  }
 
+  // pickIcon(categoryName) {
+  //   switch (categoryName) {
+  //     case 'School':{
+  //       return icSchool;
+  //     }
+  //     case 'Student':{
+  //       return icStudents;
+
+  //     }
+  //     case 'Staff':{
+  //       return icStaff;
+
+  //     }
+  //     case 'Event':{
+  //       return icEvent;
+
+  //     }
+  //     case 'Notice':{
+  //       return icNotice;
+  //     }
+  //   }
+  // }
   ngOnInit() {
   }
 

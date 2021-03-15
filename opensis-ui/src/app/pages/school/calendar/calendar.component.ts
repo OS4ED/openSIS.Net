@@ -27,6 +27,9 @@ import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confi
 import * as moment from 'moment';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { LoaderService } from '../../../services/loader.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { CryptoService } from '../../../services/Crypto.service';
 const colors: any = {
   blue: {
     primary: '#5c77ff',
@@ -87,16 +90,23 @@ export class CalendarComponent implements OnInit {
   calendarFrom: FormControl;
   cssClass: string;
   loading: boolean;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(private http: HttpClient,
-    private dialog: MatDialog,
-    private snackbar: MatSnackBar,
-    public translate: TranslateService,
-    private membershipService: MembershipService,
-    private calendarEventService: CalendarEventService,
-    private calendarService: CalendarService,
-    private layoutService: LayoutService,
-    private loaderService: LoaderService,
-    private cdr: ChangeDetectorRef,) {
+              private dialog: MatDialog,
+              private snackbar: MatSnackBar,
+              public translate: TranslateService,
+              private membershipService: MembershipService,
+              private calendarEventService: CalendarEventService,
+              private calendarService: CalendarService,
+              private layoutService: LayoutService,
+              public rollBasedAccessService: RollBasedAccessService,
+              private loaderService: LoaderService,
+              private cdr: ChangeDetectorRef,
+              private cryptoService: CryptoService ) {
     this.translate.setDefaultLang('en');
     if (localStorage.getItem("collapseValue") !== null) {
       if (localStorage.getItem("collapseValue") === "false") {
@@ -217,14 +227,21 @@ export class CalendarComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.isMarkingPeriod = sessionStorage.getItem("markingPeriod");
-    if (this.isMarkingPeriod != "null") {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 2);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 3);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+
+    this.isMarkingPeriod = sessionStorage.getItem('markingPeriod');
+    if (this.isMarkingPeriod !== 'null') {
       this.getAllCalendar();
       this.getAllMemberList();
     }
   }
 
-  //open event modal for view
+  // open event modal for view
   viewEvent(eventData) {
     this.dialog.open(AddEventComponent, {
       data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, calendarEvent: eventData },
@@ -324,28 +341,35 @@ export class CalendarComponent implements OnInit {
 
   // Open add new event by clicking calendar day
   openAddNewEvent(event) {
-    if (!event.isWeekend && event.inMonth) {
-      this.dialog.open(AddEventComponent, {
-        data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, day: event },
-        width: '600px'
-      }).afterClosed().subscribe(data => {
-        if (data === 'submitedEvent') {
-          this.getAllCalendarEvent();
+    if (this.addPermission){
+      if (!event.isWeekend && event.inMonth) {
+        this.dialog.open(AddEventComponent, {
+          data: { allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length, day: event },
+          width: '600px'
+        }).afterClosed().subscribe(data => {
+          if (data === 'submitedEvent') {
+            this.getAllCalendarEvent();
+          }
+        });
+      }
+      else {
+        if (event.isWeekend) {
+          this.snackbar.open('Cannot add event in weekend', '', {
+            duration: 2000
+          });
         }
+        if (!event.isWeekend) {
+          this.snackbar.open('Cannot add event in previous month', '', {
+            duration: 2000
+          });
+        }
+      }
+    }
+    else{
+      this.snackbar.open('Have not any permission to add', '', {
+        duration: 2000
       });
     }
-    else {
-      if (event.isWeekend) {
-        this.snackbar.open('Cannot add event in weekend', '', {
-          duration: 2000
-        });
-      }
-      if (!event.isWeekend) {
-        this.snackbar.open('Cannot add event in previous month', '', {
-          duration: 2000
-        });
-      }
-
-    }
+    
   }
 }

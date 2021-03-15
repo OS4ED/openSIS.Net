@@ -298,7 +298,7 @@
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.VIEW">
     <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressAndContact' | translate}}</h3>
-        <button mat-raised-button (click)="editAddressContactInfo()" color="primary">
+        <button mat-raised-button *ngIf="editPermission" (click)="editAddressContactInfo()" color="primary">
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
     </div>

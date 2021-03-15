@@ -8,12 +8,12 @@
                 <div *ngFor="let fieldsCategory of fieldsCategoryList" class="mt-2 flex flex-wrap justify-between">
                     <a class="cursor-pointer" [ngClass]="{'font-bold':currentCategoryId === fieldsCategory.categoryId}" (click)="selectCategory(fieldsCategory)">{{fieldsCategory.title}} </a>
                     <div *ngIf="!fieldsCategory.isSystemCategory">
-                        <a class="cursor-pointer mr-3" (click)="editFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-                        <a class="cursor-pointer" (click)="confirmDeleteFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
+                        <a *ngIf="editPermission" class="cursor-pointer mr-3" (click)="editFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
+                        <a *ngIf="deletePermission" class="cursor-pointer" (click)="confirmDeleteFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
                     </div>
                 </div>
                 <hr class="my-3"/>
-                <button color="" class="w-full text-primary" mat-button type="button"
+                <button *ngIf="addPermission" color="" class="w-full text-primary" mat-button type="button"
                     (click)='goToAddCategory()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                         size="24px">
@@ -53,7 +53,7 @@
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
 
-                        <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                        <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
                             (click)='goToAdd()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
@@ -109,10 +109,10 @@
                     <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let element">
                         <!-- <span *ngIf="element.type === 'Custom'"> -->
-                        <a class="mr-3 cursor-pointer" (click)="openEditdata(element)">
+                        <a *ngIf="editPermission" class="mr-3 cursor-pointer" (click)="openEditdata(element)">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a class="cursor-pointer"(click)="confirmDelete(element)">
+                        <a *ngIf="deletePermission" class="cursor-pointer"(click)="confirmDelete(element)">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                         <!-- </span> -->

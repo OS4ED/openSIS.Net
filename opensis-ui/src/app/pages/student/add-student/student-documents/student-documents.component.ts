@@ -23,7 +23,9 @@ import { MatDialog } from '@angular/material/dialog';
 import * as _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
 const moment =  _rollupMoment || _moment;
-import { SchoolCreate } from 'src/app/enums/school-create.enum';
+import { SchoolCreate } from '../../../../enums/school-create.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-student-documents',
@@ -70,14 +72,20 @@ export class StudentDocumentsComponent implements OnInit {
   getAllStudentDocumentsList: GetAllStudentDocumentsList = new GetAllStudentDocumentsList();   
   StudentDocumentModelList: MatTableDataSource<any>;
   studentDocumentAddModel: StudentDocumentAddModel = new StudentDocumentAddModel();
-
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   @ViewChild(MatSort) sort: MatSort;
+  
   constructor(   
     public translateService:TranslateService, 
     private loaderService:LoaderService,
     private studentService:StudentService,
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
+    private cryptoService: CryptoService
   ) {
     translateService.use('en');    
     this.loaderService.isLoading.subscribe((val) => {
@@ -86,6 +94,14 @@ export class StudentDocumentsComponent implements OnInit {
     
   }
   ngOnInit(): void {  
+
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 9);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllDocumentsList();
   }  
   //Split base 64 data from its datatype then push to base64 array
@@ -155,11 +171,11 @@ export class StudentDocumentsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('File Deletion failed. ' + data._message, '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('File Deletion Successful.', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
             this.getAllDocumentsList();
@@ -200,11 +216,11 @@ export class StudentDocumentsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Student Document Upload failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {          
-              this.snackbar.open('Student Document Upload Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               }).afterOpened().subscribe(data => {
                 this.base64Arr=[];
@@ -242,20 +258,21 @@ export class StudentDocumentsComponent implements OnInit {
     this.getAllStudentDocumentsList.studentId = this.studentDetailsForViewAndEdit.studentMaster.studentId;
     this.studentService.GetAllStudentDocumentsList(this.getAllStudentDocumentsList).subscribe(data => {
       if(data._failure){
-        if(data._message==="NO RECORD FOUND"){
+      
           if(data.studentDocumentsList==null){
             this.StudentDocumentModelList=new MatTableDataSource([]) ;
-        this.StudentDocumentModelList.sort=this.sort;     
+            this.StudentDocumentModelList.sort=this.sort;   
+            this.snackbar.open( data._message, '', {
+              duration: 10000
+            });  
           }
-        } else{
-          this.snackbar.open('Student Document failed. ' + data._message, '', {
-            duration: 10000
-          });
-        }
+          else{
+            this.StudentDocumentModelList=new MatTableDataSource([]) ;
+            this.StudentDocumentModelList.sort=this.sort;   
+          }
       }else{   
         
         this.StudentDocumentModelList = new MatTableDataSource(data.studentDocumentsList);
-       
         this.StudentDocumentModelList.sort=this.sort;      
       }
     });

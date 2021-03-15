@@ -82,10 +82,14 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
   roomModelList = [];
   submitTitle = 'submit';
   addClassTitle = 'addClass';
+  startDate: string;
+  endDate: string;
   refresh: Subject<any> = new Subject();
   blockedSchedulingCourseSectionAddModel: BlockedSchedulingCourseSectionAddModel = new BlockedSchedulingCourseSectionAddModel();
   @Input() courseCalendarScheduleList;
   @Input() detailsFromParentModal;
+  @Input() selectedMarkingPeriod;
+  @Input() durationDateRange;
   @Output() calendarScheduleData = new EventEmitter<OutputEmitDataFormat>()
   courseCalendarSchedule: CourseCalendarSchedule = new CourseCalendarSchedule()
   view: CalendarView = CalendarView.Month;
@@ -102,6 +106,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
   classdate: string;
   color = ['bg-deep-orange', 'bg-red', 'bg-green', 'bg-teal', 'bg-cyan', 'bg-deep-purple', 'bg-pink', 'bg-blue'];
   showError: boolean = false;
+  showMarkingPeriodError: boolean = false;
   constructor(
     private fb: FormBuilder,
     private schoolPeriodService: SchoolPeriodService,
@@ -122,25 +127,31 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
 
 
   ngOnChanges(changes: SimpleChanges): void {
-    this.selectedCalendar;
-    this.detailsFromParentModal;
-    if (this.selectedCalendar.days !== null && this.selectedCalendar.days !== undefined) {
-      this.showError = false;
-      this.getDays(this.selectedCalendar.days);
-      this.refresh.next();
-    }
+    this.checkDurationChanges();
+    this.checkCalendarChanges();
   }
 
+
+  checkDurationChanges() {
+      if(this.selectedMarkingPeriod){
+        this.startDate = this.selectedMarkingPeriod.startDate;
+        this.endDate = this.selectedMarkingPeriod.endDate;
+        this.showMarkingPeriodError = false;
+      }
+      else if (this.durationDateRange.startDate && this.durationDateRange.endDate) {
+        this.startDate = this.durationDateRange.startDate;
+        this.endDate = this.durationDateRange.endDate;
+        this.showMarkingPeriodError = false;
+      }
+      else {
+        this.showMarkingPeriodError = true;
+      }
+
+  }
   ngOnInit(): void {
     this.courseCalendarSchedule.takeAttendance = false;
-    if (this.selectedCalendar.days !== null && this.selectedCalendar.days !== undefined) {
-      this.showError = false;
-      this.getDays(this.selectedCalendar.days);
-      this.refresh.next();
-    }
-    else {
-      this.showError = true;
-    }
+    this.checkCalendarChanges();
+    this.checkDurationChanges();
     if (this.detailsFromParentModal.editMode) {
       this.patchFormValue();
     }
@@ -148,6 +159,18 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
     this.getAllPeriodList();
 
     this.getAllRooms();
+  }
+
+
+  checkCalendarChanges() {
+    if (this.selectedCalendar == undefined || this.selectedCalendar?.days == undefined) {
+      this.showError = true;
+    }
+    else {
+      this.showError = false;
+      this.getDays(this.selectedCalendar.days);
+      this.refresh.next()
+    }
   }
 
   patchFormValue() {
@@ -161,7 +184,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
       this.courseCalendarSchedule.roomId = schedule.roomId;
       this.courseCalendarSchedule.serial = schedule.serial;
       this.courseCalendarSchedule.takeAttendance = schedule.takeAttendance;
-     let random=Math.floor((Math.random() * 7) + 0);
+      let random = Math.floor((Math.random() * 7) + 0);
       this.events.push({
         start: new Date(schedule.date),
         end: new Date(schedule.date),
@@ -174,7 +197,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
           afterEnd: true,
         },
         draggable: true,
-        meta: {scheduleDetails:schedule,randomColor:this.color[random]}
+        meta: { scheduleDetails: schedule, randomColor: this.color[random] }
       });
       this.refresh.next();
     }
@@ -188,7 +211,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
       });
     }
     else {
-      this.addClassTitle='addClass';
+      this.addClassTitle = 'addClass';
       this.classEditMode = false;
       this.showClassDetails = false;
       this.editClassDetails = true;
@@ -199,7 +222,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
 
   }
   viewEvent(event) {
-    this.addClassTitle='editClass';
+    this.addClassTitle = 'editClass';
     this.showClassDetails = true;
     this.editClassDetails = false;
     this.classDetails = event;
@@ -210,14 +233,13 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
     this.addCalendarDay = 1;
 
   }
-  deleteEvent(event){
-    debugger;
+  deleteEvent(event) {
     this.addCalendarDay = 0;
-      let classIndex = this.calendarSchedulingModel.courseCalendarScheduleList.findIndex(x => x.serial == event.meta.scheduleDetails.serial);
-      this.calendarSchedulingModel.courseCalendarScheduleList.splice(classIndex, 1);
-      let eventIndex = this.events.findIndex(x => x.meta.scheduleDetails.serial == this.courseCalendarSchedule.serial);
-      this.events.splice(eventIndex, 1);
-    
+    let classIndex = this.calendarSchedulingModel.courseCalendarScheduleList.findIndex(x => x.serial == event.meta.scheduleDetails.serial);
+    this.calendarSchedulingModel.courseCalendarScheduleList.splice(classIndex, 1);
+    let eventIndex = this.events.findIndex(x => x.meta.scheduleDetails.serial == this.courseCalendarSchedule.serial);
+    this.events.splice(eventIndex, 1);
+
   }
 
   closeDetails() {
@@ -256,30 +278,29 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
     this.durationType = mrChange.value;
   }
   classSubmit() {
-    debugger;
-    let random=Math.floor((Math.random() * 7) + 0);
+    let random = Math.floor((Math.random() * 7) + 0);
     this.currentForm.form.markAllAsTouched();
     this.courseCalendarSchedule.blockId = this.blockListViewModel.getBlockListForView[0].blockId;
     this.courseCalendarSchedule.date = this.commonFunction.formatDateSaveWithoutTime(this.courseCalendarSchedule.date);
     if (this.classEditMode) {
 
-      if(this.courseCalendarSchedule.serial=== 0){
+      if (this.courseCalendarSchedule.serial === 0) {
         let eventIndex = this.events.findIndex(x => x.meta.scheduleDetails.serial == this.courseCalendarSchedule.serial);
         this.events.splice(eventIndex, 1);
       }
-      else{
+      else {
         let classIndex = this.calendarSchedulingModel.courseCalendarScheduleList.findIndex(x => x.serial == this.courseCalendarSchedule.serial);
         this.calendarSchedulingModel.courseCalendarScheduleList.splice(classIndex, 1);
         this.calendarSchedulingModel.courseCalendarScheduleList.push(this.courseCalendarSchedule);
         let eventIndex = this.events.findIndex(x => x.meta.scheduleDetails.serial == this.courseCalendarSchedule.serial);
         this.events.splice(eventIndex, 1);
       }
-      
+
     }
     else {
       let roomIndex = this.roomModelList.findIndex(x => x.roomId == this.courseCalendarSchedule.roomId);
       let roomTitle = this.roomModelList[roomIndex].title;
-      this.courseCalendarSchedule.rooms.title=roomTitle;
+      this.courseCalendarSchedule.rooms.title = roomTitle;
       this.courseCalendarSchedule.serial = 0;
       this.calendarSchedulingModel.courseCalendarScheduleList.push(this.courseCalendarSchedule);
     }
@@ -303,7 +324,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
           afterEnd: true,
         },
         draggable: true,
-        meta:{scheduleDetails: this.courseCalendarSchedule,randomColor: this.color[random]}
+        meta: { scheduleDetails: this.courseCalendarSchedule, randomColor: this.color[random] }
       });
       this.refresh.next();
       this.addCalendarDay = 0;
@@ -336,10 +357,17 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
   //for rendar weekends
   beforeMonthViewRender(renderEvent: CalendarMonthViewBeforeRenderEvent): void {
     renderEvent.body.forEach((day) => {
-      const dayOfMonth = day.date.getDay();
-      if (this.filterDays.includes(dayOfMonth)) {
+      if (day.date >= new Date(this.startDate) && day.date <= new Date(this.endDate)) {
+        const dayOfMonth = day.date.getDay();
+        if (this.filterDays.includes(dayOfMonth)) {
+          day.cssClass = this.cssClass;
+        }
+      }
+      else {
+        day.isWeekend = true;
         day.cssClass = this.cssClass;
       }
+
     });
   }
 

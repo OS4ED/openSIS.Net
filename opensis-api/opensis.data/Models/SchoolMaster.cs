@@ -25,6 +25,7 @@ namespace opensis.data.Models
             SearchFilter = new HashSet<SearchFilter>();
             Semesters = new HashSet<Semesters>();
             StaffMaster = new HashSet<StaffMaster>();
+            StudentCoursesectionSchedule = new HashSet<StudentCoursesectionSchedule>();
             StudentEnrollmentCode = new HashSet<StudentEnrollmentCode>();
             StudentMaster = new HashSet<StudentMaster>();
         }
@@ -80,6 +81,7 @@ namespace opensis.data.Models
         public virtual ICollection<SearchFilter> SearchFilter { get; set; }
         public virtual ICollection<Semesters> Semesters { get; set; }
         public virtual ICollection<StaffMaster> StaffMaster { get; set; }
+        public virtual ICollection<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
         public virtual ICollection<StudentEnrollmentCode> StudentEnrollmentCode { get; set; }
         public virtual ICollection<StudentMaster> StudentMaster { get; set; }
     }

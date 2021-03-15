@@ -1,7 +1,7 @@
 <mat-card class="w-full pb-0">
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'certificationInformation' | translate}}</h3>
-        <button mat-raised-button color="primary" (click)='openAddNew()'><mat-icon [icIcon]="icAdd"></mat-icon> {{'addNewCertification' |translate}}</button>
+        <button *ngIf="addPermission" mat-raised-button color="primary" (click)='openAddNew()'><mat-icon [icIcon]="icAdd"></mat-icon> {{'addNewCertification' |translate}}</button>
     </div>
     <mat-card-content class="-mx-4">
         <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
@@ -57,10 +57,10 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'actions'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        <a (click)="openEditdata(element)" class="mr-3 cursor-pointer">
+                        <a *ngIf="editPermission" (click)="openEditdata(element)" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a (click)="confirmDelete(element)" class="mr-3 cursor-pointer">
+                        <a *ngIf="deletePermission" (click)="confirmDelete(element)" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                     </td>

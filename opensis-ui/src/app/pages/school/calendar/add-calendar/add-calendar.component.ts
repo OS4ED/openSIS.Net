@@ -169,7 +169,6 @@ export class AddCalendarComponent implements OnInit {
 
   }
   selectDays(event, id) {
-    debugger;
     event.preventDefault();
     var index = this.weekArray.indexOf(id);
     if (index > -1) {

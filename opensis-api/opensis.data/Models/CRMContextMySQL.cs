@@ -18,7 +18,15 @@ namespace opensis.data.Models
             if (!optionsBuilder.IsConfigured)
             {
                 string connectionString = "server=localhost;database={tenant};user=root;password=admin@123";
-                optionsBuilder.UseMySql(connectionString.Replace("{tenant}", "opensisv2test"));
+                optionsBuilder.UseMySql(connectionString.Replace("{tenant}", "opensisv2new"));
+                /* ********* bob server*********
+                 * 
+                 string connectionString = "server=159.89.143.110;port=3306;database={tenant};user=opensisadmin;password=Opens1s@2021";
+                 optionsBuilder.UseMySql(connectionString.Replace("{tenant}", "opensisv2"));*/
+
+                //string connectionString = "server=103.230.103.93;port=3306;database={tenant};user=admin;password=methodolog1c";
+                //optionsBuilder.UseMySql(connectionString.Replace("{tenant}", "opensisv2_test1"));
+
             }
 
         }

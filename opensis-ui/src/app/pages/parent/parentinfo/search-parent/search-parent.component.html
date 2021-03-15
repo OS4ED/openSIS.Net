@@ -1,0 +1,175 @@
+<form (ngSubmit)="submit()" #f="ngForm">
+    <div class="search-body">
+        <div class="flex justify-between px-6 py-4">
+            <h4 class="font-bold">{{'advanceSearch' | translate}}</h4>
+            <a (click)="hideAdvanceSearch()" class="cursor-pointer">
+                <mat-icon>close</mat-icon>
+            </a>
+        </div>
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel expanded>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'identificationInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>First/Given Name</mat-label>
+                            <input [(ngModel)]="parentSearchModel.firstname" name="firstGivenName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Middle Name</mat-label>
+                            <input [(ngModel)]="parentSearchModel.middlename" name="middleName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Last/Family Name</mat-label>
+                            <input [(ngModel)]="parentSearchModel.lastname" name="lastFamilyName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                </li>
+
+                </ul>
+
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'personalContactInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Personal Email</mat-label>
+                            <input [(ngModel)]="parentSearchModel.personalEmail" name="personalEmail" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Work Email</mat-label>
+                            <input [(ngModel)]="parentSearchModel.workEmail" name="schoolEmail" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Home Phone</mat-label>
+                            <input [(ngModel)]="parentSearchModel.homePhone" name="homePhone" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Mobile Phone</mat-label>
+                            <input [(ngModel)]="parentSearchModel.mobile" name="mobilePhone" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Work Phone</mat-label>
+                            <input [(ngModel)]="parentSearchModel.workPhone" name="mobilePhone" matInput>
+                        </mat-form-field>
+                    </li>
+            
+                </ul>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'associatedStudents' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>First/Given Name</mat-label>
+                            <input [(ngModel)]="parentSearchModel.studentFirstName" name="firstGivenName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Middle Name</mat-label>
+                            <input [(ngModel)]="parentSearchModel.studentMiddleName" name="middleName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Last/Family Name</mat-label>
+                            <input [(ngModel)]="parentSearchModel.studentLastName" name="lastFamilyName" matInput>
+                        </mat-form-field>
+                    </li>
+            
+                </ul>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'addressInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Street Address 1</mat-label>
+                            <input [(ngModel)]="parentSearchModel.addressLineOne" name="homeAddressLineOne" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Street Address 2</mat-label>
+                            <input [(ngModel)]="parentSearchModel.addressLineTwo" name="homeAddressLineTwo" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'country'|translate}}</mat-label>
+                        <mat-select [(ngModel)]="parentSearchModel.country"  name="homeAddressCountry">
+                            <mat-option *ngFor="let country of countryListArr" [value]= 'country.id'>
+                                {{country.name}}
+                            </mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>State/Province/Locality</mat-label>
+                            <input [(ngModel)]="parentSearchModel.state" name="homeAddressState" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>City</mat-label>
+                            <input [(ngModel)]="parentSearchModel.city" name="homeAddressCity" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Zip/Postal Code</mat-label>
+                            <input [(ngModel)]="parentSearchModel.zip" name="homeAddressZip" matInput>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+        </mat-accordion>
+    </div>
+    <div class="search-toolbar py-3 px-6 text-right">
+        <button color="" mat-button type="button" (click)="resetData()" class="mr-3">{{'reset' | translate}}</button>
+        <button color="primary" mat-raised-button>{{'search' | translate}}</button>
+    </div>
+
+</form>

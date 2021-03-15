@@ -29,6 +29,10 @@ import * as cloneDeep from 'lodash/cloneDeep';
 import { MiscModel } from '../../../../models/misc-data-student.model';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { CryptoService } from '../../../../services/Crypto.service';
+import { Router } from '@angular/router';
 @Component({
   selector: 'vex-staff-generalinfo',
   templateUrl: './staff-generalinfo.component.html',
@@ -87,17 +91,25 @@ export class StaffGeneralinfoComponent implements OnInit {
   internalId:FormControl;
   loginEmail:FormControl;
   cloneStaffAddModel;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(private fb: FormBuilder,
-    private el: ElementRef,
-    public translateService: TranslateService,
-    private snackbar: MatSnackBar,
-    private commonService: CommonService,
-    private loginService: LoginService,
-    private commonFunction: SharedFunction,
-    private staffService: StaffService,
-    private cd: ChangeDetectorRef,
-    private imageCropperService: ImageCropperService,
-    private commonLOV:CommonLOV) {
+              private el: ElementRef,
+              public translateService: TranslateService,
+              private snackbar: MatSnackBar,
+              private commonService: CommonService,
+              private loginService: LoginService,
+              private cryptoService: CryptoService,
+              private commonFunction: SharedFunction,
+              private staffService: StaffService,
+              private router:Router,
+              public rollBasedAccessService: RollBasedAccessService,
+              private cd: ChangeDetectorRef,
+              private imageCropperService: ImageCropperService,
+              private commonLOV: CommonLOV) {
     translateService.use('en');
 
     this.staffService.getStaffDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StaffAddModel) => {
@@ -117,9 +129,21 @@ export class StaffGeneralinfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.internalId = new FormControl('',Validators.required);
-    this.loginEmail = new FormControl('',Validators.required);
+
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 13);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+
+    this.internalId = new FormControl('', Validators.required);
+    this.loginEmail = new FormControl('', Validators.required);
     if (this.staffCreateMode == this.staffCreate.ADD) {
+      if(this.addPermission===false){
+        this.router.navigate(['/'])
+      }
       this.initializeDropdowns();
     } else if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.staffService.changePageMode(this.staffCreateMode);
@@ -421,11 +445,11 @@ export class StaffGeneralinfoComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Staff Save failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Staff Save Successful.', '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
           this.staffService.setStaffId(data.staffMaster.staffId);
@@ -458,11 +482,11 @@ export class StaffGeneralinfoComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Staff Update failed. ' + data._message, '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Staff Update Successful.', '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
           this.staffService.setStaffCloneImage(data.staffMaster.staffPhoto);

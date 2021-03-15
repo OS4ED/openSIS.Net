@@ -126,7 +126,7 @@ export class FemaleToiletAccessibilityComponent implements OnInit {
     return this.columns.filter(column => column.visible).map(column => column.property);
   }
   deleteFemaleToiletAccessibilitydata(element){
-    this.lovAddView.dropdownValue=element
+    this.lovAddView.dropdownValue.id=element.id
     this.commonService.deleteDropdownValue(this.lovAddView).subscribe(
       (res:LovAddView)=>{
         if(typeof(res)=='undefined'){
@@ -173,12 +173,17 @@ export class FemaleToiletAccessibilityComponent implements OnInit {
           });
         }
         else{
-          if (res._failure) {  
-            this.femaleToiletAccessibilityList=new MatTableDataSource(res.dropdownList) ;
-            this.listCount=this.femaleToiletAccessibilityList.data;
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
+          if (res._failure) { 
+            if (res.dropdownList == null) {
+              this.femaleToiletAccessibilityList= new MatTableDataSource(null);
+              this.listCount=this.femaleToiletAccessibilityList.data;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.femaleToiletAccessibilityList= new MatTableDataSource(null);
+              this.listCount=this.femaleToiletAccessibilityList.data;
+            } 
           } 
           else{
             this.femaleToiletAccessibilityList=new MatTableDataSource(res.dropdownList) ;

@@ -86,7 +86,7 @@ export class SelectBarComponent implements OnInit {
       } else {
         this.selectSchoolOnLoad();
       }
-      this.schoolService.changeSchoolListStatus(true);
+      this.schoolService.changeSchoolListStatus({schoolLoaded:true,schoolChanged:false,dataFromUserLogin:false});
     });
   }
 
@@ -127,6 +127,8 @@ export class SelectBarComponent implements OnInit {
     this.callAcademicYearsOnSchoolSelect();
     this.router.navigate(['/school/dashboards']);
     this.dasboardService.sendPageLoadEvent(true);
+    this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false});
+
   }
 
   callAcademicYearsOnSchoolSelect() {

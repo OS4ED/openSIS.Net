@@ -72,6 +72,12 @@
         <li class="col-span-2">
             <div class="flex flex-wrap">
                 <span class="mr-6">
+                    <mat-slide-toggle formControlName="" name="" class="mb-3" color="primary">{{'allowStudentConflict' | translate}}</mat-slide-toggle>
+                </span>
+                <span class="mr-6">
+                    <mat-slide-toggle formControlName="" name="" class="mb-3" color="primary">{{'allowTeacherConflict' | translate}}</mat-slide-toggle>
+                </span>
+                <span class="mr-6">
                     <mat-slide-toggle formControlName="isWeightedCourse" name="isWeightedCourse" class="mb-3" color="primary">{{'courseIsWeighted' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6">
@@ -80,26 +86,11 @@
                 <span class="mr-6">
                     <mat-slide-toggle class="mb-3" formControlName="affectsHonorRoll" name="affectsHonorRoll"   color="primary">{{'affectsHonorRoll' | translate}}</mat-slide-toggle>
                 </span>
+                <span class="mr-6"><mat-slide-toggle (change)="toggleUsStandards($event)" formControlName="useStandards" color="primary">{{'useStandards' | translate}}</mat-slide-toggle></span>
                 <span class="mr-6 mb-3">
                     <mat-slide-toggle (change)="showOnlineClassRoom($event)" formControlName="onlineClassRoom" name="onlineClassRoom"   color="primary">{{'onlineClassRoom' | translate}}</mat-slide-toggle>
                 </span>
             </div>
-        </li>
-        <li *ngIf="form?.value.onlineClassRoom">
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{'onlineClassRoomUrl' | translate}}</mat-label>
-                <input type="text" formControlName="onlineClassroomUrl" name ="onlineClassroomUrl" matInput [required]="form?.value.onlineClassRoom?true:null">
-                <mat-error *ngIf="form.get('onlineClassroomUrl').hasError('required')">{{'onlineClassroomUrlIsRequired'|translate}}</mat-error>
-            </mat-form-field>
-        </li>
-        <li *ngIf="form?.value.onlineClassRoom">
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{'onlineClassRoomPasswordIfAny' | translate}}</mat-label>
-                <input type="text" formControlName="onlineClassroomPassword" name ="onlineClassroomPassword" matInput>
-            </mat-form-field>
-        </li>
-        <li class="col-span-2 pb-3">
-            <mat-slide-toggle (change)="toggleUsStandards($event)" formControlName="useStandards" color="primary">{{'useStandards' | translate}}</mat-slide-toggle>
         </li>
         <li *ngIf="form.value.useStandards">
             <mat-form-field class="w-full" appearance="outline" color="primary">
@@ -111,6 +102,20 @@
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="form.get('standardGradeScaleId').hasError('required')">{{'standardGradeScaleIsRequired'|translate}}</mat-error>
+            </mat-form-field>
+        </li>
+        <li *ngIf="form.value.useStandards"></li>
+        <li *ngIf="form?.value.onlineClassRoom">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'onlineClassRoomUrl' | translate}}</mat-label>
+                <input type="text" formControlName="onlineClassroomUrl" name ="onlineClassroomUrl" matInput [required]="form?.value.onlineClassRoom?true:null">
+                <mat-error *ngIf="form.get('onlineClassroomUrl').hasError('required')">{{'onlineClassroomUrlIsRequired'|translate}}</mat-error>
+            </mat-form-field>
+        </li>
+        <li *ngIf="form?.value.onlineClassRoom">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'onlineClassRoomPasswordIfAny' | translate}}</mat-label>
+                <input type="text" formControlName="onlineClassroomPassword" name ="onlineClassroomPassword" matInput>
             </mat-form-field>
         </li>
     </ul>
@@ -131,7 +136,7 @@
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'markingPeriod' | translate}}</mat-label>
-                    <mat-select formControlName="markingPeriodId" name="markingPeriodId" required>
+                    <mat-select formControlName="markingPeriodId" (selectionChange) = "changeMarkingPeriod($event.value)" name="markingPeriodId" required>
                         <mat-option></mat-option>
                         <mat-option *ngFor="let markingPeriod of markingPeriodList" [value]='markingPeriod.value'>
                             {{markingPeriod.text}}
@@ -147,7 +152,7 @@
             <li >
                 <mat-form-field class="w-full" appearance="outline" color="primary" >
                     <mat-label>{{'startDate' | translate}}</mat-label>
-                    <input formControlName="durationStartDate" name="durationStartDate"  matInput [matDatepicker]="pickerStartDate"  [min]="startDate" [max]="endDate" [required]="form.value.durationType=='2'?true:null"  [disabled]="showCalendarDates"> 
+                    <input formControlName="durationStartDate" name="durationStartDate" (dateChange)="durationChange($event.value,'durationStartDate')"  matInput [matDatepicker]="pickerStartDate"  [min]="startDate" [max]="endDate" [required]="form.value.durationType=='2'?true:null"  [disabled]="showCalendarDates"> 
                     
                     <mat-datepicker-toggle matSuffix [for]="pickerStartDate"></mat-datepicker-toggle>
                     <mat-datepicker #pickerStartDate></mat-datepicker>
@@ -159,7 +164,7 @@
             <li>
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{'endDate' | translate}}</mat-label>
-                    <input formControlName="durationEndDate" name="durationEndDate" [matDatepicker]="pickerEndDate"  [min]="startDate" [max]="endDate" matInput [required]="form.value.durationType=='2'?true:null"  [disabled]="showCalendarDates">
+                    <input formControlName="durationEndDate" name="durationEndDate" (dateChange)="durationChange($event.value,'durationEndDate')" [matDatepicker]="pickerEndDate"  [min]="startDate" [max]="endDate" matInput [required]="form.value.durationType=='2'?true:null"  [disabled]="showCalendarDates">
                     <mat-datepicker-toggle [for]="pickerEndDate" matSuffix></mat-datepicker-toggle>
                     <mat-datepicker #pickerEndDate></mat-datepicker>
                     <mat-error *ngIf="form.get('durationEndDate')?.hasError('required')">{{'endDateIsRequired'|translate}}</mat-error>
@@ -187,7 +192,7 @@
     </div>
 
     <div class="-mx-6 mt-5 relative" *ngIf="scheduleType === '3'">
-        <vex-calendar-days (calendarScheduleData)="manipulateCalendarScheduleBeforeSubmit($event)" [detailsFromParentModal]="data" [selectedCalendar]="selectedCalendar"></vex-calendar-days>      
+        <vex-calendar-days (calendarScheduleData)="manipulateCalendarScheduleBeforeSubmit($event)" [selectedMarkingPeriod]="selectedMarkingPeriod" [detailsFromParentModal]="data" [durationDateRange]="durationDateRange" [selectedCalendar]="selectedCalendar"></vex-calendar-days>      
     </div>
 
     <div class="-mx-6 mt-5" *ngIf="scheduleType === '4'">

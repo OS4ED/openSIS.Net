@@ -72,12 +72,13 @@ namespace opensis.data.Repository
             CountryListModel countryListModel = new CountryListModel();
             try
             {
-                countryListModel.TableCountry = null;
                 var CountryList = this.context?.Country.ToList();
+
+                countryListModel.TableCountry = CountryList;
+
                 if (CountryList.Count > 0)
                 {
                     int? StateCount = this.context?.State.Count();
-                    countryListModel.TableCountry = CountryList;
                     countryListModel.StateCount = StateCount;
                     countryListModel._failure = false;
                 }
@@ -214,11 +215,12 @@ namespace opensis.data.Repository
             LanguageListModel languageListModel = new LanguageListModel();
             try
             {
-                languageListModel.TableLanguage = null;
                 var languages = this.context?.Language.ToList();
+
+                languageListModel.TableLanguage = languages;
+
                 if (languages.Count > 0)
                 {
-                    languageListModel.TableLanguage = languages;
                     languageListModel._failure = false;
                 }
                 else
@@ -321,7 +323,7 @@ namespace opensis.data.Repository
                 this.context?.DpdownValuelist.Add(dpdownValue.DropdownValue);
                 this.context?.SaveChanges();
                 dpdownValue._failure = false;
-                dpdownValue._message = "LOV Added Successfully";
+                dpdownValue._message = "Data Added Successfully";
             }
             return dpdownValue;
         }
@@ -470,7 +472,7 @@ namespace opensis.data.Repository
                         getDpdownValue.UpdatedBy = dpdownValue.DropdownValue.UpdatedBy;
                         this.context?.SaveChanges();
                         dpdownValue._failure = false;
-                        dpdownValue._message = "LOV Updated Successfully";
+                        dpdownValue._message = "Data Updated Successfully";
                         transaction.Commit();
                     }
                     return dpdownValue;
@@ -533,15 +535,14 @@ namespace opensis.data.Repository
 
                 var dropdownList = this.context?.DpdownValuelist.Where(x => x.TenantId == dpdownList.TenantId && x.SchoolId == dpdownList.SchoolId && x.LovName.ToLower() == dpdownList.LovName.ToLower()).ToList();
 
+                dpdownListModel.dropdownList = dropdownList;
 
                 if (dropdownList.Count > 0)
                 {
-                    dpdownListModel.dropdownList = dropdownList;
                     dpdownListModel._failure = false;
                 }
                 else
                 {
-                    dpdownListModel.dropdownList = null;
                     dpdownListModel._failure = true;
                     dpdownListModel._message = NORECORDFOUND;
                 }
@@ -817,7 +818,7 @@ namespace opensis.data.Repository
                     this.context?.DpdownValuelist.Remove(getDpValue);
                     this.context?.SaveChanges();
                     dropdownValueAddModel._failure = false;
-                    dropdownValueAddModel._message = "LOV Deleted Successfully";
+                    dropdownValueAddModel._message = "Data Deleted Successfully";
                 }
 
             }
@@ -935,12 +936,12 @@ namespace opensis.data.Repository
             ReleaseNumberAddViewModel ReleaseNumberViewModel = new ReleaseNumberAddViewModel();
             try
             {
-                ReleaseNumberViewModel.releaseNumber = null;
                 var releaseNumber = this.context?.ReleaseNumber.OrderByDescending(c => c.ReleaseDate).FirstOrDefault(c=>c.SchoolId== releaseNumberAddViewModel.releaseNumber.SchoolId && c.TenantId== releaseNumberAddViewModel.releaseNumber.TenantId);
-                
+
+                ReleaseNumberViewModel.releaseNumber = releaseNumber;
+
                 if (releaseNumber!=null)
-                {
-                    ReleaseNumberViewModel.releaseNumber = releaseNumber;                    
+                {             
                     ReleaseNumberViewModel._failure = false;                
                 }
                 else
@@ -1121,6 +1122,76 @@ namespace opensis.data.Repository
                 searchFilterListModel._token = searchFilterListViewModel._token;
             }
             return searchFilterListModel;
+        }
+
+        /// <summary>
+        /// Get All Grade Age Range
+        /// </summary>
+        /// <param name="gradeAgeRangeListViewModel"></param>
+        /// <returns></returns>
+        public GradeAgeRangeListViewModel GetAllGradeAgeRange(GradeAgeRangeListViewModel gradeAgeRangeListViewModel)
+        {
+            GradeAgeRangeListViewModel gradeAgeRangeListModel = new GradeAgeRangeListViewModel();
+            try
+            {
+                var gradeAgeRangeList = this.context?.GradeAgeRange.ToList();
+                gradeAgeRangeListModel.gradeAgeRangeList = gradeAgeRangeList;
+                gradeAgeRangeListModel._tenantName = gradeAgeRangeListViewModel._tenantName;
+                gradeAgeRangeListModel._token = gradeAgeRangeListViewModel._token;
+
+                if (gradeAgeRangeList.Count>0)
+                {                    
+                    gradeAgeRangeListModel._failure = false;
+                }
+                else
+                {
+                    gradeAgeRangeListModel._failure = true;
+                    gradeAgeRangeListModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                gradeAgeRangeListModel._message = es.Message;
+                gradeAgeRangeListModel._failure = true;
+                gradeAgeRangeListModel._tenantName = gradeAgeRangeListViewModel._tenantName;
+                gradeAgeRangeListModel._token = gradeAgeRangeListViewModel._token;
+            }
+            return gradeAgeRangeListModel;
+        }
+
+        /// <summary>
+        /// Get All Grade Educational Stage
+        /// </summary>
+        /// <param name="gradeEducationalStageListViewModel"></param>
+        /// <returns></returns>
+        public GradeEducationalStageListViewModel GetAllGradeEducationalStage(GradeEducationalStageListViewModel gradeEducationalStageListViewModel)
+        {
+            GradeEducationalStageListViewModel gradeEducationalStageListModel = new GradeEducationalStageListViewModel();
+            try
+            {
+                var gradeEducationalStageList = this.context?.GradeEducationalStage.ToList();
+                gradeEducationalStageListModel.gradeEducationalStageList = gradeEducationalStageList;
+                gradeEducationalStageListModel._tenantName = gradeEducationalStageListViewModel._tenantName;
+                gradeEducationalStageListModel._token = gradeEducationalStageListViewModel._token;
+
+                if (gradeEducationalStageList.Count > 0)
+                {
+                    gradeEducationalStageListModel._failure = false;
+                }
+                else
+                {
+                    gradeEducationalStageListModel._failure = true;
+                    gradeEducationalStageListModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                gradeEducationalStageListModel._message = es.Message;
+                gradeEducationalStageListModel._failure = true;
+                gradeEducationalStageListModel._tenantName = gradeEducationalStageListViewModel._tenantName;
+                gradeEducationalStageListModel._token = gradeEducationalStageListViewModel._token;
+            }
+            return gradeEducationalStageListModel;
         }
     }
 }

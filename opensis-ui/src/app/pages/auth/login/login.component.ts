@@ -15,7 +15,8 @@ import { LoaderService } from '../../../services/loader.service';
 import { ValidationService } from '../../shared/validation.service';
 import { LanguageModel } from '../../../models/languageModel';
 import { CookieService } from 'ngx-cookie-service';
-
+import { CryptoService } from '../../../services/Crypto.service';
+import { SchoolService } from '../../../services/school.service';
 @Component({
   selector: 'vex-login',
   templateUrl: './login.component.html',
@@ -56,7 +57,9 @@ export class LoginComponent implements OnInit {
     private loginService: LoginService,
     public translate: TranslateService,
     private cookieService: CookieService,
-    private loaderService: LoaderService
+    private loaderService: LoaderService,
+    private cryptoService:CryptoService,
+    private schoolService:SchoolService
   ) {
     this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
     this.translate.addLangs(['en', 'fr']);
@@ -88,7 +91,7 @@ export class LoginComponent implements OnInit {
     if (!event) {
       this.expiredDate = new Date();
       this.expiredDate.setDate(this.expiredDate.getDate() + 7);
-      this.cookieService.set('userDetails', JSON.stringify(this.form.value), this.expiredDate);
+      this.cookieService.set('userDetails', JSON.stringify(this.form.value), this.expiredDate,null,null,true);
 
     }
     else {
@@ -117,10 +120,14 @@ export class LoginComponent implements OnInit {
               duration: 10000
             });
           } else {
+             sessionStorage.setItem("selectedSchoolId", data.schoolId.toString());
+            localStorage.setItem('permissions',this.cryptoService.dataEncrypt(JSON.stringify(data)));
+            this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:false,dataFromUserLogin:true});
             sessionStorage.setItem("token", data._token);
             sessionStorage.setItem("tenantId", data.tenantId);
             sessionStorage.setItem("email", data.email);
             sessionStorage.setItem("user", data.name);
+            sessionStorage.setItem("userMembershipID",data.membershipId.toString())
             sessionStorage.setItem("membershipName", data.membershipName);
             this.router.navigateByUrl("/school/dashboards");
           }

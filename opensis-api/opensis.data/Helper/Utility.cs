@@ -47,6 +47,57 @@ namespace opensis.data.Helper
 
             return GetMaxId;
         }
+
+
+        //public static int? GetIntMaxPK<TEntity>(CRMContext cRMContext, Func<TEntity, int> columnSelector, string tenantid, string schoolid) where TEntity : class
+        //{
+        //    int? GetMaxId = 0;
+
+        //    List<FilterParams> filters = new List<FilterParams>();
+
+        //    FilterParams param1 = new FilterParams();
+        //    param1.ColumnName = "TenantId";
+        //    param1.FilterValue = tenantid;
+        //    param1.JoinCondition = "AND";
+        //    param1.FilterOption = FilterOptions.IsEqualTo;
+
+        //    FilterParams param2 = new FilterParams();
+        //    param2.ColumnName = "SchoolId";
+        //    param2.FilterValue = schoolid;
+        //    param2.FilterOption = FilterOptions.IsEqualTo;
+
+
+        //    filters.Add(param1);
+        //    filters.Add(param2);
+
+        //    var entityClass = cRMContext?.Set<TEntity>().AsQueryable();
+            
+        //    entityClass = entityClass.Where(filters);
+
+        //    if (entityClass.Count() == 0)
+        //    {               
+        //            GetMaxId = 1;                
+        //    }
+        //    else
+        //    {
+        //        GetMaxId = cRMContext?.Set<TEntity>().AsQueryable().Where(filters).Max(columnSelector);
+
+        //        if (GetMaxId == null || GetMaxId <= 0)
+        //        {
+
+        //            GetMaxId = 1;
+        //        }
+        //        else
+        //        {
+        //            GetMaxId = GetMaxId + 1;
+        //        }
+        //    }
+
+
+        //    return GetMaxId;
+        //}
+
+
         public static long? GetMaxLongPK<TEntity>(CRMContext cRMContext, Func<TEntity, long> columnSelector) where TEntity : class
         {
             long? GetMaxId = 0;

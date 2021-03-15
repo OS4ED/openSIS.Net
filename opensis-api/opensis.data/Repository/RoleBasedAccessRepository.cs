@@ -124,8 +124,7 @@ namespace opensis.data.Repository
                                 TenantId = scrp.TenantId,
                                 SchoolId = scrp.SchoolId,
                                 MembershipId = scrp.MembershipId,
-                                PermissionCategoryId = scrp.PermissionCategoryId,
-                                PermissionSubcategoryId=scrp.PermissionSubcategoryId,
+                                PermissionSubcategoryId = scrp.PermissionSubcategoryId,
                                 CanView = scrp.CanView,
                                 CanAdd = scrp.CanAdd,
                                 CanDelete = scrp.CanDelete,
@@ -133,21 +132,34 @@ namespace opensis.data.Repository
 
                             }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId && x.MembershipId == rolePermissionListViewModel.MembershipId)
                         }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId),
-                        RolePermission = (ICollection<RolePermission>)pc.RolePermission.Select(rp => new RolePermission
+                        RolePermission = (ICollection<RolePermission>)pc.RolePermission.Select(crp => new RolePermission
                         {
-                            RolePermissionId = rp.RolePermissionId,
-                            TenantId = rp.TenantId,
-                            SchoolId = rp.SchoolId,
-                            MembershipId = rp.MembershipId,
-                            PermissionCategoryId = rp.PermissionCategoryId,
-                            CanView = rp.CanView,
-                            CanAdd = rp.CanAdd,
-                            CanDelete = rp.CanDelete,
-                            CanEdit = rp.CanEdit,
+                            RolePermissionId = crp.RolePermissionId,
+                            TenantId = crp.TenantId,
+                            SchoolId = crp.SchoolId,
+                            MembershipId = crp.MembershipId,
+                            PermissionCategoryId = crp.PermissionCategoryId,
+                            CanView = crp.CanView,
+                            CanAdd = crp.CanAdd,
+                            CanDelete = crp.CanDelete,
+                            CanEdit = crp.CanEdit,
 
                         }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId && x.MembershipId == rolePermissionListViewModel.MembershipId)
-                    }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId)
-                }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId && x.IsActive == true).OrderBy(x => x.SortOrder).ToList();
+                    }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId),
+                    RolePermission = (ICollection<RolePermission>)pg.RolePermission.Select(grp => new RolePermission
+                    {
+                        RolePermissionId = grp.RolePermissionId,
+                        TenantId = grp.TenantId,
+                        SchoolId = grp.SchoolId,
+                        MembershipId = grp.MembershipId,
+                        PermissionGroupId = grp.PermissionGroupId,
+                        CanView = grp.CanView,
+                        CanAdd = grp.CanAdd,
+                        CanDelete = grp.CanDelete,
+                        CanEdit = grp.CanEdit,
+
+                    }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId && x.MembershipId == rolePermissionListViewModel.MembershipId)
+                }).Where(x => x.TenantId == rolePermissionListViewModel.TenantId && x.SchoolId == rolePermissionListViewModel.SchoolId).OrderBy(x => x.SortOrder).ToList();
 
                 if (permissionGroup.Count() > 0)
                 {
@@ -158,23 +170,24 @@ namespace opensis.data.Repository
                         pgvm.permissionGroup = pg;
 
                         //Get Role permission 
-                        foreach (PermissionCategory pc in pg.PermissionCategory)
-                        {
-                            if (pc.RolePermission.Count == 0)
-                            {
+                        //foreach (PermissionCategory pc in pg.PermissionCategory)
+                        //{
+                        //    if (pc.RolePermission.Count == 0)
+                        //    {
 
-                                RolePermission rp = new RolePermission();
-                                rp.PermissionCategoryId = pc.PermissionCategoryId;
-                                rp.MembershipId = rolePermissionListViewModel.MembershipId;
-                                rp.CanAdd = false;
-                                rp.CanDelete = false;
-                                rp.CanEdit = false;
-                                rp.CanView = false;
-                                rp.TenantId = rolePermissionListViewModel.TenantId;
-                                rp.SchoolId = rolePermissionListViewModel.SchoolId;
-                                pc.RolePermission.Add(rp);
-                            }
-                        }
+                        //        RolePermission rp = new RolePermission();
+                        //        rp.PermissionCategoryId = pc.PermissionCategoryId;
+                        //        rp.MembershipId = rolePermissionListViewModel.MembershipId;
+                        //        rp.CanAdd = false;
+                        //        rp.CanDelete = false;
+                        //        rp.CanEdit = false;
+                        //        rp.CanView = false;
+                        //        rp.TenantId = rolePermissionListViewModel.TenantId;
+                        //        rp.SchoolId = rolePermissionListViewModel.SchoolId;
+                        //        pc.RolePermission.Add(rp);
+                        //    }
+                        //}
+
                         rolePermissionListView.PermissionList.Add(pgvm);
                     }
                     //objViewModel.PermissionList = permissionGroup.ToList(); 
@@ -249,78 +262,109 @@ namespace opensis.data.Repository
             {
                 foreach (PermissionGroup p_group in permissionGroupListViewModel.permissionGroupList)
                 {
-                    var PermissionGroup = this.context?.PermissionGroup.FirstOrDefault(x => x.TenantId == p_group.TenantId && x.SchoolId == p_group.SchoolId && x.PermissionGroupId == p_group.PermissionGroupId);
+                    if (p_group.RolePermission.ToList().Count() > 0 && p_group.RolePermission != null)
+                    {
 
-                    if (PermissionGroup != null)
-                    {
-                        PermissionGroup.IsActive = p_group.IsActive;                     
-                    }
-                    foreach (PermissionCategory p_cat in p_group.PermissionCategory)
-                    {
-                        if (p_cat.PermissionSubcategory.Count > 0)
+                        var PermissionGroup = this.context?.RolePermission.FirstOrDefault(x => x.TenantId == p_group.TenantId && x.SchoolId == p_group.SchoolId && x.PermissionGroupId == p_group.PermissionGroupId && x.RolePermissionId == p_group.RolePermission.FirstOrDefault().RolePermissionId && x.MembershipId == p_group.RolePermission.FirstOrDefault().MembershipId);
+
+                        if (PermissionGroup != null)
                         {
-                            foreach (PermissionSubcategory p_subcat in p_cat.PermissionSubcategory)
-                            {
-                                foreach (RolePermission roleper in p_subcat.RolePermission)
-                                {
-                                    var RolePermission = this.context?.RolePermission.FirstOrDefault(x => x.TenantId == roleper.TenantId && x.SchoolId == roleper.SchoolId && x.RolePermissionId == roleper.RolePermissionId && x.PermissionCategoryId == roleper.PermissionCategoryId && x.PermissionSubcategoryId == roleper.PermissionSubcategoryId);
+                            PermissionGroup.CanAdd = p_group.RolePermission.FirstOrDefault().CanAdd;
+                            PermissionGroup.CanEdit = p_group.RolePermission.FirstOrDefault().CanEdit;
+                            PermissionGroup.CanDelete = p_group.RolePermission.FirstOrDefault().CanDelete;
+                            PermissionGroup.CanView = p_group.RolePermission.FirstOrDefault().CanView;
+                            this.context?.SaveChanges();
+                        }
+                        else
+                        {
+                            int? AutoId = 1;
 
-                                    if (RolePermission != null)
+                            var rolePermissionData = this.context?.RolePermission.Where(x => x.SchoolId == p_group.SchoolId && x.TenantId == p_group.TenantId).OrderByDescending(x => x.RolePermissionId).FirstOrDefault();
+
+                            if (rolePermissionData != null)
+                            {
+                                AutoId = rolePermissionData.RolePermissionId + 1;
+                            }
+                            p_group.RolePermission.FirstOrDefault().RolePermissionId = (int)AutoId;
+                            p_group.RolePermission.FirstOrDefault().PermissionSubcategoryId = null;
+                            p_group.RolePermission.FirstOrDefault().PermissionCategoryId = null;
+                            p_group.RolePermission.FirstOrDefault().CreatedBy = permissionGroupListViewModel.CreatedBy;
+                            p_group.RolePermission.FirstOrDefault().CreatedOn = DateTime.UtcNow;
+                            this.context?.RolePermission.Add(p_group.RolePermission.FirstOrDefault());
+                            this.context?.SaveChanges();
+                        }
+                        if (p_group.PermissionCategory.Count() > 0 && p_group.PermissionCategory != null)
+                        {
+                            foreach (PermissionCategory p_cat in p_group.PermissionCategory)
+                            {
+                                if (p_cat.RolePermission.ToList().Count() > 0 && p_cat.RolePermission != null)
+                                {
+                                    var PermissionCatagoary = this.context?.RolePermission.FirstOrDefault(x => x.TenantId == p_cat.TenantId && x.SchoolId == p_cat.SchoolId && x.PermissionCategoryId == p_cat.PermissionCategoryId && x.RolePermissionId == p_cat.RolePermission.FirstOrDefault().RolePermissionId && x.MembershipId == p_cat.RolePermission.FirstOrDefault().MembershipId);
+
+                                    if (PermissionCatagoary != null)
                                     {
-                                        RolePermission.CanAdd = roleper.CanAdd;
-                                        RolePermission.CanEdit = roleper.CanEdit;
-                                        RolePermission.CanDelete = roleper.CanDelete;
-                                        RolePermission.CanView = roleper.CanView;
+                                        PermissionCatagoary.CanAdd = p_cat.RolePermission.FirstOrDefault().CanAdd;
+                                        PermissionCatagoary.CanEdit = p_cat.RolePermission.FirstOrDefault().CanEdit;
+                                        PermissionCatagoary.CanDelete = p_cat.RolePermission.FirstOrDefault().CanDelete;
+                                        PermissionCatagoary.CanView = p_cat.RolePermission.FirstOrDefault().CanView;
                                         this.context?.SaveChanges();
                                     }
                                     else
                                     {
                                         int? AutoId = 1;
 
-                                        var rolePermissionData = this.context?.RolePermission.Where(x => x.SchoolId == roleper.SchoolId && x.TenantId == roleper.TenantId).OrderByDescending(x => x.RolePermissionId).FirstOrDefault();
+                                        var rolePermissionData = this.context?.RolePermission.Where(x => x.SchoolId == p_cat.SchoolId && x.TenantId == p_cat.TenantId).OrderByDescending(x => x.RolePermissionId).FirstOrDefault();
 
                                         if (rolePermissionData != null)
                                         {
                                             AutoId = rolePermissionData.RolePermissionId + 1;
                                         }
-                                        roleper.RolePermissionId = (int)AutoId;
-                                        roleper.CreatedBy = permissionGroupListViewModel.CreatedBy;
-                                        roleper.CreatedOn = DateTime.UtcNow;
-                                        this.context?.RolePermission.Add(roleper);
+                                        p_cat.RolePermission.FirstOrDefault().RolePermissionId = (int)AutoId;
+                                        p_cat.RolePermission.FirstOrDefault().PermissionGroupId = null;
+                                        p_cat.RolePermission.FirstOrDefault().PermissionSubcategoryId = null;
+                                        p_cat.CreatedBy = permissionGroupListViewModel.CreatedBy;
+                                        p_cat.CreatedOn = DateTime.UtcNow;
+                                        this.context?.RolePermission.Add(p_cat.RolePermission.FirstOrDefault());
                                         this.context?.SaveChanges();
                                     }
-                                }
-                            }
-                        }
-                        else
-                        {
-                            foreach (RolePermission roleper in p_cat.RolePermission)
-                            {
-                                var RolePermission = this.context?.RolePermission.FirstOrDefault(x => x.TenantId == roleper.TenantId && x.SchoolId == roleper.SchoolId && x.RolePermissionId == roleper.RolePermissionId && x.PermissionCategoryId == roleper.PermissionCategoryId);
-
-                                if (RolePermission != null)
-                                {
-                                    RolePermission.CanAdd = roleper.CanAdd;
-                                    RolePermission.CanEdit = roleper.CanEdit;
-                                    RolePermission.CanDelete = roleper.CanDelete;
-                                    RolePermission.CanView = roleper.CanView;
-                                    this.context?.SaveChanges();
-                                }
-                                else
-                                {
-                                    int? AutoId = 1;
-
-                                    var rolePermissionData = this.context?.RolePermission.Where(x => x.SchoolId == roleper.SchoolId && x.TenantId == roleper.TenantId).OrderByDescending(x => x.RolePermissionId).FirstOrDefault();
-
-                                    if (rolePermissionData != null)
+                                    if (p_cat.PermissionSubcategory.Count() > 0 && p_cat.PermissionSubcategory != null)
                                     {
-                                        AutoId = rolePermissionData.RolePermissionId + 1;
+
+                                        foreach (PermissionSubcategory p_subcat in p_cat.PermissionSubcategory)
+                                        {
+                                            foreach (RolePermission roleper in p_subcat.RolePermission)
+                                            {
+                                                var PermissionSubCatagory = this.context?.RolePermission.FirstOrDefault(x => x.TenantId == roleper.TenantId && x.SchoolId == roleper.SchoolId && x.RolePermissionId == roleper.RolePermissionId && x.PermissionSubcategoryId == roleper.PermissionSubcategoryId && x.MembershipId == roleper.MembershipId);
+
+                                                if (PermissionSubCatagory != null)
+                                                {
+                                                    PermissionSubCatagory.CanAdd = roleper.CanAdd;
+                                                    PermissionSubCatagory.CanEdit = roleper.CanEdit;
+                                                    PermissionSubCatagory.CanDelete = roleper.CanDelete;
+                                                    PermissionSubCatagory.CanView = roleper.CanView;
+                                                    this.context?.SaveChanges();
+                                                }
+                                                else
+                                                {
+                                                    int? AutoId = 1;
+
+                                                    var rolePermissionData = this.context?.RolePermission.Where(x => x.SchoolId == roleper.SchoolId && x.TenantId == roleper.TenantId).OrderByDescending(x => x.RolePermissionId).FirstOrDefault();
+
+                                                    if (rolePermissionData != null)
+                                                    {
+                                                        AutoId = rolePermissionData.RolePermissionId + 1;
+                                                    }
+                                                    roleper.RolePermissionId = (int)AutoId;
+                                                    roleper.PermissionGroupId = null;
+                                                    roleper.PermissionCategoryId = null;
+                                                    roleper.CreatedBy = permissionGroupListViewModel.CreatedBy;
+                                                    roleper.CreatedOn = DateTime.UtcNow;
+                                                    this.context?.RolePermission.Add(roleper);
+                                                    this.context?.SaveChanges();
+                                                }
+                                            }
+                                        }
                                     }
-                                    roleper.RolePermissionId = (int)AutoId;
-                                    roleper.CreatedBy = permissionGroupListViewModel.CreatedBy;
-                                    roleper.CreatedOn = DateTime.UtcNow;
-                                    this.context?.RolePermission.Add(roleper);
-                                    this.context?.SaveChanges();
                                 }
                             }
                         }

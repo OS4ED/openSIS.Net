@@ -51,10 +51,9 @@ export class EditGradeScaleComponent implements OnInit {
       else{
         this.buttonType="update";
         this.gradeScaleTitle="editGradeScale";
-        
         this.form.controls.gradeScaleId.patchValue(this.data.gradeScaleId)
         this.form.controls.gradeScaleName.patchValue(this.data.gradeScaleName)
-        this.form.controls.gradeScaleValue.patchValue(this.data.gradeScaleValue)
+        this.data.useAsStandardGradeScale?this.onStandardGradeScaleChange(this.data.useAsStandardGradeScale):this.form.controls.gradeScaleValue.patchValue(this.data.gradeScaleValue)
         this.form.controls.gradeScaleComment.patchValue(this.data.gradeScaleComment)
         this.form.controls.calculateGpa.patchValue(this.data.calculateGpa)
         this.form.controls.useAsStandardGradeScale.patchValue(this.data.useAsStandardGradeScale)
@@ -64,13 +63,24 @@ export class EditGradeScaleComponent implements OnInit {
   ngOnInit(): void {
   }
 
+  onStandardGradeScaleChange(event){
+    if(event){
+    this.form.removeControl('gradeScaleValue'); 
+    }else{
+     this.form.setControl('gradeScaleValue', this.fb.control('', [Validators.required,ValidationService.noWhitespaceValidator])); 
+    }
+
+  }
+
+  
+
   submit(){
     this.form.markAllAsTouched();
     if(this.form.valid){
       if(this.form.controls.gradeScaleId.value==0){
         this.gradeScaleAddViewModel.gradeScale.gradeScaleId=this.form.controls.gradeScaleId.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleName=this.form.controls.gradeScaleName.value;
-        this.gradeScaleAddViewModel.gradeScale.gradeScaleValue=this.form.controls.gradeScaleValue.value;
+        this.gradeScaleAddViewModel.gradeScale.gradeScaleValue=this.form.controls?.gradeScaleValue?.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleComment;
         this.gradeScaleAddViewModel.gradeScale.calculateGpa=this.form.controls.calculateGpa.value;
         this.gradeScaleAddViewModel.gradeScale.useAsStandardGradeScale=this.form.controls.useAsStandardGradeScale.value;
@@ -101,7 +111,7 @@ export class EditGradeScaleComponent implements OnInit {
         
         this.gradeScaleAddViewModel.gradeScale.gradeScaleId=this.form.controls.gradeScaleId.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleName=this.form.controls.gradeScaleName.value;
-        this.gradeScaleAddViewModel.gradeScale.gradeScaleValue=this.form.controls.gradeScaleValue.value;
+        this.gradeScaleAddViewModel.gradeScale.gradeScaleValue=this.form.controls?.gradeScaleValue?.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleComment;
         this.gradeScaleAddViewModel.gradeScale.calculateGpa=this.form.controls.calculateGpa.value;
         this.gradeScaleAddViewModel.gradeScale.useAsStandardGradeScale=this.form.controls.useAsStandardGradeScale.value;

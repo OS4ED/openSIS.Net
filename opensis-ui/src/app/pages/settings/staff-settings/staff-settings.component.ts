@@ -1,4 +1,6 @@
 import { Component, OnInit } from '@angular/core';
+import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from 'src/app/services/Crypto.service';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 
 
@@ -11,34 +13,45 @@ import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.anim
   ]
 })
 export class StaffSettingsComponent implements OnInit {
-  pages=['Staff Fields']
+  pages=[]
   staffSettings=true;
-  pageTitle = 'Staff Fields';
-  pageId: string = '';
-  displayStaffFields = true;
+  pageTitle:string;
+  pageId: string;
 
-  StaffFieldsFlag: boolean = true;
-
-  constructor() { }
+  constructor(private cryptoService:CryptoService) { }
 
   ngOnInit(): void {
-    this.pageId = localStorage.getItem("pageId");
-    this.showPage(this.pageId);
-  }
+    let permissions:RolePermissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    let settingIndex = permissions?.permissionList?.findIndex((item) => {
+      return item.permissionGroup?.permissionGroupId == 12
+    });
+  
+    let staffMenu= permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory.findIndex((item)=>{
+      return item.permissionCategoryId==24;
+    });
+    permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory[staffMenu].permissionSubcategory.map((option)=>{
+      if(option.rolePermission[0].canView){
+        this.pages.push(option.title);
+      }
+    })
+    
 
-  getSelectedPage(event){
-    this.showPage(event);
-  }
-
-  showPage(pageId = 'Staff Fields') {
-    this.pageTitle = pageId;
-    if (pageId === 'Staff Fields') {
-      this.displayStaffFields = true;
-      this.StaffFieldsFlag = true;
-    } else {
-      this.displayStaffFields = false;
-      this.StaffFieldsFlag = false;
+    let availablePageId=localStorage.getItem("pageId");
+    if(availablePageId==null || !this.pages.includes(availablePageId)){
+      for(let item of permissions?.permissionList[settingIndex]?.permissionGroup.permissionCategory[staffMenu].permissionSubcategory){
+        if(item.rolePermission[0].canView){
+          localStorage.setItem("pageId",item.title);
+          break;
+        }
+      }
     }
+
+    this.pageId = localStorage.getItem("pageId");
+  }
+
+  getSelectedPage(pageId){
+    this.pageId = pageId;
+    localStorage.setItem("pageId", pageId);
   }
 
 }

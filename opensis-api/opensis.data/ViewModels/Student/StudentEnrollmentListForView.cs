@@ -28,5 +28,6 @@ namespace opensis.data.ViewModels.Student
         public string EnrollmentType { get; set; }
         public string ExitType { get; set; }
         public string Type { get; set; }
+        public int? GradeId { get; set; }
     }
 }

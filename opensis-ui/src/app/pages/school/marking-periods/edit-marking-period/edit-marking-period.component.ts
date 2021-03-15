@@ -244,12 +244,12 @@ export class EditMarkingPeriodComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Semester Updation failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {
       
-              this.snackbar.open('School Semester Updation Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               });
               this.markingPeriodService.getCurrentYear(true);    
@@ -275,12 +275,12 @@ export class EditMarkingPeriodComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Quarter Updation failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {
       
-              this.snackbar.open('School Quarter Updation Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               });
               this.markingPeriodService.getCurrentYear(true);    

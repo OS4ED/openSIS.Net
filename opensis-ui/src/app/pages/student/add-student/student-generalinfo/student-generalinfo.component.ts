@@ -31,6 +31,9 @@ import { LovList } from '../../../../models/lovModel';
 import {MiscModel} from '../../../../models/misc-data-student.model';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import {ModuleIdentifier} from '../../../../enums/module-identifier.enum'
+import { CryptoService } from '../../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { Router } from '@angular/router';
 @Component({
   selector: 'vex-student-generalinfo',
   templateUrl: './student-generalinfo.component.html',
@@ -92,6 +95,11 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   internalId: FormControl;
   loginEmail:FormControl;
   cloneStudentModel;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   @Output() dataAfterSavingGeneralInfo = new EventEmitter<any>();
   constructor(
@@ -104,7 +112,9 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     private commonFunction: SharedFunction,
     private sectionService: SectionService,
     private cd: ChangeDetectorRef,
+    private router:Router,
     private imageCropperService: ImageCropperService,
+    private cryptoService: CryptoService,
     private commonLOV:CommonLOV) {
     translateService.use('en');
     this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
@@ -123,9 +133,20 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   }
 
   ngOnInit(): void {
+
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 3);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.internalId = new FormControl('',Validators.required);
     this.loginEmail=new FormControl('',Validators.required);
     if (this.studentCreateMode == this.studentCreate.ADD) {
+      if(this.addPermission===false){
+        this.router.navigate(['/'])
+      }
       this.initializeDropdownsInAddMode();
     } else if (this.studentCreateMode == this.studentCreate.VIEW) {
       this.studentService.changePageMode(this.studentCreateMode);
@@ -139,7 +160,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
 
         this.GetAllLanguage();
         this.getAllCountry();
-        this.getAllSection();
         // this.callLOVs();
       
 
@@ -167,14 +187,12 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
 
   initializeDropdowns(){
     this.getAllCountry();
-    this.getAllSection();
   }
 
   initializeDropdownsInAddMode(){
     this.callLOVs();
     this.getAllCountry();
     this.GetAllLanguage();
-    this.getAllSection();
   }
 
   callLOVs(){
@@ -274,32 +292,9 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-  getAllSection() {
-    if(!this.sectionList.isSectionAvailable){
-      this.sectionList.isSectionAvailable=true;
-      this.sectionService.GetAllSection(this.sectionList).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-        if (data._failure) {
-        }
-        else {
-          this.sectionList.tableSectionsList = data.tableSectionsList;
-          if (this.studentCreateMode == this.studentCreate.VIEW) {
-           this.findSectionNameById();
-          }
-        }
-        
-      });
-    }
-   
-  }
+ 
 
-  findSectionNameById(){
-    this.sectionList?.tableSectionsList.map((val) => {
-      var sectionNumber = +this.data.sectionId;
-      if (val.sectionId === sectionNumber) {
-        this.nameOfMiscValuesForView.sectionName = val.name;
-      }
-    })
-  }
+  
 
   isPortalAccess(event) {
     if (event.checked) {
@@ -374,7 +369,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     }
     this.findCountryNationalityById();
     this.findLanguagesById();
-    this.findSectionNameById();
     this.studentCreateMode = this.studentCreate.VIEW
     this.imageCropperService.cancelImage("student");
     this.studentService.changePageMode(this.studentCreateMode);
@@ -463,11 +457,11 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Student Update failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Student Information has been updated successfully', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
           this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
@@ -476,7 +470,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
           this.cloneStudentModel=JSON.stringify(data);
           this.findCountryNationalityById();
           this.findLanguagesById();
-          this.findSectionNameById();
           this.studentDetailsForViewAndEdit=data;
           this.dataAfterSavingGeneralInfo.emit(data);
           this.studentCreateMode = this.studentCreate.VIEW
@@ -500,11 +493,11 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Student Save failed. ' + data._message, '', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Student has been saved successfully.', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
           this.studentService.setStudentId(data.studentMaster.studentId);

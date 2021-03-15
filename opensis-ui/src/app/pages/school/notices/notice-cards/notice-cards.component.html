@@ -9,11 +9,11 @@
         </button>
 
         <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-            <button mat-menu-item (click)="editNotice(noticeId)">
+            <button *ngIf="editPermission" mat-menu-item (click)="editNotice(noticeId)">
                 <span>{{'editItem' |translate }}</span>
             </button>
 
-            <button mat-menu-item (click)="deleteNoticeConfirm(noticeId)">
+            <button *ngIf="deletePermission" mat-menu-item (click)="deleteNoticeConfirm(noticeId)">
                 <span>{{'deleteItem' |translate}}</span>
             </button>
         </mat-menu>

@@ -27,6 +27,8 @@ import { ValidationService } from '../../shared/validation.service';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 import { Subject } from 'rxjs';
+import { CryptoService } from '../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-effort-grade-library',
@@ -65,6 +67,11 @@ export class EffortGradeLibraryComponent implements OnInit {
   form:FormGroup
   buttonType: string;
   effortCategoryTitle: string;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   destroySubject$: Subject<void> = new Subject();
 
   constructor(
@@ -75,7 +82,8 @@ export class EffortGradeLibraryComponent implements OnInit {
     private gradesService:GradesService,
     private fb:FormBuilder,
     private loaderService: LoaderService,
-    private excelService:ExcelService
+    private excelService:ExcelService,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
@@ -89,6 +97,13 @@ export class EffortGradeLibraryComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllEffortGradeLlibraryCategoryList();
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 26);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 29);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
   }
   selectEffortCategory(element){
     this.currentEffortCategoryId=element.effortCategoryId;
@@ -235,10 +250,14 @@ export class EffortGradeLibraryComponent implements OnInit {
         }
         else{
           if (res._failure) {
-            this.snackbar.open('' + res._message, '', {
-              duration: 10000
-            });
-            this.effortCategoriesList= res.effortGradeLibraryCategoryList;
+            if (res.effortGradeLibraryCategoryList == null) {
+              this.effortCategoriesList=null
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.effortCategoriesList=null;
+            }
           } 
           else{
             this.effortCategoriesList= res.effortGradeLibraryCategoryList;

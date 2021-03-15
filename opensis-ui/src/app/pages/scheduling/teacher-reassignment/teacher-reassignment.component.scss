@@ -1,0 +1,145 @@
+.opacity-50 {
+  opacity: 0.5;
+}
+
+.triangle-right {
+  &::after {
+    content: " ";
+    display: inline-block;
+    position: absolute;
+    left: -15px;
+    top: 0px;
+    width: 0;
+    height: 0;
+    border-bottom: 87px solid #0c3f8a;
+    border-left: 30px solid transparent;
+  }
+  @media only screen and (max-width: 1023px) {
+    &::after {
+      border-bottom: 73px solid #0c3f8a;
+    }
+  }
+}
+
+.triangle-left {
+  &::after {
+    content: " ";
+    display: inline-block;
+    position: absolute;
+    right: -16px;
+    top: 0;
+    width: 0;
+    height: 0;
+    border-top: 87px solid #4caf51;
+    border-right: 30px solid transparent;
+    z-index: 1;
+  }
+  @media only screen and (max-width: 1023px) {
+    &::after {
+      border-top: 73px solid #4caf51;
+    }
+  }
+
+  &::before {
+    content: " ";
+    display: inline-block;
+    position: absolute;
+    width: 2px;
+    height: 94px;
+    background: #fff;
+    right: -2px;
+    z-index: 2;
+    top: -3px;
+    transform: rotate(18deg);
+  }
+  @media only screen and (max-width: 1023px) {
+    &::before {
+      height: 78px;
+      transform: rotate(20deg);
+    }
+  }
+}
+
+.arrow-right::after {
+  content: " ";
+  display: inline-block;
+  position: absolute;
+  right: -6px;
+  top: 42%;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-left: 6px solid #4caf50;
+}
+
+.schedule-icon {
+  display: inline-block;
+  position: absolute;
+  right: -30px;
+  top: calc(50% - 30px);
+  width: 60px;
+  height: 60px;
+  text-align: center;
+  border-radius: 50%;
+  border: 1px solid rgba(0, 0, 0, 0.1);
+  padding-top: 10px;
+  font-size: 24px;
+  z-index: 2;
+}
+.schedule-table {
+  tr {
+    td,
+    th {
+      @apply border-b;
+      border-color: rgba(0, 0, 0, 0.1);
+      @apply px-4;
+      @apply py-2;
+      text-align: left;
+    }
+  }
+}
+.teacher-reassignment-timeline {
+  width: calc(100% - 44px);
+  border-left-width: 2px;
+  border-style: dotted;
+  border-color: rgba(var(--color-black), 0.1);
+  padding: 2rem;
+  padding-right: 0;
+  margin-left: auto;
+  position: relative;
+
+  &::after {
+    content: " ";
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 12px solid rgb(0, 0, 0);
+    position: absolute;
+    left: -7px;
+    top: 50%;
+  }
+}
+.course-reassignment-timeline {
+  width: calc(100% - 44px);
+  border-right-width: 2px;
+  border-style: dotted;
+  border-color: rgba(var(--color-black), 0.1);
+  padding: 2rem;
+  padding-left: 0;
+  margin-right: auto;
+  position: relative;
+
+  &::after {
+    content: " ";
+    width: 0;
+    height: 0;
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-top: 12px solid rgb(0, 0, 0);
+    position: absolute;
+    right: -7px;
+    top: 50%;
+  }
+}

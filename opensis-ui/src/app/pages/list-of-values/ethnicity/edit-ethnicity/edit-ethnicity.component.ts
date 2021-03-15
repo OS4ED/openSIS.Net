@@ -74,7 +74,7 @@ export class EditEthnicityComponent implements OnInit {
                 });
               }
               else {
-                this.snackbar.open('Ethnicity Added Successfully. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');
@@ -103,7 +103,7 @@ export class EditEthnicityComponent implements OnInit {
                 });
               }
               else {
-                this.snackbar.open('Ethnicity Updated Successfully. ' + res._message, '', {
+                this.snackbar.open('' + res._message, '', {
                   duration: 10000
                 });
                 this.dialogRef.close('submited');

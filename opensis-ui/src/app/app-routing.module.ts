@@ -87,9 +87,20 @@ const routes: Routes = [
         path: '',
         children: [
           {
+            path: 'studentdataimport',
+            loadChildren: () => import('./pages/student/student-data-import/student-data-import.module').then(m => m.StudentDataImportModule),
+            canActivate: [AuthGuard]
+            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
             path: 'parents',
             loadChildren: () => import('./pages/parent/parentinfo/parentinfo.module').then(m => m.ParentinfoModule),
-            canActivate: [AuthGuard]            
+            //canActivate: [AuthGuard]            
           }
         ]
       },
@@ -153,7 +164,17 @@ const routes: Routes = [
             // canActivate: [AuthGuard]            
           }
         ]
-      },       
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'teacher-reassignment',
+            loadChildren: () => import('./pages/scheduling/teacher-reassignment/teacher-reassignment.module').then(m => m.TeacherReassignmentModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },         
     ]
   },
 ];

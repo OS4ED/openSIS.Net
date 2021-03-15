@@ -36,12 +36,32 @@
         <div class="flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'gradeLevelEquivalency' | translate}}</mat-label>
-                <mat-select formControlName="iscedGradeLevel" name="iscedGradeLevel">
+                <mat-select formControlName="equivalencyId" name="equivalencyId">
                     <mat-option value="null">N/A</mat-option>
                     <mat-option *ngFor="let list of getGradeEquivalencyList.gradeEquivalencyList"
-                        value="{{list.iscedGradeLevel}}">
-                        {{list.gradeDescription}}
+                        value="{{list.equivalencyId}}">
+                        {{list.gradeLevelEquivalency}}
                     </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+        <div class="flex-1 mx-6 md:w-1/2">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'ageRange' | translate}}</mat-label>
+                <mat-select  formControlName="ageRangeId"  name="ageRange">
+                    <mat-option value="null">N/A</mat-option>
+                    <mat-option *ngFor="let age of ageRangeList.gradeAgeRangeList" value="{{age.ageRangeId}}">{{age.ageRange}}</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </div>
+    </div>
+    <div class="md:flex md:flex-wrap -mx-6">
+        <div class="flex-1 mx-6 md:w-1/2">
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{'educationalStage' | translate}}</mat-label>
+                <mat-select formControlName="iscedCode" name="educationalStage">
+                    <mat-option value="null">N/A</mat-option>
+                    <mat-option *ngFor="let educationalStage of educationStageList.gradeEducationalStageList" value="{{educationalStage.iscedCode}}">{{educationalStage.educationalStage}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </div>

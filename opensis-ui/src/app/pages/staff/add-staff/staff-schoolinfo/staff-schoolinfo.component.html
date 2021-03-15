@@ -11,14 +11,6 @@
             <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'openSISProfile'|translate}}</mat-label>
-                        <mat-select name="openSISProfile" [(ngModel)]="staffSchoolInfoModel.profile">
-                            <mat-option *ngFor="let profile of profiles" value={{profile}}>{{profile}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'jobTitle'|translate}}</mat-label>
                         <input #jobTitle="ngModel" name="jobTitle" matInput required [(ngModel)]="staffSchoolInfoModel.jobTitle">
                         <mat-error *ngIf="jobTitle.errors?.required">{{'jobTitleIsRequired'|translate}}
@@ -26,8 +18,6 @@
                     </mat-form-field>
 
                 </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'joiningDate'|translate}}</mat-label>
@@ -36,6 +26,8 @@
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
                 </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'endDate'|translate}}</mat-label>
@@ -44,34 +36,37 @@
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
                 </div>
-            </div>
-            
-            <div class="mb-6 mx-4">
-                <mat-slide-toggle color="primary" name="homeroom" [(ngModel)]="staffSchoolInfoModel.homeroomTeacher">{{'homeroomTeacher' | translate}}</mat-slide-toggle>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex-1 mx-4 md:w-1/2">
+                <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'primaryGradeLevelTaught'|translate}}</mat-label>
                         <mat-select name="primaryGradeLevelTaught" [(ngModel)]="staffSchoolInfoModel.primaryGradeLevelTaught">
                             <mat-option *ngFor="let grade of getAllGradeLevels.tableGradelevelList" value={{grade.title}}>{{grade.title}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field class="w-full mt-2" appearance="outline" color="primary">
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="flex flex-1 mx-4 md:w-1/2">
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'otherGradeLevelTaught'|translate}}</mat-label>
                         <mat-select name="otherGradeLevelTaught" multiple [(ngModel)]="otherGradeLevelTaught">
                             <mat-option *ngFor="let grade of getAllGradeLevels.tableGradelevelList" value={{grade.title}}>{{grade.title}}</mat-option>
                         </mat-select>
                     </mat-form-field>
                 </div>
-                <div class="flex-1 mx-4 md:w-1/2">
+                <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'primarySubjectTaught'|translate}}</mat-label>
                         <mat-select name="primarySubjectTaught" [(ngModel)]="staffSchoolInfoModel.primarySubjectTaught">
                             <mat-option *ngFor="let subject of subjects" value={{subject}}>{{subject}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                    <mat-form-field class="w-full mt-2" appearance="outline" color="primary">
+                </div>
+            </div>
+            <div class="mb-2 md:flex md:flex-wrap">
+                <div class="mx-4 md:w-1/2">
+                    
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'otherSubjectTaught'|translate}}</mat-label>
                         <mat-select name="otherSubjectTaught" multiple [(ngModel)]="otherSubjectTaught">
                             <mat-option *ngFor="let subject of subjects" value={{subject}}>{{subject}}</mat-option>
@@ -109,7 +104,7 @@
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'profile'|translate}}</mat-label>
                                         <mat-select #profile="ngModel" name="{{'profile'+i}}" required [(ngModel)]="staffSchoolInfoModel.staffSchoolInfoList[i].profile">
-                                            <mat-option *ngFor="let profile of profiles" value={{profile}}>{{profile}}</mat-option>
+                                            <mat-option *ngFor="let profile of getAllMembersList.getAllMemberList" value={{profile.profile}}>{{profile.profile}}</mat-option>
                                         </mat-select>
                                         <mat-error *ngIf="profile.errors?.required">{{'profileIsRequired'|translate}}
                                         </mat-error>
@@ -162,7 +157,7 @@
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'schoolInformation' | translate}}</h3>
-        <button (click)="editSchoolInfo()" mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button *ngIf="editPermission" (click)="editSchoolInfo()" mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
     </div>
     <mat-card-content>
 
@@ -170,16 +165,8 @@
             <h4 class="text-primary pt-6 pb-2 px-4">{{'officialInformation'|translate}}</h4>
             <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
-                    <label class="text-sm leading-5 text-gray">{{'openSISProfile' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffSchoolInfoModel.profile | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
                     <label class="text-sm leading-5 text-gray">{{'jobTitle' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffSchoolInfoModel.jobTitle | EmtyValueCheckPipe}}</p>
-                </li>
-                <li>
-                    <label class="text-sm leading-5 text-gray">{{'homeroomTeacher' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffSchoolInfoModel.homeroomTeacher |EmtyBooleanCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'joiningDate' | translate}}</label>

@@ -129,7 +129,7 @@
 
     <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'medicalInformation' | translate}}</h3>
-        <button mat-button color="primary" (click)="editMedicalInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button *ngIf="editPermission" mat-button color="primary" (click)="editMedicalInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
     </div>
     <mat-card-content>
 

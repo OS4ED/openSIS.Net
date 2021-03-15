@@ -81,5 +81,21 @@ namespace opensisAPI.Controllers
             }
             return membershipUpdate;
         }
+
+        [HttpPost("deleteMembership")]
+        public ActionResult<MembershipAddViewModel> DeleteMembership(MembershipAddViewModel membershipAddViewModel)
+        {
+            MembershipAddViewModel membershipDelete = new MembershipAddViewModel();
+            try
+            {
+                membershipDelete = _membershipService.DeleteMembership(membershipAddViewModel);
+            }
+            catch (Exception es)
+            {
+                membershipDelete._failure = true;
+                membershipDelete._message = es.Message;
+            }
+            return membershipDelete;
+        }
     }
 }

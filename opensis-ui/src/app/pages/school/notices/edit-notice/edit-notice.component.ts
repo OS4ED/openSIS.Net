@@ -122,11 +122,11 @@ export class EditNoticeComponent implements OnInit {
         
           this.noticeService.updateNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
-              this.snackbar.open('Notice updating failed. ' + data._message,'', {
+              this.snackbar.open( data._message,'', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Notice updated successful. ','', {
+              this.snackbar.open( data._message,'', {
                 duration: 10000
               });
               this.noticeService.changeNotice(true)
@@ -141,11 +141,11 @@ export class EditNoticeComponent implements OnInit {
         this.noticeAddViewModel.notice.validTo=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validTo)
           this.noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
-              this.snackbar.open('Notice saving failed. ' + data._message, '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Notice saved successful. ' ,'', {
+              this.snackbar.open(data._message,'', {
                 duration: 10000
               });
       this.dialogRef.close(true);

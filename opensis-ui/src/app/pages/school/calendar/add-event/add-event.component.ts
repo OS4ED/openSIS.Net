@@ -19,6 +19,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { SharedFunction} from '../../../shared/shared-function';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-add-event',
@@ -42,6 +44,7 @@ export class AddEventComponent implements OnInit {
   memberNames : string;
   membercount: number;
   memberArray: number[] = [];
+  
   colors: colors[] =[
     {name: 'Red',value: '#f44336'},
     {name: 'Orange', value: '#ff9800'},
@@ -60,19 +63,39 @@ export class AddEventComponent implements OnInit {
   icMoreVertical = icMoreVertical;
   icDone = icDone;
   form: FormGroup;
-  constructor(private dialog: MatDialog, private commonFunction:SharedFunction, private dialogRef: MatDialogRef<AddEventComponent>, @Inject(MAT_DIALOG_DATA) public data: any, public translate: TranslateService, private snackbar: MatSnackBar, private calendarService: CalendarService, private calendarEventService: CalendarEventService, private fb: FormBuilder) {
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
+  constructor(private dialog: MatDialog,
+              private commonFunction: SharedFunction,
+              private dialogRef: MatDialogRef<AddEventComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              public translate: TranslateService,
+              private snackbar: MatSnackBar,
+              public rollBasedAccessService: RollBasedAccessService,
+              private calendarService: CalendarService,
+              private calendarEventService: CalendarEventService,
+              private fb: FormBuilder) {
     this.translate.setDefaultLang('en');
     this.form = this.fb.group({
       title: ['', Validators.required],
       startDate: ['', Validators.required],
       endDate: ['', Validators.required],
       notes: [''],
-      eventColor :[''],
-      systemWideEvent :[false]
+      eventColor : [''],
+      systemWideEvent : [false]
     });
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = this.rollBasedAccessService.getPermission();
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 9);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
     if (this.data == null) {
       this.snackbar.open('Null value occur. ', '', {
         duration: 1000
@@ -80,10 +103,10 @@ export class AddEventComponent implements OnInit {
 
     }
     else {
-      this.membercount = this.data.membercount
-      this.getAllMembersList = this.data.allMembers
+      this.membercount = this.data.membercount;
+      this.getAllMembersList = this.data.allMembers;
       if (this.data.calendarEvent == null) {
-        this.calendarEventTitle = "addEvent";
+        this.calendarEventTitle = 'addEvent';
         this.isEditMode = true;
         this.form.patchValue({ startDate: this.data.day.date });
       }
@@ -124,12 +147,12 @@ export class AddEventComponent implements OnInit {
     }
   }
 
-  //edit event
+  // edit event
   editCalendarEvent() {
     this.isEditMode = true;
   }
 
-  //confirm delete modal
+  // confirm delete modal
   deleteCalendarConfirm() {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
@@ -148,7 +171,7 @@ export class AddEventComponent implements OnInit {
     });
   
   }
-  //delete event 
+  // delete event
   deleteCalendarEvent() {
     this.dialogRef.close();
     let id = this.data.calendarEvent.id;
@@ -172,7 +195,7 @@ export class AddEventComponent implements OnInit {
 
   }
 
-//save event
+// save event
   submitCalendarEvent() {
     this.calendarEventAddViewModel.schoolCalendarEvent.title = this.form.value.title;
     this.calendarEventAddViewModel.schoolCalendarEvent.academicYear = +sessionStorage.getItem("academicyear");

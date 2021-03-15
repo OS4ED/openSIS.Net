@@ -23,10 +23,10 @@
                         </div>
                         <hr/>
                         <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                            <button mat-menu-item (click)="goToEditCategory(effortCategory)">
+                            <button *ngIf="editPermission" mat-menu-item (click)="goToEditCategory(effortCategory)">
                                 <span>{{'editItem' | translate}}</span>
                             </button>
-                            <button mat-menu-item (click)="confirmDeleteEffortCategory(effortCategory)">
+                            <button *ngIf="deletePermission" mat-menu-item (click)="confirmDeleteEffortCategory(effortCategory)">
                                 <span>{{'deleteItem' | translate}}</span>
                             </button>
                         </mat-menu>
@@ -57,7 +57,7 @@
                 </div>
                 <ng-template #elseBlock>
                 <div class="text-center">
-                    <button color="" (click)='goToAddCategory()' class="text-primary" mat-button type="button">
+                    <button *ngIf="addPermission" color="" (click)='goToAddCategory()' class="text-primary" mat-button type="button">
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px"></ic-icon>
                         <span>{{'addEffortCategory'|translate}}</span>
@@ -81,7 +81,7 @@
                             matTooltip="Filter Columns" type="button">
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
-                        <button color="primary" [disabled]="effortCategoriesList==null" class="ml-4" fxFlex="none" mat-raised-button type="button"
+                        <button *ngIf="addPermission" color="primary" [disabled]="effortCategoriesList==null" class="ml-4" fxFlex="none" mat-raised-button type="button"
                             (click)='goToAddEffortItem()'>
                             <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
                                 size="24px">
@@ -113,10 +113,10 @@
                 <ng-container matColumnDef="action">
                     <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                        <a (click)="goToEditEffortItem(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
+                        <a *ngIf="editPermission" (click)="goToEditEffortItem(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a (click)="confirmDeleteEffortItems(element)" matTooltip="Delete Info" class="mr-3 cursor-pointer">
+                        <a *ngIf="deletePermission" (click)="confirmDeleteEffortItems(element)" matTooltip="Delete Info" class="mr-3 cursor-pointer">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                     </mat-cell>

@@ -103,12 +103,12 @@ export class AddCertificateComponent implements OnInit {
                 }
                 else{
                   if (res._failure) {
-                    this.snackbar.open('Staff Certificate Insertion failed. ' + res._message, '', {
+                    this.snackbar.open( res._message, '', {
                       duration: 10000
                     });
                   } 
                   else { 
-                    this.snackbar.open('Staff Certificate Inserted Successfully. ', '', {
+                    this.snackbar.open(res._message, '', {
                       duration: 10000
                     });
                     this.dialogRef.close('submited');
@@ -137,12 +137,12 @@ export class AddCertificateComponent implements OnInit {
                 }
                 else{
                   if (res._failure) {
-                    this.snackbar.open('Staff Certificate Update failed. ' + res._message, '', {
+                    this.snackbar.open(res._message , '', {
                       duration: 10000
                     });
                   } 
                   else { 
-                    this.snackbar.open('Staff Certificate Updateed Successfully. ', '', {
+                    this.snackbar.open(res._message, '', {
                       duration: 10000
                     });
                     this.dialogRef.close('submited');

@@ -3,7 +3,6 @@ import { Membership } from "./membershipModel";
 
 
 export class RolePermission {
-
     public tenantId: string;
     public schoolId: number;
     public rolePermissionId: number;
@@ -19,10 +18,10 @@ export class RolePermission {
     public updatedOn: string;
     public membership: Membership;
     public permissionCategory: PermissionCategory;
-    constructor() {
+    constructor() {   
         
         this.tenantId = sessionStorage.getItem('tenantId');
-        this.schoolId = + sessionStorage.getItem('selectedSchoolId');
+        this.schoolId = +sessionStorage.getItem('selectedSchoolId');
     }
 
 }
@@ -33,10 +32,13 @@ export class PermissionCategory {
     public permissionCategoryId: number;
     public permissionGroupId: number;
     public permissionCategoryName: string;
+    public permissionSubcategoryId: number;
+    public permissionSubcategoryName: string;
+    public icon;
     public shortCode: string;
     public path: string;
     public title: string;
-    public Type: string;
+    public type: string;
     public enableView: boolean;
     public enableAdd: boolean;
     public enableEdit: boolean;
@@ -95,7 +97,7 @@ export class PermissionGroup {
     public icon: string;
     public iconType: string;
     public sortOrder: number;
-    public Type: string;
+    public type: string;
     public path: string;
     public badgeType: string;
     public badgeValue: string;
@@ -105,8 +107,10 @@ export class PermissionGroup {
     public updatedBy: string;
     public updatedOn: string;
     public permissionCategory: PermissionCategory[];
+    public rolePermission : RolePermission[];   
     constructor() {
-        this.permissionCategory = [new PermissionCategory] 
+        this.permissionCategory = [new PermissionCategory];
+        this.rolePermission = [new RolePermission];
         this.tenantId = sessionStorage.getItem('tenantId');
         this.schoolId = + sessionStorage.getItem('selectedSchoolId');
     }
@@ -134,11 +138,13 @@ export class RolePermissionListViewModel extends CommonField{
     public membershipId : number;
     constructor() {
         super()
+        this.membershipId = 1;
         this.permissionList = [new RolePermissionViewModel]
         this.tenantId = sessionStorage.getItem('tenantId');
         this.schoolId = + sessionStorage.getItem('selectedSchoolId');
         this._tenantName= sessionStorage.getItem("tenant");
         this._token=sessionStorage.getItem("token");
+        this.membershipId=+sessionStorage.getItem("userMembershipID");
     }
 }
 

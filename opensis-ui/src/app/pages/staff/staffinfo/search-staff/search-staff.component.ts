@@ -15,7 +15,8 @@ import { LanguageModel } from '../../../../models/languageModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StaffService } from '../../../../services/staff.service';
 import { GetAllStaffModel, StaffMasterSearchModel } from '../../../../models/staffModel';
-import { Profile } from '../../../../enums/opensis-profile.enum';
+import { GetAllMembersList } from '../../../../models/membershipModel';
+import { MembershipService } from '../../../../services/membership.service';
 
 @Component({
   selector: 'vex-search-staff',
@@ -40,19 +41,18 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
   ethnicityList = [];
   raceList = [];
   genderList = [];
-  suffixList = [];
   maritalStatusList = [];
-  salutationList = [];
-  sectionList = [];
   languageList;
-  profiles=Object.keys(Profile);
+  getAllMembersList: GetAllMembersList = new GetAllMembersList();
+
   constructor(
     private commonLOV: CommonLOV,
     private snackbar: MatSnackBar,
     private sectionService: SectionService,
     private commonService: CommonService,
     private loginService: LoginService,
-    private staffService: StaffService
+    private staffService: StaffService,
+    private membershipService:MembershipService
   ) { }
 
   ngOnInit(): void {
@@ -63,16 +63,10 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
     this.callLOVs();
     this.getAllCountry();
     this.GetAllLanguage();
-    this.getAllSection();
+    this.getAllMembership();
   }
 
   callLOVs() {
-    this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
-      this.salutationList = res;
-    });
-    this.commonLOV.getLovByName('Suffix').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
-      this.suffixList = res;
-    });
     this.commonLOV.getLovByName('Gender').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       this.genderList = res;
     });
@@ -115,17 +109,33 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
       }
     });
   }
-
-  getAllSection() {
-    let section: GetAllSectionModel = new GetAllSectionModel();
-    this.sectionService.GetAllSection(section).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (data._failure) {
+  
+  getAllMembership() {
+    this.membershipService.getAllMembers(this.getAllMembersList).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Membership List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
       }
       else {
-        this.sectionList = data.tableSectionsList;
+        if (res._failure) {
+          if (res.getAllMemberList == null) {
+            this.getAllMembersList.getAllMemberList = [];
+            this.snackbar.open( res._message,'', {
+              duration: 10000
+            });
+          } else {
+            this.getAllMembersList.getAllMemberList = [];
+          }
+        }
+        else {
+          this.getAllMembersList.getAllMemberList = res.getAllMemberList.filter((item) => {
+            return (item.profileType == 'School Administrator' || item.profileType == 'Admin Assistant'
+              || item.profileType == 'Teacher' || item.profileType == 'Homeroom Teacher')
+          });
+        }
       }
-
-    });
+    })
   }
 
 
@@ -142,7 +152,7 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
     this.getAllStaff.sortingModel = null;
     this.getAllStaff.dobStartDate = this.dobStartDate;
     this.getAllStaff.dobEndDate= this.dobEndDate;
-
+    this.commonService.setSearchResult(this.params);
     this.staffService.getAllStaffList(this.getAllStaff).subscribe(res => {
       if (res._failure) {
         this.searchList.emit([]);

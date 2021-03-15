@@ -22,6 +22,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
+import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 @Component({
   selector: 'vex-marking-periods',
   templateUrl: './marking-periods.component.html',
@@ -55,16 +58,22 @@ export class MarkingPeriodsComponent implements OnInit {
   doesComments = false;
   loading;
   academicYear;
-
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   zeroIndexOfelement: boolean = false;
   constructor(private dialog: MatDialog,
-    private markingPeriodService: MarkingPeriodService,
-    private snackbar: MatSnackBar,
-    private commonFunction: SharedFunction,
-    private loaderService: LoaderService,
-    public translateService: TranslateService,private layoutService: LayoutService    ) {  
-      if(localStorage.getItem("collapseValue") !== null){
-        if( localStorage.getItem("collapseValue") === "false"){
+              private markingPeriodService: MarkingPeriodService,
+              private snackbar: MatSnackBar,
+              private commonFunction: SharedFunction,
+              private loaderService: LoaderService,
+              public rollBasedAccessService: RollBasedAccessService,
+              public translateService: TranslateService,private layoutService: LayoutService,
+              private cryptoService: CryptoService   ) {  
+      if (localStorage.getItem('collapseValue') !== null){
+        if ( localStorage.getItem('collapseValue') === 'false'){
           this.layoutService.expandSidenav();
         }else{
           this.layoutService.collapseSidenav();
@@ -78,6 +87,13 @@ export class MarkingPeriodsComponent implements OnInit {
       });
   }
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 2);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 2);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+
     this.academicYear = +sessionStorage.getItem('academicyear');
 
     this.getMarkingPeriod();
@@ -87,15 +103,15 @@ export class MarkingPeriodsComponent implements OnInit {
 
   viewDetails(details, data) {
 
-    let elem = document.querySelectorAll(".commonClass");
+    let elem = document.querySelectorAll('.commonClass');
     elem.forEach(val => {
-      val.setAttribute("style", "background-color:white");
-      val.setAttribute("style", "color:black");
+      val.setAttribute('style', 'background-color:white');
+      val.setAttribute('style', 'color:black');
       val.setAttribute('class', 'tree-node card flex shadow-none border-solid border commonClass');
-    })
-    data.parentElement.style.backgroundColor = "#1763b3";
-    data.parentElement.style.color = "white";
-    data.parentElement.style.fontWeight = "bold";
+    });
+    data.parentElement.style.backgroundColor = '#1763b3';
+    data.parentElement.style.color = 'white';
+    data.parentElement.style.fontWeight = 'bold';
     this.viewFirstChild = details;
     this.viewFirstChild.startDate = this.commonFunction.formatDate(this.viewFirstChild.startDate);
     this.viewFirstChild.endDate = this.commonFunction.formatDate(this.viewFirstChild.endDate);
@@ -127,19 +143,16 @@ export class MarkingPeriodsComponent implements OnInit {
       }
       else {
         if (data._failure) {
-          if (data._message === "NO RECORD FOUND") {
             if (data.schoolYearsView == null) {
               this.viewFirstChild = [];
+              this.snackbar.open( data._message, '', {
+                duration: 10000
+              });
             }
             else {
               this.list = data.schoolYearsView;
               this.viewFirstMarkingPeriodChild();
             }
-          } else {
-            this.snackbar.open('General Info Updation failed. ' + data._message, '', {
-              duration: 10000
-            });
-          }
         } else {
           this.list = data.schoolYearsView;
           this.viewFirstMarkingPeriodChild();
@@ -222,12 +235,12 @@ export class MarkingPeriodsComponent implements OnInit {
         }
         else {
           if (data._failure) {
-            this.snackbar.open('School Year Deletion failed. ' + data._message, '', {
+            this.snackbar.open( data._message, '', {
               duration: 10000
             });
           } else {
             this.markingPeriodService.getCurrentYear(true);
-            this.snackbar.open('School Year Deletion Successful.', '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             }).afterOpened().subscribe(data => {
               this.getMarkingPeriod();
@@ -247,12 +260,12 @@ export class MarkingPeriodsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Semester Deletion failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {
               this.markingPeriodService.getCurrentYear(true);
-              this.snackbar.open('School Semester Deletion Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               }).afterOpened().subscribe(data => {
                 this.getMarkingPeriod();
@@ -272,12 +285,12 @@ export class MarkingPeriodsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Quarter Deletion failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {
               this.markingPeriodService.getCurrentYear(true);
-              this.snackbar.open('School Quarter Deletion Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               }).afterOpened().subscribe(data => {
                 this.getMarkingPeriod();
@@ -296,12 +309,12 @@ export class MarkingPeriodsComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('School Progress Period Deletion failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {
               this.markingPeriodService.getCurrentYear(true);
-              this.snackbar.open('School Progress Period Deletion Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               }).afterOpened().subscribe(data => {
                 this.getMarkingPeriod();

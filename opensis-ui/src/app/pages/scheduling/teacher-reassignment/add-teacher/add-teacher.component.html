@@ -1,0 +1,113 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "searchselectTeacher" | translate }}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 row-gap-2 mt-4">
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "staffName" | translate }}</mat-label>
+                <input name="staffName" matInput />
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "staffId" | translate }}</mat-label>
+                <input name="staffId" matInput />
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "openSISProfile" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="allProfile">allProfile</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "jobTitle" | translate }}</mat-label>
+                <input name="jobTitle" matInput />
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "homeroomTeacher" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="homeroomTeacher">homeroomTeacher</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "primaryGradeLevelTaught" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="primaryGradeLevelTaught">primaryGradeLevelTaught</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "otherGradeLevelTaught" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="otherGradeLevelTaught">otherGradeLevelTaught</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "primarySubjectTaught" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="primarySubjectTaught">primarySubjectTaught</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "otherSubjectTaught" | translate }}</mat-label>
+                <mat-select>
+                    <mat-option value="otherSubjectTaught">otherSubjectTaught</mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+    </ul>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-0 mb-2">
+    <button color="primary" mat-raised-button type="submit">Search</button>
+</mat-dialog-actions>
+<div class="-mx-6 border-t overflow-auto">
+    <table mat-table [dataSource]="teacherDetails" class="mat-elevation-z8 shadow-none">
+        <ng-container matColumnDef="staffName">
+            <th mat-header-cell *matHeaderCellDef>{{ "staffName" | translate }}</th>
+            <td mat-cell *matCellDef="let element">
+                <div class="text-primary cursor-pointer">{{ element.staffName }}</div>
+            </td>
+        </ng-container>
+        <ng-container matColumnDef="staffId">
+            <th mat-header-cell *matHeaderCellDef>{{ 'staffId' | translate }}</th>
+            <td mat-cell *matCellDef="let element">{{ element.staffId }}</td>
+        </ng-container>
+        <ng-container matColumnDef="primaryGrade">
+            <th mat-header-cell *matHeaderCellDef>{{ 'primaryGrade' | translate }}</th>
+            <td mat-cell *matCellDef="let element">{{ element.primaryGrade }}</td>
+        </ng-container>
+        <ng-container matColumnDef="primarySubject">
+            <th mat-header-cell *matHeaderCellDef>{{ 'primarySubject' | translate }}</th>
+            <td mat-cell *matCellDef="let element">{{ element.primarySubject }}</td>
+        </ng-container>
+        <ng-container matColumnDef="homeroomTeacher">
+            <th mat-header-cell *matHeaderCellDef>{{ 'homeroomTeacher' | translate }}</th>
+            <td mat-cell *matCellDef="let element">{{ element.homeroomTeacher }}</td>
+        </ng-container>
+
+        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+    </table>
+</div>

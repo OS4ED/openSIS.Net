@@ -96,10 +96,13 @@
     </div>
 </div>
 <hr />
-<mat-error *ngIf="showError">
+<mat-error class="mx-8" *ngIf="showError">
     Please Select a Calendar.
 </mat-error>
-<div class="flex justify-between items-center" *ngIf="!showError">
+<mat-error class="mx-8" *ngIf="showMarkingPeriodError">
+    Please select valid duration.
+</mat-error>
+<div class="flex justify-between items-center" *ngIf="!showError && !showMarkingPeriodError">
     <a [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
         <mat-icon>west</mat-icon>
     </a>
@@ -109,7 +112,7 @@
         <mat-icon>east</mat-icon>
     </a>
 </div>
-<hr *ngIf="!showError">
+<hr *ngIf="!showError && !showMarkingPeriodError">
 <ng-template #customCellTemplate let-day="day" let-locale="locale">
     <div class="cal-cell-top">
         <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
@@ -123,7 +126,7 @@
 
 </ng-template>
 
-<div [ngSwitch]="view" *ngIf="!showError">
+<div [ngSwitch]="view" *ngIf="!showError && !showMarkingPeriodError">
     <mwl-calendar-month-view *ngSwitchCase="'month'" (dayClicked)="openAddNewEvent($event.day)" [viewDate]="viewDate"
         [events]="events" [refresh]="refresh" (beforeViewRender)="beforeMonthViewRender($event)"
         [weekendDays]="weekendDays" [cellTemplate]="customCellTemplate">

@@ -176,7 +176,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
 
   ngOnInit() {
     this.schoolService.schoolListCalled.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      if(res){
+      if(res.schoolLoaded || res.schoolChanged){
         this.getDashboardView();
         this.getReleaseNumber();
       }
@@ -215,7 +215,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
       }
       else {
         if (data._failure) {
-          this.snackbar.open('Release Number failed. ' + data._message, '', {
+          this.snackbar.open('' + data._message, '', {
             duration: 10000
           });
         } else {
@@ -236,7 +236,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Dashboard View failed. ' + res._message, 'LOL THANKS', {
+          this.snackbar.open( res._message, '', {
             duration: 10000
           });
         }

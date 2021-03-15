@@ -25,14 +25,14 @@
                                     <div>
                                         <div class="flex items-center">
                                             <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
-                                                <button (click) = "addChildren(item)" matTooltip="Add Child Marking Period" class="px-2 pt-3 pb-1">
+                                                <button *ngIf="addPermission" (click) = "addChildren(item)" matTooltip="Add Child Marking Period" class="px-2 pt-3 pb-1">
                                                     <mat-icon [icIcon]="icAdd"></mat-icon>
                                     </button>
                                             </div>
-                                            <button (click) = "editItem(item)" matTooltip="Edit Item" class="px-2 pt-3 pb-1">
+                                            <button *ngIf="editPermission" (click) = "editItem(item)" matTooltip="Edit Item" class="px-2 pt-3 pb-1">
                                                 <mat-icon [icIcon]="icEdit"></mat-icon>
                                         </button>
-                                            <button (click) = "confirmDelete(item)" matTooltip="Delete Item" class="px-2 pt-3 pb-1">
+                                            <button *ngIf="deletePermission" (click) = "confirmDelete(item)" matTooltip="Delete Item" class="px-2 pt-3 pb-1">
                                                 <mat-icon [icIcon]="icDelete"></mat-icon>
                                             </button>
                                         </div>
@@ -67,15 +67,15 @@
     
                                     <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
                                         yPosition="below">
-                                        <button (click) = "editItem(item)" mat-menu-item>
+                                        <button *ngIf="editPermission" (click) = "editItem(item)" mat-menu-item>
                                             <span>{{'editItem' | translate}}</span>
                                         </button>
     
-                                        <button (click) = "confirmDelete(item)" mat-menu-item>
+                                        <button *ngIf="deletePermission" (click) = "confirmDelete(item)" mat-menu-item>
                                             <span>{{'deleteItem' | translate}}</span>
                                         </button>
                                         <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
-                                            <button (click) = "addChildren(item)"  mat-menu-item>
+                                            <button *ngIf="addPermission" (click) = "addChildren(item)"  mat-menu-item>
                                                 <span>{{'addChildMarkingPeriod' | translate}}</span>
                                             </button>
                                         </div>
@@ -105,11 +105,11 @@
                             <mat-icon [icIcon]="icMoreVert" size="20px"></mat-icon>
                         </button>
                         <mat-menu #addMenu="matMenu" [overlapTrigger]="false" xPosition="before"  yPosition="below">
-                            <button (click) = "editItem(viewFirstChild)" mat-menu-item>
+                            <button *ngIf="editPermission" (click) = "editItem(viewFirstChild)" mat-menu-item>
                                 <span>{{'editItem' | translate}}</span>
                             </button>
 
-                            <button (click) = "confirmDelete(viewFirstChild)" mat-menu-item>
+                            <button *ngIf="deletePermission" (click) = "confirmDelete(viewFirstChild)" mat-menu-item>
                                 <span>{{'deleteItem' | translate}}</span>
                             </button>
                                                                
@@ -182,7 +182,7 @@
                             </div>
                             <h1 class="mb-6 opacity-75">No <span class="font-bold">Marking Period</span> Data
                                 Found!</h1>
-                            <button (click)="openAddNew()" type="button" color="primary" mat-raised-button>
+                            <button *ngIf="addPermission" (click)="openAddNew()" type="button" color="primary" mat-raised-button>
                                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline"
                                         inline="true">
                                     </ic-icon> {{'addAFullYearToBegin' | translate}}

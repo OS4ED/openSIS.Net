@@ -93,6 +93,7 @@ namespace opensis.data.Repository
                         gradeScaleAddViewModel.gradeScale.CreatedBy = gradeScaleUpdate.CreatedBy;
                         gradeScaleAddViewModel.gradeScale.CreatedOn = gradeScaleUpdate.CreatedOn;
                         gradeScaleAddViewModel.gradeScale.UpdatedOn = DateTime.Now;
+                        gradeScaleAddViewModel.gradeScale.SortOrder = gradeScaleUpdate.SortOrder;
                         this.context.Entry(gradeScaleUpdate).CurrentValues.SetValues(gradeScaleAddViewModel.gradeScale);
                         this.context?.SaveChanges();
                         gradeScaleAddViewModel._failure = false;

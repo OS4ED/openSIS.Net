@@ -211,7 +211,7 @@
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'openSISProfile'|translate}}</mat-label>
                             <mat-select name="openSISProfile" [(ngModel)]="staffMasterSearchModel.profile">
-                                <mat-option *ngFor="let profile of profiles" value={{profile}}>{{profile}}</mat-option>
+                                <mat-option *ngFor="let profile of getAllMembersList.getAllMemberList " value={{profile.profile}}>{{profile.profile}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>

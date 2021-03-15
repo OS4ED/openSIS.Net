@@ -86,6 +86,7 @@ export class CourseVariableScheduleListModel {
         this.day=null;
         this.periodId=null;
         this.roomId=null;
+        this.serial=0;
         this.createdBy= sessionStorage.getItem("email");
         this.updatedBy=sessionStorage.getItem("email");
         this.tenantId= sessionStorage.getItem("tenantId");
@@ -299,6 +300,7 @@ export class CourseVariableSchedule {
         this.day=null;
         this.periodId=null;
         this.roomId=null;
+        this.serial=0;
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
     }
@@ -318,7 +320,7 @@ export class CourseSectionAddViewModel extends CommonField {
 
     public markingPeriodId: string;
     public markingPeriod: string;
-    public standardRefNo:string;
+    public standardGradeScaleName:string;
     constructor() {
         super();
         this.courseSection = new CourseSection();
@@ -350,4 +352,29 @@ export class GetAllCourseStandardForCourseSectionModel extends CommonField{
 class GetCourseStandardForCoursesModel{
         standardRefNo: string;
         gradeStandardId: number   
+}
+
+export class CourseSectionDataTransferModel{
+    courseSectionCount:number;
+    showCourse:boolean;
+    courseId:number;
+    constructor(){
+        this.showCourse=false;
+    }
+}
+
+export class DeleteCourseSectionSchedule extends CommonField{
+    schoolId: number;
+    courseId: number;
+    courseSectionId: number;
+    scheduleType: string;
+    serial: number;
+    tenantId:string;
+    constructor(){
+        super();
+        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this.tenantId = sessionStorage.getItem("tenantId");
+    }
 }

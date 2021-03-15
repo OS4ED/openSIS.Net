@@ -58,15 +58,18 @@
         </ul>
 
         <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="staffViewDetails" [module]="module"
-                [categoryId]="categoryId" [staffCreateMode]="staffCreateMode"></vex-custom-field-without-form>
+            [categoryId]="categoryId" [staffCreateMode]="staffCreateMode"></vex-custom-field-without-form>
 
 
         <hr class="-mx-4 mt-6">
 
 
         <div class="flex w-full items-center pt-4 pb-2 mx-2">
-            <h4 class="text-blue mr-4">{{'homeAddress'|translate}} &nbsp; <span class="text-gray-light">|</span></h4>
-            <a (click)="showHomeAddressOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
+            <h4 class="text-blue mr-4">{{'homeAddress'|translate}} &nbsp;</h4><span
+                *ngIf="staffViewDetails.staffMaster.homeAddressLineOne || staffViewDetails.staffMaster.homeAddressLineTwo || staffViewDetails.staffMaster.homeAddressCity || staffViewDetails.staffMaster.homeAddressState || nameOfMiscValues.countryName || staffViewDetails.staffMaster.homeAddressZip"><span
+                    class="text-gray-light">|</span>
+                <a (click)="showHomeAddressOnGoogleMap()" class="cursor-pointer"><i
+                        class="icon icon-location4 mr-2"></i>Show on Map</a></span>
         </div>
         <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
             <li>
@@ -81,7 +84,8 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{nameOfMiscValues.countryName|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    {{nameOfMiscValues.countryName|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
@@ -104,11 +108,13 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'busPickup' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails.staffMaster.busPickup ? "Yes" :"No"}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails.staffMaster.busPickup ? "Yes"
+                    :"No"}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'busDropoff' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails.staffMaster.busDropoff ? "Yes" :"No"}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails.staffMaster.busDropoff ?
+                    "Yes" :"No"}}</p>
             </li>
         </ul>
 
@@ -116,8 +122,11 @@
         <hr class="-mx-4 mt-6">
 
         <div class="flex w-full items-center pt-4 pb-2 mx-2">
-            <h4 class="text-blue mr-4">{{'mailingAddress'|translate}} &nbsp; <span class="text-gray-light">|</span></h4>
-            <a (click)="showMailingAddressOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
+            <h4 class="text-blue mr-4">{{'mailingAddress'|translate}} &nbsp;</h4> <span
+                *ngIf="staffViewDetails.staffMaster.mailingAddressLineOne || staffViewDetails.staffMaster.mailingAddressLineTwo ||staffViewDetails.staffMaster.mailingAddressCity|| staffViewDetails.staffMaster.mailingAddressState||nameOfMiscValues.mailingAddressCountry || staffViewDetails.staffMaster.mailingAddressZip">
+                <span class="text-gray-light">|</span>
+                <a (click)="showMailingAddressOnGoogleMap()" class="cursor-pointer"><i
+                        class="icon icon-location4 mr-2"></i>Show on Map</a></span>
         </div>
         <p class="mb-6" *ngIf="staffViewDetails.staffMaster.mailingAddressSameToHome; else mailingAddressNotSameToHome">
             <span class="same-as-home-address">{{'sameAsHomeAddress' | translate}}</span>
@@ -143,7 +152,7 @@
                 <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{nameOfMiscValues.mailingAddressCountry
                     |EmtyValueCheckPipe}}</p>
             </li>
-            
+
             <li>
                 <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>
                 <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
@@ -170,10 +179,12 @@
         <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'emergencyContactName' | translate}}</label>
-                <p *ngIf="staffViewDetails.staffMaster.emergencyFirstName!==''||staffViewDetails.staffMaster.emergencyLastName!==''" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                <p *ngIf="staffViewDetails.staffMaster.emergencyFirstName!==''||staffViewDetails.staffMaster.emergencyLastName!==''"
+                    class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                     {{staffViewDetails.staffMaster.emergencyFirstName
                     }} {{staffViewDetails.staffMaster.emergencyLastName }}</p>
-                <p *ngIf="(staffViewDetails.staffMaster.emergencyFirstName===''||null) && (staffViewDetails.staffMaster.emergencyLastName===''||null)"  class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                <p *ngIf="(staffViewDetails.staffMaster.emergencyFirstName===''||null) && (staffViewDetails.staffMaster.emergencyLastName===''||null)"
+                    class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                     -</p>
             </li>
             <li>

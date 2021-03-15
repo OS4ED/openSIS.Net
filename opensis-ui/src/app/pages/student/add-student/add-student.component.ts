@@ -150,9 +150,11 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Cateogy list failed. ' + res._message, '', {
-            duration: 10000
-          });
+          if(res.fieldsCategoryList==null){
+            this.snackbar.open( res._message, '', {
+              duration: 10000
+            });
+          }
         }
         else {
           this.fieldsCategory = res.fieldsCategoryList;

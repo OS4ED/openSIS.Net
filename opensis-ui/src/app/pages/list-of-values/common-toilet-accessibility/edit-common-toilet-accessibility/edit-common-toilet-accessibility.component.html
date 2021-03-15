@@ -11,6 +11,7 @@
 
     <mat-form-field class="w-full mt-6" appearance="outline" color="primary">
         <mat-label>{{'accessibilityName' | translate}}</mat-label>
+        
         <input type="text" formControlName="lovColumnValue" matInput required>
         <mat-error *ngIf="form.get('lovColumnValue').hasError('whitespace')">{{'accessibilityNameIsRequired'|translate}}</mat-error>
     </mat-form-field>

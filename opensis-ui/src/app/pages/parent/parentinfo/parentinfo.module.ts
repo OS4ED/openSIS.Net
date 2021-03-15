@@ -22,9 +22,18 @@ import { ParentRoutingModule } from '../parentinfo/parent-routing-module';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import {MatSortModule} from '@angular/material/sort';
-
+import { SearchParentComponent } from './search-parent/search-parent.component';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatInputModule } from '@angular/material/input';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatDatepickerModule } from '@angular/material/datepicker';
+import { MatNativeDateModule } from '@angular/material/core';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { MatRippleModule } from '@angular/material/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 @NgModule({
-  declarations: [ParentinfoComponent],
+  declarations: [ParentinfoComponent, SearchParentComponent],
   imports: [
     CommonModule,
     SecondaryToolbarModule,
@@ -48,7 +57,16 @@ import {MatSortModule} from '@angular/material/sort';
     ParentRoutingModule,
     TranslateModule,
     MatTooltipModule,
-    MatSortModule
+    MatSortModule,
+    MatExpansionModule,
+    MatInputModule,
+    MatDividerModule,
+    MatDatepickerModule,
+    MatNativeDateModule,
+    MatFormFieldModule,
+    MatSlideToggleModule,
+    MatRippleModule,
+    MatProgressSpinnerModule
   ]
 })
 export class ParentinfoModule { }

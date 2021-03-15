@@ -19,6 +19,8 @@ import { StudentAddModel } from '../../../../src/app/models/studentModel';
 import { StudentService } from '../../../../src/app/services/student.service';
 import { StaffAddModel } from '../../models/staffModel';
 import { StaffService } from '../../services/staff.service';
+import { CryptoService } from '../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../models/rollBasedAccessModel';
 
 @Component({
   selector: 'vex-custom-field',
@@ -50,6 +52,11 @@ export class CustomFieldComponent implements OnInit {
   staffMultiSelectValue;
   studentMultiSelectValue;
   schoolMultiSelectValue
+  editStudentPermission:boolean= false;
+  editStaffPermission:boolean= false;
+  editSchoolPermission:boolean= false;
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup:RolePermissionViewModel= new RolePermissionViewModel();
   f: NgForm;
   formActionButtonTitle = "update";
   constructor(
@@ -59,6 +66,7 @@ export class CustomFieldComponent implements OnInit {
     private schoolService: SchoolService,
     private staffService: StaffService,
     private router: Router,
+    private cryptoService: CryptoService
   ) {
     if (this.module === 'School') {
       this.schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
@@ -69,18 +77,29 @@ export class CustomFieldComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     if (this.module === 'Student') {
-      this.studentAddViewModel = this.schoolDetailsForViewAndEdit;
       this.checkStudentCustomValue();
-
+      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 3);
+      let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 5);
+      let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
+      this.editStudentPermission = permissionSubCategory.rolePermission[0].canEdit;
+      this.studentAddViewModel = this.schoolDetailsForViewAndEdit;
     }
     else if (this.module === 'School') {
       this.checkNgOnInitCustomValue();
+      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
+      let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
+      let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
+      this.editSchoolPermission = permissionSubCategory.rolePermission[0].canEdit;
     }
     else if (this.module === 'Staff') {
-      this.staffAddViewModel = this.schoolDetailsForViewAndEdit;
       this.checkStaffCustomValue();
-
+      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 5);
+      let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 10);
+      let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
+      this.editStaffPermission = permissionSubCategory.rolePermission[0].canEdit;
+      this.staffAddViewModel = this.schoolDetailsForViewAndEdit;
     }
   }
 

@@ -17,6 +17,10 @@ import { MatSort } from '@angular/material/sort';
 import { LoaderService } from '../../../services/loader.service';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
+import { CommonService } from '../../../services/common.service';
+import { AgeRangeList, EducationalStage } from '../../../models/common.model';
 
 @Component({
   selector: 'vex-grade-levels',
@@ -39,19 +43,26 @@ export class GradeLevelsComponent implements OnInit {
   getAllGradeLevels: GetAllGradeLevelsModel = new GetAllGradeLevelsModel();
   gradeLevelList: MatTableDataSource<GetAllGradeLevelsModel>;
   getGradeEquivalencyList: GelAllGradeEquivalencyModel = new GelAllGradeEquivalencyModel();
+  ageRangeList:AgeRangeList = new AgeRangeList();
+  educationalStageList:EducationalStage = new EducationalStage();
   sendGradeLevelsToDialog: [];
   editMode: boolean;
   sendDetailsToEditComponent: [];
   loading: boolean = false;
   searchKey: string;
   deleteGradeLevelData: AddGradeLevelModel = new AddGradeLevelModel();
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   columns = [
     { label: 'Title', property: 'title', type: 'text', visible: true },
     { label: 'Short Name', property: 'shortName', type: 'text', visible: true },
     { label: 'Sort Order', property: 'sortOrder', type: 'number', visible: true },
-    { label: 'Grade Level Equivalency', property: 'gradeDescription', type: 'text', visible: true },
-    // { label: 'Age Range', property: 'ageRange', type: 'text', visible: false},
-    // { label: 'Educational Stage', property: 'educationalStage', type: 'text', visible: false},
+    { label: 'Grade Level Equivalency', property: 'gradeLevelEquivalency', type: 'text', visible: true },
+   // { label: 'Age Range', property: 'ageRange', type: 'text', visible: false},
+  //  { label: 'Educational Stage', property: 'educationalStage', type: 'text', visible: false},
     { label: 'Next Grade', property: 'nextGrade', type: 'text', visible: true },
     { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
@@ -59,20 +70,100 @@ export class GradeLevelsComponent implements OnInit {
     public translateService: TranslateService,
     private gradeLevelService: GradeLevelService,
     private loaderService: LoaderService,
-    private snackbar: MatSnackBar) {
+    private snackbar: MatSnackBar,
+    private cryptoService: CryptoService,
+    private commonService:CommonService) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
     });
   }
   ngOnInit(): void {
-    this.getGradeEquivalency()
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 22);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 18);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+    this.getGradeEquivalency();
+    this.getAgeRangeList();
+    this.getEducationalStageList();
     this.getAllGradeLevel();
   }
 
+ 
   getGradeEquivalency() {
     this.gradeLevelService.getAllGradeEquivalency(this.getGradeEquivalencyList).subscribe((res) => {
-      this.getGradeEquivalencyList = res;
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Grade Equivalency List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          if (res.gradeEquivalencyList==null) {
+            this.getGradeEquivalencyList= new GelAllGradeEquivalencyModel();
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+          } else {
+            this.getGradeEquivalencyList= new GelAllGradeEquivalencyModel();
+          }
+        }
+        else {
+          this.getGradeEquivalencyList = res;
+
+        }
+      }
+    })
+  }
+  getAgeRangeList(){
+    this.commonService.getAllGradeAgeRange(this.ageRangeList).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Grade Age Range List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          if (res.gradeAgeRangeList==null) {
+            this.ageRangeList= new AgeRangeList();
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+          } else {
+            this.ageRangeList= new AgeRangeList();
+          }
+        }
+        else {
+          this.ageRangeList = res;
+        }
+      }
+    })
+  }
+  getEducationalStageList(){
+    this.commonService.getAllGradeEducationalStage(this.educationalStageList).subscribe((res) => {
+      if (typeof (res) == 'undefined') {
+        this.snackbar.open('Grade Educational Stage List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+      else {
+        if (res._failure) {
+          if (res.gradeEducationalStageList==null) {
+            this.educationalStageList= new EducationalStage();
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+          } else {
+            this.educationalStageList= new EducationalStage();
+          }
+        }
+        else {
+          this.educationalStageList = res;
+        }
+      }
     })
   }
 
@@ -82,7 +173,9 @@ export class GradeLevelsComponent implements OnInit {
       data: {
         editMode: this.editMode,
         gradeLevels: this.sendGradeLevelsToDialog,
-        gradeLevelEquivalencyList: this.getGradeEquivalencyList
+        gradeLevelEquivalencyList: this.getGradeEquivalencyList,
+        ageRangeList: this.ageRangeList,
+        educationalStage:this.educationalStageList
       },
       width: '600px'
     }).afterClosed().subscribe((res) => {
@@ -99,7 +192,9 @@ export class GradeLevelsComponent implements OnInit {
         editMode: this.editMode,
         editDetails: editDetails,
         gradeLevels: this.sendGradeLevelsToDialog,
-        gradeLevelEquivalencyList: this.getGradeEquivalencyList
+        gradeLevelEquivalencyList: this.getGradeEquivalencyList,
+        ageRangeList: this.ageRangeList,
+        educationalStage:this.educationalStageList
       },
       width: '600px'
     }).afterClosed().subscribe((res) => {
@@ -122,17 +217,17 @@ export class GradeLevelsComponent implements OnInit {
       }
       else {
         if (res._failure) {
-          if (res._message === "NO RECORD FOUND") {
-            if (res.tableGradelevelList == null) {
-              this.gradeLevelList = new MatTableDataSource([]);
-              this.gradeLevelList.sort = this.sort;
-              this.sendGradeLevelsToDialog = [];
-            }
-
-          } else {
-            this.snackbar.open('Grade Level List failed. ' + res._message, '', {
+          if (res.tableGradelevelList === null) {
+            this.gradeLevelList = new MatTableDataSource([]);
+            this.gradeLevelList.sort = this.sort;
+            this.sendGradeLevelsToDialog = [];
+            this.snackbar.open('' + res._message, '', {
               duration: 10000
             });
+          } else {
+            this.gradeLevelList = new MatTableDataSource([]);
+            this.gradeLevelList.sort = this.sort;
+            this.sendGradeLevelsToDialog = [];
           }
 
         }
@@ -198,7 +293,7 @@ export class GradeLevelsComponent implements OnInit {
           duration: 10000
         });
       } else {
-        this.snackbar.open('Grade Level Deleted Successfully.', '', {
+        this.snackbar.open('' + res._message, '', {
           duration: 10000
         });
         this.getAllGradeLevel();

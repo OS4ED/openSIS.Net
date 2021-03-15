@@ -10,5 +10,6 @@ namespace opensis.core.School.Interfaces
         GetAllMembersList GetAllMembersForNotice(GetAllMembersList allMembersList);
         MembershipAddViewModel AddMembership(MembershipAddViewModel membershipAddViewModel);
         public MembershipAddViewModel UpdateMembership(MembershipAddViewModel membershipAddViewModel);
+        public MembershipAddViewModel DeleteMembership(MembershipAddViewModel membershipAddViewModel);
     }
 }

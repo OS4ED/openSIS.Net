@@ -24,7 +24,9 @@ class tblGradelevel {
     public gradeId: number;
     public shortName: string;
     public title: string;
-    public iscedGradeLevel:string;
+    public equivalencyId:string;
+    public ageRangeId:number;
+    public iscedCode:number;
     public nextGrade: string;
     public nextGradeId:number;
     public sortOrder: number;
@@ -48,9 +50,8 @@ export class AddGradeLevelModel extends CommonField{
 
 
 class gradeEquivalencyList{
-    iscedGradeLevel: string;
-    gradeDescription: string;
-    ageRange: string;
+    equivalencyId: string;
+    gradeLevelEquivalency: string;
     gradelevels:[]
 }
 
