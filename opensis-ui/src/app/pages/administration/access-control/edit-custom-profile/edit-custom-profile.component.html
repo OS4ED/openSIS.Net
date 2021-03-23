@@ -19,7 +19,7 @@
             <mat-label>{{'userType' | translate}}</mat-label>
             <mat-select   formControlName="userType" [disabled]="data=== null?false:true" required>
                 <mat-option></mat-option>       
-                <mat-option *ngFor="let profiles of profileList"  [value]="profiles.label">{{profiles.label}}</mat-option>               
+                <mat-option *ngFor="let profile of profileList"  [value]="profile.profileType">{{profile.profile}}</mat-option>               
             </mat-select>
             <mat-error *ngIf="form.get('userType').hasError('required')">{{'userTypeIsRequired'|translate}}</mat-error>
         </mat-form-field>

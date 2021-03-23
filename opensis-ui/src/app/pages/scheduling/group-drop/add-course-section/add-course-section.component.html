@@ -8,82 +8,94 @@
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-content fxLayout="column">
-    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-6">
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "course" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="otherGradeLevelTaught">Geometry</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </li>
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "subject" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="primarySubjectTaught">Mathematics</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </li>
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "program" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="otherSubjectTaught">All Program</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </li>
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "markingPeriod" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="markingPeriod">Quarter 1</mat-option>
-                </mat-select>
-            </mat-form-field>
-        </li>
-        <li class="col-span-2 text-right pt-1">
+<mat-dialog-content>
+    <form (ngSubmit)="searchCourseSection()" #f="ngForm">
+        <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-6">
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{ "course" | translate }}</mat-label>
+                    <mat-select [(ngModel)]="courseSectionSearch.courseId" name="courseId">
+                        <mat-option *ngFor="let course of courseList" [value]="course.course.courseId">
+                            {{course.course.courseTitle}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{ "subject" | translate }}</mat-label>
+                    <mat-select [(ngModel)]="courseSectionSearch.courseSubject" name="courseSubject">
+                        <mat-option *ngFor="let subject of subjectList" [value]="subject.subjectName">
+                            {{subject.subjectName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{ "program" | translate }}</mat-label>
+                    <mat-select [(ngModel)]="courseSectionSearch.courseProgram" name="courseProgram">
+                        <mat-option *ngFor="let program of programList" [value]="program.programName">
+                            {{program.programName}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{ "markingPeriod" | translate }}</mat-label>
+                    <mat-select [(ngModel)]="courseSectionSearch.markingPeriodId" name="markingPeriodId">
+                        <mat-option *ngFor="let markingPeriod of getMarkingPeriodTitleListModel.getMarkingPeriodView" [value]='markingPeriod.value'>
+                            {{markingPeriod.text}}
+                        </mat-option>
+                    </mat-select>
+                </mat-form-field>
+            </li>
+
+        </ul>
+        <div fxLayout="row" fxLayoutAlign="end center" class="py-0 mb-2">
             <button color="primary" mat-raised-button type="submit">Search</button>
-        </li>
-    </ul>
+        </div>
+    </form>
+
+    <div *ngIf="courseDetails?.data?.length >0 || searchRecord" class="-mx-6 -mb-6 border-t overflow-auto">
+        <table mat-table [dataSource]="courseDetails" class="mat-elevation-z8 shadow-none">
+            <ng-container matColumnDef="course">
+                <th mat-header-cell *matHeaderCellDef>{{ "course" | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                    <div>{{ element.courseTitle }}</div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="courseSection">
+                <th mat-header-cell *matHeaderCellDef>{{ "courseSection" | translate }}</th>
+                <td mat-cell *matCellDef="let element"><a href="javascript:void(0)" (click)="cellClicked(element)" class="text-blue">{{ element.courseSectionName }}</a></td>
+            </ng-container>
+            <ng-container matColumnDef="markingPeriod">
+                <th mat-header-cell *matHeaderCellDef>{{ "markingPeriod" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.markingPeriodTitle}}</td>
+            </ng-container>
+            <ng-container matColumnDef="startDate">
+                <th mat-header-cell *matHeaderCellDef>{{ "startDate" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.durationStartDate | date:'shortDate'  }}</td>
+            </ng-container>
+            <ng-container matColumnDef="endDate">
+                <th mat-header-cell *matHeaderCellDef>{{ "endDate" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.durationEndDate | date:'shortDate' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="scheduledTeacher">
+                <th mat-header-cell *matHeaderCellDef>{{ "scheduledTeacher" | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                    <button *ngIf="element.scheduledTeacher" matTooltip="Jolly Holmes"
+                        aria-label="Button that displays a tooltip when focused or hovered over"
+                        [matTooltipPosition]="'above'">
+                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                    </button>
+                    <span *ngIf="!element.scheduledTeacher">-</span>
+                </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+    </div>
 </mat-dialog-content>
-
-<div class="-mx-6 -mb-6 border-t overflow-auto">
-    <table mat-table [dataSource]="courseDetails" class="mat-elevation-z8 shadow-none">
-        <ng-container matColumnDef="course">
-            <th mat-header-cell *matHeaderCellDef>{{ "course" | translate }}</th>
-            <td mat-cell *matCellDef="let element">
-                <div>{{ element.course }}</div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="courseSection">
-            <th mat-header-cell *matHeaderCellDef>{{ "courseSection" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.courseSection }}</td>
-        </ng-container>
-        <ng-container matColumnDef="markingPeriod">
-            <th mat-header-cell *matHeaderCellDef>{{ "markingPeriod" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.markingPeriod | translate }}</td>
-        </ng-container>
-        <ng-container matColumnDef="startDate">
-            <th mat-header-cell *matHeaderCellDef>{{ "startDate" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.startDate | translate }}</td>
-        </ng-container>
-        <ng-container matColumnDef="endDate">
-            <th mat-header-cell *matHeaderCellDef>{{ "endDate" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.endDate | translate }}</td>
-        </ng-container>
-        <ng-container matColumnDef="scheduledTeacher">
-            <th mat-header-cell *matHeaderCellDef>{{ "scheduledTeacher" | translate }}</th>
-            <td mat-cell *matCellDef="let element">
-                <button *ngIf="element.scheduledTeacher" matTooltip="Jolly Holmes"
-                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
-                <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-            </button>
-            <span *ngIf="!element.scheduledTeacher">-</span>
-        </td>
-        </ng-container>
-
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-</div>

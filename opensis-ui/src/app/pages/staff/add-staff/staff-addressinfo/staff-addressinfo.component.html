@@ -139,7 +139,7 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                            <input [(ngModel)]="staffAddModel.staffMaster.homeAddressZip" #homeAddressZip="ngModel"
+                            <input [(ngModel)]="staffAddModel.staffMaster.homeAddressZip" maxlength="20" #homeAddressZip="ngModel"
                                 name="homeAddressZip" matInput>
                         </mat-form-field>
                     </li>
@@ -213,7 +213,7 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'zip/Postal Code'|translate}}</mat-label>
-                            <input [disabled]="checkBox.checked" [(ngModel)]="staffAddModel.staffMaster.mailingAddressZip" name="mailingAddressZip"
+                            <input [disabled]="checkBox.checked" maxlength="20" [(ngModel)]="staffAddModel.staffMaster.mailingAddressZip" name="mailingAddressZip"
                                 matInput>
                         </mat-form-field>
                     </li>

@@ -31,7 +31,7 @@ export class LanguageAddModel {
 }
 
 export class LanguageModel  {
-    public tableLanguage : [tableLanguage];
+    public tableLanguage : tableLanguage[];
     public isLanguageAvailable:boolean;
     public _failure: boolean;
     public _message:string;

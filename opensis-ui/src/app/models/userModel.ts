@@ -40,4 +40,6 @@ export class DataAvailablity{
     schoolLoaded:boolean;
     schoolChanged:boolean;
     dataFromUserLogin:boolean;
+    academicYearChanged: boolean;
+    academicYearLoaded: boolean;
 }

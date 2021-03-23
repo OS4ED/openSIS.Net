@@ -299,10 +299,15 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
 
   showAdvanceSearch() {
     this.showAdvanceSearchPanel = true;
+    this.filterJsonParams = null;
   }
 
   hideAdvanceSearch(event){
+    this.showSaveFilter = event.showSaveFilter;
     this.showAdvanceSearchPanel = false;
+    if(event.showSaveFilter == false){
+      this.getAllSearchFilter();
+    }
   }
 
   getSearchResult(res){
@@ -321,6 +326,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
     }).afterClosed().subscribe(res => {
       if(res){
        this.showSaveFilter=false;
+       this.showLoadFilter=false;
         this.getAllSearchFilter();
       }
     });
@@ -342,6 +348,13 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
         }
         else {
           this.searchFilterListViewModel= res;
+          let filterData=this.searchFilterListViewModel.searchFilterList.filter(x=> x.filterId == this.searchFilter.filterId);
+          if(filterData.length >0){
+            this.searchFilter.jsonList= filterData[0].jsonList;
+          }
+          if(this.filterJsonParams == null){
+            this.searchFilter = this.searchFilterListViewModel.searchFilterList[this.searchFilterListViewModel.searchFilterList.length-1];
+          }
         }
       }
     }
@@ -351,6 +364,8 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
   editFilter(){
     this.showAdvanceSearchPanel = true;
     this.filterJsonParams = this.searchFilter;
+    this.showSaveFilter = false;
+    this.showLoadFilter=false;
   }
 
   deleteFilter(){
@@ -385,7 +400,9 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
           else {
             this.searchFilter = new SearchFilter();
             this.showLoadFilter=true;
+            this.getAllStaff.filterParams= null;
             this.getAllSearchFilter();
+            this.callStaffList();
           }
         }
       }

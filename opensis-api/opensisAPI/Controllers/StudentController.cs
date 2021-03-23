@@ -530,5 +530,22 @@ namespace opensisAPI.Controllers
             }
             return studentPhotoUpdate;
         }
+
+        //[HttpPost("searchStudentForSchedule")]
+
+        //public ActionResult<SearchStudentViewModel> SearchStudentForSchedule(SearchStudentViewModel searchStudentViewModel)
+        //{
+        //    SearchStudentViewModel searchStudentView = new SearchStudentViewModel();
+        //    try
+        //    {
+        //        searchStudentView = _studentService.SearchStudentForSchedule(searchStudentViewModel);
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        searchStudentView._message = es.Message;
+        //        searchStudentView._failure = true;
+        //    }
+        //    return searchStudentView;
+        //}
     }
 }

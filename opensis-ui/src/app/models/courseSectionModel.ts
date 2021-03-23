@@ -192,11 +192,14 @@ export class CourseSection {
     public courseId: number;
     public courseSectionId: number;
     public gradeScaleId: number;
+    public gradeScaleType: string;
     public courseSectionName: string;
     public calendarId: number;
     public attendanceCategoryId: number;
     public creditHours: number;
     public seats: number;
+    public allowStudentConflict: boolean;
+    public allowTeacherConflict: boolean;
     public isWeightedCourse: boolean;
     public affectsClassRank: boolean;
     public affectsHonorRoll: boolean;

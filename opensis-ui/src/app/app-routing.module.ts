@@ -1,18 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { CustomLayoutComponent } from './custom-layout/custom-layout.component';
-import { SettingsComponent } from './pages/settings/settings.component';
-import { SchoolSettingsComponent } from './pages/settings/school-settings/school-settings.component';
-import { StudentSettingsComponent } from './pages/settings/student-settings/student-settings.component';
-import { StudentComponent } from './pages/student/studentinfo/student.component';
-import { AddStudentComponent } from './pages/student/add-student/add-student.component';
-import { 
-  AuthGuard as AuthGuard
-} from '../app/common/auth.guard';
-import { VariableSchedulingComponent } from './pages/courses/course-manager/edit-course-section/variable-scheduling/variable-scheduling.component';
-import { FixedSchedulingComponent } from './pages/courses/course-manager/edit-course-section/fixed-scheduling/fixed-scheduling.component';
-import { RotatingSchedulingComponent } from './pages/courses/course-manager/edit-course-section/rotating-scheduling/rotating-scheduling.component';
-import { CalendarDaysComponent } from './pages/courses/course-manager/edit-course-section/calendar-days/calendar-days.component';
+import {AuthGuard as AuthGuard} from '../app/common/auth.guard';
+import { RolePermissionGuard } from './common/role-permission.guard';
 const routes: Routes = [
   // { path: '', redirectTo: '/login', pathMatch: 'full' },
   {
@@ -30,7 +20,7 @@ const routes: Routes = [
       {
         path: 'dashboards',
         loadChildren: () => import('./pages/dashboards/dashboard-analytics/dashboard-analytics.module').then(m => m.DashboardAnalyticsModule),
-        canActivate: [AuthGuard]
+        canActivate: [AuthGuard,RolePermissionGuard]
       },
       {
         path: '',
@@ -38,7 +28,7 @@ const routes: Routes = [
           {
             path: 'schoolinfo',
             loadChildren: () => import('./pages/school/school-details/school-details/school-details.module').then(m => m.SchoolDetailsModule),
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard,RolePermissionGuard]
           }
         ]
       },
@@ -48,7 +38,7 @@ const routes: Routes = [
           {
             path: 'marking-periods',
             loadChildren: () => import('./pages/school/marking-periods/marking-periods.module').then(m => m.MarkingPeriodsModule),
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard,RolePermissionGuard]
           }
         ]
       },
@@ -58,7 +48,7 @@ const routes: Routes = [
           {
             path: 'schoolcalendars',
             loadChildren: () => import('./pages/school/calendar/calendar.module').then(m => m.CalendarModule),
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard,RolePermissionGuard]
           }
         ]
       },
@@ -68,7 +58,7 @@ const routes: Routes = [
           {
             path: 'notices',
             loadChildren: () => import('./pages/school/notices/notices.module').then(m => m.NoticesModule),
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard,RolePermissionGuard]
           }
         ]
       },
@@ -78,7 +68,7 @@ const routes: Routes = [
           {
             path: 'students',
             loadChildren: () => import('./pages/student/studentinfo/student.module').then(m => m.StudentModule),
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard,RolePermissionGuard]
             
           }
         ]
@@ -89,7 +79,7 @@ const routes: Routes = [
           {
             path: 'studentdataimport',
             loadChildren: () => import('./pages/student/student-data-import/student-data-import.module').then(m => m.StudentDataImportModule),
-            canActivate: [AuthGuard]
+            canActivate: [AuthGuard,RolePermissionGuard]
             
           }
         ]
@@ -100,7 +90,7 @@ const routes: Routes = [
           {
             path: 'parents',
             loadChildren: () => import('./pages/parent/parentinfo/parentinfo.module').then(m => m.ParentinfoModule),
-            //canActivate: [AuthGuard]            
+            canActivate: [AuthGuard,RolePermissionGuard]            
           }
         ]
       },
@@ -110,7 +100,18 @@ const routes: Routes = [
           {
             path: 'staff',
             loadChildren: () => import('./pages/staff/staffinfo/staffinfo.module').then(m => m.StaffinfoModule),
-            canActivate: [AuthGuard]            
+            canActivate: [AuthGuard,RolePermissionGuard]          
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'staffdataimport',
+            loadChildren: () => import('./pages/staff/staff-data-import/staff-data-import.module').then(m => m.StaffDataImportModule),
+            canActivate: [AuthGuard,RolePermissionGuard]
+            
           }
         ]
       },
@@ -130,7 +131,7 @@ const routes: Routes = [
           {
             path: 'schedule-teacher',
             loadChildren: () => import('./pages/scheduling/schedule-teacher/schedule-teacher.module').then(m => m.ScheduleTeacherModule),
-            //canActivate: [AuthGuard]            
+            canActivate: [AuthGuard,RolePermissionGuard]           
           }
         ]
       },
@@ -140,7 +141,7 @@ const routes: Routes = [
           {
             path: 'settings',
             loadChildren: () => import('./pages/settings/settings.module').then(m => m.SettingsModule),
-            canActivate: [AuthGuard]            
+            canActivate: [AuthGuard,RolePermissionGuard]            
             
           }
         ]
@@ -151,7 +152,7 @@ const routes: Routes = [
           {
             path: 'schedule-student',
             loadChildren: () => import('./pages/scheduling/schedule-student/schedule-student.module').then(m => m.ScheduleStudentModule),
-            // canActivate: [AuthGuard]            
+            canActivate: [AuthGuard,RolePermissionGuard]            
           }
         ]
       },
@@ -161,7 +162,7 @@ const routes: Routes = [
           {
             path: 'group-drop',
             loadChildren: () => import('./pages/scheduling/group-drop/group-drop.module').then(m => m.GroupDropModule),
-            // canActivate: [AuthGuard]            
+            canActivate: [AuthGuard,RolePermissionGuard]            
           }
         ]
       },
@@ -171,7 +172,7 @@ const routes: Routes = [
           {
             path: 'teacher-reassignment',
             loadChildren: () => import('./pages/scheduling/teacher-reassignment/teacher-reassignment.module').then(m => m.TeacherReassignmentModule),
-            // canActivate: [AuthGuard]            
+            canActivate: [AuthGuard,RolePermissionGuard]            
           }
         ]
       },         

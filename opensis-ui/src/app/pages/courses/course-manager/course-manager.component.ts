@@ -21,7 +21,7 @@ import { ManageSubjectsComponent } from './manage-subjects/manage-subjects.compo
 import { ManageProgramsComponent } from './manage-programs/manage-programs.component';
 import { EditCourseComponent } from './edit-course/edit-course.component';
 import { EditCourseSectionComponent } from './edit-course-section/edit-course-section.component';
-import {GetAllCourseListModel,AddCourseModel,GetAllProgramModel,GetAllSubjectModel} from '../../../models/courseManagerModel';
+import {GetAllCourseListModel,AddCourseModel,GetAllProgramModel,GetAllSubjectModel, CourseListFilterModel} from '../../../models/courseManagerModel';
 import {CourseManagerService} from '../../../services/course-manager.service';
 import {MatSnackBar} from  '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
@@ -31,6 +31,7 @@ import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms'
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
 import { CryptoService } from '../../../services/Crypto.service';
+import { LoaderService } from '../../../services/loader.service';
 
 @Component({
   selector: 'vex-course-manager',
@@ -42,7 +43,6 @@ import { CryptoService } from '../../../services/Crypto.service';
   ]
 })
 export class CourseManagerComponent implements OnInit {
-  @Input()
   columns = [
     { label: 'Student Name', property: 'student_name', type: 'text', visible: true },
     { label: 'Student ID', property: 'student_id', type: 'text', visible: true },
@@ -68,7 +68,7 @@ export class CourseManagerComponent implements OnInit {
   courseDetails = 0;
   icFilterList = icFilterList;
   icSearch = icSearch;
-  loading:Boolean;
+  loading:boolean;
   selectedTab = 'scheduled_teachers';
   getAllCourseListModel: GetAllCourseListModel = new GetAllCourseListModel(); 
   addCourseModel:AddCourseModel= new AddCourseModel();
@@ -123,7 +123,7 @@ export class CourseManagerComponent implements OnInit {
   addPermission = false;
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
-  
+  filteredCourseListModel:CourseListFilterModel = new CourseListFilterModel();
   constructor(
     public translateService:TranslateService,
     private dialog: MatDialog,
@@ -132,9 +132,12 @@ export class CourseManagerComponent implements OnInit {
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
     private layoutService: LayoutService,
-    private cryptoService: CryptoService) {
-      this.getAllCourse();
+    private cryptoService: CryptoService,
+    private loaderService:LoaderService) {
       translateService.use('en');
+      this.loaderService.isLoading.subscribe((val) => {
+        this.loading = val;
+      });
       if(localStorage.getItem("collapseValue") !== null){
         if( localStorage.getItem("collapseValue") === "false"){
           this.layoutService.expandSidenav();
@@ -161,6 +164,7 @@ export class CourseManagerComponent implements OnInit {
       program:['all',[Validators.required]],
       gradeLevel:['all',[Validators.required]],
     })
+    this.getAllCourse();
     this.getAllProgramList();
     this.getAllSubjectList();
     this.getAllGradeLevelList();
@@ -232,72 +236,98 @@ export class CourseManagerComponent implements OnInit {
     column.visible = !column.visible;
   }
 
- 
+ onSubjectChange(subjectValue){
+  this.filteredCourseListModel.subject=subjectValue;
+  this.filterCourse(this.filteredCourseListModel);
+ }
+
+ onProgramChange(programValue){
+  this.filteredCourseListModel.program=programValue;
+  this.filterCourse(this.filteredCourseListModel);
+ }
+
+ onGradeLevelChange(gradeLevelValue){
+  this.filteredCourseListModel.gradeLevel=gradeLevelValue;
+  this.filterCourse(this.filteredCourseListModel);
+ }
 
   
-  filterCourse(event,category){
+  filterCourse(filter:CourseListFilterModel){
+    if(filter.subject=='all' && filter.program=='all' && filter.gradeLevel=='all'){
+      this.courseList=this.courseListClone;
+    }else{
+      filter.subject=filter.subject=='all'?'':filter.subject;
+      filter.program=filter.program=='all'?'':filter.program;
+      filter.gradeLevel=filter.gradeLevel=='all'?'':filter.gradeLevel;
+      this.courseList=this.courseListClone.filter((item) => {
+        return item.course.courseSubject?.toLowerCase().indexOf(filter.subject.toLowerCase()) !== -1
+            && item.course.courseProgram?.toLowerCase().indexOf(filter.program.toLowerCase()) !== -1
+            && item.course.courseGradeLevel?.toLowerCase().indexOf(filter.gradeLevel.toLowerCase()) !== -1;
+    });
+    }
+
   
-    if(category === "Subject"){
-      var subject  = event.value;
-    }else{
-      var subject  = this.form.value.subject;
-    }
-    if(category === "Program"){
-      var program  = event.value; 
-    }else{
-      var program  = this.form.value.program; 
-    }
-    if(category === "Grade"){
-      var gradeLevel  = event.value; 
-    }else{
-      var gradeLevel  = this.form.value.gradeLevel; 
-    }
-    
-    if(subject !== "all" && program !== "all" && gradeLevel !== "all"){
-      this.noFilterMode = false;
-      var l_flag = "N";
-      for(let i = 0;i< this.courseListClone.length ;i++){
-        var obj1 = {};      
+  
+    // if(category === "Subject"){
+    //   var subject  = event.value;
+    // }else{
+    //   var subject  = this.form.value.subject;
+    // }
+    // if(category === "Program"){
+    //   var program  = event.value; 
+    // }else{
+    //   var program  = this.form.value.program; 
+    // }
+    // if(category === "Grade"){
+    //   var gradeLevel  = event.value; 
+    // }else{
+    //   var gradeLevel  = this.form.value.gradeLevel; 
+    // }
+    // if(subject !== "all" && program !== "all" && gradeLevel !== "all"){
+    //   this.noFilterMode = false;
+    //   var l_flag = "N";
+    //   for(let i = 0;i< this.courseListClone.length ;i++){
+    //     var obj1 = {};      
        
-        if(subject == this.courseListClone[i].course.courseSubject && program == this.courseListClone[i].course.courseProgram && gradeLevel == this.courseListClone[i].course.courseGradeLevel ){
+    //     if(subject == this.courseListClone[i].course.courseSubject && program == this.courseListClone[i].course.courseProgram && gradeLevel == this.courseListClone[i].course.courseGradeLevel ){
         
-            var l_flag = "Y";             
-            obj1["courseTitle"]= this.courseListClone[i].course.courseTitle,
-            obj1["courseShortName"] = this.courseListClone[i].course.courseShortName,
-            obj1["courseGradeLevel"] = this.courseListClone[i].course.courseGradeLevel,
-            obj1["courseProgram"] = this.courseListClone[i].course.courseProgram,
-            obj1["courseSubject"] = this.courseListClone[i].course.courseSubject,
-            obj1["courseStandard"] = this.courseListClone[i].course.courseStandard,
-            obj1["courseCategory"] = this.courseListClone[i].course.courseCategory,
-            obj1["creditHours"] = this.courseListClone[i].course.creditHours,
-            obj1["courseDescription"] = this.courseListClone[i].course.courseDescription,    
-            this.filterCourseList.push(obj1);  
-            this.cloneFilterCourseList.push(obj1);                  
-          }
+    //         var l_flag = "Y";             
+    //         obj1["courseTitle"]= this.courseListClone[i].course.courseTitle,
+    //         obj1["courseShortName"] = this.courseListClone[i].course.courseShortName,
+    //         obj1["courseGradeLevel"] = this.courseListClone[i].course.courseGradeLevel,
+    //         obj1["courseProgram"] = this.courseListClone[i].course.courseProgram,
+    //         obj1["courseSubject"] = this.courseListClone[i].course.courseSubject,
+    //         obj1["courseStandard"] = this.courseListClone[i].course.courseStandard,
+    //         obj1["courseCategory"] = this.courseListClone[i].course.courseCategory,
+    //         obj1["creditHours"] = this.courseListClone[i].course.creditHours,
+    //         obj1["courseDescription"] = this.courseListClone[i].course.courseDescription,    
+    //         this.filterCourseList.push(obj1);  
+    //         this.cloneFilterCourseList.push(obj1);                  
+    //       }
           
-        }
-        this.filterCourseCount = this.filterCourseList.length;   
-        if(this.filterCourseList.length > 0){
-          this.selectedCourseObj = this.filterCourseList[0]; 
-          this.selectedCourse = this.filterCourseList[this.selectedCourses];          
-          this.standard = this.filterCourseList[0].courseStandard;
-          this.selectedCourse = this.filterCourseList[0]; 
-          this.standard = this.filterCourseList[0].courseStandard;
-          this.filterFlag = true;
-        }     
+    //     }
+    //     this.filterCourseCount = this.filterCourseList.length;   
+    //     if(this.filterCourseList.length > 0){
+    //       this.selectedCourseObj = this.filterCourseList[0]; 
+    //       this.selectedCourse = this.filterCourseList[this.selectedCourses];          
+    //       this.standard = this.filterCourseList[0].courseStandard;
+    //       this.selectedCourse = this.filterCourseList[0]; 
+    //       this.standard = this.filterCourseList[0].courseStandard;
+    //       this.filterFlag = true;
+    //     }     
         
-        if(l_flag == "N"){
-          this.totalCourse = 0;
-          this.filterCourseList = [];
-          this.cloneFilterCourseList = [];
-          this.courseList=[];
+    //     if(l_flag == "N"){
+    //       this.totalCourse = 0;
+    //       this.filterCourseList = [];
+    //       this.cloneFilterCourseList = [];
+    //       this.courseList=[];
           
-        }
-      }else{
-        this.cloneFilterCourseList = [];
-        this.filterCourseList = [];       
-        this.getAllCourse();
-      }
+    //     }
+    //   }else{
+    //     this.cloneFilterCourseList = [];
+    //     this.filterCourseList = [];       
+    //     this.getAllCourse();
+    //   }
     }
   backToCourse(event) {
       this.showCourses = true;
@@ -371,16 +401,22 @@ export class CourseManagerComponent implements OnInit {
   openModalManageSubjects() {
     this.dialog.open(ManageSubjectsComponent, {
       width: '500px'
-    }).afterClosed().subscribe((data) => {
+    }).afterClosed().subscribe((res) => {
       this.getAllSubjectList();
+      if(res){
+        this.getAllCourse();
+      }
     });   
   }
 
   openModalManagePrograms() {
     this.dialog.open(ManageProgramsComponent, {
       width: '500px'
-    }).afterClosed().subscribe((data) => {
+    }).afterClosed().subscribe((res) => {
       this.getAllProgramList();
+      if(res){
+        this.getAllCourse();
+      }
     });   
   }
   confirmDelete(element,index){

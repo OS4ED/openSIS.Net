@@ -8,72 +8,65 @@
 
         <div @stagger fxLayout="column">
             <h4 class="text-primary px-4 pb-2">{{'officialInformation'|translate}}</h4>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
+                <ul class="grid sm:grid-cols-2 md:grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-2">
+                    <li>
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'jobTitle'|translate}}</mat-label>
                         <input #jobTitle="ngModel" name="jobTitle" matInput required [(ngModel)]="staffSchoolInfoModel.jobTitle">
                         <mat-error *ngIf="jobTitle.errors?.required">{{'jobTitleIsRequired'|translate}}
                         </mat-error>
                     </mat-form-field>
-
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
+                    </li>
+                    <li></li>
+                    <li>
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'joiningDate'|translate}}</mat-label>
                         <input matInput name="joiningDate" [matDatepicker]="picker1" [(ngModel)]="staffSchoolInfoModel.joiningDate">
                         <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
                         <mat-datepicker #picker1></mat-datepicker>
                     </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
+                    </li>
+                    <li>
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'endDate'|translate}}</mat-label>
                         <input matInput name="endDate" [matDatepicker]="picker" [(ngModel)]="staffSchoolInfoModel.endDate">
                         <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
                         <mat-datepicker #picker></mat-datepicker>
                     </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
+                    </li>
+                    <li>
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'primaryGradeLevelTaught'|translate}}</mat-label>
                         <mat-select name="primaryGradeLevelTaught" [(ngModel)]="staffSchoolInfoModel.primaryGradeLevelTaught">
                             <mat-option *ngFor="let grade of getAllGradeLevels.tableGradelevelList" value={{grade.title}}>{{grade.title}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
+                    </li>
+                    <li>
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'otherGradeLevelTaught'|translate}}</mat-label>
                         <mat-select name="otherGradeLevelTaught" multiple [(ngModel)]="otherGradeLevelTaught">
                             <mat-option *ngFor="let grade of getAllGradeLevels.tableGradelevelList" value={{grade.title}}>{{grade.title}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
+                    </li>
+                    <li>
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'primarySubjectTaught'|translate}}</mat-label>
                         <mat-select name="primarySubjectTaught" [(ngModel)]="staffSchoolInfoModel.primarySubjectTaught">
-                            <mat-option *ngFor="let subject of subjects" value={{subject}}>{{subject}}</mat-option>
+                            <mat-option *ngFor="let subject of getAllSubjectModel.subjectList" value={{subject.subjectName}}>{{subject.subjectName}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="mx-4 md:w-1/2">
-                    
+                    </li>
+                    <li>
                     <mat-form-field class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'otherSubjectTaught'|translate}}</mat-label>
                         <mat-select name="otherSubjectTaught" multiple [(ngModel)]="otherSubjectTaught">
-                            <mat-option *ngFor="let subject of subjects" value={{subject}}>{{subject}}</mat-option>
+                            <mat-option *ngFor="let subject of getAllSubjectModel.subjectList" value={{subject.subjectName}}>{{subject.subjectName}}</mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-            </div>
+                    </li>
+                </ul>
 
             <div class="flex w-full justify-between items-center px-4 pb-2 pt-10">
                 <h4 class="text-primary">{{'schoolInformation'|translate}}</h4>
@@ -88,8 +81,8 @@
                 class="bg-white shadow-md border border-primary-light hover:border-primary rounded px-4 pt-3 mb-4 mx-4">
                 <div class="flex flex-wrap w-full justify-between">
                     <div class="w-11/12 -mx-4">
-                            <div class="flex flex-wrap">
-                            <div class="w-1/2 px-4">
+                                <ul class="grid sm:grid-cols-2 md:grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-2">
+                                    <li>
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'school'|translate}}</mat-label>
                                         <mat-select #school="ngModel" (selectionChange)="onSchoolChange($event.value,i)" name="{{'school'+i}}" [disabled]="staffSchoolInfoModel.staffSchoolInfoList[i].id!=null" required [(ngModel)]="staffSchoolInfoModel.staffSchoolInfoList[i].schoolAttachedId">
@@ -99,8 +92,8 @@
                                         <mat-error *ngIf="school.errors?.required">{{'schooNameIsRequired'|translate}}
                                         </mat-error>
                                     </mat-form-field>
-                                </div>
-                            <div class="w-1/2 px-4">
+                                    </li>
+                                    <li>
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'profile'|translate}}</mat-label>
                                         <mat-select #profile="ngModel" name="{{'profile'+i}}" required [(ngModel)]="staffSchoolInfoModel.staffSchoolInfoList[i].profile">
@@ -109,10 +102,8 @@
                                         <mat-error *ngIf="profile.errors?.required">{{'profileIsRequired'|translate}}
                                         </mat-error>
                                     </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="flex flex-wrap">
-                            <div class="w-1/2 px-4">
+                                    </li>
+                                    <li>
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'startDate'|translate}}</mat-label>
                                         <input #start_date="ngModel" matInput name="{{'startDate'+i}}" [matDatepicker]="startDate" required [(ngModel)]="staffSchoolInfoModel.staffSchoolInfoList[i].startDate">
@@ -121,8 +112,8 @@
                                         <mat-error *ngIf="start_date.errors?.required">{{'startDateIsRequired'|translate}}
                                         </mat-error>
                                     </mat-form-field>
-                                </div>
-                            <div class="w-1/2 px-4">
+                                    </li>
+                                    <li>
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'endDate'|translate}}</mat-label>
                                         <input matInput #end_date="ngModel" name="{{'endDate'+i}}" [matDatepicker]="endDate" [(ngModel)]="staffSchoolInfoModel.staffSchoolInfoList[i].endDate">
@@ -131,8 +122,8 @@
                                         <mat-error *ngIf="end_date.errors?.nomatch">{{'startDateCannotExceedEndDate'|translate}}
                                         </mat-error>
                                     </mat-form-field>
-                                </div>
-                            </div>
+                                    </li>
+                                </ul>
                     </div>
                     <div class="w-1/12 text-center pt-2" >
                         <a (click)="deleteSchoolInfo(i)" *ngIf="staffSchoolInfoModel.staffSchoolInfoList[i].id==null;else dontDelete"  class="cursor-pointer">
@@ -143,12 +134,13 @@
                 </div>
             </div>
         </div>
-            <div class="px-4 pt-3 mb-4 text-right">
-                <button mat-raised-button color="white" *ngIf="staffCreateMode == staffCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
-                <button color="primary" mat-raised-button (click)="submitSchoolInfo()">{{'update'|translate}}</button>
-            </div>
         </div>
     </mat-card-content>
+        <mat-card-footer class="text-right mx-4 mb-2">
+            <button mat-button *ngIf="staffCreateMode == staffCreate.EDIT"
+                (click)="cancelEdit()">{{'cancel'|translate}}</button>
+            <button color="primary" class="ml-2" mat-raised-button (click)="submitSchoolInfo()">{{'update'|translate}}</button>
+        </mat-card-footer>
     </form>
 </mat-card>
 
@@ -220,4 +212,4 @@
             </div>
         </div>
     </mat-card-content>
-</mat-card> 
+</mat-card>

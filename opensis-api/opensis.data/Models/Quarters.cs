@@ -9,6 +9,7 @@ namespace opensis.data.Models
         {
             CourseSection = new HashSet<CourseSection>();
             ProgressPeriods = new HashSet<ProgressPeriods>();
+            StaffCoursesectionSchedule = new HashSet<StaffCoursesectionSchedule>();
         }
 
         public Guid TenantId { get; set; }
@@ -34,5 +35,6 @@ namespace opensis.data.Models
         public virtual Semesters Semesters { get; set; }
         public virtual ICollection<CourseSection> CourseSection { get; set; }
         public virtual ICollection<ProgressPeriods> ProgressPeriods { get; set; }
+        public virtual ICollection<StaffCoursesectionSchedule> StaffCoursesectionSchedule { get; set; }
     }
 }

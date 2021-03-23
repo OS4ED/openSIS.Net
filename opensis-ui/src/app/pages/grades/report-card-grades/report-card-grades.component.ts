@@ -301,8 +301,8 @@ export class ReportCardGradesComponent implements OnInit {
   }
   drop(event: CdkDragDrop<string[]>) {
     this.gradeDragDropModel.gradeScaleId = this.currentGradeScaleId;
-    this.gradeDragDropModel.currentSortOrder = this.gradeList.data[event.currentIndex].sortOrder;
-    this.gradeDragDropModel.previousSortOrder = this.gradeList.data[event.previousIndex].sortOrder;
+    this.gradeDragDropModel.currentSortOrder = this.gradeScaleListForExcel[event.currentIndex].sortOrder;
+    this.gradeDragDropModel.previousSortOrder = this.gradeScaleListForExcel[event.previousIndex].sortOrder;
 
     this.gradesService.updateGradeSortOrder(this.gradeDragDropModel).subscribe(
       (res: GradeDragDropModel) => {

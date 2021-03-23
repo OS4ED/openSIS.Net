@@ -193,6 +193,7 @@ export class GetMarkingPeriodTitleListModel extends CommonField{
         tenantId: string;
         academicYear: number;
         period: []
+        getMarkingPeriodView: MarkingPeriodTitleList[]
         constructor() {
             super();
             this.tenantId=sessionStorage.getItem("tenantId");
@@ -201,6 +202,12 @@ export class GetMarkingPeriodTitleListModel extends CommonField{
         }
 }
 
+class MarkingPeriodTitleList{
+    value:string;
+    text:string;
+    startDate:string;
+    endDate:string;
+}
 export class GetAllMarkingPeriodTitle extends CommonField{
     schoolId: number;
     tenantId: string;

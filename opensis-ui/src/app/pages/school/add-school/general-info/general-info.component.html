@@ -326,7 +326,7 @@
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'zipPostalCode'|translate}}</mat-label>
                             <input #zip="ngModel" [(ngModel)]="schoolAddViewModel.schoolMaster.zip"
-                                maxlength="10" name="zip" matInput required>
+                                maxlength="20" name="zip" matInput required>
                             <mat-error *ngIf="zip.errors?.required">{{'zipIsRequired'|translate}}
                             </mat-error>
                         </mat-form-field>

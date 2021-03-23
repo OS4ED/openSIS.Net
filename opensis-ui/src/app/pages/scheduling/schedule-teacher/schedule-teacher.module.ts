@@ -16,9 +16,6 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
-
-
 @NgModule({
   declarations: [ScheduleTeacherComponent],
   imports: [

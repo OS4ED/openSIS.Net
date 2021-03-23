@@ -2,6 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
+import { SearchCourseSectionViewModel } from '../models/courseManagerModel';
 import { CourseSectionAddViewModel, DeleteCourseSectionSchedule, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel} from '../models/courseSectionModel';
 import { CryptoService } from './Crypto.service';
 
@@ -46,5 +47,18 @@ export class CourseSectionService {
       let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/deleteSchedule";
       return this.http.post<DeleteCourseSectionSchedule>(apiurl, courseSection)
     }
+
     
+
+    private afterDeleted = new Subject;
+    callCourseSection = this.afterDeleted.asObservable();
+
+    scheduleDeleted(message: boolean) {
+      this.afterDeleted.next(message)
+    }
+
+    searchCourseSectionForSchedule(courseSection : SearchCourseSectionViewModel){
+      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/searchCourseSectionForSchedule";
+      return this.http.post<SearchCourseSectionViewModel>(apiurl, courseSection)
+    }
 }

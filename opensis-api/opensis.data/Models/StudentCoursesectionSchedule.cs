@@ -15,13 +15,15 @@ namespace opensis.data.Models
         public string MiddleName { get; set; }
         public string LastFamilyName { get; set; }
         public int FirstLanguageId { get; set; }
-        public int GradeId { get; set; }
+        public int? GradeId { get; set; }
         public int CourseId { get; set; }
         public int CourseSectionId { get; set; }
         public decimal AcademicYear { get; set; }
-        public int GradeScaleId { get; set; }
+        public int? GradeScaleId { get; set; }
         public string CourseSectionName { get; set; }
         public int? CalendarId { get; set; }
+        public bool? IsDropped { get; set; }
+        public DateTime? EffectiveDropDate { get; set; }
         public string CreatedBy { get; set; }
         public DateTime? CreatedOn { get; set; }
         public string UpdatedBy { get; set; }

@@ -24,6 +24,8 @@ import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../.
 import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
 import { GetAllMembersList } from '../../../../models/membershipModel';
 import { MembershipService } from '../../../../services/membership.service';
+import { CourseManagerService } from '../../../../services/course-manager.service';
+import { GetAllSubjectModel } from '../../../../models/courseManagerModel';
 
 @Component({
   selector: 'vex-staff-schoolinfo',
@@ -38,7 +40,6 @@ import { MembershipService } from '../../../../services/membership.service';
 export class StaffSchoolinfoComponent implements OnInit {
   getSchoolList: OnlySchoolListModel = new OnlySchoolListModel();
   staffCreate = SchoolCreate;
-  subjects = Object.keys(Subject);
   @Input() staffDetailsForViewAndEdit;
   @Input() staffCreateMode: SchoolCreate;
   @Output() checkUpdatedProfileName= new EventEmitter<string>()
@@ -61,6 +62,7 @@ export class StaffSchoolinfoComponent implements OnInit {
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
+  getAllSubjectModel: GetAllSubjectModel = new GetAllSubjectModel();
 
   constructor(public translateService: TranslateService,
     private snackbar: MatSnackBar,
@@ -70,7 +72,8 @@ export class StaffSchoolinfoComponent implements OnInit {
     private schoolService: SchoolService,
     private imageCropperService: ImageCropperService,
     private commonFunction: SharedFunction,
-    private membershipService: MembershipService) {
+    private membershipService: MembershipService,
+    private courseManagerService:CourseManagerService) {
     translateService.use('en');
   }
 
@@ -92,10 +95,17 @@ export class StaffSchoolinfoComponent implements OnInit {
       this.callAllSchool();
       this.getAllStaffSchoolInfo();
       this.getAllMembership();
+      this.getAllSubjectList();
     } else if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.staffService.changePageMode(this.staffCreateMode);
       this.getAllStaffSchoolInfo();
     }
+  }
+
+  getAllSubjectList(){   
+    this.courseManagerService.GetAllSubjectList(this.getAllSubjectModel).subscribe(data => {          
+      this.getAllSubjectModel.subjectList=data.subjectList;      
+    });
   }
 
   getAllGradeLevel() {
@@ -288,6 +298,7 @@ export class StaffSchoolinfoComponent implements OnInit {
     this.getAllGradeLevel();
     this.callAllSchool();
     this.getAllMembership();
+    this.getAllSubjectList();
     this.staffCreateMode = this.staffCreate.EDIT;
     this.staffService.changePageMode(this.staffCreateMode);
   }

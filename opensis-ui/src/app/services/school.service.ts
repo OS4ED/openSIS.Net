@@ -119,7 +119,7 @@ export class SchoolService {
     return this.http.put<SchoolAddViewModel>(apiurl, obj)
   }
 
-  private changeStatusTo = new BehaviorSubject<DataAvailablity>({schoolChanged:false,schoolLoaded:false,dataFromUserLogin:false});
+  private changeStatusTo = new BehaviorSubject<DataAvailablity>({schoolChanged:false,schoolLoaded:false,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
   schoolListCalled = this.changeStatusTo.asObservable();  
 
   changeSchoolListStatus(message: DataAvailablity) {

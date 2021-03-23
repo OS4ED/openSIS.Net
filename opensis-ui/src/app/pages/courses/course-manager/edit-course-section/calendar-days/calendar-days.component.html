@@ -1,5 +1,5 @@
 <div class="absolute w-full h-full bg-gray-light z-50 p-10" *ngIf="addCalendarDay === 1">
-    <form *ngIf="editClassDetails" #f="ngForm" (ngSubmit)="classSubmit()">
+    <form *ngIf="editClassDetails" #f="ngForm" (ngSubmit)="classSubmit()" appInvalidControlScroll>
         <div class="shadow-lg w-full bg-white rounded p-6">
             <div class="pb-4">
                 <h3>{{addClassTitle | translate}}</h3>

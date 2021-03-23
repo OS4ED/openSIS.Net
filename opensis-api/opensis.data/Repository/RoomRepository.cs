@@ -31,7 +31,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                var checkRoomTitle = this.context?.Rooms.Where(x => x.SchoolId == rooms.tableRoom.SchoolId && x.TenantId == rooms.tableRoom.TenantId && x.Title.ToLower() == rooms.tableRoom.Title.ToLower()).FirstOrDefault();
+                var checkRoomTitle = this.context?.Rooms.Where(x => x.SchoolId == rooms.tableRoom.SchoolId && x.TenantId == rooms.tableRoom.TenantId && x.Title.ToLower() == rooms.tableRoom.Title.ToLower() && x.IsActive==true).FirstOrDefault();
 
                 if (checkRoomTitle !=null)
                 {
@@ -111,7 +111,7 @@ namespace opensis.data.Repository
                 var roomMaster = this.context?.Rooms.FirstOrDefault(x => x.TenantId == room.tableRoom.TenantId && x.SchoolId == room.tableRoom.SchoolId && x.RoomId == room.tableRoom.RoomId);
                 if (roomMaster !=null)
                 {
-                    var checkRoomTitle = this.context?.Rooms.Where(x => x.SchoolId == room.tableRoom.SchoolId && x.TenantId == room.tableRoom.TenantId && x.RoomId != room.tableRoom.RoomId && x.Title.ToLower() == room.tableRoom.Title.ToLower()).FirstOrDefault();
+                    var checkRoomTitle = this.context?.Rooms.Where(x => x.SchoolId == room.tableRoom.SchoolId && x.TenantId == room.tableRoom.TenantId && x.RoomId != room.tableRoom.RoomId && x.Title.ToLower() == room.tableRoom.Title.ToLower() && x.IsActive == true).FirstOrDefault();
 
                     if (checkRoomTitle !=null)
                     {

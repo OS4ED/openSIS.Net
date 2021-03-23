@@ -23,7 +23,7 @@ import {
   isSameDay, isSameMonth, addHours
 } from 'date-fns';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { BlockedSchedulingCourseSectionAddModel, CalendarSchedulingCourseSectionAddModel, CourseCalendarSchedule, OutputEmitDataFormat } from '../../../../../models/courseSectionModel';
+import { BlockedSchedulingCourseSectionAddModel, CalendarSchedulingCourseSectionAddModel, CourseCalendarSchedule, CourseSectionAddViewModel, DeleteCourseSectionSchedule, OutputEmitDataFormat } from '../../../../../models/courseSectionModel';
 import { SchoolPeriodService } from '../../../../../services/school-period.service';
 import { BlockListViewModel } from '../../../../../models/schoolPeriodModel';
 import { RoomListViewModel } from '../../../../../models/roomModel';
@@ -137,11 +137,13 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
         this.startDate = this.selectedMarkingPeriod.startDate;
         this.endDate = this.selectedMarkingPeriod.endDate;
         this.showMarkingPeriodError = false;
+        this.viewDate = new Date(this.startDate);
       }
       else if (this.durationDateRange.startDate && this.durationDateRange.endDate) {
         this.startDate = this.durationDateRange.startDate;
         this.endDate = this.durationDateRange.endDate;
         this.showMarkingPeriodError = false;
+        this.viewDate = new Date(this.startDate);
       }
       else {
         this.showMarkingPeriodError = true;
@@ -211,6 +213,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
       });
     }
     else {
+      document.getElementById('calendarDays').scrollIntoView();
       this.addClassTitle = 'addClass';
       this.classEditMode = false;
       this.showClassDetails = false;
@@ -222,6 +225,7 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
 
   }
   viewEvent(event) {
+    document.getElementById('calendarDays').scrollIntoView();
     this.addClassTitle = 'editClass';
     this.showClassDetails = true;
     this.editClassDetails = false;
@@ -235,11 +239,21 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
   }
   deleteEvent(event) {
     this.addCalendarDay = 0;
-    let classIndex = this.calendarSchedulingModel.courseCalendarScheduleList.findIndex(x => x.serial == event.meta.scheduleDetails.serial);
-    this.calendarSchedulingModel.courseCalendarScheduleList.splice(classIndex, 1);
-    let eventIndex = this.events.findIndex(x => x.meta.scheduleDetails.serial == this.courseCalendarSchedule.serial);
-    this.events.splice(eventIndex, 1);
-
+    if(event.meta.scheduleDetails.serial >0 ){
+      let classIndex = this.calendarSchedulingModel.courseCalendarScheduleList.findIndex(x => x.serial == event.meta.scheduleDetails.serial);
+      this.calendarSchedulingModel.courseCalendarScheduleList.splice(classIndex, 1);
+      let eventIndex = this.events.findIndex(x => x.meta.scheduleDetails.serial == event.meta.scheduleDetails.serial);
+      this.events.splice(eventIndex, 1);
+      this.refresh.next();
+    }
+    else{
+      let classIndex = this.calendarSchedulingModel.courseCalendarScheduleList.findIndex(x => x.serial == event.meta.scheduleDetails.serial);
+      this.calendarSchedulingModel.courseCalendarScheduleList.splice(classIndex, 1);
+      let eventIndex = this.events.findIndex(x => x.meta.scheduleDetails.serial == event.meta.scheduleDetails.serial);
+      this.events.splice(eventIndex, 1);
+      this.refresh.next();
+    }
+    
   }
 
   closeDetails() {

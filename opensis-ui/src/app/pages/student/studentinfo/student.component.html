@@ -41,17 +41,17 @@
                         <!-- When a fresh search happens, sho this button -->
                         <div *ngIf="showSaveFilter" class="inline-block align-middle ml-4">
                             <div class="border flex rounded">
-                                <a matRipple (click)="saveFilter()"
-                                    class="bg-primary cursor-pointer px-3 pt-2 pb-1 text-white rounded-l">Save
+                                <a matRipple [ngClass]="searchFilterListViewModel?.searchFilterList?.length > 0 ? 'rounded-l' :' rounded' "   (click)="saveFilter()"
+                                    class="bg-primary cursor-pointer px-3 pt-2 pb-1 text-white ">Save
                                     Filter</a>
-                                <a [matMenuTriggerFor]="loadfilter" matRipple class="cursor-pointer px-2 pt-1 border-l">
+                                <a [matMenuTriggerFor]="loadfilter" *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0" matRipple class="cursor-pointer px-2 pt-1 border-l">
                                     <mat-icon>arrow_drop_down</mat-icon>
                                 </a>
                             </div>
                         </div>
 
                         <!-- When loading a Saved filter show this block -->
-                        <div *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && !showLoadFilter"
+                        <div *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && !showLoadFilter && !showSaveFilter"
                             class="inline-block align-middle ml-4">
                             <div class="border flex rounded">
                                 <a [matMenuTriggerFor]="loadfilteraction" matRipple
@@ -64,7 +64,7 @@
                         </div>
 
                         <!-- Show this block if there are already saved filters -->
-                        <button *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && showLoadFilter"
+                        <button *ngIf="searchFilterListViewModel?.searchFilterList?.length > 0 && showLoadFilter && !showSaveFilter"
                             [matMenuTriggerFor]="loadfilter" fxFlex="none" mat-stroked-button type="button"
                             class="inline-block align-middle ml-4">
                             <span>{{'loadFilter' | translate}}</span>
@@ -83,7 +83,7 @@
                         </button>
                         <mat-menu #importStudents="matMenu">
                             <button mat-menu-item>
-                                <a href="/school/studentdataimport">{{'importStudents' | translate}}</a>
+                                <a [routerLink]="['/school/studentdataimport']">{{'importStudents' | translate}}</a>
                             </button>
                         </mat-menu>
                     </div>

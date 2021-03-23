@@ -27,6 +27,7 @@ import { BlockListViewModel } from '../../../../models/schoolPeriodModel';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { CryptoService } from '../../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { GradeScaleModel } from '../../../../models/grades.model';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-course-section',
@@ -61,6 +62,7 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   @Input() courseDetailsFromParent;
   @Output() backToCourseFromCourseSection = new EventEmitter<CourseSectionDataTransferModel>();
   getAllCourseSectionModel:GetAllCourseSectionModel=new GetAllCourseSectionModel();
+  cloneGetAllCourseSectionModel;
   selectedSectionDetails:CourseSectionAddViewModel;
   selectedCourseSection:number=0;
   nameSearch:string=''
@@ -91,14 +93,19 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
     private dialog: MatDialog,
     private courseSectionService:CourseSectionService,
     private snackbar: MatSnackBar,
-    private cdr: ChangeDetectorRef,
     private loaderService:LoaderService,
+    private cdr: ChangeDetectorRef,
     private schoolPeriodService: SchoolPeriodService,
     private cryptoService:CryptoService) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
+    this.courseSectionService.callCourseSection.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      if(res){
+        this.getAllCourseSection();
+      }
+    })
    }
  
    visibleColumns=''
@@ -111,9 +118,7 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
     this.addPermission = permissionCategory.rolePermission[0].canAdd;
     this.getAllCourseSection();    
   }
-  ngAfterViewChecked(){
-    this.cdr.detectChanges();
- }
+ 
 
   backToCourse() {
     this.backToCourseFromCourseSection.emit({courseSectionCount:this.getAllCourseSectionModel.getCourseSectionForView?.length,showCourse:true,courseId:this.courseDetailsFromParent.courseId});
@@ -140,6 +145,10 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   initializeColor(){
 
   }
+
+  ngAfterViewChecked(){
+    this.cdr.detectChanges();
+ }
 
   changeTab(tab) {
     this.selectedTab = tab;
@@ -175,7 +184,9 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
           });
         } else {
           this.getAllCourseSectionModel = res;
-          this.findMarkingPeriodTitle()
+          this.findGradeScaleNameById();
+          this.cloneGetAllCourseSectionModel=JSON.stringify(res);
+          this.findMarkingPeriodTitle();
           this.selectedSectionDetails = res.getCourseSectionForView[this.selectedCourseSection];
           let days = this.selectedSectionDetails.courseSection.schoolCalendars.days;
           if (days !== null && days !== undefined) {
@@ -185,6 +196,22 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
         }
       }
     });
+  }
+
+  findGradeScaleNameById(){
+    this.getAllCourseSectionModel.getCourseSectionForView.map((item)=>{
+      if(!item.courseSection.gradeScaleId){
+        item.courseSection.gradeScale=new GradeScaleModel()
+        if(item.courseSection.gradeScaleType.toLowerCase()=='Ungraded'.toLowerCase()){
+          item.courseSection.gradeScale.gradeScaleName='Not Graded';
+        }else if(item.courseSection.gradeScaleType.toLowerCase()=='Numeric'.toLowerCase()){
+          item.courseSection.gradeScale.gradeScaleName='Numeric';
+        }else if(item.courseSection.gradeScaleType.toLowerCase()=='Teacher_Scale'.toLowerCase()){
+          item.courseSection.gradeScale.gradeScaleName='Teacher own Grade Scale';
+        }
+        
+      }
+    })
   }
 
   //render weekends
@@ -273,8 +300,20 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
     }).afterClosed().subscribe((res) => {
       if (res) {
         this.getAllCourseSection();
+      }else{
+        this.getAllCourseSectionModel=JSON.parse(this.cloneGetAllCourseSectionModel);
+        this.findMarkingPeriodTitle();
+        this.selectedSectionDetails = this.getAllCourseSectionModel.getCourseSectionForView[this.selectedCourseSection];
       }
     });
+  }
+
+  openUrl(href: string) {
+    let hrefCopy = href;
+    if (hrefCopy.includes('http:') == false && hrefCopy.includes('https:')==false) {
+        hrefCopy = 'http://' + href;
+    }
+    window.open(hrefCopy);
   }
 
   confirmDelete(selectedCourseSection){

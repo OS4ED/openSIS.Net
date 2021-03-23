@@ -86,7 +86,7 @@ export class SelectBarComponent implements OnInit {
       } else {
         this.selectSchoolOnLoad();
       }
-      this.schoolService.changeSchoolListStatus({schoolLoaded:true,schoolChanged:false,dataFromUserLogin:false});
+      this.schoolService.changeSchoolListStatus({schoolLoaded:true,schoolChanged:false,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
     });
   }
 
@@ -113,6 +113,7 @@ export class SelectBarComponent implements OnInit {
       this.schoolCtrl.setValue(this.schools[index]);
       sessionStorage.setItem("schoolOpened", this.schools[index].schoolDetail[0].dateSchoolOpened);
     } else {
+      sessionStorage.setItem("selectedSchoolId", this.schools[0].schoolId);
       this.schoolCtrl.setValue(this.schools[0]);
       sessionStorage.setItem("schoolOpened", this.schools[0].schoolDetail[0].dateSchoolOpened);
     }
@@ -127,7 +128,7 @@ export class SelectBarComponent implements OnInit {
     this.callAcademicYearsOnSchoolSelect();
     this.router.navigate(['/school/dashboards']);
     this.dasboardService.sendPageLoadEvent(true);
-    this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false});
+    this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
 
   }
 
@@ -157,8 +158,9 @@ export class SelectBarComponent implements OnInit {
           sessionStorage.setItem("markingPeriod",this.academicYearsCtrl.value.startDate);
           this.callMarkingPeriodTitleList();
         }
-    })
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:false,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:true});
 
+    })
   }
 
   changeYear(event) {
@@ -172,6 +174,8 @@ export class SelectBarComponent implements OnInit {
       this.callMarkingPeriodTitleList();
     }
     this.router.navigate(['/school/dashboards']);
+    this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:false,dataFromUserLogin:false,academicYearChanged:true,academicYearLoaded:false});
+
   }
 
   callMarkingPeriodTitleList() {

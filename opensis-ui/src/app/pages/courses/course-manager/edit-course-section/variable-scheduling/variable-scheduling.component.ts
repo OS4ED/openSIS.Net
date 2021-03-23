@@ -15,9 +15,8 @@ import { NgForm } from '@angular/forms';
   selector: 'vex-variable-scheduling',
   templateUrl: './variable-scheduling.component.html',
   styleUrls: ['./variable-scheduling.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
 })
-export class VariableSchedulingComponent implements OnInit, OnChanges, AfterViewChecked {
+export class VariableSchedulingComponent implements OnInit, OnChanges {
   @Input() selectedCalendar;
   @Input() seatChangeFlag;
   icClose = icClose;
@@ -30,7 +29,7 @@ export class VariableSchedulingComponent implements OnInit, OnChanges, AfterView
   selected = null;
   selectedBlocks = [];
   selectedPeriod = []
-  divCount = [0];
+  divCount = [];
   weekDaysList = [];
   filterDays;
   periodList = [];
@@ -63,19 +62,27 @@ export class VariableSchedulingComponent implements OnInit, OnChanges, AfterView
     if (this.detailsFromParentModal.editMode) {
       for (let i = 0; i < this.detailsFromParentModal.courseSectionDetails.courseVariableSchedule.length; i++) {
         this.courseSectionAddViewModel.courseVariableScheduleList[i] = this.detailsFromParentModal.courseSectionDetails.courseVariableSchedule[i];
-
         this.weekDaysList.map(val => {
           if (this.courseSectionAddViewModel.courseVariableScheduleList[i].day === val.label) {
             this.courseSectionAddViewModel.courseVariableScheduleList[i].day = val.value;
           }
         })
-
         this.divCount[i] = i;
       }
 
 
     } else {
-      this.courseSectionAddViewModel.courseVariableScheduleList[0].courseId = this.detailsFromParentModal.courseDetails.courseId;
+      this.weekDaysList.map((item,i)=>{
+        this.divCount.push(i);
+        if(i!=0){
+          this.courseSectionAddViewModel.courseVariableScheduleList.push(new CourseVariableSchedule());
+        }
+        this.courseSectionAddViewModel.courseVariableScheduleList[i].day=item.value
+      this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
+      this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
+
+      });
+
     }
 
   }
@@ -86,9 +93,6 @@ export class VariableSchedulingComponent implements OnInit, OnChanges, AfterView
 
   }
 
-  ngAfterViewChecked() {
-    this.cdr.detectChanges();
-  }
 
   getDays(days: string) {
     const calendarDays = days;
@@ -117,42 +121,12 @@ export class VariableSchedulingComponent implements OnInit, OnChanges, AfterView
   }
 
   deleteRow(indexOfDynamicRow) {
-    if (this.courseSectionAddViewModel.courseVariableScheduleList[indexOfDynamicRow]?.serial > 0) {
-      this.deleteCourseSchedule(indexOfDynamicRow);
-    }
     this.divCount.splice(indexOfDynamicRow, 1);
     this.courseSectionAddViewModel.courseVariableScheduleList.splice(indexOfDynamicRow, 1);
     this.selectedBlocks.splice(indexOfDynamicRow, 1);
-    this.selectedPeriod.splice(indexOfDynamicRow, 1);   
+    this.selectedPeriod.splice(indexOfDynamicRow, 1);
   }
 
-  deleteCourseSchedule(index) {
-    let deleteVariableSchedule=new DeleteCourseSectionSchedule()
-    deleteVariableSchedule.scheduleType='variableSchedule';
-    deleteVariableSchedule.serial=this.courseSectionAddViewModel.courseVariableScheduleList[index]?.serial;
-    deleteVariableSchedule.courseId=this.courseSectionAddViewModel.courseVariableScheduleList[index]?.courseId;
-    deleteVariableSchedule.courseSectionId=this.courseSectionAddViewModel.courseVariableScheduleList[index]?.courseSectionId;
-
-    this.courseSectionService.deleteSchedule(deleteVariableSchedule).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Varibale Schedule Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 5000
-        });
-      }
-      else {
-        if (res._failure) {
-            this.snackbar.open(res._message, '', {
-              duration: 5000
-            });
-        }
-        else {
-          this.snackbar.open(res._message, '', {
-            duration: 5000
-          });
-        }
-      }
-    })
-  }
   getAllBlockList() {
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(data => {
       if (data._failure) {
@@ -225,22 +199,25 @@ export class VariableSchedulingComponent implements OnInit, OnChanges, AfterView
       } else {
         return false;
       }
-    })
-    if (this.currentForm.form.valid && !invalidSeatCapacity) {
+    });
+    let formValid=true;
+    for(let variable of this.courseSectionAddViewModel.courseVariableScheduleList){
+      if(variable.day==null || variable.periodId==null || variable.roomId==null){
+        formValid=false;
+        break;
+      }
+    }
+    if (formValid && !invalidSeatCapacity) {
       this.checkDuplicateRow();
     } else {
       this.variableScheduleData.emit({ scheduleType: 'variableSchedule', roomList: null, scheduleDetails: this.courseSectionAddViewModel.courseVariableScheduleList, error: true });
     }
   }
   checkDuplicateRow() {
-    this.currentForm.form.markAllAsTouched();
-    if (this.currentForm.form.invalid) {
-      return
-    }
     let Ids = [];
     for (let [i, val] of this.courseSectionAddViewModel.courseVariableScheduleList.entries()) {
-      Ids[i] = +this.courseSectionAddViewModel.courseVariableScheduleList[i].day
-        + this.courseSectionAddViewModel.courseVariableScheduleList[i].periodId
+      Ids[i] = +this.courseSectionAddViewModel.courseVariableScheduleList[i].day.toString()
+        + this.courseSectionAddViewModel.courseVariableScheduleList[i].periodId.toString()
         + this.courseSectionAddViewModel.courseVariableScheduleList[i].roomId
     }
     let checkDuplicate = Ids.sort().some((item, i) => {

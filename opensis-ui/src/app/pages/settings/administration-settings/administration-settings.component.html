@@ -8,17 +8,21 @@
             <hr/>
             <h4 class="px-6 py-3 text-primary font-bold">Available Profiles</h4>
             <div class="px-gutter sm:px-0 profile-list" *ngFor="let member of memberList;let index=index">
-                <div @fadeInRight (click) = "getRolePermission(member.membershipId,member.profile,member.description)" [ngClass]="selectedMemeber == member.membershipId? 'list-item no-underline flex justify-between items-center active':'list-item no-underline flex justify-between items-center'"  matRipple>
-                    <a>
-                        <span *ngIf="member.icon === null;else className">
-                        <i [ngClass]="member.className"></i>{{member.profile}}  
+                <div @fadeInRight (click)="getRolePermission(member.membershipId,member.profile,member.description)"
+                    [ngClass]="selectedMemeber == member.membershipId? 'list-item no-underline flex justify-between items-center active':'list-item no-underline flex justify-between items-center'"
+                    matRipple>
+                    <span>
+                        <span *ngIf="member.icon === null;else className" class="align-middle">
+                            <i [ngClass]="member.className" class="align-middle inline-block"></i>{{member.profile}}
                         </span>                        
                         <ng-template #className>                           
-                            <mat-icon  [icIcon]="member.icon"></mat-icon>
+                            <mat-icon [icIcon]="member.icon" class="align-middle inline-block mr-2"></mat-icon>
                             {{member.profile}}
                         </ng-template>
+                    </span>
+                    <a *ngIf="member.isSystem === false" [matMenuTriggerFor]="addNewMenu">
+                        <mat-icon [icIcon]="icMoreVert"></mat-icon>
                         </a>
-                        <a *ngIf="member.isSystem === false"[matMenuTriggerFor]="addNewMenu"><mat-icon [icIcon]="icMoreVert"></mat-icon></a> 
                 </div> 
                 
                 <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">

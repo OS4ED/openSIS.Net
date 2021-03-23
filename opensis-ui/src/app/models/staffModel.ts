@@ -142,6 +142,8 @@ export class GetAllStaffModel {
     _message: string;
     public dobStartDate : string;
     public dobEndDate : string;
+    public fullName:string;
+    public profilePhoto:boolean;
     constructor() {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");

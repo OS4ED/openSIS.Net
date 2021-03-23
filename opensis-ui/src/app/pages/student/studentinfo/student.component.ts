@@ -80,7 +80,6 @@ export class StudentComponent implements OnInit,OnDestroy {
   showAdvanceSearchPanel: boolean = false;
   moduleIdentifier=ModuleIdentifier;
   createMode=SchoolCreate;
-  
   editPermission = false;
   deletePermission = false;
   addPermission = false;
@@ -214,6 +213,7 @@ export class StudentComponent implements OnInit,OnDestroy {
     }).afterClosed().subscribe(data => {
       if(data==='submited'){
         this.showSaveFilter=false;
+        this.showLoadFilter=false;
         this.getAllSearchFilter();
       }
     });
@@ -235,6 +235,14 @@ export class StudentComponent implements OnInit,OnDestroy {
         }
         else {
           this.searchFilterListViewModel= res;
+          
+          let filterData=this.searchFilterListViewModel.searchFilterList.filter(x=> x.filterId == this.searchFilter.filterId);
+          if(filterData.length >0){
+            this.searchFilter.jsonList= filterData[0].jsonList;
+          }
+          if(this.filterJsonParams == null){
+            this.searchFilter = this.searchFilterListViewModel.searchFilterList[this.searchFilterListViewModel.searchFilterList.length-1];
+          }
         }
       }
     }
@@ -244,6 +252,8 @@ export class StudentComponent implements OnInit,OnDestroy {
   editFilter(){
     this.showAdvanceSearchPanel = true;
     this.filterJsonParams = this.searchFilter;
+    this.showSaveFilter = false;
+    this.showLoadFilter=false;
   }
 
   deleteFilter(){
@@ -278,8 +288,10 @@ export class StudentComponent implements OnInit,OnDestroy {
           }
           else {
             this.getAllSearchFilter();
-            this.showLoadFilter=true;
+            this.getAllStudent.filterParams= null;
+            this.callAllStudent();
             this.searchFilter = new SearchFilter();
+            this.showLoadFilter=true;
           }
         }
       }
@@ -307,7 +319,7 @@ export class StudentComponent implements OnInit,OnDestroy {
         this.pageNumber = data.pageNumber;
         this.pageSize = data._pageSize;
         this.StudentModelList = new MatTableDataSource(data.studentMaster);      
-        this.getAllStudent=new StudentListModel();     
+        this.getAllStudent=new StudentListModel(); 
       }
     });
   }
@@ -399,12 +411,15 @@ export class StudentComponent implements OnInit,OnDestroy {
 
   showAdvanceSearch() {
     this.showAdvanceSearchPanel = true;
+    this.filterJsonParams = null;
   }
 
   hideAdvanceSearch(event){
+    this.showSaveFilter = event.showSaveFilter;
     this.showAdvanceSearchPanel = false;
-    this.getAllSearchFilter();
-    this.searchFilter = new SearchFilter();
+    if(event.showSaveFilter == false){
+      this.getAllSearchFilter();
+    }
   }
 
 

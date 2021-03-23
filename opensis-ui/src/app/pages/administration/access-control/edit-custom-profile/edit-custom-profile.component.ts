@@ -7,8 +7,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import {CountryAddModel} from '../../../../models/countryModel';
 import {CommonService} from '../../../../services/common.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AddMembershipModel} from '../../../../models/membershipModel';
-import { profile } from '../../../../enums/system-defined-profile.enum';
+import { AddMembershipModel, GetAllMembersList} from '../../../../models/membershipModel';
 import { MembershipService } from '../../../../services/membership.service';
 @Component({
   selector: 'vex-edit-custom-profile',
@@ -26,8 +25,12 @@ export class EditCustomProfileComponent implements OnInit {
   customProfileModalTitle:string;
   customProfileModalActionTitle:string;
   addMembershipModel:AddMembershipModel= new AddMembershipModel();
-  constructor(private dialogRef: MatDialogRef<EditCustomProfileComponent>,@Inject(MAT_DIALOG_DATA) public data:any, private fb: FormBuilder,
-  private membershipService:MembershipService,private snackbar:MatSnackBar) { }
+  constructor(private dialogRef: MatDialogRef<EditCustomProfileComponent>,
+    @Inject(MAT_DIALOG_DATA) public data:any, 
+    private fb: FormBuilder,
+  private membershipService:MembershipService,
+  private snackbar:MatSnackBar) { }
+  getAllMembersList: GetAllMembersList = new GetAllMembersList();
 
   ngOnInit(): void {
     this.form=this.fb.group({
@@ -35,8 +38,7 @@ export class EditCustomProfileComponent implements OnInit {
       userType:['',Validators.required],
       description:[''],
     })
-    this.profileList= Object.keys(profile).filter(k => typeof profile[k] === 'number')
-    .map(label => ({ label, value: profile[label] }))  
+    this.getAllMembership();
     if(this.data !== null){
       this.form.controls.title.patchValue(this.data.profile);
       this.form.controls.description.patchValue(this.data.description);
@@ -106,6 +108,35 @@ export class EditCustomProfileComponent implements OnInit {
       }
        
       }
+    }
+
+    getAllMembership(){
+      this.membershipService.getAllMembers(this.getAllMembersList).subscribe((res) => {
+        if (typeof (res) == 'undefined') {
+          this.snackbar.open('Membership List failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (res._failure) {
+            if (res.getAllMemberList) {
+              if (res.getAllMemberList == null) {
+                this.profileList=[];
+                this.snackbar.open(res._message,'', {
+                  duration: 10000
+                });
+              }
+            } else{
+              this.profileList=[];
+            }
+          }
+          else { 
+            this.profileList=res.getAllMemberList.filter((item)=>{
+              return item.isSystem;
+            });           
+          }
+        }
+      })
     }
 
 }

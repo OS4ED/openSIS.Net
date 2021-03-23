@@ -227,7 +227,7 @@ namespace opensis.data.Repository
                                 var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "profile");
                                 pageResult.FilterParams.RemoveAt(indexValue);
                             }
-                        }
+                        }   
 
                         transactionIQ = Utility.FilteredData(pageResult.FilterParams, StaffMasterList).AsQueryable();
                     }
@@ -241,6 +241,32 @@ namespace opensis.data.Repository
                     if (filterInDateRange.ToList().Count() > 0)
                     {
                         transactionIQ = filterInDateRange;
+                    }
+                }
+
+                if (pageResult.FullName != null)
+                {
+                    var staffName = pageResult.FullName.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                    if (staffName.Length > 1)
+                    {
+                        var firstName = staffName.First();
+                        var lastName = staffName.Last();
+                        pageResult.FullName = null;
+
+                        if (pageResult.FullName == null)
+                        {
+                            var nameSearch = transactionIQ.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.FirstGivenName.StartsWith(firstName.ToString()) && x.LastFamilyName.StartsWith(lastName.ToString()));
+
+                            //transactionIQ = transactionIQ.Concat(nameSearch);
+                            transactionIQ = nameSearch;
+                        }
+                    }
+                    else
+                    {
+                        var nameSearch = transactionIQ.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && (x.FirstGivenName.StartsWith(pageResult.FullName) || x.LastFamilyName.StartsWith(pageResult.FullName)));
+
+                        //transactionIQ = transactionIQ.Concat(nameSearch);
+                        transactionIQ = nameSearch;
                     }
                 }
 
@@ -283,6 +309,15 @@ namespace opensis.data.Repository
                         JobTitle = e.JobTitle,
                         SchoolEmail = e.SchoolEmail,
                         MobilePhone = e.MobilePhone,
+                        HomeroomTeacher=e.HomeroomTeacher,
+                        PrimaryGradeLevelTaught=e.PrimaryGradeLevelTaught,
+                        OtherGradeLevelTaught=e.OtherGradeLevelTaught,
+                        PrimarySubjectTaught=e.PrimarySubjectTaught,
+                        OtherSubjectTaught=e.OtherSubjectTaught,
+                        FirstLanguage=e.FirstLanguage,
+                        SecondLanguage=e.SecondLanguage,
+                        ThirdLanguage=e.ThirdLanguage,
+                        StaffPhoto=pageResult.ProfilePhoto != null ? e.StaffPhoto : null,
                     }).Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
                 }
                 

@@ -57,7 +57,8 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                        <input [(ngModel)]="studentAddModel.studentMaster.homeAddressZip" #homeAddressZip="ngModel" name="homeAddressZip" matInput required>
+                        <input [(ngModel)]="studentAddModel.studentMaster.homeAddressZip" 
+                        maxlength="20" #homeAddressZip="ngModel" name="homeAddressZip" matInput required>
                         <mat-error class="text-red" *ngIf="homeAddressZip.errors?.required">
                             {{'zipPostalCodeIsRequired'|translate}}</mat-error>
                     </mat-form-field>
@@ -126,7 +127,8 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'zip/Postal Code'|translate}}</mat-label>
-                        <input [disabled]="checkBox.checked"  [(ngModel)]="studentAddModel.studentMaster.mailingAddressZip"  name="mailingAddressZip" matInput>
+                        <input [disabled]="checkBox.checked"  [(ngModel)]="studentAddModel.studentMaster.mailingAddressZip"
+                        maxlength="20"  name="mailingAddressZip" matInput>
                     </mat-form-field>
                 </div>
             </div>

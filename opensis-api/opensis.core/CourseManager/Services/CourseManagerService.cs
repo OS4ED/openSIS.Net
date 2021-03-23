@@ -494,6 +494,29 @@ namespace opensis.core.CourseManager.Services
             }
             return deleteSchedule;
         }
+
+        public SearchCourseSectionViewModel SearchCourseSectionForSchedule(SearchCourseSectionViewModel searchCourseSectionViewModel)
+        {
+            SearchCourseSectionViewModel searchCourseSection = new SearchCourseSectionViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(searchCourseSectionViewModel._tenantName, searchCourseSectionViewModel._token))
+                {
+                    searchCourseSection = this.courseManagerRepository.SearchCourseSectionForSchedule(searchCourseSectionViewModel);
+                }
+                else
+                {
+                    searchCourseSection._failure = true;
+                    searchCourseSection._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                searchCourseSection._failure = true;
+                searchCourseSection._message = es.Message;
+            }
+            return searchCourseSection;
+        }
     }
 }
  

@@ -60,6 +60,10 @@ using opensis.core.Grade.Interfaces;
 using opensis.core.Grade.Services;
 using opensis.core.RoleBasedAccess.Interfaces;
 using opensis.core.RoleBasedAccess.Services;
+using opensis.core.StudentSchedule.Interfaces;
+using opensis.core.StudentSchedule.Services;
+using opensis.core.StaffSchedule.Interfaces;
+using opensis.core.StaffSchedule.Services;
 
 namespace opensisAPI
 {
@@ -124,6 +128,12 @@ namespace opensisAPI
             services.AddScoped<IGradeService, GradeService>();
             services.AddScoped<IRoleBasedAccessRepository, RoleBasedAccessRepository>();
             services.AddScoped<IRoleBasedAccessService, RoleBasedAccessService>();
+            
+            services.AddScoped<IStudentScheduleRepository, StudentScheduleRepository>();
+            services.AddScoped<IStudentScheduleService, StudentScheduleService>();
+
+            services.AddScoped<IStaffScheduleRepository, StaffScheduleRepository>();
+            services.AddScoped<IStaffScheduleService, StaffScheduleServices>();
 
 
 

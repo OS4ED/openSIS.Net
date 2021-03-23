@@ -22,7 +22,7 @@ const defaultConfig: Config = {
   },
   footer: {
     visible: true,
-    fixed: true
+    fixed: false
   }
 };
 

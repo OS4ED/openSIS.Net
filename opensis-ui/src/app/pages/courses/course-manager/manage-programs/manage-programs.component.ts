@@ -193,6 +193,7 @@ submit(){
             this.massUpdateProgramModel.programList=[{}];
             this.addProgramModel.programList= [new ProgramsModel()];
           });
+          this.dialogRef.close(true);
         }        
       }      
     });

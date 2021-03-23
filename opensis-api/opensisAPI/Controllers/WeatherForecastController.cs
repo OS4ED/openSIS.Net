@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using opensis.data.Helper;
@@ -12,7 +13,7 @@ using opensis.data.Models;
 namespace opensisAPI.Controllers
 {
     [ApiController]
-    
+
     [Route("{tenant}/ WeatherForecast")]
     public class WeatherForecastController : ControllerBase
     {
@@ -44,8 +45,8 @@ namespace opensisAPI.Controllers
             //    Summary = Summaries[rng.Next(Summaries.Length)]
             //})
             //.ToArray();
-            
-            
+
+
             //var schoolList = this.context?.SchoolMaster.ToList();
             //foreach (var school in schoolList)
             //{                
@@ -152,21 +153,21 @@ namespace opensisAPI.Controllers
         [HttpPost]
         public IActionResult InsertEnrollmentCode()
         {
-        //    //var schoolList = this.context?.SchoolMaster.ToList();
-        //    //foreach (var school in schoolList)
-        //    //{
-        //    //    var enrollmentCode = new List<StudentEnrollmentCode>()
-        //    //    {
-        //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=1, Title="New", ShortName="NEW", Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
-        //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
-        //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
-        //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
-        //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy }
-        //    //    };
+            //    //var schoolList = this.context?.SchoolMaster.ToList();
+            //    //foreach (var school in schoolList)
+            //    //{
+            //    //    var enrollmentCode = new List<StudentEnrollmentCode>()
+            //    //    {
+            //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=1, Title="New", ShortName="NEW", Type="Add", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=2, Title="Dropped Out", ShortName="DROP", Type="Drop", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=3, Title="Rolled Over", ShortName="ROLL", Type="Rolled Over", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=4, Title="Transferred In", ShortName="TRAN", Type="Enroll (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy },
+            //    //         new StudentEnrollmentCode(){TenantId=school.TenantId, SchoolId=school.SchoolId, EnrollmentCode=5, Title="Transferred Out", ShortName="TRAN", Type="Drop (Transfer)", LastUpdated=DateTime.UtcNow, UpdatedBy=school.CreatedBy }
+            //    //    };
 
-        //    //    this.context?.StudentEnrollmentCode.AddRange(enrollmentCode);
-        //    //    this.context?.SaveChanges();
-        //    //}
+            //    //    this.context?.StudentEnrollmentCode.AddRange(enrollmentCode);
+            //    //    this.context?.SaveChanges();
+            //    //}
             return Ok();
         }
 
@@ -323,7 +324,7 @@ namespace opensisAPI.Controllers
             },
                 }.ToList();
                 this.context?.SchoolMaster.AddRange(school);
-              
+
                 var gradelevels = new List<Gradelevels>()
                 {
                     new Gradelevels(){TenantId=tenantId,SchoolId=(int)schoolId,GradeId=(int)gradeId,ShortName="G-6",Title="Grade-6",SortOrder=1,LastUpdated=DateTime.UtcNow,UpdatedBy="Sayan Das",EquivalencyId=6,AgeRangeId=4,IscedCode=1},
@@ -399,7 +400,7 @@ namespace opensisAPI.Controllers
                 }
 
                 var gradeLevel = this.context?.Gradelevels.Where(x => x.SchoolId == schoolId).OrderBy(x => x.GradeId).FirstOrDefault();
-                var StudentEnrollmentData = new StudentEnrollment() { TenantId = tenantId, SchoolId = schoolId, StudentId = (int)MasterStudentId, EnrollmentId = 1, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode = enrollmentCode, CalenderId = calenderId, GradeLevelTitle = (gradeLevel != null) ? gradeLevel.Title : null, EnrollmentDate = DateTime.UtcNow, StudentGuid = GuidId,IsActive=true };
+                var StudentEnrollmentData = new StudentEnrollment() { TenantId = tenantId, SchoolId = schoolId, StudentId = (int)MasterStudentId, EnrollmentId = 1, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode = enrollmentCode, CalenderId = calenderId, GradeLevelTitle = (gradeLevel != null) ? gradeLevel.Title : null, EnrollmentDate = DateTime.UtcNow, StudentGuid = GuidId, IsActive = true };
 
                 this.context?.StudentEnrollment.Add(StudentEnrollmentData);
             }
@@ -458,7 +459,7 @@ namespace opensisAPI.Controllers
                 {
                     foreach (var school in allSchoolData)
                     {
-                        var permissionGroupData = this.context?.PermissionGroup.Where(x => x.SchoolId==school.SchoolId).ToList();
+                        var permissionGroupData = this.context?.PermissionGroup.Where(x => x.SchoolId == school.SchoolId).ToList();
 
                         if (permissionGroupData.Count() == 0)
                         {
@@ -535,6 +536,32 @@ namespace opensisAPI.Controllers
                 throw;
             }
             return Ok();
+        }
+
+        [HttpPost("pivot")]
+        public IActionResult Pivot()
+        {
+            var table = this.context?.StudentScheduleView.Where(x => x.SchoolId == 1).ToPivotTable(
+                item => item.CourseSectionName,
+                item => new { item.StudentId, item.StudentName, item.StudentInternalId},
+                items => items.Any() ? items.First().Scheduled +" | "+items.First().ConflictComment : null);
+
+            return Ok(table);
+        }
+
+        [HttpPost("pivot2")]
+        public IActionResult Pivot2()
+        {
+
+            var qry = this.context.StudentScheduleView.AsNoTracking()
+                    .AsEnumerable().GroupBy(v => new { v.CourseSectionId, v.CourseSectionName })
+            .Select(g => new {
+                CourseSectionName = g.Key.CourseSectionName,
+                CourseSectionId = g.Key.CourseSectionId,
+                StudentView = g.GroupBy(f => f.StudentId).OrderBy(p => p.Key).Select(m => new {Data = m.ToList() })
+            });
+
+            return Ok(qry);
         }
     }
 }

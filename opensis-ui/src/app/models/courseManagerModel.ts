@@ -204,3 +204,65 @@ export class AddCourseModel extends CommonField{
         this._token = sessionStorage.getItem("token");
     }
 } 
+
+export class CourseListFilterModel{
+    subject:string;
+    program:string;
+    gradeLevel:string;
+  
+    constructor(){
+      this.subject='',
+      this.program='',
+      this.gradeLevel=''
+    }
+  }
+
+  export class SearchCourseSectionViewModel extends CommonField{
+    allCourseSectionViewList : AllCourseSectionView[];
+    public tenantId: string;
+    public schoolId: number;
+    public courseId: number;
+    public courseSubject: string;
+    public courseProgram: string;
+    public markingPeriodId: string;
+    constructor() {
+        super();  
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this.schoolId = +sessionStorage.getItem("selectedSchoolId");         
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+    }
+  }
+
+  export class AllCourseSectionView{
+    public tenantId: string;
+    public schoolId: number;
+    public courseId: number;
+    public courseTitle: string;
+    public courseProgram: string;
+    public courseSubject: string;
+    public academicYear: number;
+    public courseSectionId: number;
+    public gradeScaleId: number;
+    public courseSectionName: string;
+    public seats: number;
+    public durationStartDate: string;
+    public durationEndDate: string;
+    public yrMarkingPeriodId: number;
+    public smstrMarkingPeriodId: number;
+    public qtrMarkingPeriodId: number;
+    public scheduleType: string;
+    public fixedDays: string;
+    public fixedRoomId : number;
+    public fixedPeriodId : number;
+    public varDay : string;
+    public varPeriodId : number;
+    public varRoomId : number;
+    public calDate : string;
+    public calPeriodId : number;
+    public calRoomId : number;
+    public blockPeriodId : number;
+    public blockRoomId : number;
+    public isActive: boolean;
+    public markingPeriodTitle:string; // This is only for Front End to extract the marking period title based on ID
+  }

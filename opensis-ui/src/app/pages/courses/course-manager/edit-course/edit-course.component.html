@@ -66,7 +66,7 @@
             <div class="px-6 py-3">
                 <div class="flex w-full">
                     <div class="w-1/12">
-                        <mat-checkbox color="primary" name="checkboxes"  (change) = "checkAllStandard($event)"></mat-checkbox>
+                        <mat-checkbox color="primary" name="checkboxes" [checked]="checkedStandardList?.length==schoolSpecificList?.length" (change) = "checkAllStandard($event)"></mat-checkbox>
                     </div>
                     <div class="w-5/12 font-bold">
                         {{'standardRefNo' | translate}}
@@ -216,9 +216,9 @@
                         <li>
                             <hr/>
                             <div class="flex justify-between items-center pl-3">
-                                <div title="show the standard description">{{checkedStandard.standardDetails}}</div>
+                                <div title="show the standard description">{{checkedStandard.standardRefNo}} - {{checkedStandard.topic}}</div>
                                 <div>
-                                    <span matTooltip="" class="inline-block opacity-75 p-2"><mat-icon [icIcon]="icInfo"></mat-icon></span>
+                                    <span [matTooltip]="checkedStandard.standardDetails" class="inline-block opacity-75 p-2"><mat-icon [icIcon]="icInfo"></mat-icon></span>
                                     <a class="cursor-pointer opacity-75 py-2 px-3 inline-block" (click) = "removeStandard(checkedStandard)"><mat-icon [icIcon]="icRemove"></mat-icon></a>
                                 </div>
                             </div>

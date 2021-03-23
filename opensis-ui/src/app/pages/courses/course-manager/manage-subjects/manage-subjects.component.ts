@@ -95,6 +95,7 @@ export class ManageSubjectsComponent implements OnInit {
       }
    });
   }
+
   deleteSubject(deleteDetails){
   this.deleteSubjectModel.subject.subjectId=deleteDetails.subjectId;    
   this.courseManager.DeleteSubject(this.deleteSubjectModel).subscribe(data => {
@@ -188,6 +189,7 @@ updateSubject(element,index){
               this.massUpdateSubjectModel.subjectList=[{}];
               this.addSubjectModel.subjectList= [new SubjectModel()];
             });
+            this.dialogRef.close(true);
           }        
         }      
       });

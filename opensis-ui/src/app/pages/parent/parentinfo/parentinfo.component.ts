@@ -23,7 +23,6 @@ import { ExcelService } from '../../../services/excel.service';
 import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
 
 @Component({
-  changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-parentinfo',
   templateUrl: './parentinfo.component.html',
   styleUrls: ['./parentinfo.component.scss'],
@@ -68,8 +67,7 @@ export class ParentinfoComponent implements OnInit {
     public translateService: TranslateService,
     private studentService: StudentService,
     private layoutService: LayoutService,
-    private excelService: ExcelService,
-    private cdr: ChangeDetectorRef
+    private excelService: ExcelService
   ) {
     if (localStorage.getItem("collapseValue") !== null) {
       if (localStorage.getItem("collapseValue") === "false") {
@@ -303,7 +301,6 @@ export class ParentinfoComponent implements OnInit {
 
   showAdvanceSearch() {
     this.showAdvanceSearchPanel = true;
-    this.cdr.detectChanges();
   }
 
   hideAdvanceSearch(event){

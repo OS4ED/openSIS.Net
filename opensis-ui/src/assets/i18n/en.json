@@ -71,6 +71,7 @@
     "youtube": "Youtube",
     "linkedIn": "LinkedIn",
     "county": "County",
+    "copySchool": "Copy School",
     "washInformation": "WASH Information",
     "runningWater": "Running Water",
     "mainSourceofDrinkingWater": "Main Source of Drinking Water",
@@ -614,6 +615,7 @@
     "editClass":"Edit Class",
     "onlineClassRoomUrl":"Online Classroom URL",
     "onlineClassRoomPasswordIfAny":"Online Classroom Password (if any)",
+    "onlineClassRoomPassword":"Online Classroom Password",
     "standardGradeScale":"Standard Grade Scale",
     "scheduledStudents":"Scheduled Students",
     "scheduledTeachers":"Scheduled Teachers",
@@ -736,5 +738,7 @@
     "loadFilter":"Load Filter",
     "uploadFile": "Upload File",
     "userTypeIsRequired":"User Type is Required",
-    "updateCustomProfile":"Update Custom Profile"
+    "updateCustomProfile":"Update Custom Profile",
+    "importStaffs": "Import Staffs",
+    "searchAndUpdateFilter":"Search And Update Filter"
 }

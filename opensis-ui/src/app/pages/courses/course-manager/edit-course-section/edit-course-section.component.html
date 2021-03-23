@@ -37,8 +37,17 @@
                 <mat-label>{{'gradeScale' | translate}}</mat-label>
                 <mat-select formControlName="gradeScaleId"  name="gradeScaleId"  name="gradeScaleId" required>
                     <mat-option></mat-option>
+                    <mat-option [value]='staticGradeScaleValue[0].gradeScaleId'>
+                    {{staticGradeScaleValue[0].gradescaleName}}
+                    </mat-option>
+                    <mat-option [value]='staticGradeScaleValue[1].gradeScaleId'>
+                        {{staticGradeScaleValue[1].gradescaleName}}
+                        </mat-option>
                     <mat-option *ngFor="let gradeScale of gradeScaleList" [value]='gradeScale.gradeScaleId'>
                         {{gradeScale.gradeScaleName}}
+                    </mat-option>
+                    <mat-option [value]='staticGradeScaleValue[2].gradeScaleId'>
+                        {{staticGradeScaleValue[2].gradescaleName}}
                     </mat-option>
                 </mat-select>
                 <mat-error *ngIf="form.get('gradeScaleId').hasError('required')">{{'gradeScaleIsRequired'|translate}}</mat-error>
@@ -72,10 +81,10 @@
         <li class="col-span-2">
             <div class="flex flex-wrap">
                 <span class="mr-6">
-                    <mat-slide-toggle formControlName="" name="" class="mb-3" color="primary">{{'allowStudentConflict' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle formControlName="allowStudentConflict" name="allowStudentConflict" class="mb-3" color="primary">{{'allowStudentConflict' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6">
-                    <mat-slide-toggle formControlName="" name="" class="mb-3" color="primary">{{'allowTeacherConflict' | translate}}</mat-slide-toggle>
+                    <mat-slide-toggle formControlName="allowTeacherConflict" name="allowTeacherConflict" class="mb-3" color="primary">{{'allowTeacherConflict' | translate}}</mat-slide-toggle>
                 </span>
                 <span class="mr-6">
                     <mat-slide-toggle formControlName="isWeightedCourse" name="isWeightedCourse" class="mb-3" color="primary">{{'courseIsWeighted' | translate}}</mat-slide-toggle>
@@ -191,7 +200,7 @@
         <vex-variable-scheduling  [selectedCalendar]="selectedCalendar" [detailsFromParentModal]="data" (variableScheduleData)="manipulateVariableScheduleBeforeSubmit($event)"></vex-variable-scheduling>
     </div>
 
-    <div class="-mx-6 mt-5 relative" *ngIf="scheduleType === '3'">
+    <div class="-mx-6 mt-5 relative" *ngIf="scheduleType === '3'" id="calendarDays">
         <vex-calendar-days (calendarScheduleData)="manipulateCalendarScheduleBeforeSubmit($event)" [selectedMarkingPeriod]="selectedMarkingPeriod" [detailsFromParentModal]="data" [durationDateRange]="durationDateRange" [selectedCalendar]="selectedCalendar"></vex-calendar-days>      
     </div>
 

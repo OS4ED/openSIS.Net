@@ -24,6 +24,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import {MatSortModule} from '@angular/material/sort';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+
 
 @NgModule({
   declarations: [SchoolDetailsComponent],
@@ -51,6 +53,7 @@ import { TranslateModule } from '@ngx-translate/core';
     MatSortModule,
     MatProgressSpinnerModule,
     TranslateModule,
+    MatSlideToggleModule,
     AngularCalendarModule.forRoot({
       provide: DateAdapter,
       useFactory: adapterFactory

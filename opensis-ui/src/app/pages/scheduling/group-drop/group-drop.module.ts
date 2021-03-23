@@ -21,7 +21,7 @@ import { GroupDropComponent } from './group-drop.component';
 import { MatTableModule } from '@angular/material/table';
 import {MatDatepickerModule} from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
-
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -47,7 +47,8 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatProgressSpinnerModule,
     MatTableModule,
     MatDatepickerModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    FormsModule
   ]
 })
 export class GroupDropModule { }

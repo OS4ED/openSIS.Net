@@ -24,7 +24,6 @@ import { Observable, Subject } from 'rxjs';
 import { CalendarModel } from '../../../models/calendarModel';
 import { map, takeUntil, tap, shareReplay } from 'rxjs/operators';
 import { CustomDateFormatter } from '../../shared-module/user-defined-directives/custom-date-formatter.provider';
-import { ReleaseNumberAddViewModel } from '../../../models/releaseNumberModel';
 import { CommonService } from '../../../services/common.service';
 import { SchoolService } from '../../../services/school.service';
 
@@ -59,8 +58,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
   activeDayIsOpen = true;
   weekendDays: number[];
   filterDays = [];
-  releaseNumberAddViewModel : ReleaseNumberAddViewModel= new ReleaseNumberAddViewModel()
-
+ 
 
   tableColumns: TableColumn<Order>[] = [
     {
@@ -165,20 +163,14 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     } else {
       this.layoutService.expandSidenav();
     }
-    this.dasboardService.getPageLoadEvent().pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
-      if (message) {
-        this.getDashboardView();
-        this.getReleaseNumber();
-      }
-    });
 
   }
 
   ngOnInit() {
     this.schoolService.schoolListCalled.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      if(res.schoolLoaded || res.schoolChanged){
+     
+      if(res.academicYearChanged || res.academicYearLoaded){
         this.getDashboardView();
-        this.getReleaseNumber();
       }
     })
     setTimeout(() => {
@@ -204,30 +196,9 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
       }
     });
   }
-  getReleaseNumber(){
-    this.releaseNumberAddViewModel.releaseNumber.schoolId= +sessionStorage.getItem("selectedSchoolId");
-    this.releaseNumberAddViewModel.releaseNumber.tenantId= sessionStorage.getItem("tenantId");
-    this.commonService.getReleaseNumber(this.releaseNumberAddViewModel).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('Release Number failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
-        if (data._failure) {
-          this.snackbar.open('' + data._message, '', {
-            duration: 10000
-          });
-        } else {
-          this.releaseNumberAddViewModel.releaseNumber.releaseNumber1 = data.releaseNumber.releaseNumber1;
-
-        }
-      }
-    })
-  }
-
   getDashboardView() {
     this.dashboardViewModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
+    this.dashboardViewModel.academicYear = +sessionStorage.getItem("academicyear");
     this.events$ = this.dasboardService.getDashboardView(this.dashboardViewModel).pipe(shareReplay(),tap((res)=> {
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Dashboard View failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -236,9 +207,6 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
       }
       else {
         if (res._failure) {
-          this.snackbar.open( res._message, '', {
-            duration: 10000
-          });
         }
         else {
           this.studentCount = res.totalStudent !== null ? res.totalStudent : 0;

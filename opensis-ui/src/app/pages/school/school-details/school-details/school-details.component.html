@@ -26,7 +26,8 @@
                     </div>
 
 
-                    <div fxFlex="200px" class="pt-3">
+                    <div fxFlex="350px" class="pt-3">
+                      <mat-slide-toggle color="primary" class="mr-6 align-middle">Show Inactive School</mat-slide-toggle>
                       <a (click)="exportSchoolListToExcel()" class="cursor-pointer p-1 mt-1 inline-block align-middle"
                       matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
                         <button 
@@ -62,7 +63,7 @@
         </ng-container>
       
         <ng-container matColumnDef="schoolName" >
-          <th mat-header-cell *matHeaderCellDef mat-sort-header>NAME</th>
+          <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'name' | translate}}</th>
                <td mat-cell *matCellDef="let element">
                 <a  (click) ="viewGeneralInfo(element.schoolId)" class="text-blue" style="cursor: pointer;">                
                   {{element.schoolName}}</a>
@@ -71,28 +72,28 @@
       
                 <!-- Body -->
                 <ng-container matColumnDef="streetAddress1">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>ADDRESS </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'address' | translate}}</th>
                        <td mat-cell *matCellDef="let element"> 
                         {{element.streetAddress1}}             
                     </td>
                 </ng-container>
       
                 <ng-container matColumnDef="nameOfPrincipal">
-                  <th mat-header-cell *matHeaderCellDef mat-sort-header>PRINCIPAL </th>
+                  <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'principal' | translate}}</th>
                   <td mat-cell *matCellDef="let element">
                     {{element.schoolDetail[0].nameOfPrincipal}}
                     </td>
                 </ng-container>
       
                 <ng-container matColumnDef="telephone">
-                  <th mat-header-cell *matHeaderCellDef>PHONE </th>
+                  <th mat-header-cell *matHeaderCellDef>{{'phone' | translate}}</th>
                   <td mat-cell *matCellDef="let element">
                     {{element.schoolDetail[0].telephone}}
                        </td>
                 </ng-container>
       
                 <ng-container matColumnDef="status">
-                  <th mat-header-cell *matHeaderCellDef>STATUS </th>
+                  <th mat-header-cell *matHeaderCellDef>{{'status' | translate}}</th>
                   <td mat-cell *matCellDef="let element"> 
                     <span>{{element.schoolDetail[0].status?'Active':'Inactive'}}</span>
                   </td>

@@ -32,9 +32,11 @@ export class StudentMasterModel {
     public countryOfBirth: number;
     public nationality: number;
     public firstLanguageId: number;
+    public firstLanguageName: string;
     public secondLanguageId: number;
     public thirdLanguageId: number;
     public sectionId: number;
+    public sectionName: string;
     public estimatedGradDate: string;
     public eligibility504: boolean;
     public economicDisadvantage: boolean;
@@ -199,6 +201,7 @@ export class StudentListModel extends CommonField {
     public filterParams: filterParams[];
     public dobStartDate : string;
     public dobEndDate : string;
+    public fullName : string;
     constructor() {
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
@@ -408,6 +411,7 @@ export class StudentMasterSearchModel {
     public alternateId: string;
     public districtId: number;
     public stateId: number;
+    public gradeLevelId: number;
     public admissionNumber: string;
     public rollNumber: string;
     public salutation: string;

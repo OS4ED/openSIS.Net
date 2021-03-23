@@ -72,42 +72,12 @@ export class RotatingSchedulingComponent implements OnInit {
   }
 
   deleteRow(indexOfDynamicRow) {
-    if (this.blockScheduleAddModel.courseBlockScheduleList[indexOfDynamicRow]?.serial > 0) {
-      this.deleteCourseSchedule(indexOfDynamicRow);
-    }
     this.divCount.splice(indexOfDynamicRow, 1);
     this.blockScheduleAddModel.courseBlockScheduleList.splice(indexOfDynamicRow, 1);
     this.selectedBlocks.splice(indexOfDynamicRow, 1);
     this.selectedPeriod.splice(indexOfDynamicRow, 1);
   }
 
-  deleteCourseSchedule(index){
-    let deleteVariableSchedule=new DeleteCourseSectionSchedule()
-    deleteVariableSchedule.scheduleType='blockSchedule';
-    deleteVariableSchedule.serial=this.blockScheduleAddModel.courseBlockScheduleList[index]?.serial;
-    deleteVariableSchedule.courseId=this.blockScheduleAddModel.courseBlockScheduleList[index]?.courseId;
-    deleteVariableSchedule.courseSectionId=this.blockScheduleAddModel.courseBlockScheduleList[index]?.courseSectionId;
-
-    this.courseSectionService.deleteSchedule(deleteVariableSchedule).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Block Schedule Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 5000
-        });
-      }
-      else {
-        if (res._failure) {
-            this.snackbar.open(res._message, '', {
-              duration: 5000
-            });
-        }
-        else {
-          this.snackbar.open(res._message, '', {
-            duration: 5000
-          });
-        }
-      }
-    })
-  }
 
   getAllBlockList() {
     this.blockListViewModel.getBlockListForView = [];

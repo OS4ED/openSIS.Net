@@ -5,8 +5,7 @@
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
     <vex-page-layout-content class="-mt-6">
-        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
-            <mat-drawer-content class="flex-auto flex items-start">
+        <div class="-mt-16">
                 <div  class="w-full p-0">
                     <div *ngIf="pageId === 'Standard Grade Setup'">
                         <vex-standard-grade-setup></vex-standard-grade-setup>
@@ -24,7 +23,6 @@
                         <vex-honor-roll-setup></vex-honor-roll-setup>
                     </div>
                 </div>
-            </mat-drawer-content>
-        </mat-drawer-container>
+            </div>
     </vex-page-layout-content>
 </vex-page-layout>

@@ -23,7 +23,7 @@ import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
 export class SearchStudentComponent implements OnInit, OnDestroy {
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
-  @Output() showHideAdvanceSearch = new EventEmitter<boolean>();
+  @Output() showHideAdvanceSearch = new EventEmitter<any>();
   @Output() searchList = new EventEmitter<any>();
   @Input() filterJsonParams;
   countryModel: CountryModel = new CountryModel();
@@ -35,7 +35,9 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   searchFilterAddViewModel : SearchFilterAddViewModel= new SearchFilterAddViewModel();
   dobEndDate: string;
   dobStartDate: string;
+  showSaveFilter= true;
   params = [];
+  searchTitle :string= 'search';
   updateFilter: boolean = false;
   countryListArr = [];
   ethnicityList = [];
@@ -58,6 +60,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     if (this.filterJsonParams !== null && this.filterJsonParams !== undefined) {
       this.updateFilter = true;
+      this.searchTitle='searchAndUpdateFilter';
       let jsonResponse = JSON.parse(this.filterJsonParams.jsonList);
       for (let json of jsonResponse) {
         this.studentMasterSearchModel[json.columnName] = json.filterValue;
@@ -141,7 +144,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
     this.params = [];
     for (var key in this.studentMasterSearchModel) {
       if (this.studentMasterSearchModel.hasOwnProperty(key))
-        if (this.studentMasterSearchModel[key] !== null) {
+        if (this.studentMasterSearchModel[key] !== null && this.studentMasterSearchModel[key] !=='' ) {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.studentMasterSearchModel[key] })
         }
     }
@@ -149,6 +152,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
 
 
     if (this.updateFilter) {
+      this.showSaveFilter = false;
       this.searchFilterAddViewModel.searchFilter.filterId = this.filterJsonParams.filterId;
       this.searchFilterAddViewModel.searchFilter.module = 'Student';
       this.searchFilterAddViewModel.searchFilter.jsonList = JSON.stringify(this.params);
@@ -190,7 +194,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
 
       } else {
         this.searchList.emit(data);
-        this.showHideAdvanceSearch.emit(false);
+        this.showHideAdvanceSearch.emit({ showSaveFilter:this.showSaveFilter , hide: false});
       }
     });
     
@@ -202,7 +206,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   }
 
   hideAdvanceSearch() {
-    this.showHideAdvanceSearch.emit(false);
+    this.showHideAdvanceSearch.emit({ showSaveFilter: null , hide: false});
   }
 
   ngOnDestroy() {

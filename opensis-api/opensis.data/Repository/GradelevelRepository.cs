@@ -101,19 +101,36 @@ namespace opensis.data.Repository
                 {
                     var checkGradelevelTitle = this.context?.Gradelevels.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.GradeId != gradelevel.tblGradelevel.GradeId && x.Title.ToLower() == gradelevel.tblGradelevel.Title.ToLower()).FirstOrDefault();
 
-                    if (checkGradelevelTitle !=null)
+                    if (checkGradelevelTitle != null)
                     {
                         gradelevel._failure = true;
                         gradelevel._message = "Gradelevel Title Already Exists";
                     }
                     else
                     {
+                        if (GradeLevel.Title.ToLower() != gradelevel.tblGradelevel.Title.ToLower())
+                        {
+                            var gradeTitleUsed = this.context?.GradeUsStandard.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.GradeLevel.ToLower() == GradeLevel.Title.ToLower()).ToList();
+
+                            if (gradeTitleUsed.Count() > 0)
+                            {
+                                gradeTitleUsed.ForEach(x => x.GradeLevel = gradelevel.tblGradelevel.Title);
+                            }
+
+                            var gradeTitleUsedInCourse = this.context?.Course.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.CourseGradeLevel.ToLower() == GradeLevel.Title.ToLower()).ToList();
+
+                            if (gradeTitleUsedInCourse.Count() > 0)
+                            {
+                                gradeTitleUsedInCourse.ForEach(x => x.CourseGradeLevel = gradelevel.tblGradelevel.Title);
+                            }
+                        }
+
                         gradelevel.tblGradelevel.LastUpdated = DateTime.Now;
                         this.context.Entry(GradeLevel).CurrentValues.SetValues(gradelevel.tblGradelevel);
                         this.context?.SaveChanges();
                         gradelevel._failure = false;
                         gradelevel._message = "Gradelevel Updated Successsfully";
-                    }                    
+                    }
                 }
                 else
                 {

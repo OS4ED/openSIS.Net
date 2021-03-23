@@ -637,7 +637,7 @@ export class AppComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.schoolService.changeSchoolListStatus({schoolChanged:false,schoolLoaded:false,dataFromUserLogin:false});
+    this.schoolService.changeSchoolListStatus({schoolChanged:false,schoolLoaded:false,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
     this.destroySubject$.next();
     this.destroySubject$.complete();
   }

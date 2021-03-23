@@ -1,3 +1,4 @@
+<vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
 <div class="bg-skyblue px-gutter py-4 border-b border-t">
     <vex-secondary-toolbar current="Course Manager" class="text-primary">
         <vex-breadcrumbs [crumbs]="['Courses']" class="flex-auto"></vex-breadcrumbs>
@@ -5,7 +6,7 @@
 </div>
 <vex-page-layout>
     <vex-page-layout-content>
-       <div *ngIf= "showCourses === true;else showCourseSections">
+       <div *ngIf= "showCourses;else showCourseSections">
         <div class="flex justify-between mb-6">
             <form [formGroup]="form">
                     <div>
@@ -13,7 +14,7 @@
                 <div class="inline-block mr-4">
                     <mat-form-field class="mb-0 mr-1 bg-white" appearance="outline" color="primary">
                             <mat-label>{{'Subject'|translate}}</mat-label>
-                            <mat-select name="subject" formControlName="subject" (selectionChange)="filterCourse($event,'Subject')">
+                            <mat-select name="subject" formControlName="subject" (selectionChange)="onSubjectChange($event.value)">
                                 <mat-option value="all">All</mat-option>
                                 <mat-option *ngFor="let subject of subjectList" [value]='subject.subjectName'>{{subject.subjectName}}</mat-option>
                             </mat-select>
@@ -27,7 +28,7 @@
                 <div class="inline-block mr-4">
                     <mat-form-field class="mb-0 mr-1 bg-white" appearance="outline" color="primary">
                             <mat-label>{{'Program'|translate}}</mat-label>
-                            <mat-select  name="program" formControlName="program" (selectionChange)="filterCourse($event,'Program')">
+                            <mat-select  name="program" formControlName="program" (selectionChange)="onProgramChange($event.value)">
                                 <mat-option value="all">All</mat-option>
                                 <mat-option *ngFor="let program of programList" [value]='program.programName'>{{program.programName}}</mat-option>
                             </mat-select>
@@ -40,7 +41,7 @@
         
                 <mat-form-field class="mb-0 bg-white" appearance="outline" color="primary">
                             <mat-label>{{'gradeLevel'|translate}}</mat-label>
-                            <mat-select  name="gradeLevel" formControlName="gradeLevel" (selectionChange)="filterCourse($event,'Grade')">
+                            <mat-select  name="gradeLevel" formControlName="gradeLevel" (selectionChange)="onGradeLevelChange($event.value)">
                                 <mat-option value="all">All</mat-option>
                                 <mat-option *ngFor="let gradeLevel of gradeLevelList" [value]='gradeLevel.title'>{{gradeLevel.title}}</mat-option>
                             </mat-select>
@@ -53,13 +54,15 @@
             <div class="lg:w-1/2 lg:pr-6">
                 <div class="card overflow-auto">
                     <div class="flex justify-between w-full px-6 py-3 align-middle">
-                        <h3 *ngIf = "filterCourseList.length > 0 ; else noFilterCount">{{filterCourseCount}} Course Found</h3>
+                        <!-- <h3 *ngIf = "filterCourseList.length > 0 ; else noFilterCount">{{filterCourseCount}} Course Found</h3>
                         <ng-template #noFilterCount>
                             <h3 *ngIf = "globalFilterCourseList.length > 0; else noGlobalFilterCount">{{globalFilterCourseCount}} Course Found</h3>
                             <ng-template #noGlobalFilterCount>
                                 <h3 >{{totalCourse}} Course Found</h3>
                             </ng-template>
-                        </ng-template>
+                        </ng-template> -->
+                        <h3>{{courseList?.length}} Course Found</h3>
+
                         <button *ngIf="addPermission" mat-raised-button color="primary" (click)="openModalEditCourse()">
                             <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon>{{'addNewCourse'|translate}}
                         </button>
@@ -70,7 +73,7 @@
                     type="text" placeholder="Search Course..." [(ngModel)]="nameSearch">
                     <hr />
 
-                    <div *ngIf = "filterCourseList.length > 0 ; else noFilter">
+                    <!-- <div *ngIf = "filterCourseList.length > 0 ; else noFilter">
                         <ul >
                             <li *ngFor="let course of filterCourseList | courseFilter:nameSearch:filterFlag;let index=index" [ngClass]="selectedCourses==index?'pl-5 pr-2 py-3 bg-green-light border-l-4 border-green':'pl-6 pr-2 py-3 border-b'">
                                 <div class="flex items-center w-full justify-between">
@@ -100,10 +103,10 @@
                                 </mat-menu>
                             </li>                    
                         </ul>
-                    </div>
+                    </div> -->
                    
                       
-                    <ng-template #noFilter>
+                    <div>
                         <ul>
                             <li *ngFor="let course of courseList | courseFilter:nameSearch:filterFlag;let index=index" [ngClass]="selectedCourses==index?'pl-5 pr-2 py-3 bg-green-light border-l-4 border-green':'pl-6 pr-2 py-3 border-b'">
                                 <div class="flex items-center w-full justify-between">
@@ -133,11 +136,11 @@
                                 </mat-menu>
                             </li>                    
                         </ul>
-                    </ng-template>             
+                    </div>             
                    
                 </div>
             </div>
-            <div class="lg:w-1/2 lg:pl-6 course-details" *ngIf="totalCourse > 0">
+            <div class="lg:w-1/2 lg:pl-6 course-details" *ngIf="courseList?.length > 0">
                 <div class="card overflow-auto">
                     <div class="flex justify-between w-full pl-6 py-3 align-middle">
                         <h3 class="pt-1">{{selectedCourseObj.courseTitle}}</h3>
@@ -195,11 +198,11 @@
                             <div class="standards-list mt-1" *ngFor="let std of standard">
                                 <hr/>
                                 <div class="flex justify-between items-center">
-                                    <div title="show the standard description">{{std.gradeUsStandard.standardDetails|EmtyValueCheckPipe}}
+                                    <div >{{std.gradeUsStandard.standardDetails}}
                                     </div>
                                     <div>
                                         <span class="inline-block opacity-75 p-2 text-gray">
-                                            <mat-icon [icIcon]="icInfo"></mat-icon>
+                                            <mat-icon [icIcon]="icInfo" [matTooltip]="std.gradeUsStandard.standardDetails"></mat-icon>
                                         </span>
                                     </div>
                                 </div>

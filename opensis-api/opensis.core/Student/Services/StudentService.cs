@@ -558,5 +558,20 @@ namespace opensis.core.Student.Services
             }
             return studentPhotoUpdate;
         }
+
+        //public SearchStudentViewModel SearchStudentForSchedule(SearchStudentViewModel searchStudentViewModel)
+        //{
+        //    SearchStudentViewModel searchStudentView = new SearchStudentViewModel();
+        //    if (TokenManager.CheckToken(searchStudentViewModel._tenantName, searchStudentViewModel._token))
+        //    {
+        //        searchStudentView = this.studentRepository.SearchStudentForSchedule(searchStudentViewModel);
+        //    }
+        //    else
+        //    {
+        //        searchStudentView._failure = true;
+        //        searchStudentView._message = TOKENINVALID;
+        //    }
+        //    return searchStudentView;
+        //}
     }
 }

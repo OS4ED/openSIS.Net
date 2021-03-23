@@ -13,26 +13,27 @@
             </div>
             <hr class="border-normal" />
             <div class="flex w-full">
-                <div class="w-1/2 border-r border-normal cursor-pointer relative" (click)="selectStudent()">
-                    <div class="flex items-center">
+                <div class="w-1/2 border-r border-normal cursor-pointer relative" >
+                    <div class="flex items-center" (click)="selectStudent()">
                         <div class="w-2/12 bg-green text-white text-center py-6 rounded-bl relative arrow-right">
                             <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
                         </div>
                         <div class="w-10/12 pl-6">
-                            <h2>Student</h2>
+                            <h2 *ngIf="!showStudentCount">Student</h2>
+                            <h2 *ngIf="showStudentCount"> {{studentList.length}} Students Selected</h2>
                             <p class="text-blue">Select Student to Schedule</p>
                         </div>
                     </div>
-                    <div class="schedule-icon bg-white">
+                    <div  *ngIf="studentList.length==0 || courseSectionList.length==0" class="schedule-icon bg-white">
                         <img src="assets/img/icons/teacher-course-schedule.svg" width="80%" class="inline-block" />
                     </div>
 
                     <!-- start Schedule button design -->
-                    <!-- <div class="schedule-button">
+                    <div *ngIf="studentList.length > 0 && courseSectionList.length >0" (click)="scheduleStudent()" class="schedule-button">
                         <button mat-button class="bg-green text-white">
                             Schedule Student
                         </button>
-                    </div> -->
+                    </div>
                     <!-- end Schedule button design -->
 
                     <!-- start refresh button design -->
@@ -44,7 +45,8 @@
                 <div class="w-1/2 cursor-pointer" (click)="selectCourseSection()">
                     <div class="flex items-center">
                         <div class="w-10/12 text-right pr-6">
-                            <h2>Course Section</h2>
+                            <h2 *ngIf="!showCourseSectionCount">Course Section</h2>
+                            <h2 *ngIf="showCourseSectionCount">{{studentList.length}} Course Section Selected </h2>
                             <p class="text-blue">Select Course Section to Schedule</p>
                         </div>
                         <div class="w-2/12 bg-primary text-white text-center py-6 rounded-br relative arrow-left">
@@ -54,7 +56,7 @@
                 </div>
             </div>
         </div>
-        <div class="card mt-6 p-4">
+        <!-- <div class="card mt-6 p-4"> -->
             <!-- when schedule student selected -->
             <!-- <div class="flex">
                 <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
@@ -63,16 +65,17 @@
                     <p class="">Please do not refresh the page or click back button.</p>
                 </div>
             </div> -->
+            
             <!-- when schedule completed  -->
-            <div class="flex">
+            <!-- <div class="flex">
                 <mat-icon aria-hidden="false" aria-label="icon" class="mt-1 text-green">check_circle</mat-icon>
                 <div class="ml-4">
                     <span class="text-lg inline-block align-middle text-green font-bold">Scheduling Completed</span>
                     <p class="">Some student could not be scheduled due to conflicts.Please find the detailed report
                         below.</p>
                 </div>
-            </div>
-            <mat-divider class="-mx-6 mt-4 text-border"></mat-divider>
+            </div> -->
+            <!-- <mat-divider class="-mx-6 mt-4 text-border"></mat-divider>
             <ul class="grid grid-cols-1 md:grid-cols-2 col-gap-4 mt-6">
                 <li class="flex mb-10">
                     <div class="flex-shrink-0">
@@ -139,9 +142,9 @@
                 <button class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit">
                     <i class="icon icon-file-excel mr-2"></i>Download this report to Excel
                 </button>
-            </div>
-        </div>
-        <div class="card mt-6 p-4">
+            </div> 
+        </div>-->
+       <div class="card mt-6 p-4">
             <h6 class="text-base mb-3">Schedule Report</h6>
             <div class="-mx-4 border-t overflow-auto">
                 <table mat-table [dataSource]="scheduleReport" class="mat-elevation-z8 shadow-none">

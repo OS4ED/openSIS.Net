@@ -1,5 +1,11 @@
-<div class="footer" fxLayout="row">
-  <div fxFlex="auto" fxLayout="row" fxLayoutAlign="start center" vexContainer>
-    © 2019 <a href="#">&nbsp;Open Solutions for Education</a>
+<div class="footer bg-white shadow">
+  <div class="flex justify-between py-4 border-t">
+    <div>
+      openSIS is a product of Open Solutions for Education, Inc. (<a href="http://www.os4ed.com" target="_blank" class="text-blue">OS4ED</a>) and is licensed under the <a href="http://www.gnu.org/licenses/gpl.html" target="_blank" class="text-blue">GPL license</a>.
   </div>
+    <div *ngIf="releaseNumberAddViewModel?.releaseNumber?.releaseNumber1">
+      <p class="text-primary font-bold"><span>{{releaseNumberAddViewModel?.releaseNumber?.releaseNumber1}}</span>
+      </p>
+</div>
+</div>
 </div>

@@ -18,6 +18,9 @@ import { TranslateService } from '@ngx-translate/core';
 })
 export class GroupDropComponent implements OnInit {
   icClose = icClose;
+  selectDropDate: string;
+  courseSectionData ;
+  showcourseSectionCount: boolean;
   studentDetails: StudentDetails[] = [
     {studentSelected: true, studentName: 'Danielle Boucher', studentId: '12', alternateId: 'STD0012', gradeLevel: 'Grade 9', section: 'Section A', phoneNumber: '3217984560', action: 'Active'},
     {studentSelected: false, studentName: 'Andrew Brown', studentId: '15', alternateId: 'STD0012', gradeLevel: 'Grade 10', section: 'Section B', phoneNumber: '4446534672', action: 'Active'},
@@ -38,6 +41,11 @@ export class GroupDropComponent implements OnInit {
   selectCourseSection(){
     this.dialog.open(AddCourseSectionComponent, {
       width: '900px'
+    }).afterClosed().subscribe((data) => {
+      this.courseSectionData = data;
+      if (this.courseSectionData !== null) {
+        this.showcourseSectionCount = true;
+      }
     });
   }
 }

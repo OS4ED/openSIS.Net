@@ -17,7 +17,8 @@
                             <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
                         </div>
                         <div class="w-10/12 pl-6">
-                            <h2>Teacher</h2>
+                            <h2 *ngIf="selectedTeachers?.length==0">Teacher</h2>
+                            <h2 *ngIf="selectedTeachers?.length>0">{{selectedTeachers.length>1?selectedTeachers?.length+' Teachers Selected':selectedTeachers?.length+' Teacher Selected'}}</h2>
                             <p class="text-blue">Select Teacher to Schedule</p>
                         </div>
                     </div>
@@ -27,7 +28,9 @@
                 <div class="w-1/2 cursor-pointer" (click)="selectCourseSection()">
                     <div class="flex items-center">
                         <div class="w-10/12 text-right pr-6">
-                            <h2>Course Section</h2>
+                            <h2 *ngIf="selectedCourseSection?.length==0">Course Section</h2>
+                            <h2 *ngIf="selectedCourseSection?.length>0">{{selectedCourseSection?.length>1?selectedCourseSection?.length+' Course Sections Selected':selectedCourseSection?.length+' Course Section Selected'}}</h2>
+
                             <p class="text-blue">Select Course Section to Schedule</p>
                         </div>
                         <div class="w-2/12 bg-primary text-white text-center py-6 rounded-br relative arrow-left">

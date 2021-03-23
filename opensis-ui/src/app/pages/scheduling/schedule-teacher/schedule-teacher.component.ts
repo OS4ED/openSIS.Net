@@ -13,7 +13,8 @@ import { AddCalendarScheduleComponent } from './add-calendar-schedule/add-calend
   styleUrls: ['./schedule-teacher.component.scss']
 })
 export class ScheduleTeacherComponent implements OnInit {
-
+  selectedTeachers=[]
+  selectedCourseSection=[]
   constructor(private dialog: MatDialog, public translateService:TranslateService) { 
     translateService.use('en');
   }
@@ -24,13 +25,17 @@ export class ScheduleTeacherComponent implements OnInit {
   selectTeacher(){
     this.dialog.open(AddTeacherComponent, {
       width: '900px'
+    }).afterClosed().subscribe((res)=>{
+      this.selectedTeachers=res?res:[];
     });
   }
 
   selectCourseSection(){
     this.dialog.open(AddCourseSectionComponent, {
       width: '900px'
-    });
+    }).afterClosed().subscribe((res)=>{
+      this.selectedCourseSection=res?res:[];
+    });;
   }
 
   selectCalendar(){

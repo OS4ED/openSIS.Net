@@ -7,6 +7,7 @@ namespace opensis.data.Models
     {
         public CourseSection()
         {
+            StaffCoursesectionSchedule = new HashSet<StaffCoursesectionSchedule>();
             StudentCoursesectionSchedule = new HashSet<StudentCoursesectionSchedule>();
         }
 
@@ -22,6 +23,8 @@ namespace opensis.data.Models
         public int? AttendanceCategoryId { get; set; }
         public decimal? CreditHours { get; set; }
         public int? Seats { get; set; }
+        public bool? AllowStudentConflict { get; set; }
+        public bool? AllowTeacherConflict { get; set; }
         public bool? IsWeightedCourse { get; set; }
         public bool? AffectsClassRank { get; set; }
         public bool? AffectsHonorRoll { get; set; }
@@ -52,6 +55,7 @@ namespace opensis.data.Models
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual SchoolYears SchoolYears { get; set; }
         public virtual Semesters Semesters { get; set; }
+        public virtual ICollection<StaffCoursesectionSchedule> StaffCoursesectionSchedule { get; set; }
         public virtual ICollection<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
     }
 }

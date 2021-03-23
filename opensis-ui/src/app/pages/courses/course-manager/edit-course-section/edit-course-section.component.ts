@@ -70,20 +70,13 @@ export class EditCourseSectionComponent implements OnInit {
   courseSection: CourseSection = new CourseSection();
   courseSectionAddViewModel: CourseSectionAddViewModel = new CourseSectionAddViewModel();
   getMarkingPeriodTitleListModel: GetMarkingPeriodTitleListModel = new GetMarkingPeriodTitleListModel();
-  schoolSpecificStandardsList: GetAllCourseStandardForCourseSectionModel = new GetAllCourseStandardForCourseSectionModel();
   getAllAttendanceCategoriesListModel: GetAllAttendanceCategoriesListModel = new GetAllAttendanceCategoriesListModel();
   view: CalendarView = CalendarView.Month;
-  courseCalendarSchedule: CourseCalendarSchedule = new CourseCalendarSchedule();
   calendarError: boolean = false;
-  variableSchedulingCourseSectionAddModel: VariableSchedulingCourseSectionAddModel = new VariableSchedulingCourseSectionAddModel();
-  courseVariableSchedule: CourseVariableSchedule = new CourseVariableSchedule();
-  courseVariableScheduleList = [];
   calendarList = [];
   selectedCalendar = new CalendarModel();
   selectedMarkingPeriod;
   gradeScaleList = [];
-  fixedSchedulingCourseSectionAddModel: FixedSchedulingCourseSectionAddModel = new FixedSchedulingCourseSectionAddModel();
-
   viewDate: Date = new Date();
   events: CalendarEvent[] = [];
   standardGradeScaleList = [];
@@ -97,6 +90,20 @@ export class EditCourseSectionComponent implements OnInit {
   endDate;
   showCalendarDates;
   seatChangeFlag: boolean;
+  staticGradeScaleValue=[
+    {
+      gradeScaleId:'Ungraded',
+      gradescaleName:'Not Graded'
+    },
+    {
+      gradeScaleId:'Numeric',
+      gradescaleName:'Numeric'
+    },
+    {
+      gradeScaleId:'Teacher_Scale',
+      gradescaleName:'Teacher own Grade Scale'
+    }
+  ]
   constructor(
     private dialogRef: MatDialogRef<EditCourseSectionComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
@@ -123,6 +130,8 @@ export class EditCourseSectionComponent implements OnInit {
         creditHours: [this.data.courseDetails?.creditHours],
         seats: [''],
         attendanceCategoryId: [''],
+        allowStudentConflict:[false],
+        allowTeacherConflict:[false],
         isWeightedCourse: [false],
         affectsClassRank: [false],
         affectsHonorRoll: [false],
@@ -156,14 +165,21 @@ export class EditCourseSectionComponent implements OnInit {
 
   patchFormValue() {
     this.durationType = this.data.courseSectionDetails.courseSection.durationBasedOnPeriod ? '1' : '2'
+    if(this.data.courseSectionDetails.courseSection.gradeScaleId!=( null && undefined)){
+      this.form.controls.gradeScaleId.patchValue(this.data.courseSectionDetails.courseSection.gradeScaleId);
+    }
+    else{
+      this.form.controls.gradeScaleId.patchValue(this.data.courseSectionDetails.courseSection.gradeScaleType);
+    }
     this.form.patchValue({
       isActive: this.data.courseSectionDetails.courseSection.isActive,
       courseSectionName: this.data.courseSectionDetails.courseSection.courseSectionName,
       calendarId: this.data.courseSectionDetails.courseSection.calendarId,
-      gradeScaleId: this.data.courseSectionDetails.courseSection.gradeScaleId,
       creditHours: this.data.courseSectionDetails.courseSection.creditHours,
       attendanceCategoryId: this.data.courseSectionDetails.courseSection.attendanceCategoryId,
       seats: this.data.courseSectionDetails.courseSection.seats,
+      allowStudentConflict: this.data.courseSectionDetails.courseSection.allowStudentConflict,
+      allowTeacherConflict: this.data.courseSectionDetails.courseSection.allowTeacherConflict,
       isWeightedCourse: this.data.courseSectionDetails.courseSection.isWeightedCourse,
       affectsClassRank: this.data.courseSectionDetails.courseSection.affectsClassRank,
       affectsHonorRoll: this.data.courseSectionDetails.courseSection.affectsHonorRoll,
@@ -372,11 +388,19 @@ export class EditCourseSectionComponent implements OnInit {
     this.courseSection.courseId = this.data.courseDetails.courseId;
     this.courseSection.courseSectionName = this.form.value.courseSectionName;
     this.courseSection.calendarId = this.form.value.calendarId;
-    this.courseSection.gradeScaleId = this.form.value.gradeScaleId;
+    if( typeof this.form.value.gradeScaleId=='number'){
+      this.courseSection.gradeScaleId = this.form.value.gradeScaleId;
+      this.courseSection.gradeScaleType = null;
+    }else {
+      this.courseSection.gradeScaleType = this.form.value.gradeScaleId;
+      this.courseSection.gradeScaleId = null;
+    }
     this.courseSection.creditHours = this.form.value.creditHours;
     this.courseSection.isActive = this.form.value.isActive;
     this.courseSection.attendanceCategoryId = this.form.value.attendanceCategoryId;
     this.courseSection.seats = this.form.value.seats;
+    this.courseSection.allowStudentConflict = this.form.value.allowStudentConflict;
+    this.courseSection.allowTeacherConflict = this.form.value.allowTeacherConflict;
     this.courseSection.isWeightedCourse = this.form.value.isWeightedCourse;
     this.courseSection.affectsClassRank = this.form.value.affectsClassRank;
     this.courseSection.affectsHonorRoll = this.form.value.affectsHonorRoll;
@@ -385,8 +409,20 @@ export class EditCourseSectionComponent implements OnInit {
     this.courseSection.standardGradeScaleId = this.form.value.standardGradeScaleId;
     this.courseSection.onlineClassroomUrl = this.form.value.onlineClassroomUrl;
     this.courseSection.onlineClassroomPassword = this.form.value.onlineClassroomPassword;
-    this.courseSection.durationStartDate = this.form.value.durationStartDate;
-    this.courseSection.durationEndDate = this.form.value.durationEndDate;
+    if(this.form.value.durationType=='1'){
+      this.markingPeriodList.find(
+        (x)=>{
+          if(x.value === this.form.value.markingPeriodId?.toString())
+          {
+            this.courseSection.durationStartDate=x.startDate;
+            this.courseSection.durationEndDate=x.endDate;
+          }
+        })
+    }else{
+      this.courseSection.durationStartDate = this.form.value.durationStartDate;
+      this.courseSection.durationEndDate = this.form.value.durationEndDate;
+    }
+    
     this.courseSectionAddViewModel.markingPeriod = '';
     this.courseSectionAddViewModel.markingPeriodId = this.form.value.markingPeriodId?.toString();
     this.courseSection.durationBasedOnPeriod = this.form.value.durationType == '1' ? true : false;
@@ -490,7 +526,7 @@ export class EditCourseSectionComponent implements OnInit {
       this.courseSection.scheduleType = details.scheduleType;
       this.courseSectionAddViewModel.courseBlockScheduleList = details.scheduleDetails;
       this.courseSectionAddViewModel.courseBlockScheduleList = this.courseSectionAddViewModel.courseBlockScheduleList?.map((item) => {
-        item.gradeScaleId = this.form.value.gradeScaleId;
+        // item.gradeScaleId = this.form.value.gradeScaleId;
         if (this.data.editMode) {
           item.updatedBy = sessionStorage.getItem("email");
         } else {

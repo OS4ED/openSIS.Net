@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy, Input } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
 import { StudentService } from '../../../../services/student.service';
@@ -17,6 +17,7 @@ import { StaffService } from '../../../../services/staff.service';
 import { GetAllStaffModel, StaffMasterSearchModel } from '../../../../models/staffModel';
 import { GetAllMembersList } from '../../../../models/membershipModel';
 import { MembershipService } from '../../../../services/membership.service';
+import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
 
 @Component({
   selector: 'vex-search-staff',
@@ -26,16 +27,21 @@ import { MembershipService } from '../../../../services/membership.service';
 export class SearchStaffComponent implements OnInit,OnDestroy {
 
   @ViewChild(MatAccordion) accordion: MatAccordion;
-  @Output() showHideAdvanceSearch = new EventEmitter<boolean>();
+  @Output() showHideAdvanceSearch = new EventEmitter<any>();
   @Output() searchList = new EventEmitter<any>();
+  @Input() filterJsonParams;
   countryModel: CountryModel = new CountryModel();
   languages: LanguageModel = new LanguageModel();
   @ViewChild('f') currentForm: NgForm;
   destroySubject$: Subject<void> = new Subject();
   staffMasterSearchModel: StaffMasterSearchModel = new StaffMasterSearchModel();
   getAllStaff: GetAllStaffModel = new GetAllStaffModel();
-    dobEndDate : string;
+  searchFilterAddViewModel : SearchFilterAddViewModel= new SearchFilterAddViewModel();
+  dobEndDate : string;
   dobStartDate : string;
+  searchTitle= 'search'
+  showSaveFilter= true;
+  updateFilter= false;
   params = [];
   countryListArr = [];
   ethnicityList = [];
@@ -56,6 +62,15 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    if (this.filterJsonParams !== null && this.filterJsonParams !== undefined) {
+      this.updateFilter = true;
+      this.searchTitle='searchAndUpdateFilter';
+      let jsonResponse = JSON.parse(this.filterJsonParams.jsonList);
+      for (let json of jsonResponse) {
+        this.staffMasterSearchModel[json.columnName] = json.filterValue;
+      }
+    }
+
     this.initializeDropdownsInAddMode();
   }
 
@@ -147,6 +162,36 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.staffMasterSearchModel[key] })
         }
     }
+
+    if (this.updateFilter) {
+      this.showSaveFilter = false;
+      this.searchFilterAddViewModel.searchFilter.filterId = this.filterJsonParams.filterId;
+      this.searchFilterAddViewModel.searchFilter.module = 'Staff';
+      this.searchFilterAddViewModel.searchFilter.jsonList = JSON.stringify(this.params);
+      this.searchFilterAddViewModel.searchFilter.filterName = this.filterJsonParams.filterName;
+      this.searchFilterAddViewModel.searchFilter.modifiedBy = sessionStorage.getItem('email');
+      this.commonService.updateSearchFilter(this.searchFilterAddViewModel).subscribe((res) => {
+        if (typeof (res) === 'undefined') {
+          this.snackbar.open('Search filter updated failed' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
+        else {
+          if (res._failure) {
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+          }
+          else {
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+            
+          }
+        }
+      }
+      );
+    }
     
     this.getAllStaff.filterParams = this.params;
     this.getAllStaff.sortingModel = null;
@@ -161,7 +206,7 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
         });
       } else {
         this.searchList.emit(res);
-        this.showHideAdvanceSearch.emit(false);
+        this.showHideAdvanceSearch.emit({ showSaveFilter:this.showSaveFilter , hide: false});
       }
     });
   }
@@ -171,7 +216,7 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
   }
 
   hideAdvanceSearch() {
-    this.showHideAdvanceSearch.emit(false);
+    this.showHideAdvanceSearch.emit({ showSaveFilter: null , hide: false});
   }
 
   ngOnDestroy() {

@@ -8,7 +8,7 @@ import { MatInputModule } from '@angular/material/input';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { IconModule } from '@visurel/iconify-angular';
-import { ReactiveFormsModule } from '@angular/forms';
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
 import { MatMenuModule } from '@angular/material/menu';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
@@ -17,6 +17,8 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { SharedModuleModule } from '../../../shared-module/shared-module.module';
 
 
 
@@ -39,7 +41,10 @@ import { MatTableModule } from '@angular/material/table';
     MatCheckboxModule,
     TranslateModule,
     MatSelectModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule,
+    FormsModule,
+    SharedModuleModule
   ]
 })
 export class AddTeacherModule { }

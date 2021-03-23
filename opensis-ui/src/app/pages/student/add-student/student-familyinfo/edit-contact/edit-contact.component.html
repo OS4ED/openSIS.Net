@@ -284,7 +284,7 @@
             
                     <mat-form-field *ngIf="sameAsStudentAddress === false" fxFlex="auto" appearance="outline" color="primary">
                         <mat-label>{{'zipPostalCode'|translate}}</mat-label>
-                        <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].zip" name="zip" #zip="ngModel" matInput required>
+                        <input   [(ngModel)]="addParentInfoModel.parentInfo.parentAddress[0].zip" maxlength="20" name="zip" #zip="ngModel" matInput required>
                         <mat-error class="text-red" *ngIf="zip.errors?.required">
                             {{'zipPostalCodeIsRequired'|translate}}</mat-error>
                     </mat-form-field>              
@@ -342,7 +342,7 @@
                     </mat-form-field>
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'zip' | translate}}</mat-label>
-                        <input name="zip" [(ngModel)]="parentInfoList.zip" name="zip" #salutation="ngModel" type="text" matInput>
+                        <input name="zip" [(ngModel)]="parentInfoList.zip" maxlength="20" #salutation="ngModel" type="text" matInput>
                     </mat-form-field>
                 </mat-dialog-content>
                 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">

@@ -10,6 +10,7 @@ namespace opensis.data.Models
         {
             StaffCertificateInfo = new HashSet<StaffCertificateInfo>();
             StaffSchoolInfo = new HashSet<StaffSchoolInfo>();
+            StaffCoursesectionSchedule = new HashSet<StaffCoursesectionSchedule>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -94,5 +95,6 @@ namespace opensis.data.Models
         public virtual Language ThirdLanguageNavigation { get; set; }
         public virtual ICollection<StaffCertificateInfo> StaffCertificateInfo { get; set; }
         public virtual ICollection<StaffSchoolInfo> StaffSchoolInfo { get; set; }
+        public virtual ICollection<StaffCoursesectionSchedule> StaffCoursesectionSchedule { get; set; }
     }
 }

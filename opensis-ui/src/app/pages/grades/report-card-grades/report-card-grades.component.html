@@ -71,11 +71,12 @@
                 </div>
             </div>
         
+            <div class="overflow-x-auto">
             <table @stagger mat-table [dataSource]="gradeList" 
             class="table-auto w-full"
             cdkDropList (cdkDropListDropped)="drop($event)">
         
-                <ng-container matColumnDef="id">
+                    <ng-container matColumnDef="id" sticky>
                     <th mat-header-cell *matHeaderCellDef></th>
                     <td mat-cell *matCellDef="let element" >
                         <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
@@ -120,7 +121,7 @@
                     </td>
                 </ng-container>
         
-                <ng-container matColumnDef="action">
+                    <ng-container matColumnDef="action" stickyEnd>
                     <th mat-header-cell *matHeaderCellDef>{{'actions'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
                         <a *ngIf="editPermission" (click)="editGrade(element)" matTooltip="Edit Info" class="mr-3 cursor-pointer">
@@ -148,6 +149,7 @@
                 <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
                 <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!==0"></tr>
             </table>
+            </div>
             <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
             <!-- <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator> -->
         

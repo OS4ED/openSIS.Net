@@ -125,7 +125,7 @@ export class EditCourseComponent implements OnInit {
             this.updatedCheckedStandardList.push(obj1);
             this.checkedStandardList.push(obj1);
             this.nonDuplicateCheckedStandardList.push(obj1);
-          })
+          });
         }
       }
       
@@ -187,6 +187,7 @@ export class EditCourseComponent implements OnInit {
       let findIndexArray = this.checkedStandardList.findIndex(x => x.gradeStandardId === data.gradeStandardId);
       this.checkedStandardList.splice(findIndexArray, 1);
     }
+
   }
 
  
@@ -341,7 +342,14 @@ export class EditCourseComponent implements OnInit {
               obj2["standardDetails"] = val.standardDetails;
               obj2["selected"] = false;
               this.schoolSpecificList.push(obj2)
-            })   
+            });
+            this.schoolSpecificList.map((item)=>{
+              this.nonDuplicateCheckedStandardList.map((standard)=>{
+                if(standard.gradeStandardId==item.gradeStandardId){
+                  item.selected=true;
+                }
+              });
+            });
           }                
           this.schoolSpecificListCount = res.gradeUsStandardList.length;     
           if(this.schoolSpecificListCount === 0){

@@ -53,6 +53,7 @@ export class EditBlockComponent implements OnInit {
   ngOnInit(): void {
   }
   submit() {
+    this.form.markAllAsTouched()
     if (this.form.valid) {
       if (this.form.controls.blockId.value == 0) {
         this.blockAddViewModel.block.blockTitle = this.form.controls.title.value;

@@ -8,91 +8,127 @@
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-content fxLayout="column">
+<mat-dialog-content>
+    <form (ngSubmit)="searchCourseSection()" #f="ngForm">
     <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-6">
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "course" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="otherGradeLevelTaught">Geometry</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.courseId" name="courseId" >
+                    <mat-option *ngFor="let course of courseList" [value]="course.course.courseId">
+                        {{course.course.courseTitle}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "subject" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="primarySubjectTaught">Mathematics</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.courseSubject" name="courseSubject">
+                    <mat-option *ngFor="let subject of subjectList" [value]="subject.subjectName">
+                        {{subject.subjectName}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "program" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="otherSubjectTaught">All Program</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.courseProgram" name="courseProgram">
+                    <mat-option *ngFor="let program of programList" [value]="program.programName">
+                        {{program.programName}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "markingPeriod" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="markingPeriod">Quarter 1</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.markingPeriodId" name="markingPeriodId">
+                    <mat-option *ngFor="let markingPeriod of getMarkingPeriodTitleListModel.getMarkingPeriodView" [value]='markingPeriod.value'>
+                        {{markingPeriod.text}}
+                    </mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
-        <li class="col-span-2 text-right pt-1">
-            <button color="primary" mat-raised-button type="submit">Search</button>
-        </li>
+       
     </ul>
-</mat-dialog-content>
+    <div fxLayout="row" fxLayoutAlign="end center" class="py-0 mb-2">
+        <button color="primary" mat-raised-button type="submit">Search</button>
+    </div>
+    </form>
 
-<div class="-mx-6 border-t overflow-auto">
-    <table mat-table [dataSource]="teacherDetails" class="mat-elevation-z8 shadow-none">
+
+<div  *ngIf="courseDetails?.data?.length >0 || searchRecord" class="-mx-6 border-t overflow-auto">
+    <table mat-table [dataSource]="courseDetails" class="mat-elevation-z8 shadow-none">
         <ng-container matColumnDef="courseSelected">
-            <th mat-header-cell *matHeaderCellDef></th>
+            <th [class.hide]="courseDetails?.data?.length==0" mat-header-cell *matHeaderCellDef>
+                <mat-checkbox color="primary" (change)="$event ? masterToggle() : null"
+                    [checked]="selection.hasValue() && isAllSelected()"
+                    [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+            </th>
             <td mat-cell *matCellDef="let element">
-                <mat-checkbox color="primary" [checked]="element.courseSelected"></mat-checkbox>
+                <mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                    (change)="$event.checked ? checked(element) : unChecked(element)"
+                    [checked]="isChecked(element)">
+                </mat-checkbox>
             </td>
         </ng-container>
         <ng-container matColumnDef="course">
             <th mat-header-cell *matHeaderCellDef>{{ "course" | translate }}</th>
             <td mat-cell *matCellDef="let element">
-                <div>{{ element.course }}</div>
+                <div>{{ element.courseTitle }}</div>
             </td>
         </ng-container>
         <ng-container matColumnDef="courseSection">
             <th mat-header-cell *matHeaderCellDef>{{ "courseSection" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.courseSection }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.courseSectionName }}</td>
         </ng-container>
         <ng-container matColumnDef="markingPeriod">
             <th mat-header-cell *matHeaderCellDef>{{ "markingPeriod" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.markingPeriod | translate }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.markingPeriodTitle }}</td>
         </ng-container>
         <ng-container matColumnDef="startDate">
             <th mat-header-cell *matHeaderCellDef>{{ "startDate" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.startDate | translate }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.durationStartDate | date:'shortDate' }}</td>
         </ng-container>
         <ng-container matColumnDef="endDate">
             <th mat-header-cell *matHeaderCellDef>{{ "endDate" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.endDate | translate }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.durationEndDate | date:'shortDate' }}</td>
         </ng-container>
         <ng-container matColumnDef="seats">
             <th mat-header-cell *matHeaderCellDef>{{ "seats" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.seats | translate }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.seats }}</td>
         </ng-container>
         <ng-container matColumnDef="available">
             <th mat-header-cell *matHeaderCellDef>{{ "available" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.available | translate }}</td>
+            <td mat-cell *matCellDef="let element">{{ element.available }}</td>
         </ng-container>
 
+        <ng-container matColumnDef="loading">
+            <mat-footer-cell *matFooterCellDef colspan="8">
+                <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
+            </mat-footer-cell>
+        </ng-container>
+        <ng-container matColumnDef="noData">
+            <td mat-footer-cell *matFooterCellDef colspan="8">
+                {{loading?('fetchingData' | translate):('noData' | translate) }}
+            </td>
+        </ng-container>
+
+        
+        <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+        <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="courseDetails?.data?.length!=0"></tr>
         <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
     </table>
-    <div class="text-right p-6 pb-0">
-        <button color="primary" mat-raised-button type="submit">
-            {{ 'selectCourseSections' | translate }}
-        </button>
-    </div>
+    <mat-paginator [class.hide]="courseDetails?.data?.length ==0" [pageSize]="10"
+        [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons ></mat-paginator>
+    
 </div>
+</mat-dialog-content>
+<mat-dialog-actions *ngIf="courseDetails?.data?.length >0" fxLayout="row" fxLayoutAlign="end center" class="py-0 mb-2">
+    <button color="primary" mat-raised-button (click)="addCourseSection()" type="submit">
+        {{ 'selectCourseSections' | translate }}
+    </button>
+</mat-dialog-actions>

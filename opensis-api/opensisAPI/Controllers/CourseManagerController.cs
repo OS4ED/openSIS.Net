@@ -325,5 +325,21 @@ namespace opensisAPI.Controllers
             }
             return deleteSchedule;
         }
+
+        [HttpPost("searchCourseSectionForSchedule")]
+        public ActionResult<SearchCourseSectionViewModel> SearchCourseSectionForSchedule(SearchCourseSectionViewModel searchCourseSectionViewModel)
+        {
+            SearchCourseSectionViewModel searchCourseSection = new SearchCourseSectionViewModel();
+            try
+            {
+                searchCourseSection = _courseManagerService.SearchCourseSectionForSchedule(searchCourseSectionViewModel);
+            }
+            catch (Exception es)
+            {
+                searchCourseSection._failure = true;
+                searchCourseSection._message = es.Message;
+            }
+            return searchCourseSection;
+        }
     }
 }

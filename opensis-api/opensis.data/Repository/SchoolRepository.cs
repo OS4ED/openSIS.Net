@@ -185,7 +185,7 @@ namespace opensis.data.Repository
             SchoolListModel schoolListModel = new SchoolListModel();
             try
             {
-                var schoolList = this.context?.SchoolMaster.Include(x => x.SchoolDetail).Where(x => x.TenantId == school.TenantId).OrderBy(x => x.SchoolName)
+                var schoolList = this.context?.SchoolMaster.Include(x => x.SchoolDetail).Where(x => x.TenantId == school.TenantId && x.SchoolDetail.FirstOrDefault().Status!=false).OrderBy(x => x.SchoolName)
                     .Select(e => new SchoolMaster()
                     {
                         SchoolId = e.SchoolId,
@@ -409,7 +409,9 @@ namespace opensis.data.Repository
                     new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Parent", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 6, ProfileType= "Parent"},
                     new Membership(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,Profile= "Student", IsActive= true, IsSuperadmin= false, IsSystem= true, MembershipId= 7, ProfileType= "Student"},
                 };
+
                     long? dpdownValueId = Utility.GetMaxLongPK(this.context, new Func<DpdownValuelist, long>(x => x.Id));
+
                     school.schoolMaster.DpdownValuelist = new List<DpdownValuelist>() {
                     new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Grade Level",LovColumnValue="PK",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId},
                     new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Grade Level",LovColumnValue="K",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+1},
@@ -497,9 +499,11 @@ namespace opensis.data.Repository
                      new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Field Type",LovColumnValue="Multiple SelectBox",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+65},
                      new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Field Type",LovColumnValue="Date",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+66},
                      new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="Field Type",LovColumnValue="Textarea",CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+67},
+                     new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="School Level",LovColumnValue=school.schoolMaster.SchoolLevel,CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+68},
+                     new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy, TenantId= school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,LovName="School Classification",LovColumnValue=school.schoolMaster.SchoolClassification,CreatedBy=school.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+69}
                 };
 
-                    school.schoolMaster.FieldsCategory = new List<FieldsCategory>()
+                school.schoolMaster.FieldsCategory = new List<FieldsCategory>()
                 {
                     new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,IsSystemCategory=true,Search=true, Title="General Information",Module="School",SortOrder=1,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy,CategoryId=1},
                     new FieldsCategory(){ TenantId=school.schoolMaster.TenantId,SchoolId=school.schoolMaster.SchoolId,IsSystemCategory=true,Search=true, Title="Wash Information",Module="School",SortOrder=2,Required=true,Hide=false,LastUpdate=DateTime.UtcNow,UpdatedBy=school.schoolMaster.ModifiedBy,CategoryId=2},

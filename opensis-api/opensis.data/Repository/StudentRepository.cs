@@ -421,6 +421,8 @@ namespace opensis.data.Repository
                 HomeAddressState = e.HomeAddressState,
                 HomeAddressZip = e.HomeAddressZip,
                 BusNo=e.BusNo,
+                FirstLanguageId=e.FirstLanguageId,
+                SectionId=e.SectionId,
                 StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == true).Select(s => new StudentEnrollment
                 {
                     EnrollmentDate = s.EnrollmentDate,
@@ -430,6 +432,7 @@ namespace opensis.data.Repository
                     StudentId = s.StudentId,
                     EnrollmentId = s.EnrollmentId, 
                     StudentGuid = s.StudentGuid,
+                    GradeId=s.GradeId,
                 }).ToList()
             });
 
@@ -465,21 +468,28 @@ namespace opensis.data.Repository
                     }
                     else
                     {
-                        if (pageResult.FilterParams.FirstOrDefault().ColumnName.ToLower() == "gradeleveltitle")
+                        if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "gradeid"))
                         {
-                            var filterGradeLevelTitle = studentDataList.AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().GradeLevelTitle == Columnvalue).AsQueryable();
-                            if (filterGradeLevelTitle.ToList().Count() > 0)
+                            var filterValue = Convert.ToInt32(pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "gradeid").Select(x => x.FilterValue).FirstOrDefault());
+
+                            var gradeLevelData = studentDataList.AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().GradeId == filterValue).AsQueryable();
+
+                            if (gradeLevelData.ToList().Count() > 0)
                             {
-                                transactionIQ = filterGradeLevelTitle;
+                                transactionIQ = gradeLevelData.AsNoTracking().ToList().AsQueryable();
+                                var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "gradeid");
+                                pageResult.FilterParams.RemoveAt(indexValue);
+                                if(pageResult.FilterParams.Count() > 0)
+                                {
+                                    transactionIQ = Utility.FilteredData(pageResult.FilterParams, transactionIQ).AsQueryable();
+                                }
                             }
                         }
                         else
-                        {                            
+                        {
                             transactionIQ = Utility.FilteredData(pageResult.FilterParams, studentDataList).AsQueryable();
-                            
-                        }  
-                    }
-                    //transactionIQ = transactionIQ.Distinct();
+                        }
+                    }  
                 }
 
                 if (pageResult.DobStartDate != null && pageResult.DobEndDate != null)
@@ -492,6 +502,30 @@ namespace opensis.data.Repository
                     else
                     {
                         transactionIQ = null;
+                    }
+                }
+
+                if (pageResult.FullName != null)
+                {
+                    var studentName = pageResult.FullName.Split(" ", StringSplitOptions.RemoveEmptyEntries);
+                    if (studentName.Length > 1)
+                    {
+                        var firstName = studentName.First();
+                        var lastName = studentName.Last();
+                        pageResult.FullName = null;
+
+                        if (pageResult.FullName == null)
+                        {
+                            var nameSearch = transactionIQ.AsNoTracking().ToList().Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.FirstGivenName.StartsWith(firstName.ToString()) && x.LastFamilyName.StartsWith(lastName.ToString())).AsQueryable();
+
+                            transactionIQ = nameSearch;
+                        }
+                    }
+                    else
+                    {
+                        var nameSearch = transactionIQ.AsNoTracking().ToList().Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && (x.FirstGivenName.StartsWith(pageResult.FullName) || x.LastFamilyName.StartsWith(pageResult.FullName))).AsQueryable();
+
+                        transactionIQ = nameSearch;
                     }
                 }
 
@@ -520,7 +554,7 @@ namespace opensis.data.Repository
                     }
                     
                 }
-                int totalCount = transactionIQ.Count();
+                int totalCount = transactionIQ.AsNoTracking().ToList().Count();
                 if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
                 {
                     transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
@@ -1740,6 +1774,89 @@ namespace opensis.data.Repository
             }
             return studentAddViewModel;
         }
+
+        //public SearchStudentViewModel SearchStudentForSchedule(SearchStudentViewModel searchStudentViewModel)
+        //{
+        //    SearchStudentViewModel searchStudentView = new SearchStudentViewModel();
+        //    IQueryable<StudentMaster> transactionIQ = null;
+        //    try
+        //    {
+        //        var studentDataList = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.TenantId == searchStudentViewModel.TenantId && x.SchoolId == searchStudentViewModel.SchoolId && (searchStudentViewModel.StudentId == null || (x.StudentId == searchStudentViewModel.StudentId)) && (searchStudentViewModel.AlternateId == null || (x.AlternateId == searchStudentViewModel.AlternateId)) && (searchStudentViewModel.SectionId == null || (x.SectionId == searchStudentViewModel.SectionId)) && (searchStudentViewModel.FirstLanguageId == null || (x.FirstLanguageId == searchStudentViewModel.FirstLanguageId))).Select(e => new StudentMaster
+        //        {
+        //            TenantId = e.TenantId,
+        //            SchoolId = e.SchoolId,
+        //            StudentId = e.StudentId,
+        //            FirstGivenName = e.FirstGivenName,
+        //            MiddleName = e.MiddleName,
+        //            LastFamilyName = e.LastFamilyName,
+        //            AlternateId = e.AlternateId,
+        //            SectionId = e.SectionId,
+        //            FirstLanguage = e.FirstLanguage,
+
+        //            StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == true).Select(s => new StudentEnrollment
+        //            {
+        //                GradeId = s.GradeId,
+
+        //            }).ToList()
+        //        });
+
+
+
+        //        if (searchStudentViewModel.GradeId!=null)
+        //        {
+        //            var filterGradeLevelTitle = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.StudentEnrollment.FirstOrDefault().GradeId == searchStudentViewModel.GradeId).AsQueryable();
+        //            if (filterGradeLevelTitle.ToList().Count() > 0)
+        //            {
+        //                transactionIQ = filterGradeLevelTitle;
+        //            }
+        //        }
+
+        //        if (searchStudentViewModel.StudentName != null)
+        //        {
+        //            var name = searchStudentViewModel.StudentName.Split(" ");
+        //            var firstName = name.First();
+        //            var lastName = name.Last();
+        //            searchStudentViewModel.StudentName = null;
+        //            if (searchStudentViewModel.StudentName == null)
+        //            {
+        //                var a = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.TenantId == searchStudentViewModel.TenantId && x.SchoolId == searchStudentViewModel.SchoolId && x.FirstGivenName.StartsWith(firstName.ToString()) && x.LastFamilyName.StartsWith(lastName.ToString()));
+        //                transactionIQ = transactionIQ.Concat(a).Distinct();
+
+        //            }
+        //            else
+        //            {
+        //                var b = transactionIQ.Where(x => x.TenantId == searchStudentViewModel.TenantId && x.SchoolId == searchStudentViewModel.SchoolId && x.FirstGivenName.StartsWith(searchStudentViewModel.StudentName) || x.LastFamilyName.StartsWith(searchStudentViewModel.StudentName));
+        //                transactionIQ = transactionIQ.Concat(b).Distinct();
+
+        //            }
+        //        }
+
+        //        int totalCount = transactionIQ.Count();
+
+        //        var xyz = transactionIQ.Select(e => new SearchStudentForView
+        //        {
+        //            TenantId = e.TenantId,
+        //            SchoolId = e.SchoolId,
+        //            StudentId = e.StudentId,
+        //            StudentName = e.FirstGivenName +" " + e.LastFamilyName,
+        //            AlternateId = e.AlternateId,
+        //            GradeId = e.StudentEnrollment.FirstOrDefault().GradeId,
+        //            SectionId = e.SectionId,
+        //            FirstLanguageId = e.FirstLanguageId,
+        //        }).Skip((searchStudentViewModel.PageNumber - 1) * searchStudentViewModel.PageSize).Take(searchStudentViewModel.PageSize);
+
+        //        searchStudentView.searchStudentForView = xyz.ToList();
+
+                
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        searchStudentView._failure = true;
+        //        searchStudentView._message = es.Message;
+        //    }
+        //    return searchStudentView;
+        //}
+
     }
 }
 

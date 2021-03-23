@@ -60,7 +60,7 @@ namespace opensis.data.Repository
                 if (memberShipData != null)
                 {
 
-                    var checkProfile = this.context?.Membership.Where(x => x.SchoolId == membershipAddViewModel.membership.SchoolId && x.TenantId == membershipAddViewModel.membership.TenantId && x.Profile.ToLower() == membershipAddViewModel.membership.Profile.ToLower()).FirstOrDefault();
+                    var checkProfile = this.context?.Membership.Where(x => x.SchoolId == membershipAddViewModel.membership.SchoolId && x.TenantId == membershipAddViewModel.membership.TenantId && x.Profile.ToLower() == membershipAddViewModel.membership.Profile.ToLower() && x.IsActive==true).FirstOrDefault();
 
                     if (checkProfile != null)
                     {
@@ -160,7 +160,7 @@ namespace opensis.data.Repository
                 
                 if (memeberShipData != null)
                 {
-                    var checkProfile = this.context?.Membership.Where(x => x.SchoolId == membershipAddViewModel.membership.SchoolId && x.TenantId == membershipAddViewModel.membership.TenantId && x.MembershipId != membershipAddViewModel.membership.MembershipId && x.Profile.ToLower() == membershipAddViewModel.membership.Profile.ToLower()).FirstOrDefault();
+                    var checkProfile = this.context?.Membership.Where(x => x.SchoolId == membershipAddViewModel.membership.SchoolId && x.TenantId == membershipAddViewModel.membership.TenantId && x.MembershipId != membershipAddViewModel.membership.MembershipId && x.Profile.ToLower() == membershipAddViewModel.membership.Profile.ToLower() && x.IsActive==true).FirstOrDefault();
 
                     if (checkProfile != null)
                     {

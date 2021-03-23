@@ -36,5 +36,7 @@ namespace opensis.data.Models
         public List<FilterParams> FilterParams { get; set; }
         public DateTime? DobStartDate { get; set; }
         public DateTime? DobEndDate { get; set; }
+        public string FullName { get; set; }
+        public bool? ProfilePhoto { get; set; }
     }
 }

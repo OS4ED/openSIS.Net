@@ -124,7 +124,7 @@
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'gradeScale' | translate}}</label>
                         <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                            {{selectedSectionDetails.courseSection.gradeScale.gradeScaleName}}</p>
+                            {{selectedSectionDetails.courseSection.gradeScale?.gradeScaleName}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
@@ -178,13 +178,12 @@
                             </span>
                         </div>
                     </li>
-                    <li *ngIf="selectedSectionDetails.courseSection.onlineClassRoom">
+                    <li class="break-words" *ngIf="selectedSectionDetails.courseSection.onlineClassRoom">
                         <label class="text-sm leading-5 text-gray">{{'onlineClassRoomUrl' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                            {{selectedSectionDetails.courseSection.onlineClassroomUrl}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 truncate text-blue cursor-pointer" matTooltip={{selectedSectionDetails.courseSection.onlineClassroomUrl}} (click)="openUrl(selectedSectionDetails.courseSection.onlineClassroomUrl)">{{selectedSectionDetails.courseSection.onlineClassroomUrl}}</p>
                     </li>
                     <li *ngIf="selectedSectionDetails.courseSection.onlineClassRoom">
-                        <label class="text-sm leading-5 text-gray">{{'onlineClassRoomPasswordIfAny' |
+                        <label class="text-sm leading-5 text-gray">{{'onlineClassRoomPassword' |
                             translate}}</label>
                         <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                             {{selectedSectionDetails.courseSection.onlineClassroomPassword|EmtyValueCheckPipe}}</p>
