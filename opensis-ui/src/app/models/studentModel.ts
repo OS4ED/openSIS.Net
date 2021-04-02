@@ -27,6 +27,7 @@ export class StudentMasterModel {
     public displayAge: string;
     public gender: string;
     public race: string;
+    public checked:boolean;
     public ethnicity: string;
     public maritalStatus: string;
     public countryOfBirth: number;

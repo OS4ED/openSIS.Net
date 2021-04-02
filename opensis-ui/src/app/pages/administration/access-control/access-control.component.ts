@@ -11,6 +11,7 @@ import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CryptoService } from '../../../services/Crypto.service';
 import { NavigationService } from 'src/@vex/services/navigation.service';
+import { MatSlideToggleChange } from '@angular/material/slide-toggle';
 
 @Component({
   selector: 'vex-access-control',
@@ -221,10 +222,8 @@ export class AccessControlComponent implements OnInit {
       }
     })
   }
-  changeCategoryCanEdit(e, i, j) {
-
+  changeCategoryCanEdit(e:MatSlideToggleChange, i, j) {
     if (e.source.checked) {
-
       this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.map((res, k) => {
         this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory[k].rolePermission[0].canView = true;
         this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory[k].rolePermission[0].canEdit = true;
@@ -235,8 +234,25 @@ export class AccessControlComponent implements OnInit {
         this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory[k].rolePermission[0].canEdit = false;
       })
     }
+
+
+    let permissionCategoryLength=this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.length;
+    if(this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[permissionCategoryLength-1].hasOwnProperty('permissionCategoryName')==false){
+      this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.pop();
+    }
+      let permissionCategoryStateEdit= this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.every(function(permissionCategory){
+        return permissionCategory.rolePermission[0].canEdit== e.source.checked ;
+      })
+      if(permissionCategoryStateEdit==true){
+        this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canEdit=e.source.checked;
+        if(e.source.checked==true){
+          this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canView=true;
+        }
+      }
+   
   }
-  changeCategoryCanView(e, i, j) {
+
+  changeCategoryCanView(e:MatSlideToggleChange, i, j) {
     if (e.source.checked === false) {
       this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].rolePermission[0].canEdit = false;
       this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.map((res, k) => {
@@ -248,6 +264,21 @@ export class AccessControlComponent implements OnInit {
         this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory[k].rolePermission[0].canView = true;
       })
     }
+
+    let permissionCategoryLength=this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.length;
+    
+    if(this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[permissionCategoryLength-1].hasOwnProperty('permissionCategoryName')==false){
+      this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.pop();
+    }
+    let permissionCategoryStateView= this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.every(function(permissionCategory){
+      return permissionCategory.rolePermission[0].canView== e.source.checked ;
+    })
+    if(permissionCategoryStateView==true){
+      this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canView=e.source.checked;
+      if(e.source.checked==false){
+        this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canEdit=false;
+      }
+    }
   }
 
   changeSubCategoryCanView(i, j, k, e) {
@@ -256,6 +287,33 @@ export class AccessControlComponent implements OnInit {
     } else {
       this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].rolePermission[0].canView = true;
     }
+    let permissionSubCategoryLength=this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.length;
+    
+    if(this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory[permissionSubCategoryLength-1].hasOwnProperty('permissionSubcategoryName')==false){
+      this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.pop();
+    }
+    let permissionSubCategoryStateView= this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.every(function(permissionSubCategory){
+      return permissionSubCategory.rolePermission[0].canView== e.source.checked ;
+    })
+    if(permissionSubCategoryStateView==true){
+      this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].rolePermission[0].canView= e.source.checked
+      if(e.source.checked==false){
+        this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].rolePermission[0].canEdit= false
+      }
+      let permissionCategoryLength=this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.length;
+      if(this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[permissionCategoryLength-1].hasOwnProperty('permissionCategoryName')==false){
+        this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.pop();
+      }
+      let permissionCategoryStateView= this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.every(function(permissionCategory){
+        return permissionCategory.rolePermission[0].canView== e.source.checked ;
+      })
+      if(permissionCategoryStateView==true){
+        this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canView=e.source.checked;
+        if(e.source.checked==false){
+          this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canEdit=false;
+        }
+      }
+    }
   }
 
   changeSubCategoryCanEdit(i, j, k, e) {
@@ -263,6 +321,30 @@ export class AccessControlComponent implements OnInit {
       this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory[k].rolePermission[0].canView = true;
       this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].rolePermission[0].canView = true;
       this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].rolePermission[0].canEdit = true;
+    }
+    let permissionSubCategoryLength=this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.length;
+    if(this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory[permissionSubCategoryLength-1].hasOwnProperty('permissionSubcategoryName')==false){
+      this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.pop();
+    }
+    let permissionSubCategoryStateEdit= this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].permissionSubcategory.every(function(permissionSubCategory){
+      return permissionSubCategory.rolePermission[0].canEdit== e.source.checked ;
+    })
+    if(permissionSubCategoryStateEdit==true){
+      this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[j].rolePermission[0].canEdit= e.source.checked
+      
+      let permissionCategoryLength=this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.length;
+      if(this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory[permissionCategoryLength-1].hasOwnProperty('permissionCategoryName')==false){
+        this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.pop();
+      }
+      let permissionCategoryStateEdit= this.rolePermissionListViewModel.permissionList[i].permissionGroup.permissionCategory.every(function(permissionCategory){
+        return permissionCategory.rolePermission[0].canEdit== e.source.checked ;
+      })
+      if(permissionCategoryStateEdit==true){
+        this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canEdit=e.source.checked;
+        if(e.source.checked==true){
+          this.rolePermissionListViewModel.permissionList[i].permissionGroup.rolePermission[0].canView=true;
+        }
+      }
     }
   }
 

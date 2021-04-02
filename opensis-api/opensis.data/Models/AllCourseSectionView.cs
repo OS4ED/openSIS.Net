@@ -38,8 +38,13 @@ namespace opensis.data.Models
         public int? GradeScaleId { get; set; }
         public bool? AllowStudentConflict { get; set; }
         public bool? AllowTeacherConflict { get; set; }
-        public int? CalendarId { get; set; }    
+        public int? CalendarId { get; set; }
+        public bool? AttendanceTaken { get; set; }
         [NotMapped]
         public string StaffName { get; set; }
+        public string CalDay { get; set; }
+        [NotMapped]
+        public int? AvailableSeat { get; set; }
+        
     }
 }

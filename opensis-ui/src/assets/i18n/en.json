@@ -308,6 +308,7 @@
     "address":"Address",
     "schoolAccess":"School Access",
     "portalAccess":"Portal Access",
+    "studentInternalId": "Student Internal ID",
     "studentInternalIdIsRequired" : "Student ID is Required",
     "studentInternalIdAlreadyExist":"Student ID Already Exist",
     "loginEmailAddressAlreadyExist" :"Login Email Address Already Exist",
@@ -524,6 +525,7 @@
     "weightedGPValue":"Weighted GP Value",
     "unweightedGPValue":"Unweighted GP Value",
     "comment":"Comment",
+    "addCommentTo":"Add Comment to",
     "gradeScale":"Grade Scale",
     "addNewGrade":"Add New Grade",
     "addGradeScale":"Add Grade Scale",
@@ -739,6 +741,13 @@
     "uploadFile": "Upload File",
     "userTypeIsRequired":"User Type is Required",
     "updateCustomProfile":"Update Custom Profile",
+    "students": "Students",
+    "showShortName": "Show Short Name",
     "importStaffs": "Import Staffs",
-    "searchAndUpdateFilter":"Search And Update Filter"
+    "searchAndUpdateFilter":"Search And Update Filter",
+    "addCourse": "Add Course",
+    "allCourses": "All Courses",
+    "general": "General",
+    "lastGradeLevel": "Last Grade Level",
+    "reenrollmentDate": "Re-enrollment Date"
 }

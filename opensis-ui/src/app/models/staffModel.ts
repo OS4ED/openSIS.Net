@@ -124,10 +124,12 @@ export class StaffListModel {
     schoolEmail: string;
     mobilePhone: string;
 }
-
+export class staffMasterCloneModel extends StaffMasterModel{
+    checked:boolean;
+}
 export class GetAllStaffModel {
     getStaffListForView: [StaffListModel];
-    staffMaster:[]
+    staffMaster:[staffMasterCloneModel]
     tenantId: string;
     schoolId: number;
     pageNumber: number;

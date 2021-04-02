@@ -58,7 +58,9 @@ export class AddStudentComponent implements OnInit,OnDestroy {
   searchFilterAddViewModel : SearchFilterAddViewModel= new SearchFilterAddViewModel();
   getAllGradeLevelsModel:GetAllGradeLevelsModel= new GetAllGradeLevelsModel();
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
-  @ViewChild('masterCheckbox') private masterCheckbox: MatCheckbox;
+  @ViewChild('masterCheckBox') private masterCheckBox: MatCheckbox;
+  listOfStudent=[];
+  selectedStudent=[]
   studentDetails: MatTableDataSource<any>;
   selection : SelectionModel<StudentMasterModel> = new SelectionModel<StudentMasterModel>(true, []);
   icClose = icClose;
@@ -79,49 +81,11 @@ export class AddStudentComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit(): void {
-    this.selection.isSelected = this.isChecked.bind(this);
     this.getAllLanguage();
     this.getAllSection();
     this.getAllGradeLevelList();
   }
 
-//   isChecked(row: any): boolean {
-//     const found = this.selection.selected.find((el) =>{
-//        return el.studentId === row.studentId
-//       });
-//     if (found) {
-//       return true;
-//     }else{
-//       console.log("Im in Unchecked")
-//     }
-//     return false;
-//  }
-
- checked(row: any){
-  this.selection.select(row)
-  var found = this.selection.selected.find(x => x.studentId == row.studentId);
-  if (found){
-    return true;
-  }
-  }
-
-  unChecked(row: any){
-    var found = this.selection.selected.find(x => x.studentId == row.studentId);
-    // if (found) found.checked = false;
-    this.selection.deselect(found); 
-
-    if (found){
-      return false;
-    }
-  }
-
-  isChecked(row: any) {
-    var found = this.selection.selected.find(x => x.studentId == row.studentId);
-
-    if (found){
-      return true;
-    }
-  }
   getAllLanguage() {
     this.languages._tenantName = sessionStorage.getItem("tenant");
     this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
@@ -147,35 +111,6 @@ export class AddStudentComponent implements OnInit,OnDestroy {
     });
   }
 
-  /** Whether the number of selected elements matches the total number of rows. */
-  isAllSelected() {
-    const numSelected = this.selection.selected.length;
-
-    
-    return numSelected === this.numRows;
-    // const numSelected = this.selection.selected.length;
-    // let count=0;
-    // for(let i=0;i<this.studentDetails.data.length;i++){
-    //   if(this.selection.selected.includes(this.studentDetails.data[i])){
-    //     count=count+1
-    //   }
-    // }
-    // const numRows = this.studentDetails.data.length;
-    
-    // return numSelected === numRows;
-  }
-
-  
-
-  /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.studentDetails.data.forEach(row => this.selection.select(row));
-    
-  }
-
-
 
   getAllGradeLevelList(){   
     this.getAllGradeLevelsModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
@@ -184,6 +119,77 @@ export class AddStudentComponent implements OnInit,OnDestroy {
     this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevelsModel).subscribe(data => {          
       this.gradeLevelList=data.tableGradelevelList;      
     });
+  }
+
+
+  someComplete():boolean{
+    let indetermine=false;
+      for(let user of this.listOfStudent){
+        for(let selectedUser of this.selectedStudent){
+          if(user.StudentId==selectedUser.StudentId){
+            indetermine=true;
+          }
+        }
+      }
+      if(indetermine){
+        this.masterCheckBox.checked=this.listOfStudent.every((item)=>{
+          return item.checked;
+        })
+        if(this.masterCheckBox.checked){
+          return false;
+        }else{
+          return true;
+        }
+      }
+      
+  }
+  
+  setAll(event){
+    this.listOfStudent.forEach(user => {user.checked = event;});
+    this.studentDetails=new MatTableDataSource(this.listOfStudent);
+    this.decideCheckUncheck();
+  }
+  
+    onChangeSelection(eventStatus:boolean,id){
+      for(let item of this.listOfStudent){
+        if(item.studentId==id){
+          item.checked=eventStatus;
+          break;
+        }
+      }
+      this.studentDetails=new MatTableDataSource(this.listOfStudent);
+      this.masterCheckBox.checked=this.listOfStudent.every((item)=>{
+        return item.checked;
+      });
+    
+     this.decideCheckUncheck();
+    }
+  
+  decideCheckUncheck(){
+    this.listOfStudent.map((item)=>{
+      let isIdIncludesInSelectedList=false;
+      if(item.checked){
+        for(let selectedUser of this.selectedStudent){
+          if(item.studentId==selectedUser.studentId){
+            isIdIncludesInSelectedList=true;
+            break;
+           }
+        }
+        if(!isIdIncludesInSelectedList){
+          this.selectedStudent.push(item);
+        }
+      }else{
+        for(let selectedUser of this.selectedStudent){
+          if(item.studentId==selectedUser.studentId){
+            this.selectedStudent=this.selectedStudent.filter((user)=>user.studentId!=item.studentId);
+            break;
+           }
+        }
+      }
+      isIdIncludesInSelectedList=false;
+      
+    });
+    this.selectedStudent=this.selectedStudent.filter((item)=>item.checked);
   }
 
   submit(){
@@ -202,8 +208,6 @@ export class AddStudentComponent implements OnInit,OnDestroy {
     this.getAllStudent.pageNumber=event.pageIndex+1;
     this.getAllStudent.pageSize=event.pageSize;
     this.studentList();
-    this.selection.isSelected = this.isChecked.bind(this);
-
   }
 
   studentList(){
@@ -242,18 +246,40 @@ export class AddStudentComponent implements OnInit,OnDestroy {
               }
             });
             }
-
         this.studentDetails = new MatTableDataSource(this.studentMasterList);
-        this.numRows=this.totalCount;      
+
+
+        this.studentMasterList.forEach(user => {
+          user.checked=false
+        });
+        let response=this.studentMasterList.map((item)=>{
+          this.selectedStudent.map((selectedUser)=>{
+            if(item.studentId==selectedUser.studentId){
+              item.checked=true;
+              return item;
+            }
+          });
+          return item;
+        });
+        this.listOfStudent=response;
+        this.masterCheckBox.checked=response.every((item)=>{
+          return item.checked;
+        })
+
+
         this.getAllStudent=new StudentListModel();     
       }
     });
   }
 
   addStudent(){
-    const numSelected = this.selection.selected;
-    console.log(numSelected);
-    this.dialogRef.close(numSelected);
+    if(this.selectedStudent.length>0){
+      this.dialogRef.close(this.selectedStudent);
+    }else{
+      this.snackbar.open('Please select at least 1 student', '', {
+        duration: 2000
+      });
+    }
   }
 
   ngOnDestroy() {

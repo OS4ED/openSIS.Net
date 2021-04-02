@@ -37,6 +37,7 @@ import { MatSortModule } from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
+import { ReportCardCommentsComponent } from '../../grades/report-card-comments/report-card-comments.component';
 
 
 
@@ -50,7 +51,8 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
     EffortGradeLibraryComponent,
     EffortGradeScaleComponent,
     ReportCardGradesComponent,
-    HonorRollSetupComponent
+    HonorRollSetupComponent,
+    ReportCardCommentsComponent
   ],
   imports: [
     CommonModule,

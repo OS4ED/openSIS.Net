@@ -16,5 +16,6 @@ namespace opensis.data.ViewModels.StudentSchedule
         public string Section { get; set; }
         public string PhoneNumber { get; set; }
         public bool? Action { get; set; }
+        public DateTime? ScheduleDate { get; set; }
     }
 }

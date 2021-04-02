@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -15,7 +15,8 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatPaginator } from '@angular/material/paginator';
-import { MatDialogRef } from '@angular/material/dialog';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatCheckbox } from '@angular/material/checkbox';
 @Component({
   selector: 'vex-add-course-section',
   templateUrl: './add-course-section.component.html',
@@ -25,38 +26,41 @@ import { MatDialogRef } from '@angular/material/dialog';
     fadeInUp400ms
   ]
 })
-export class AddCourseSectionComponent implements OnInit,OnDestroy {
+export class AddCourseSectionComponent implements OnInit, OnDestroy {
   getAllProgramModel: GetAllProgramModel = new GetAllProgramModel();
   getAllSubjectModel: GetAllSubjectModel = new GetAllSubjectModel();
   getAllCourseListModel: GetAllCourseListModel = new GetAllCourseListModel();
   getMarkingPeriodTitleListModel: GetMarkingPeriodTitleListModel = new GetMarkingPeriodTitleListModel();
   icClose = icClose;
-  displayedColumns: string[] = ['staffSelected', 'course', 'courseSectionName', 'markingPeriod', 'startDate', 'endDate',  'gradeLevelTitle','scheduledTeacher'];
-  courseSectionSearch:SearchCourseSectionViewModel = new SearchCourseSectionViewModel();
+  displayedColumns: string[] = ['staffSelected', 'course', 'courseSectionName', 'markingPeriod', 'startDate', 'endDate', 'gradeLevelTitle', 'scheduledTeacher'];
+  courseSectionSearch: SearchCourseSectionViewModel = new SearchCourseSectionViewModel();
   courseSectionList: MatTableDataSource<any>;
-  loading:boolean;
+  loading: boolean;
   destroySubject$: Subject<void> = new Subject();
-  selection : SelectionModel<AllCourseSectionView> = new SelectionModel<AllCourseSectionView>(true, []);
+  selection: SelectionModel<AllCourseSectionView> = new SelectionModel<AllCourseSectionView>(true, []);
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
-  isSearchRecordAvailable=false;
+  isSearchRecordAvailable = false;
+  @ViewChild('masterCheckBox') masterCheckBox: MatCheckbox;
+
   constructor(public translateService: TranslateService,
     private courseManagerService: CourseManagerService,
     private snackbar: MatSnackBar,
     private markingPeriodService: MarkingPeriodService,
-    private courseSectionService:CourseSectionService,
-    private loaderService:LoaderService,
-    private dialogRef: MatDialogRef<AddCourseSectionComponent>) {
+    private courseSectionService: CourseSectionService,
+    private loaderService: LoaderService,
+    private dialogRef: MatDialogRef<AddCourseSectionComponent>,
+    @Inject(MAT_DIALOG_DATA) public data: any) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
+    this.getMarkingPeriodTitleListModel.getMarkingPeriodView = this.data.markingPeriods;
   }
 
   ngOnInit(): void {
     this.getAllCourse();
     this.getAllSubjectList();
     this.getAllProgramList();
-    this.getAllMarkingPeriodList();
   }
 
 
@@ -71,74 +75,62 @@ export class AddCourseSectionComponent implements OnInit,OnDestroy {
     });
   }
 
-  getAllMarkingPeriodList() {
-    this.getMarkingPeriodTitleListModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.getMarkingPeriodTitleListModel.academicYear = +sessionStorage.getItem("academicyear");
-    this.markingPeriodService.getAllMarkingPeriodList(this.getMarkingPeriodTitleListModel).subscribe(data => {
-      if (data._failure) {
-        this.getMarkingPeriodTitleListModel.getMarkingPeriodView = [];
-      } else {
-        this.getMarkingPeriodTitleListModel.getMarkingPeriodView = data.getMarkingPeriodView;
-      }
-    });
-  }
-
   getAllCourse() {
     this.courseManagerService.GetAllCourseList(this.getAllCourseListModel).subscribe(data => {
       if (data._failure) {
-          this.getAllCourseListModel.courseViewModelList = [];
+        this.getAllCourseListModel.courseViewModelList = [];
       } else {
         this.getAllCourseListModel.courseViewModelList = data.courseViewModelList;
       }
     })
   }
 
-  searchCourseSection(){
-    this.isSearchRecordAvailable=true;
-    this.courseSectionService.searchCourseSectionForSchedule(this.courseSectionSearch).subscribe((res)=>{
-      if(res._failure){
-        if(res.allCourseSectionViewList===null){
-            this.courseSectionList = new MatTableDataSource([]);   
-            this.snackbar.open( res._message, '', {
-              duration: 5000
-            });
-        } else{
-          this.courseSectionList = new MatTableDataSource([]); 
+  searchCourseSection() {
+    this.isSearchRecordAvailable = true;
+    this.courseSectionService.searchCourseSectionForSchedule(this.courseSectionSearch).subscribe((res) => {
+      if (res._failure) {
+        if (res.allCourseSectionViewList === null) {
+          this.courseSectionList = new MatTableDataSource([]);
+          this.snackbar.open(res._message, '', {
+            duration: 5000
+          });
+        } else {
+          this.courseSectionList = new MatTableDataSource([]);
         }
-      }else{
-        res.allCourseSectionViewList=this.findMarkingPeriodTitleById(res.allCourseSectionViewList)
-        this.courseSectionList = new MatTableDataSource(res.allCourseSectionViewList);     
+      } else {
+        res.allCourseSectionViewList = this.findMarkingPeriodTitleById(res.allCourseSectionViewList)
+        this.courseSectionList = new MatTableDataSource(res.allCourseSectionViewList);
         this.courseSectionList.paginator = this.paginator;
       }
     })
   }
 
-  findMarkingPeriodTitleById(courseSectionList){
+  findMarkingPeriodTitleById(courseSectionList) {
 
-    courseSectionList=courseSectionList.map((item)=>{
-      if(item.yrMarkingPeriodId){
-        item.yrMarkingPeriodId='0_'+item.yrMarkingPeriodId;
-      }else if(item.smstrMarkingPeriodId){
-        item.smstrMarkingPeriodId='1_'+item.smstrMarkingPeriodId;
-      }else if(item.qtrMarkingPeriodId){
-        item.qtrMarkingPeriodId='2_'+item.qtrMarkingPeriodId;
+    courseSectionList = courseSectionList.map((item) => {
+      if (item.yrMarkingPeriodId) {
+        item.yrMarkingPeriodId = '0_' + item.yrMarkingPeriodId;
+      } else if (item.smstrMarkingPeriodId) {
+        item.smstrMarkingPeriodId = '1_' + item.smstrMarkingPeriodId;
+      } else if (item.qtrMarkingPeriodId) {
+        item.qtrMarkingPeriodId = '2_' + item.qtrMarkingPeriodId;
       }
-      
-      if(item.yrMarkingPeriodId || item.smstrMarkingPeriodId || item.qtrMarkingPeriodId){
-        for(let markingPeriod of this.getMarkingPeriodTitleListModel.getMarkingPeriodView){
-          if(markingPeriod.value==item.yrMarkingPeriodId){
-            item.markingPeriodTitle=markingPeriod.text;
+
+      if (item.yrMarkingPeriodId || item.smstrMarkingPeriodId || item.qtrMarkingPeriodId) {
+        for (let markingPeriod of this.getMarkingPeriodTitleListModel.getMarkingPeriodView) {
+          if (markingPeriod.value == item.yrMarkingPeriodId) {
+            item.markingPeriodTitle = markingPeriod.text;
             break;
-          }else if(markingPeriod.value==item.smstrMarkingPeriodId){
-            item.markingPeriodTitle=markingPeriod.text;
+          } else if (markingPeriod.value == item.smstrMarkingPeriodId) {
+            item.markingPeriodTitle = markingPeriod.text;
             break;
-          }else{
-            item.markingPeriodTitle=markingPeriod.text;
+          } else if (markingPeriod.value == item.qtrMarkingPeriodId) {
+            item.markingPeriodTitle = markingPeriod.text;
             break;
           }
         }
-      }else{
-        item.markingPeriodTitle='Custom'
+      } else {
+        item.markingPeriodTitle = 'Custom'
       }
       return item;
     });
@@ -151,52 +143,69 @@ export class AddCourseSectionComponent implements OnInit,OnDestroy {
     return numSelected === this.courseSectionList.paginator.pageSize;
   }
 
-  checked(row: any){
-    this.selection.select(row)
+  checked(row: any) {
+    this.selection.select(row);
+
     var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
-    if (found){
+    if (this.courseSectionList.data.length < 12 && this.courseSectionList.data.length == this.selection.selected.length) {
+      this.masterCheckBox.checked = true;
+    }
+    if (found) {
       return true;
     }
+  }
+
+  unChecked(row: any) {
+    if (this.courseSectionList.data.length < 12) {
+      this.masterCheckBox.checked = false;
     }
-  
-    unChecked(row: any){
-      var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
-      // if (found) found.checked = false;
-      this.selection.deselect(found); 
-  
-      if (found){
-        return false;
-      }
+
+    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    // if (found) found.checked = false;
+    this.selection.deselect(found);
+
+    if (found) {
+      return false;
     }
-  
-    isChecked(row: any) {
-      var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
-  
-      if (found){
-        return true;
+
+  }
+
+  isChecked(row: any) {
+    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+
+    if (found) {
+      return true;
+    }
+  }
+
+  /** Selects all rows if they are not all selected; otherwise clear selection. */
+  masterToggle(event) {
+    this.isAllSelected() ?
+      this.selection.clear() :
+      this.selectRows();
+
+    if (!event && this.courseSectionList.data.length < 12) {
+      for (let courseSection of this.courseSectionList.data) {
+        this.unChecked(courseSection);
       }
     }
 
-     /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.selectRows();
-    
   }
 
   selectRows() {
     for (let index = 0; index < this.courseSectionList.paginator.pageSize; index++) {
-      this.selection.select(this.courseSectionList.data[index]);
+      if (this.courseSectionList.data[index]) {
+        this.selection.select(this.courseSectionList.data[index]);
+      }
       // this.selectionAmount = this.selection.selected.length;
     }
   }
 
-  selectedCourseSection(){
-    console.log(this.selection.selected);
-    if(this.selection.selected.length>0){
+  selectedCourseSection() {
+    if (this.selection.selected.length > 0) {
       this.dialogRef.close(this.selection.selected);
-    }else{
+
+    } else {
       this.snackbar.open('Please select at least 1 course section', '', {
         duration: 2000
       });

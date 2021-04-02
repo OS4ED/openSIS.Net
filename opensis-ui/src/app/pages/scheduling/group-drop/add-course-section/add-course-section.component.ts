@@ -2,7 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { SearchStudentCourseSection } from '../../../../models/searchStudentCourseSectionModel';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { TranslateService } from '@ngx-translate/core';
-import { AllCourseSectionView, GetAllCourseListModel, GetAllProgramModel, GetAllSubjectModel, SearchCourseSectionViewModel } from 'src/app/models/courseManagerModel';
+import { AllCourseSectionView, GetAllCourseListModel, GetAllProgramModel, GetAllSubjectModel, SearchCourseSectionViewModel } from '../../../../models/courseManagerModel';
 import { GetAllMarkingPeriodTitle, GetMarkingPeriodTitleListModel } from '../../../../models/markingPeriodModel';
 import { Subject } from 'rxjs';
 import { MatPaginator } from '@angular/material/paginator';

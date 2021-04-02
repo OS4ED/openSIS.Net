@@ -44,12 +44,15 @@
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "markingPeriod" | translate }}</mat-label>
-                <mat-select [(ngModel)]="courseSectionSearch.markingPeriodId" name="markingPeriodId">
+                <mat-select [(ngModel)]="courseSectionSearch.markingPeriodId" (selectionChange)="changeMarkingPeriod($event.value)" name="markingPeriodId">
                     <mat-option *ngFor="let markingPeriod of getMarkingPeriodTitleListModel.getMarkingPeriodView" [value]='markingPeriod.value'>
                         {{markingPeriod.text}}
                     </mat-option>
                 </mat-select>
             </mat-form-field>
+        </li>
+        <li *ngIf="selectedMarkingPeriod.value" class="pt-4">
+            {{selectedMarkingPeriod.startDate | date}} - {{selectedMarkingPeriod.endDate | date}}
         </li>
        
     </ul>
@@ -63,9 +66,8 @@
     <table mat-table [dataSource]="courseDetails" class="mat-elevation-z8 shadow-none">
         <ng-container matColumnDef="courseSelected">
             <th [class.hide]="courseDetails?.data?.length==0" mat-header-cell *matHeaderCellDef>
-                <mat-checkbox color="primary" (change)="$event ? masterToggle() : null"
-                    [checked]="selection.hasValue() && isAllSelected()"
-                    [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+                <mat-checkbox #masterCheckBox color="primary" (change)="$event ? masterToggle($event.checked) : null"
+                    [checked]="selection.hasValue() && isAllSelected()"></mat-checkbox>
             </th>
             <td mat-cell *matCellDef="let element">
                 <mat-checkbox color="primary" (click)="$event.stopPropagation()"

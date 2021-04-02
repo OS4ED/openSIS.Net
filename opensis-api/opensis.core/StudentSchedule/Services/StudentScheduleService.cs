@@ -1,6 +1,7 @@
 ﻿using opensis.core.helper;
 using opensis.core.StudentSchedule.Interfaces;
 using opensis.data.Interface;
+using opensis.data.Models;
 using opensis.data.ViewModels.StudentSchedule;
 using System;
 using System.Collections.Generic;
@@ -55,14 +56,14 @@ namespace opensis.core.StudentSchedule.Services
         /// </summary>
         /// <param name="scheduleStudentListViewModel"></param>
         /// <returns></returns>
-        public ScheduleStudentListViewModel SearchScheduledStudentForGroupDrop(ScheduleStudentListViewModel scheduleStudentListViewModel)
+        public ScheduleStudentListViewModel SearchScheduledStudentForGroupDrop(PageResult pageResult)
         {
             ScheduleStudentListViewModel ScheduledStudentListView = new ScheduleStudentListViewModel();
             try
             {
-                if (TokenManager.CheckToken(scheduleStudentListViewModel._tenantName, scheduleStudentListViewModel._token))
+                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
                 {
-                    ScheduledStudentListView = this.studentScheduleRepository.SearchScheduledStudentForGroupDrop(scheduleStudentListViewModel);
+                    ScheduledStudentListView = this.studentScheduleRepository.SearchScheduledStudentForGroupDrop(pageResult);
                 }
                 else
                 {
@@ -125,6 +126,35 @@ namespace opensis.core.StudentSchedule.Services
                 studentScheduleReportView._message = es.Message;
             }
             return studentScheduleReportView;
+        }
+
+        /// <summary>
+        /// Delete Student Schedule Report
+        /// </summary>
+        /// <param name="studentCourseSectionScheduleAddViewModel"></param>
+        /// <returns></returns>
+        public StudentCourseSectionScheduleAddViewModel DeleteStudentScheduleReport(StudentCourseSectionScheduleAddViewModel studentCourseSectionScheduleAddViewModel)
+        {
+            StudentCourseSectionScheduleAddViewModel studentCourseSectionScheduleDeleteModel = new StudentCourseSectionScheduleAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(studentCourseSectionScheduleAddViewModel._tenantName, studentCourseSectionScheduleAddViewModel._token))
+                {
+                    studentCourseSectionScheduleDeleteModel = this.studentScheduleRepository.DeleteStudentScheduleReport(studentCourseSectionScheduleAddViewModel);
+                }
+                else
+                {
+                    studentCourseSectionScheduleDeleteModel._failure = true;
+                    studentCourseSectionScheduleDeleteModel._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+
+                studentCourseSectionScheduleDeleteModel._failure = true;
+                studentCourseSectionScheduleDeleteModel._message = es.Message;
+            }
+            return studentCourseSectionScheduleDeleteModel;
         }
     }
 }

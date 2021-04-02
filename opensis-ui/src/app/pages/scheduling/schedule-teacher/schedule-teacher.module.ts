@@ -16,6 +16,9 @@ import { MatMenuModule } from '@angular/material/menu';
 import { TranslateModule } from '@ngx-translate/core';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {SharedModuleModule} from '../../shared-module/shared-module.module';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
+
 @NgModule({
   declarations: [ScheduleTeacherComponent],
   imports: [
@@ -34,7 +37,9 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatMenuModule,
     TranslateModule,
     MatTooltipModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    SharedModuleModule,
+    MatProgressSpinnerModule
   ]
 })
 export class ScheduleTeacherModule { }

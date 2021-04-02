@@ -39,10 +39,14 @@
                         {{permission?.permissionGroup.title}}
                     </div>
                     <div class="w-2/12 pl-1 font-bold">
-                        <mat-slide-toggle #canViewGroup="ngModel" name="{{'canViewGroup'+index}}" color="primary" [(ngModel)]= "rolePermissionListViewModel.permissionList[index]?.permissionGroup.rolePermission[0].canView" (click)="$event.stopPropagation()" (change)="changeParentCanView($event,permission)"></mat-slide-toggle>
+                        <mat-slide-toggle #canViewGroup="ngModel" name="{{'canViewGroup'+index}}" color="primary" 
+                        [(ngModel)]= "rolePermissionListViewModel.permissionList[index]?.permissionGroup.rolePermission[0].canView" 
+                        (click)="$event.stopPropagation()" (change)="changeParentCanView($event,permission)"></mat-slide-toggle>
                     </div>
                     <div class="w-2/12 pl-2 font-bold">
-                        <mat-slide-toggle #canEditGroup="ngModel" name="{{'canEditGroup'+index}}" color="primary" [(ngModel)]="rolePermissionListViewModel.permissionList[index]?.permissionGroup.rolePermission[0].canEdit" (click)="$event.stopPropagation()" (change)="changeParentCanEdit($event,permission)"></mat-slide-toggle>
+                        <mat-slide-toggle #canEditGroup="ngModel" name="{{'canEditGroup'+index}}" color="primary" 
+                        [(ngModel)]="rolePermissionListViewModel.permissionList[index]?.permissionGroup.rolePermission[0].canEdit" 
+                        (click)="$event.stopPropagation()" (change)="changeParentCanEdit($event,permission)"></mat-slide-toggle>
                     </div>
                 </div>
             </mat-expansion-panel-header>
@@ -55,7 +59,9 @@
                                 {{permissionCat.permissionCategoryName}}
                             </div>
                         <div class="w-2/12">
-                                <mat-slide-toggle #canView="ngModel" name="{{'canView'+index+cat}}" [(ngModel)]="rolePermissionListViewModel.permissionList[index]?.permissionGroup?.permissionCategory[cat]?.rolePermission[0].canView" (change) = "changeCategoryCanView($event,index,cat)" color="primary"></mat-slide-toggle>
+                                <mat-slide-toggle #canView="ngModel" name="{{'canView'+index+cat}}" 
+                                [(ngModel)]="rolePermissionListViewModel.permissionList[index]?.permissionGroup?.permissionCategory[cat]?.rolePermission[0].canView" 
+                                (change) = "changeCategoryCanView($event,index,cat)" color="primary"></mat-slide-toggle>
                             </div>
                             <div class="w-2/12">
                                 <mat-slide-toggle #canEdit="ngModel" name="{{'canEdit'+index+cat}}" [(ngModel)]="rolePermissionListViewModel.permissionList[index]?.permissionGroup?.permissionCategory[cat]?.rolePermission[0].canEdit" (change) = "changeCategoryCanEdit($event,index,cat)"  color="primary"></mat-slide-toggle>

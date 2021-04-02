@@ -34,7 +34,7 @@ import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import {DragDropModule } from '@angular/cdk/drag-drop';
-
+import { StudentDataImportModule } from '../../student/student-data-import/student-data-import.module';
 
 @NgModule({
   declarations: [StudentSettingsComponent, EnrollmentCodesComponent, StudentFieldsComponent],
@@ -69,7 +69,8 @@ import {DragDropModule } from '@angular/cdk/drag-drop';
     MatSortModule,
     MatCheckboxModule,
     MatButtonToggleModule,
-    DragDropModule
+    DragDropModule,
+    StudentDataImportModule
   ]
 })
 export class StudentSettingsModule { }

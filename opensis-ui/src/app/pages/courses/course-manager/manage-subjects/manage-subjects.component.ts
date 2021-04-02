@@ -13,6 +13,8 @@ import { FormBuilder,NgForm,FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
+import { CryptoService } from '../../../../services/Crypto.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
 @Component({
   selector: 'vex-manage-subjects',
   templateUrl: './manage-subjects.component.html',
@@ -41,6 +43,10 @@ export class ManageSubjectsComponent implements OnInit {
   updateSubjectModel: UpdateSubjectModel = new UpdateSubjectModel();
   deleteSubjectModel:DeleteSubjectModel= new DeleteSubjectModel();
   massUpdateSubjectModel:MassUpdateSubjectModel= new MassUpdateSubjectModel();
+  editPermission:boolean= false;
+  permissionList= [];
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup:RolePermissionViewModel= new RolePermissionViewModel();
   hideinput = {};
   hideDiv={};
   constructor(
@@ -49,12 +55,18 @@ export class ManageSubjectsComponent implements OnInit {
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
     public translateService:TranslateService,
-    private dialog: MatDialog, ) { 
+    private dialog: MatDialog,
+    private cryptoService: CryptoService) { 
       translateService.use('en');   
     }
 
   ngOnInit(): void {  
     this.getAllSubjectList();
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 6);
+    let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 12);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+      
   }
   
   getAllSubjectList(){   

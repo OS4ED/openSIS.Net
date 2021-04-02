@@ -19,6 +19,7 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { MatTableModule } from '@angular/material/table';
+import {SharedModuleModule} from '../../shared-module/shared-module.module';
 @NgModule({
   declarations: [ScheduleStudentComponent],
   imports: [
@@ -40,7 +41,8 @@ import { MatTableModule } from '@angular/material/table';
     MatSlideToggleModule,
     MatDividerModule,
     MatProgressSpinnerModule,
-    MatTableModule
+    MatTableModule,
+    SharedModuleModule
   ]
 })
 export class ScheduleStudentModule {}

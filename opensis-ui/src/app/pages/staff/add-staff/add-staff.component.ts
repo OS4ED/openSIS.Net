@@ -22,6 +22,8 @@ import { CustomFieldService } from '../../../services/custom-field.service';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,6 +44,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   staffId: number;
   fieldsCategory = [];
   fieldsCategoryListView = new FieldsCategoryListView();
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
   currentCategory: number = 12; // because 12 is the id of general info.
   indexOfCategory: number = 0;
   staffTitle = "Add Staff Information";
@@ -66,6 +69,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     private snackbar: MatSnackBar,
     private loaderService:LoaderService,
     private cdr: ChangeDetectorRef,
+    private cryptoService: CryptoService,
     private imageCropperService:ImageCropperService) {
     translateService.use('en');
     this.layoutService.collapseSidenav();
@@ -91,6 +95,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.staffCreateMode = this.staffCreate.ADD;
     this.staffId = this.staffService.getStaffId();
     if (this.staffId != null || this.staffId != undefined) {
@@ -149,7 +154,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     this.staffAddModel.staffMaster.staffId = this.staffId;
     this.staffService.viewStaff(this.staffAddModel).subscribe(data => {
       this.staffAddModel = data;
-      this.fieldsCategory = data.fieldsCategoryList;
+      this.fieldsCategory = this.checkViewPermission(data.fieldsCategoryList);
       this.profileFromSchoolInfo(data.staffMaster.profile)
       this.responseImage = this.staffAddModel.staffMaster.staffPhoto;
       this.staffService.setStaffCloneImage(this.staffAddModel.staffMaster.staffPhoto);
@@ -181,13 +186,27 @@ export class AddStaffComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.fieldsCategory = res.fieldsCategoryList;
-          this.staffAddModel.fieldsCategoryList= res.fieldsCategoryList;
+          this.fieldsCategory = this.checkViewPermission(res.fieldsCategoryList);
+          this.staffAddModel.fieldsCategoryList= this.checkViewPermission(res.fieldsCategoryList);
           this.staffService.sendDetails(this.staffAddModel);
         }
       }
     }
     );
+  }
+
+  checkViewPermission(category){
+    category = category.filter((item) => {
+     for(let permission of this.permissionListViewModel.permissionList[4].permissionGroup.permissionCategory[0].permissionSubcategory){
+      if( item.title.toLowerCase()== permission.permissionSubcategoryName.toLowerCase()){
+        if(permission.rolePermission[0].canView==true){
+          return item;
+        }
+     }
+    }
+    });
+    this.currentCategory = category[0]?.categoryId;
+    return category;
   }
 
   ngOnDestroy() {

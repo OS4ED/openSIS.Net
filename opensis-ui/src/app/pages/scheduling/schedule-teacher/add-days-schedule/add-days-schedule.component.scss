@@ -9,3 +9,21 @@
         }
     }
 }
+
+:host::ng-deep .cal-month-view .cal-day-cell {
+    min-height: 0px  !important; 
+}
+
+:host::ng-deep .cal-month-view .cal-cell-top{
+   min-height: 50px; 
+}
+
+:host::ng-deep .cal-month-view .cal-day-number {
+  
+    float: right; 
+    margin-right: 10px;
+}
+
+.cal-month-view .cal-day-cell {
+    min-height: 0px !important;
+}

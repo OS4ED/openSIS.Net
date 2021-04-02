@@ -21,6 +21,7 @@ import { SharedFunction} from '../../../shared/shared-function';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-add-event',
@@ -76,6 +77,7 @@ export class AddEventComponent implements OnInit {
               private snackbar: MatSnackBar,
               public rollBasedAccessService: RollBasedAccessService,
               private calendarService: CalendarService,
+              private cryptoService: CryptoService,
               private calendarEventService: CalendarEventService,
               private fb: FormBuilder) {
     this.translate.setDefaultLang('en');
@@ -90,9 +92,9 @@ export class AddEventComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.permissionListViewModel = this.rollBasedAccessService.getPermission();
-    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
-    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 9);
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 2);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 3);
     this.editPermission = permissionCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionCategory.rolePermission[0].canDelete;
     this.addPermission = permissionCategory.rolePermission[0].canAdd;

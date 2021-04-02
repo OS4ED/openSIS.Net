@@ -10,6 +10,7 @@ namespace opensis.data.Models
     {
         public Guid TenantId { get; set; }
         public int? SchoolId { get; set; }
+        public int CourseSectionId { get; set; }
 
         const int maxPageSize = 50;
         public int PageNumber { get; set; } = 1;

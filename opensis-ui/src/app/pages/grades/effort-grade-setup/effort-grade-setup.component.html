@@ -1,5 +1,5 @@
-<div class="card mb-6">
-    <div class="custom-tabs pt-5">
+<div class="card">
+    <div class="custom-tabs">
         <ul class="flex border-b">
             <li [ngClass]="activeLink =='effortGradeLibrary' ? 'active' : ''"><a (click)="updateActiveLink('effortGradeLibrary')"
                     class="cursor-pointer px-6 py-4 inline-block hover:bg-skyblue-light">{{'effortGradeLibrary'|translate}}</a>
@@ -9,12 +9,12 @@
             </li>
         </ul>
     </div>
-</div>
 
-<div *ngIf="activeLink === 'effortGradeLibrary'">
+    <div *ngIf="activeLink === 'effortGradeLibrary'" class="p-4">
     <vex-effort-grade-library></vex-effort-grade-library>
 </div>
 
-<div *ngIf="activeLink === 'effortGradeScale'">
+    <div *ngIf="activeLink === 'effortGradeScale'" class="p-4">
     <vex-effort-grade-scale></vex-effort-grade-scale>
+    </div>
 </div>

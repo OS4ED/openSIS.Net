@@ -2,8 +2,17 @@
 
     <div @stagger fxLayout="column">
         <div class="flex w-full items-center pb-4 px-4">
-            <h4 class="text-blue font-medium mr-4">{{'studentHomeAddress' | translate}} &nbsp; <span class="text-gray-light">|</span></h4>
-            <a (click)="showHomeAddressOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
+            <h4 class="text-blue font-medium mr-4">{{'studentHomeAddress' | translate}}&nbsp;</h4><span 
+            *ngIf="
+                        studentViewDetails.studentMaster.homeAddressLineOne ||
+                        studentViewDetails.studentMaster.homeAddressLineTwo ||
+                        studentViewDetails.studentMaster.homeAddressCity ||
+                        nameOfMiscValues.countryName ||
+                        studentViewDetails.studentMaster.homeAddressState || 
+                        studentViewDetails.studentMaster.homeAddressZip"><span 
+                        class="text-gray-light" >|</span>
+            <a (click)="showHomeAddressOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a></span>
+            
         </div>
         <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
             <li>
@@ -47,8 +56,19 @@
         <hr class="-mx-4 mt-6">
 
         <div class="flex w-full items-center py-4 mx-4">
-            <h4 class="text-blue font-medium mr-4">{{'studentMailingAddress' | translate}} &nbsp; <span class="text-gray-light">|</span></h4>
+            <h4 class="text-blue font-medium mr-4">{{'studentMailingAddress' | translate}} &nbsp;</h4><span
+            *ngIf="
+                studentViewDetails.studentMaster.mailingAddressLineOne || 
+                studentViewDetails.studentMaster.mailingAddressLineTwo || 
+                studentViewDetails.studentMaster.mailingAddressCity || 
+                nameOfMiscValues.mailingAddressCountry || 
+                studentViewDetails.studentMaster.mailingAddressState || 
+                studentViewDetails.studentMaster.mailingAddressZip">
+            <span class="text-gray-light">|</span>
             <a (click)="showMailingAddressOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
+        </span>
+              
+            
         </div>
         <div class="mx-4 flex mb-4" *ngIf="studentViewDetails.studentMaster?.mailingAddressSameToHome; else mailingAddressNotSameToHome">
             <mat-icon [icIcon]="icCheckBox" class="mr-3"></mat-icon>

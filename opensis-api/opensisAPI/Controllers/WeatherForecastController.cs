@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -392,7 +393,7 @@ namespace opensisAPI.Controllers
                     calenderId = defaultCalender.CalenderId;
                 }
 
-                var enrollmentType = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == tenantId && x.SchoolId == schoolId && x.Type.ToLower() == "New".ToLower());
+                var enrollmentType = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == tenantId && x.SchoolId == schoolId && x.Type.ToLower() == "Add".ToLower());
 
                 if (enrollmentType != null)
                 {
@@ -400,7 +401,14 @@ namespace opensisAPI.Controllers
                 }
 
                 var gradeLevel = this.context?.Gradelevels.Where(x => x.SchoolId == schoolId).OrderBy(x => x.GradeId).FirstOrDefault();
-                var StudentEnrollmentData = new StudentEnrollment() { TenantId = tenantId, SchoolId = schoolId, StudentId = (int)MasterStudentId, EnrollmentId = 1, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode = enrollmentCode, CalenderId = calenderId, GradeLevelTitle = (gradeLevel != null) ? gradeLevel.Title : null, EnrollmentDate = DateTime.UtcNow, StudentGuid = GuidId, IsActive = true };
+
+                int? gradeId = null;
+                if (gradeLevel != null)
+                {
+                    gradeId = gradeLevel.GradeId;
+                }
+
+                var StudentEnrollmentData = new StudentEnrollment() { TenantId = tenantId, SchoolId = schoolId, StudentId = (int)MasterStudentId, EnrollmentId = 1, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode = enrollmentCode, CalenderId = calenderId, GradeLevelTitle = (gradeLevel != null) ? gradeLevel.Title : null, EnrollmentDate = DateTime.UtcNow, StudentGuid = GuidId, IsActive = true, GradeId = gradeId };
 
                 this.context?.StudentEnrollment.Add(StudentEnrollmentData);
             }
@@ -553,15 +561,48 @@ namespace opensisAPI.Controllers
         public IActionResult Pivot2()
         {
 
-            var qry = this.context.StudentScheduleView.AsNoTracking()
-                    .AsEnumerable().GroupBy(v => new { v.CourseSectionId, v.CourseSectionName })
-            .Select(g => new {
-                CourseSectionName = g.Key.CourseSectionName,
-                CourseSectionId = g.Key.CourseSectionId,
-                StudentView = g.GroupBy(f => f.StudentId).OrderBy(p => p.Key).Select(m => new {Data = m.ToList() })
-            });
+            //var qry = this.context.StudentScheduleView.AsNoTracking()
+            //        .AsEnumerable().GroupBy(v => new { v.CourseSectionId, v.CourseSectionName })
+            //.Select(g => new {
+            //    CourseSectionName = g.Key.CourseSectionName,
+            //    CourseSectionId = g.Key.CourseSectionId,
+            //    StudentView = g.GroupBy(f => f.StudentId).OrderBy(p => p.Key).Select(m => new {Data = m.ToList() })
+            //});
 
-            return Ok(qry);
+            //return Ok(qry);
+
+
+            //var fixedDay = "";
+            //var varDay = "";
+            //var calDay = "";
+
+            //var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == 1 && c.CourseSectionId == 4).ToList();
+            //if (courseSectionAllData.Count() > 0)
+            //{
+            //    if (courseSectionAllData.FirstOrDefault().ScheduleType.ToLower() == "Variable Schedule (2)".ToLower())
+            //    {
+            //        varDay = string.Join("|", courseSectionAllData.Select(row => row.VarDay).ToArray());
+            //    }
+            //}
+
+            //var data = "sunday|monday";
+            //var aa = this.context.AllCourseSectionView.ToList();
+            //var q = from r in this.context.AllCourseSectionView.AsEnumerable()
+            //        where (r.SchoolId==1 &&
+            //        (r.FixedDays == null || (Regex.IsMatch(data, r.FixedDays.ToLower(), RegexOptions.IgnoreCase)))
+
+            //        && (r.VarDay == null || (data.Contains(r.VarDay.ToLower())))
+            //        && (r.CalDay == null || (data.Contains(r.CalDay.ToLower())))
+            //        )
+            //        select r;
+            //var qry = this.context.AllCourseSectionView.Where(p => (Regex.IsMatch(data))||
+            //p.VarDay.Contains(data)|| p.CalDay.Contains(data)
+
+            //).ToList();
+
+            //return Ok(q.ToList());
+
+            return Ok();
         }
     }
 }

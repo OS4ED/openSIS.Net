@@ -1,6 +1,6 @@
 <div class="mb-2 lg:flex lg:flex-wrap">
     <div class="lg:w-3/12 lg:pr-4">
-        <mat-card class="w-full p-0" fxFlex="auto">
+        <div class="border border-normal rounded mb-4 lg:mb-0">
             <div class="py-4">
                 <h3 class="px-gutter mb-4">{{'effortCategories'|translate}}</h3>
                 <hr/>
@@ -66,10 +66,10 @@
                 </ng-template>
             
             </div>
-        </mat-card>
+        </div>
     </div>
     <div class="lg:w-9/12 lg:pl-4" *ngIf="effortCategoriesList !==null">
-        <mat-card class="w-full p-0" fxFlex="auto">
+        <div class="border border-normal rounded">
             <div class="h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between items-center pt-3">
                     <h3>{{'effortItems'|translate}}</h3>
@@ -150,6 +150,6 @@
                 </mat-checkbox>
             </button>
         </mat-menu>
-        </mat-card>
+        </div>
     </div>
 </div>

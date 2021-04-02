@@ -1,15 +1,18 @@
 <vex-page-layout>
-    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
+    <vex-page-layout-header [ngClass]="pageId=='Staff Bulk Data Import'?'':'pb-16'" fxLayout="column" fxLayoutAlign="center start">        
         <vex-secondary-toolbar current={{pageTitle}} [schoolSettings]="staffSettings" [pages]="pages" (selectedPage)="getSelectedPage($event)" class="w-full">
             <vex-breadcrumbs [crumbs]="['Settings','Staff Settings']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
-    <vex-page-layout-content class="-mt-6">
-        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+    <vex-page-layout-content [ngClass]="pageId=='Staff Bulk Data Import'?'':'-mt-6'" >
+        <mat-drawer-container class="bg-transparent flex-auto flex" [ngClass]="pageId=='Staff Bulk Data Import'?'':'-mt-16'" >
             <mat-drawer-content class="flex-auto flex items-start">
                 <div  class="w-full p-0">
                     <div *ngIf="pageId=='Staff Fields'">
                         <vex-staff-fields></vex-staff-fields>
+                    </div>
+                    <div *ngIf="pageId=='Staff Bulk Data Import'">
+                        <vex-staff-data-import></vex-staff-data-import>
                     </div>
                 </div>
             </mat-drawer-content>

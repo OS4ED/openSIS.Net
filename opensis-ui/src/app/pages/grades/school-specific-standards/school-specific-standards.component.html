@@ -1,9 +1,7 @@
 <div class="card">
     <div class="px-6 py-4">
-        <div class="flex justify-between">
-            <div>
               <form [formGroup]="form">
-                <mat-form-field fxFlex="auto" class="mb-0 mr-4" appearance="outline" color="primary">
+                <mat-form-field fxFlex="auto" class="md:mb-0 md:mr-4 block md:inline-block" appearance="outline" color="primary">
                     <mat-label>{{'Subject'|translate}}</mat-label>
                     <mat-select name="subject" formControlName="subject" required>
                         <mat-option value="all">ALL</mat-option>
@@ -13,7 +11,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field fxFlex="auto" class="mb-0 mr-4" appearance="outline" color="primary">
+                <mat-form-field fxFlex="auto" class="md:mb-0 md:mr-4 block md:inline-block" appearance="outline" color="primary">
                     <mat-label>{{'course'|translate}}</mat-label>
                     <mat-select formControlName="course" name="course" required>
                         <mat-option value="all">ALL</mat-option>
@@ -23,7 +21,7 @@
                     </mat-error>
                 </mat-form-field>
 
-                <mat-form-field fxFlex="auto" class="mb-0 mr-4" appearance="outline" color="primary">
+                <mat-form-field fxFlex="auto" class="md:mb-0 md:mr-4 block md:inline-block" appearance="outline" color="primary">
                     <mat-label>{{'gradeLevel'|translate}}</mat-label>
                     <mat-select name="gradeLevel" formControlName="gradeLevel" required>
                         <mat-option value="all">ALL</mat-option>
@@ -33,13 +31,11 @@
                     </mat-error>
                 </mat-form-field>
 
-                <button (click)="filterSchoolSpecificStandardsList()" color="primary" class="align-top mt-1" mat-raised-button type="button">
+                <button (click)="filterSchoolSpecificStandardsList()" color="primary" class="align-top md:mt-1 block md:inline-block" mat-raised-button type="button">
                     {{'filterResult'|translate}}
                 </button>
               </form>
             </div>
-        </div>
-    </div>
     <hr/>
     <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
         <div class="flex w-full justify-between">
@@ -65,10 +61,10 @@
                 </button>
                 <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
                 (click)='openAdd()'>
-                    <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
+                    <ic-icon [icon]="icAdd" class="" inline="true"
                         size="24px">
                     </ic-icon>
-                    <span>{{'addNewStandard'|translate}}</span>
+                    <span class="ml-2 hidden md:inline-block">{{'addNewStandard'|translate}}</span>
                 </button>
             </div>
         </div>
@@ -78,7 +74,7 @@
     <table @stagger mat-table [dataSource]="schoolSpecificList" class="table-auto w-full"
         matSort>
         
-        <ng-container matColumnDef="standardRefNo">
+        <ng-container matColumnDef="standardRefNo" sticky>
             <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'standardRefNo'|translate}}</th>
             <td mat-cell *matCellDef="let element">
                 <a (click)="openViewDetails(element)" class="cursor-pointer text-blue">{{element.standardRefNo}}</a>
@@ -127,7 +123,7 @@
             </td>
         </ng-container>
 
-        <ng-container matColumnDef="actions">
+        <ng-container matColumnDef="actions" stickyEnd>
             <th mat-header-cell *matHeaderCellDef>{{'action'|translate}}
             </th>
             <td mat-cell *matCellDef="let element">

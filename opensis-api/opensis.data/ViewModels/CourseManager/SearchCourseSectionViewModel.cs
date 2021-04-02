@@ -15,5 +15,6 @@ namespace opensis.data.ViewModels.CourseManager
         public string CourseProgram { get; set; }
         public string MarkingPeriodId { get; set; }
         public bool? ForStaff { get; set; }
+        public bool? ForStudent { get; set; }
     }
 }

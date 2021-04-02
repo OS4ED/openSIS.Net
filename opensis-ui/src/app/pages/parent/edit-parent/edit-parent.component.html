@@ -10,10 +10,10 @@
             </div>
             <hr class="mt-4"/>
             <div class="px-gutter sm:px-0">
-                <a @fadeInRight routerLink="" (click)='showPage("General Info")' [ngClass]=" pageId =='General Info' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>
+                <a @fadeInRight routerLink="" *ngIf="showGeneralInfo" (click)='showPage("General Info")' [ngClass]=" pageId =='General Info' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icGeneralInfo" class="mr-3"></mat-icon> General Info
                 </a>
-                <a @fadeInRight routerLink="" (click)='showPage("Address Info")' [ngClass]=" pageId =='Address Info' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>
+                <a @fadeInRight routerLink="" *ngIf="showAddressInfo" (click)='showPage("Address Info")' [ngClass]=" pageId =='Address Info' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>
                     <mat-icon [icIcon]="icAddress" class="mr-3"></mat-icon> Address Info
                 </a>
                 <!-- <a @fadeInRight routerLink="" (click)='showPage("School Access")' [ngClass]=" pageId =='School Access' ? 'text-primary active' : ''" class="list-item no-underline flex items-center rounded-none" matRipple>

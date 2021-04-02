@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
-import { TeacherDetails } from '../../../../models/teacherDetailsModel';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
-
+import {TeacherDetails} from '../../../../models/teacherDetailsModel';
 @Component({
   selector: 'vex-add-teacher',
   templateUrl: './add-teacher.component.html',

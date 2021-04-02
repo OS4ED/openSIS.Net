@@ -113,6 +113,10 @@ namespace opensis.data.Models
                     .HasColumnName("cal_date")
                     .HasColumnType("date");
 
+                entity.Property(e => e.CalDay)
+                   .HasColumnName("cal_day")
+                   .HasMaxLength(30);
+
                 entity.Property(e => e.CalPeriodId).HasColumnName("cal_period_id");
 
                 entity.Property(e => e.CalRoomId).HasColumnName("cal_room_id");
@@ -150,7 +154,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.FixedDays)
                     .HasColumnName("fixed_days")
-                    .HasMaxLength(13)
+                    .HasMaxLength(100)
                     .IsUnicode(false);
 
                 entity.Property(e => e.FixedPeriodId).HasColumnName("fixed_period_id");
@@ -197,6 +201,8 @@ namespace opensis.data.Models
                 entity.Property(e => e.AllowTeacherConflict).HasColumnName("allow_teacher_conflict");
 
                 entity.Property(e => e.CalendarId).HasColumnName("calendar_id");
+
+                entity.Property(e => e.AttendanceTaken).HasColumnName("attendance_taken");
             });
 
             modelBuilder.Entity<AttendanceCode>(entity =>
@@ -876,7 +882,7 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.MeetingDays)
                     .HasColumnName("meeting_days")
-                    .HasMaxLength(13)
+                    .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasComment("Starting Sunday as 0, 0|1|2|3|4|5|6");
 
@@ -2772,13 +2778,11 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.Affiliation)
                     .HasColumnName("affiliation")
-                    .HasMaxLength(100)
-                    .IsFixedLength();
+                   .IsUnicode(false);
 
                 entity.Property(e => e.Associations)
                 .HasColumnName("associations")
-                    .HasMaxLength(100)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CommonToiletAccessibility)
                     .HasColumnName("common_toilet_accessibility")
@@ -3492,9 +3496,11 @@ namespace opensis.data.Models
                     .HasColumnName("duration_start_date")
                     .HasColumnType("date");
 
+                entity.Property(e => e.IsAssigned).HasColumnName("is_assigned");
+
                 entity.Property(e => e.MeetingDays)
                     .HasColumnName("meeting_days")
-                    .HasMaxLength(13)
+                    .HasMaxLength(100)
                     .IsUnicode(false)
                     .HasComment("Starting Sunday as 0, 0|1|2|3|4|5|6");
 

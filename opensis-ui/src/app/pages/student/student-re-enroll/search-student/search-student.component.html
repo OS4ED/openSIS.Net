@@ -1,0 +1,202 @@
+<form>
+    <div class="search-body">
+        <div class="flex justify-between px-6 py-4">
+            <h4 class="font-bold">{{'advanceSearch' | translate}}</h4>
+            <a  (click)="hideAdvanceSearch()" class="cursor-pointer">
+                <mat-icon [icIcon]="icClose"></mat-icon>
+            </a>
+        </div>
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel expanded>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'identificationInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "firstGivenName" | translate }}</mat-label>
+                            <input name="firstGivenName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "middleName" | translate }}</mat-label>
+                            <input name="middleName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
+                            <input name="lastFamilyName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "studentID" | translate }}</mat-label>
+                            <input name="studentID" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "alternateID" | translate }}</mat-label>
+                            <input name="alternateID" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "admissionNumber" | translate }}</mat-label>
+                            <input name="admissionNumber" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "rollNumber" | translate }}</mat-label>
+                            <input name="rollNumber" matInput>
+                        </mat-form-field>
+                    </li>
+                </ul>
+
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'enrollmentInfo' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "enrollmentDate" | translate }}</mat-label>
+                            <input matInput name="enrollmentDate" [matDatepicker]="frompicker">
+                            <mat-datepicker-toggle matSuffix [for]="frompicker"></mat-datepicker-toggle>
+                            <mat-datepicker #frompicker></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "exitDate" | translate }}</mat-label>
+                            <input matInput name="exitDate" [matDatepicker]="exitDate">
+                            <mat-datepicker-toggle matSuffix [for]="exitDate"></mat-datepicker-toggle>
+                            <mat-datepicker #exitDate></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "exitCode" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="Grade 9">Grade 9</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'demographicInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "dateOfBirth" | translate }}</mat-label>
+                            <input matInput name="dateOfBirth" [matDatepicker]="dateOfBirth">
+                            <mat-datepicker-toggle matSuffix [for]="dateOfBirth"></mat-datepicker-toggle>
+                            <mat-datepicker #dateOfBirth></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{ "gender" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="male">Male</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "race" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="Race1">Race 1</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "ethnicity" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="ethnicity">Ethnicity</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "maritalStatus" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="single">Single</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "countryOfBirth" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="india">India</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "nationality" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="indian">Indian</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "firstLanguage" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="english">English</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "secondLanguage" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="bengali">Bengali</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{ "thirdLanguage" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="arabic">Arabic</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+            
+        </mat-accordion>
+        <div class="px-6 py-4">
+            <mat-slide-toggle color="primary" class="mr-5">{{'searchAllSchools' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle color="primary">{{'includeInactiveStudents' | translate}}</mat-slide-toggle>
+        </div>
+    </div>
+    <div class="search-toolbar py-3 px-6 text-right">
+        <button color="" mat-button type="button" class="mr-3">{{'reset' | translate}}</button>
+        <button color="primary" mat-raised-button>{{'search' | translate}}</button>
+    </div>
+
+</form>

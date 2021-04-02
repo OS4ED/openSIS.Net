@@ -20,5 +20,8 @@ namespace opensis.data.ViewModels.CourseManager
         public List<CourseBlockSchedule> courseBlockSchedule { get; set; }
         public string MarkingPeriod { get; set; }
         public string StandardGradeScaleName { get; set; }
+        public int? AvailableSeat { get; set; }
+        public int? TotalStudentSchedule { get; set; }
+        public int? TotalStaffSchedule { get; set; }
     }
 }

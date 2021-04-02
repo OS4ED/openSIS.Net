@@ -1,6 +1,6 @@
 <div class="mb-2 lg:flex lg:flex-wrap">
     <div class="lg:w-3/12 lg:pr-4">
-        <mat-card class="w-full p-0" fxFlex="auto">
+        <div class="card mb-4 lg:mb-0">
             <div class="py-4">
                 <h4 class="px-gutter mb-4">{{'gradeScale'|translate}}</h4>
                 <hr/>
@@ -21,17 +21,19 @@
                 </div>
 
                 <hr class="mb-3" />
-                <button *ngIf="addPermission" color="" class="w-full text-primary" mat-button type="button" (click)='goToAddBlock()'>
+                <div class="px-6">
+                    <button *ngIf="addPermission" class="w-full text-primary" mat-button type="button" (click)='goToAddBlock()'>
                     <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
                     </ic-icon>
                     <span>{{'addGradeScale'|translate}}</span>
                 </button>
             </div>
-        </mat-card>
+            </div>
+        </div>
     </div>
     <div class="lg:w-9/12 lg:pl-4" *ngIf="gradeScaleList.length !==0">
-        <mat-card class="w-full p-0" fxFlex="auto">
-            <div class="bg-white h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
+        <div class="card">
+            <div class="h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
                     <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
                         fxLayoutAlign="start center">
@@ -162,6 +164,6 @@
                     </mat-checkbox>
                 </button>
             </mat-menu>
-        </mat-card>
+        </div>
     </div>
 </div>

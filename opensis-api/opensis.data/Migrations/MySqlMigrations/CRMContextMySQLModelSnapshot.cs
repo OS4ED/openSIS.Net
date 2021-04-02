@@ -2320,9 +2320,9 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<string>("MeetingDays")
                         .HasColumnName("meeting_days")
-                        .HasColumnType("varchar(13) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
                         .HasComment("Starting Sunday as 0, 0|1|2|3|4|5|6")
-                        .HasMaxLength(13)
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<bool?>("OnlineClassRoom")
@@ -5941,15 +5941,13 @@ namespace opensis.data.Migrations.MySqlMigrations
 
                     b.Property<string>("Affiliation")
                         .HasColumnName("affiliation")
-                        .HasColumnType("char(100) CHARACTER SET utf8mb4")
-                        .IsFixedLength(true)
-                        .HasMaxLength(100);
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
 
                     b.Property<string>("Associations")
                         .HasColumnName("associations")
-                        .HasColumnType("char(100) CHARACTER SET utf8mb4")
-                        .IsFixedLength(true)
-                        .HasMaxLength(100);
+                        .HasColumnType("longtext CHARACTER SET utf8mb4")
+                        .IsUnicode(false);
 
                     b.Property<string>("CommonToiletAccessibility")
                         .HasColumnName("common_toilet_accessibility")
@@ -6823,11 +6821,15 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasColumnName("duration_start_date")
                         .HasColumnType("date");
 
+                    b.Property<bool?>("IsAssigned")
+                        .HasColumnName("is_assigned")
+                        .HasColumnType("tinyint(1)");
+
                     b.Property<string>("MeetingDays")
                         .HasColumnName("meeting_days")
-                        .HasColumnType("varchar(13) CHARACTER SET utf8mb4")
+                        .HasColumnType("varchar(100) CHARACTER SET utf8mb4")
                         .HasComment("Starting Sunday as 0, 0|1|2|3|4|5|6")
-                        .HasMaxLength(13)
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<int?>("QtrMarkingPeriodId")
@@ -7557,7 +7559,7 @@ namespace opensis.data.Migrations.MySqlMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
-                    b.Property<int>("FirstLanguageId")
+                    b.Property<int?>("FirstLanguageId")
                         .HasColumnName("first_language_id")
                         .HasColumnType("int");
 

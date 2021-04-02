@@ -22,12 +22,12 @@
         <div class="flex my-3 px-6 items-center" *ngFor="let subject of subjectList;let index=index">
             
             <div  [hidden]="hideDiv[index]" class="w-3/4 pr-4">{{subject.subjectName}}</div> 
-            <div class="w-3/4 pr-4" [hidden]="hideinput[index]">
+            <div *ngIf="editPermission" class="w-3/4 pr-4" [hidden]="hideinput[index]">
                 <input type="text" [(ngModel)]="updateSubjectModel.subjectList[index].subjectName" [hidden]="hideinput[index]"  name="{{'subjectName'+index}}"  placeholder="Subject Name" class="border rounded p-3 w-full box-border focus:border-0 focus:border-none focus:outline-none border-gray-light"> 
             </div>
                      
             <div class="w-1/4">
-                <a (click)="updateSubject(subject,index)" [hidden]="hideDiv[index]" matTooltip="Edit Info" class="mr-3 cursor-pointer">
+                <a *ngIf="editPermission" (click)="updateSubject(subject,index)" [hidden]="hideDiv[index]" matTooltip="Edit Info" class="mr-3 cursor-pointer">
                     <mat-icon [icIcon]="icEdit"></mat-icon>
                 </a>
                 <a (click)="confirmDelete(subject)" [hidden]="hideDiv[index]" matTooltip="Delete Info" class="mr-3 cursor-pointer">
@@ -38,7 +38,7 @@
       
         <hr/>
         <form (ngSubmit)="update.form.valid && submit()" #update="ngForm" novalidate>
-            <div class="flex my-3 px-6 items-center">
+            <div *ngIf="editPermission" class="flex my-3 px-6 items-center">
                 <div class="w-3/4 pr-4">
                     <input type="text"  [(ngModel)]="addSubjectModel.subjectList[0].subjectName" name="subjectName"  #subjectName="ngModel"  placeholder="Subject Name" class="border rounded p-3 w-full box-border focus:border-0 focus:border-none focus:outline-none border-gray-light">                   
                 </div>
@@ -52,6 +52,6 @@
 
     <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
         <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
-        <button color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
+        <button *ngIf="editPermission" color="primary" mat-raised-button type="submit">{{'submit' | translate}}</button>
     </mat-dialog-actions>
 </form>

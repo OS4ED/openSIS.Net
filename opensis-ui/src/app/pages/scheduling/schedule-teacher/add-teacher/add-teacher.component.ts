@@ -1,7 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
-import { TeacherDetails } from '../../../../models/teacherDetailsModel';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
@@ -21,6 +20,7 @@ import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { LanguageModel } from '../../../../models/languageModel';
 import { LoginService } from '../../../../services/login.service';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'vex-add-teacher',
@@ -43,12 +43,13 @@ export class AddTeacherComponent implements OnInit {
   totalCount=0; pageNumber; pageSize;
   staffList: MatTableDataSource<any>;
   staffFullName:string;
-  selection : SelectionModel<StaffMasterModel> = new SelectionModel<StaffMasterModel>(true, []);
   loading:boolean=false;
   destroySubject$: Subject<void> = new Subject();
   isSearchRecordAvailable=false;
   languages: LanguageModel = new LanguageModel();
-
+  @ViewChild('masterCheckBox') masterCheckBox:MatCheckbox;
+  listOfStaff=[];
+  selectedStaff=[]
   constructor(private dialogRef: MatDialogRef<AddTeacherComponent>, 
     public translateService:TranslateService,
     private gradeLevelService: GradeLevelService,
@@ -65,10 +66,80 @@ export class AddTeacherComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.getAllLanguage();
     this.getAllGradeLevelList();
     this.getAllSubjectList();
     this.getAllMembership();
-    this.getAllLanguage();
+  }
+
+  someComplete():boolean{
+    let indetermine=false;
+      for(let user of this.listOfStaff){
+        for(let selectedUser of this.selectedStaff){
+          if(user.staffId==selectedUser.staffId){
+            indetermine=true;
+          }
+        }
+      }
+      if(indetermine){
+        this.masterCheckBox.checked=this.listOfStaff.every((item)=>{
+          return item.checked;
+        })
+        if(this.masterCheckBox.checked){
+          return false;
+        }else{
+          return true;
+        }
+      }
+      
+  }
+  
+  setAll(event){
+    this.listOfStaff.forEach(user => {user.checked = event;});
+    this.staffList=new MatTableDataSource(this.listOfStaff);
+    this.decideCheckUncheck();
+  }
+  
+    onChangeSelection(eventStatus:boolean,id){
+      for(let item of this.listOfStaff){
+        if(item.staffId==id){
+          item.checked=eventStatus;
+          break;
+        }
+      }
+      this.staffList=new MatTableDataSource(this.listOfStaff);
+      this.masterCheckBox.checked=this.listOfStaff.every((item)=>{
+        return item.checked;
+      });
+    
+     this.decideCheckUncheck();
+    }
+  
+  decideCheckUncheck(){
+    this.listOfStaff.map((item)=>{
+      let isIdIncludesInSelectedList=false;
+      if(item.checked){
+        for(let selectedUser of this.selectedStaff){
+          if(item.staffId==selectedUser.staffId){
+            isIdIncludesInSelectedList=true;
+            break;
+           }
+        }
+        if(!isIdIncludesInSelectedList){
+          this.selectedStaff.push(item);
+        }
+      }else{
+        for(let selectedUser of this.selectedStaff){
+          if(item.staffId==selectedUser.staffId){
+            this.selectedStaff=this.selectedStaff.filter((user)=>user.staffId!=item.staffId);
+            break;
+           }
+        }
+      }
+      isIdIncludesInSelectedList=false;
+      
+    });
+    this.selectedStaff=this.selectedStaff.filter((item)=>item.checked);
   }
 
   submit(){
@@ -98,9 +169,7 @@ export class AddTeacherComponent implements OnInit {
   }
 
   findFilterOption(keyName):number{
-    if(keyName=='otherSubjectTaught'){
-      return 3;
-    }else if(keyName=='otherGradeLevelTaught'){
+    if(keyName=='otherSubjectTaught' || keyName=='otherGradeLevelTaught'){
       return 3;
     }else{
       return 11
@@ -137,7 +206,25 @@ export class AddTeacherComponent implements OnInit {
         this.pageNumber = res.pageNumber;
         this.pageSize = res._pageSize;
         res.staffMaster=this.findLanguageNameByLanguageId(res.staffMaster);
-        this.staffList = new MatTableDataSource(res.staffMaster); 
+        this.staffList = new MatTableDataSource(res.staffMaster);
+        
+        res.staffMaster.forEach(user => {
+          user.checked=false
+        });
+        let response=res.staffMaster.map((item)=>{
+          this.selectedStaff.map((selectedUser)=>{
+            if(item.staffId==selectedUser.staffId){
+              item.checked=true;
+              return item;
+            }
+          });
+          return item;
+        });
+        this.listOfStaff=response;
+        this.masterCheckBox.checked=response.every((item)=>{
+          return item.checked;
+        })
+
         this.getAllStaff=new GetAllStaffModel();     
       }
     });
@@ -145,7 +232,7 @@ export class AddTeacherComponent implements OnInit {
 
   findLanguageNameByLanguageId(staffMaster){
     staffMaster.map((item)=>{
-      for(let language of this.languages.tableLanguage){
+      this.languages?.tableLanguage?.map((language)=>{
         if(language.langId==+item.firstLanguage){
           item.firstLanguageName=language.locale
         }
@@ -155,54 +242,19 @@ export class AddTeacherComponent implements OnInit {
         if(language.langId==+item.thirdLanguage){
           item.thirdLanguageName=language.locale
         }
-      }
+      }) 
     })
     return staffMaster
   }
 
-   /** Whether the number of selected elements matches the total number of rows. */
-   isAllSelected() {
-    const numSelected = this.selection.selected.length;
-    return numSelected === this.totalCount;
-  }
+ 
 
-  checked(row: any){
-    this.selection.select(row)
-    var found = this.selection.selected.find(x => x.staffId == row.staffId);
-    if (found){
-      return true;
-    }
-    }
+ 
   
-    unChecked(row: any){
-      var found = this.selection.selected.find(x => x.staffId == row.staffId);
-      // if (found) found.checked = false;
-      this.selection.deselect(found); 
-  
-      if (found){
-        return false;
-      }
-    }
-  
-    isChecked(row: any) {
-      var found = this.selection.selected.find(x => x.staffId == row.staffId);
-  
-      if (found){
-        return true;
-      }
-    }
-
-     /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
-    this.isAllSelected() ?
-        this.selection.clear() :
-        this.staffList.data.forEach(row => this.selection.select(row));
-    
-  }
 
   addSelectedTeachers(){
-    if(this.selection.selected.length>0){
-      this.dialogRef.close(this.selection.selected);
+    if(this.selectedStaff.length>0){
+      this.dialogRef.close(this.selectedStaff);
     }else{
       this.snackbar.open('Please select at least 1 teacher', '', {
         duration: 2000

@@ -4,27 +4,50 @@ import { Pipe, PipeTransform } from '@angular/core';
 })
 export class WeekDayPipe implements PipeTransform {
     weeks = [
-        { name: 'SUN', id: 0 },
-        { name: 'MON', id: 1 },
-        { name: 'TUE', id: 2 },
-        { name: 'WED', id: 3 },
-        { name: 'THU', id: 4 },
-        { name: 'FRI', id: 5 },
-        { name: 'SAT', id: 6 }
+        { name: 'SUN',altName:'S',fullName:'Sunday', id: 0 },
+        { name: 'MON',altName:'M',fullName:'Monday', id: 1 },
+        { name: 'TUE',altName:'T',fullName:'Tuesday', id: 2 },
+        { name: 'WED',altName:'W',fullName:'Wednesday', id: 3 },
+        { name: 'THU',altName:'H',fullName:'Thursday', id: 4 },
+        { name: 'FRI',altName:'F',fullName:'Friday', id: 5 },
+        { name: 'SAT',altName:'S',fullName:'Saturday', id: 6 }
     ];
 
-    transform(value): number | string {
+    transform(value,scheduling?:boolean,toolTip?:boolean): number | string {
         if (value) {
-            let finalString = [];
-            value = value.split('|').join('')
-            for (let j = 0; j < this.weeks.length; j++) {
-                for (let i = 0; i < value.length; i++) {
-                    if (value[i] == this.weeks[j].id) {
-                        finalString.push(this.weeks[j].name);
+            if(scheduling){
+                let altName;
+                value = value.split('|').join('')
+                for (let day of this.weeks) {
+                    if(day.id==+value){
+                        altName=day.altName;
+                        break;
                     }
                 }
+                return altName;
+            }else if(toolTip){
+                let fullName;
+                value = value.split('|').join('')
+                for (let day of this.weeks) {
+                    if(day.id==+value){
+                        fullName=day.fullName;
+                        break;
+                    }
+                }
+                return fullName;
+            }else{
+                let finalString = [];
+                value = value.split('|').join('')
+                for (let j = 0; j < this.weeks.length; j++) {
+                    for (let i = 0; i < value.length; i++) {
+                        if (value[i] == this.weeks[j].fullName.toLowerCase()) {
+                            finalString.push(this.weeks[j].name);
+                        }
+                    }
+                }
+                return finalString.join(' - ');
             }
-            return finalString.join(' - ');
+        
         } else {
             return value;
         }

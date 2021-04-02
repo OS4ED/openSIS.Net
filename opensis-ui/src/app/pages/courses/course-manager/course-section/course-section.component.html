@@ -148,6 +148,18 @@
                         <div class="flex flex-wrap -mb-4">
                             <span class="mr-5 mb-4">
                                 <mat-icon
+                                    [icIcon]="selectedSectionDetails.courseSection.allowStudentConflict?icCheckboxChecked:icCheckboxUnchecked"
+                                    class="inline-block align-middle mr-1">
+                                </mat-icon> {{'allowStudentConflict' | translate}}
+                            </span>
+                            <span class="mr-5 mb-4">
+                                <mat-icon
+                                    [icIcon]="selectedSectionDetails.courseSection.allowTeacherConflict?icCheckboxChecked:icCheckboxUnchecked"
+                                    class="inline-block align-middle mr-1">
+                                </mat-icon> {{'allowTeacherConflict' | translate}}
+                            </span>
+                            <span class="mr-5 mb-4">
+                                <mat-icon
                                     [icIcon]="selectedSectionDetails.courseSection.isWeightedCourse?icCheckboxChecked:icCheckboxUnchecked"
                                     class="inline-block align-middle mr-1">
                                 </mat-icon> {{'courseIsWeighted' | translate}}

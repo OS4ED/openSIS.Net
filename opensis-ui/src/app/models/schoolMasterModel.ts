@@ -35,7 +35,7 @@ export class SchoolMasterModel {
   public modifiedBy: string;
   public dateModifed: string;
   public schoolDetail: [schoolDetailsModel];
-  public fieldsCategory: [FieldsCategoryModel];
+  public fieldsCategory: FieldsCategoryModel[];
   constructor() {
     this.modifiedBy = sessionStorage.getItem("email");
     this.tenantId = sessionStorage.getItem("tenantId");

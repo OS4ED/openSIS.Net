@@ -17,6 +17,8 @@ import { SchoolCreate } from '../../../enums/school-create.enum';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from 'src/app/services/Crypto.service';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-add-school',
@@ -35,7 +37,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   responseImage: string;
   image: string = '';
   module ="School";
-  fieldsCategory = [];
+  fieldsCategory: FieldsCategoryModel[];
   fieldsCategoryListView = new FieldsCategoryListView();
   schoolId: number = null;
   enableCropTool = false;
@@ -46,6 +48,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   loading: boolean;
   destroySubject$: Subject<void> = new Subject();
   moduleIdentifier=ModuleIdentifier;
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
   constructor(private imageCropperService: ImageCropperService,
     private Activeroute: ActivatedRoute,
     private snackbar: MatSnackBar,
@@ -54,6 +57,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
     private layoutService: LayoutService,
     private loaderService: LoaderService,
     private customFieldservice: CustomFieldService,
+    private cryptoService: CryptoService,
     private cdr: ChangeDetectorRef) {
     this.layoutService.collapseSidenav();
     this.imageCropperService.getUncroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
@@ -78,6 +82,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.schoolCreateMode = this.schoolCreate.ADD;
     this.schoolService.sendDetails(this.schoolAddViewModel);
     this.schoolId = this.schoolService.getSchoolId();
@@ -132,13 +137,26 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.fieldsCategory = res.fieldsCategoryList.filter(x => x.isSystemCategory == true);
-         
-
+          this.fieldsCategory= res.fieldsCategoryList.filter(x=>x.isSystemCategory=== true);
         }
       }
     }
     );
+  }
+
+  checkViewPermission(category){
+    category = category.filter((item) => {
+     for(let permission of this.permissionListViewModel.permissionList[1].permissionGroup.permissionCategory[0].permissionSubcategory){
+      if( item.title.toLowerCase()== permission.permissionSubcategoryName.toLowerCase()){
+        if(permission.rolePermission[0].canView==true){
+          return item;
+        }
+     }
+    }
+    });
+    this.currentCategory = category[0]?.categoryId;
+
+    return category;
   }
 
   getSchoolGeneralandWashInfoDetails() {
@@ -149,7 +167,8 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
       this.responseImage = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo;
       this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo=null;
       this.schoolService.sendDetails(this.schoolAddViewModel);
-      this.fieldsCategory = data.schoolMaster.fieldsCategory;
+      this.fieldsCategory = this.checkViewPermission(data.schoolMaster.fieldsCategory);
+      this.schoolAddViewModel.schoolMaster.fieldsCategory= this.fieldsCategory;
       this.schoolTitle = this.schoolAddViewModel.schoolMaster.schoolName;
       this.schoolService.setSchoolImage(this.responseImage);
       this.schoolService.setSchoolCloneImage(this.responseImage);

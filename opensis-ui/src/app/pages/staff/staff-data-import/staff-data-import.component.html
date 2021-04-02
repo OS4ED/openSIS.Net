@@ -1,443 +1,435 @@
-<vex-page-layout>
-    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
-        <vex-secondary-toolbar current="Staff Data Import" class="w-full">
-            <vex-breadcrumbs [crumbs]="['Staff']" class="flex-auto"></vex-breadcrumbs>
-        </vex-secondary-toolbar>
-    </vex-page-layout-header>
-
-    <vex-page-layout-content class="-mt-6">
-        <div class="-mt-16 mb-6">
-            <div class="grid grid-cols-4 gap-6">
-                <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-                    (click)="changeView(upload_file)" [class.active]="view === 1"
-                    [ngClass]="view === 1 ? 'bg-primary text-white arrow-bottom' : ''">
-                    <img src="assets/img/icons/cloud-computing.svg" width="65" class="inline-block">
-                    <h4 class="text-lg font-medium">Upload your file</h4>
-                    <p class="text-base text-gray" [ngClass]="view === 1 ? 'text-skyblue-light' : ''">Upload xls, xlsx or link your cloud file</p>
-                    <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
-                </div>
-                <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-                    (click)="changeView(map_fields)" [class.active]="view === 2"
-                    [ngClass]="view === 2 ? 'bg-primary text-white arrow-bottom' : ''">
-                    <img src="assets/img/icons/map-excel.svg" width="55" class="inline-block">
-                    <h4 class="text-lg font-medium">Map your fields</h4>
-                    <p class="text-base text-gray" [ngClass]="view === 2 ? 'text-skyblue-light' : ''">Map your spreadsheet columns with database fields</p>
-                    <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
-                </div>
-                <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-                    (click)="changeView(preview_map)" [class.active]="view === 3"
-                    [ngClass]="view === 3 ? 'bg-primary text-white arrow-bottom' : ''">
-                    <img src="assets/img/icons/map-preview.svg" width="55" class="inline-block">
-                    <h4 class="text-lg font-medium">Preview your mapping</h4>
-                    <p class="text-base text-gray" [ngClass]="view === 3 ? 'text-skyblue-light' : ''">Review your mapping before you proceed to import</p>
-                    <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
-                </div>
-                <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-                    (click)="changeView(import_data)" [class.active]="view === 4"
-                    [ngClass]="view === 4 ? 'bg-primary text-white arrow-bottom' : ''">
-                    <img src="assets/img/icons/import-data.svg" width="60" class="inline-block">
-                    <h4 class="text-lg font-medium">Import data</h4>
-                    <p class="text-base text-gray" [ngClass]="view === 4 ? 'text-skyblue-light' : ''">Finally import your data and see the results</p>
+<div class="mb-6">
+    <div class="grid grid-cols-4 gap-6">
+        <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
+            (click)="changeView(upload_file)" [class.active]="view === 1"
+            [ngClass]="view === 1 ? 'bg-primary text-white arrow-bottom' : ''">
+            <img src="assets/img/icons/cloud-computing.svg" width="65" class="inline-block">
+            <h4 class="text-lg font-medium">Upload your file</h4>
+            <p class="text-base text-gray" [ngClass]="view === 1 ? 'text-skyblue-light' : ''">Upload xls, xlsx or link
+                your cloud file</p>
+            <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
+        </div>
+        <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
+            (click)="changeView(map_fields)" [class.active]="view === 2"
+            [ngClass]="view === 2 ? 'bg-primary text-white arrow-bottom' : ''">
+            <img src="assets/img/icons/map-excel.svg" width="55" class="inline-block">
+            <h4 class="text-lg font-medium">Map your fields</h4>
+            <p class="text-base text-gray" [ngClass]="view === 2 ? 'text-skyblue-light' : ''">Map your spreadsheet
+                columns with database fields</p>
+            <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
+        </div>
+        <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
+            (click)="changeView(preview_map)" [class.active]="view === 3"
+            [ngClass]="view === 3 ? 'bg-primary text-white arrow-bottom' : ''">
+            <img src="assets/img/icons/map-preview.svg" width="55" class="inline-block">
+            <h4 class="text-lg font-medium">Preview your mapping</h4>
+            <p class="text-base text-gray" [ngClass]="view === 3 ? 'text-skyblue-light' : ''">Review your mapping before
+                you proceed to import</p>
+            <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
+        </div>
+        <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
+            (click)="changeView(import_data)" [class.active]="view === 4"
+            [ngClass]="view === 4 ? 'bg-primary text-white arrow-bottom' : ''">
+            <img src="assets/img/icons/import-data.svg" width="60" class="inline-block">
+            <h4 class="text-lg font-medium">Import data</h4>
+            <p class="text-base text-gray" [ngClass]="view === 4 ? 'text-skyblue-light' : ''">Finally import your data
+                and see the results</p>
+        </div>
+    </div>
+</div>
+<div [ngSwitch]="view">
+    <!-- Start Upload your file -->
+    <div class="upload_file" *ngSwitchCase="'1'">
+        <div class="card px-6 py-4">
+            <p class="text-center text-base"><a href="#" class="text-primary">Click here</a> to download the
+                sample
+                Excel sheet template.</p>
+            <mat-divider class="mt-4 mb-6 -mx-6"></mat-divider>
+            <ngx-dropzone (change)="onSelect($event)" class="mb-4">
+                <ngx-dropzone-label>
+                    <img src="assets/img/icons/upload.svg" width="60px"
+                        class="inline-block mr-4 flex-shrink-0 cursor-pointer">
+                    <p class="inline-block align-middle text-left">
+                        <span class="text-lg font-medium mb-2 inline-block text-black">Upload file from your local
+                            drive</span>
+                        <br>
+                        <a href="#" class="text-gray text-base">Click here to select a file or drop the file
+                            here</a>
+                    </p>
+                </ngx-dropzone-label>
+                <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
+                    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                </ngx-dropzone-preview>
+            </ngx-dropzone>
+            <div class="text-right mb-10">
+                <button color="primary" mat-flat-button type="submit">{{ 'uploadFile' | translate }}</button>
+            </div>
+            <mat-divider class="mt-4 mb-6 -mx-8"></mat-divider>
+            <div class="text-center -mt-12">
+                <div class="w-12 h-12 bg-black rounded-full m-auto text-white font-medium align-middle pt-3 text-lg">
+                    OR</div>
+            </div>
+            <div class="text-center mt-8 mb-6">
+                <img src="assets/img/icons/world-wide-web.svg" width="60px" class="inline-block mr-4 flex-shrink-0">
+                <div class="sm:w-9/12 lg:w-2/4 inline-block align-middle text-left">
+                    <p class="text-lg font-medium mb-2 inline-block">Upload file via web link
+                        <i class="icon icon-sphere ml-2"></i>
+                        <i class="icon icon-google-drive ml-2"></i>
+                        <i class="icon icon-dropbox ml-2"></i>
+                    </p>
+                    <div>
+                        <div class="sm:w-7/12 lg:w-2/3 inline-block px-2 py-1 border border-gray-light rounded mr-4">
+                            <input name="web_link" type="text" placeholder="Enter the web link URL of the sheet"
+                                class="w-full text-base" />
+                        </div>
+                        <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
+                            <button color="primary" mat-raised-button type="submit" class="py-0">{{
+                                "fetchUploadfile" |
+                                translate }}</button>
+                        </mat-dialog-actions>
+                    </div>
                 </div>
             </div>
         </div>
-        <div [ngSwitch]="view">
-            <!-- Start Upload your file -->
-            <div class="upload_file" *ngSwitchCase="'1'">
-                <div class="card px-6 py-4">
-                    <p class="text-center text-base"><a href="#" class="text-primary">Click here</a> to download the
-                        sample
-                        Excel sheet template.</p>
-                    <mat-divider class="mt-4 mb-6 -mx-6"></mat-divider>
-                    <ngx-dropzone (change)="onSelect($event)" class="mb-4">
-                        <ngx-dropzone-label>
-                            <img src="assets/img/icons/upload.svg" width="60px"
-                                    class="inline-block mr-4 flex-shrink-0 cursor-pointer">
-                                <p class="inline-block align-middle text-left">
-                                    <span class="text-lg font-medium mb-2 inline-block text-black">Upload file from your local
-                                        drive</span>
-                                    <br>
-                                    <a href="#" class="text-gray text-base">Click here to select a file or drop the file
-                                        here</a>
-                                </p>
-                        </ngx-dropzone-label>
-                        <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-                            <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
-                        </ngx-dropzone-preview>
-                    </ngx-dropzone>
-                    <div class="text-right mb-10">
-                        <button color="primary" mat-flat-button type="submit">{{ 'uploadFile' | translate }}</button>
-                    </div>
-                    <mat-divider class="mt-4 mb-6 -mx-8"></mat-divider>
-                    <div class="text-center -mt-12">
-                        <div
-                            class="w-12 h-12 bg-black rounded-full m-auto text-white font-medium align-middle pt-3 text-lg">
-                            OR</div>
-                    </div>
-                    <div class="text-center mt-8 mb-6">
-                        <img src="assets/img/icons/world-wide-web.svg" width="60px"
-                            class="inline-block mr-4 flex-shrink-0">
-                        <div class="sm:w-9/12 lg:w-2/4 inline-block align-middle text-left">
-                            <p class="text-lg font-medium mb-2 inline-block">Upload file via web link
-                                <i class="icon icon-sphere ml-2"></i>
-                                <i class="icon icon-google-drive ml-2"></i>
-                                <i class="icon icon-dropbox ml-2"></i>
-                            </p>
-                            <div>
-                                <div class="sm:w-7/12 lg:w-2/3 inline-block px-2 py-1 border border-gray-light rounded mr-4">
-                                    <input name="web_link" type="text" placeholder="Enter the web link URL of the sheet"
-                                        class="w-full text-base" />
-                                </div>
-                                <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
-                                    <button color="primary" mat-raised-button type="submit" class="py-0">{{
-                                        "fetchUploadfile" |
-                                        translate }}</button>
-                                </mat-dialog-actions>
-                            </div>
-                        </div>
-                    </div>
+    </div>
+    <!-- End Upload your file -->
+
+    <!-- Start map fields -->
+    <div class="map_fields" *ngSwitchCase="'2'">
+        <div class="card px-6 py-4">
+            <p class="text-base">
+                Please creat a one-to-one relationship between the fields in your spreadsheet and the fields in
+                the
+                openSIS database by selecting the appropriate fields from the right column. After you are done,
+                click Map it.
+            </p>
+            <div class="border-t border-normal -mx-6 mt-4">
+                <div class="overflow-x-auto overflow-y-hidden">
+                    <table class="w-full schedule-table">
+                        <thead>
+                            <tr>
+                                <th width="35%">This fields are in your Excel spreadsheet</th>
+                                <th width="35%"></th>
+                                <th width="30%">This are available fields in openSIS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{"firstGivenName" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "firstGivenName" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="firstGivenName">First/Given Name</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"middleName" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "middleName" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="middleName">Middle Name</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"lastFamilyName" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="lastFamilyName">Last/Family Name</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"staffId" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "alternateId" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="admissionNumber">Alternate ID</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"dob" | translate }}</td>
+                                <td></td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "dob" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="dob">Date Of Birth</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"gender" | translate }}</td>
+                                <td></td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "gender" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="select">- Select -</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
                 </div>
             </div>
-            <!-- End Upload your file -->
-
-            <!-- Start map fields -->
-            <div class="map_fields" *ngSwitchCase="'2'">
-                <div class="card px-6 py-4">
-                    <p class="text-base">
-                        Please creat a one-to-one relationship between the fields in your spreadsheet and the fields in
-                        the
-                        openSIS database by selecting the appropriate fields from the right column. After you are done,
-                        click Map it.
-                    </p>
-                    <div class="border-t border-normal -mx-6 mt-4">
-                        <div class="overflow-x-auto overflow-y-hidden">
-                            <table class="w-full schedule-table">
-                                <thead>
-                                    <tr>
-                                        <th width="35%">This fields are in your Excel spreadsheet</th>
-                                        <th width="35%"></th>
-                                        <th width="30%">This are available fields in openSIS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{"firstGivenName" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "firstGivenName" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="firstGivenName">First/Given Name</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"middleName" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "middleName" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="middleName">Middle Name</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"lastFamilyName" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="lastFamilyName">Last/Family Name</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"staffId" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "alternateId" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="admissionNumber">Alternate ID</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"dob" | translate }}</td>
-                                        <td></td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "dob" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="dob">Date Of Birth</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"gender" | translate }}</td>
-                                        <td></td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "gender" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="select">- Select -</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="text-right pt-4">
-                        <button color="primary" mat-raised-button type="submit">
-                            {{ 'mapIt' | translate }}
-                        </button>
-                    </div>
-                </div>
+            <div class="text-right pt-4">
+                <button color="primary" mat-raised-button type="submit">
+                    {{ 'mapIt' | translate }}
+                </button>
             </div>
-            <!-- End map fields -->
-
-            <!-- Start prieview map -->
-            <div class="preview_map" *ngSwitchCase="'3'">
-                <div class="card px-6 py-4">
-                    <h4 class="text-primary">Preview</h4>
-                    <p class="text-base">
-                        Please check and continue to data import
-                    </p>
-                    <div class="border-t border-normal -mx-6 mt-4">
-                        <div class="overflow-x-auto overflow-y-hidden">
-                            <table class="w-full schedule-table">
-                                <thead>
-                                    <tr>
-                                        <th width="35%">This fields are in your Excel spreadsheet</th>
-                                        <th width="35%"></th>
-                                        <th width="30%">This are available fields in openSIS</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td>{{"firstGivenName" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "firstGivenName" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="firstGivenName">First/Given Name</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"middleName" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "middleName" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="middleName">Middle Name</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"lastFamilyName" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="lastFamilyName">Last/Family Name</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"staffId" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "alternateId" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="alternateId">Alternate ID</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"dob" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "dateOfBirth" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="dob">Date Of Birth</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                    <tr>
-                                        <td>{{"gender" | translate }}</td>
-                                        <td>
-                                            <span
-                                                class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                        </td>
-                                        <td>
-                                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                                <mat-label>{{ "gender" | translate }}</mat-label>
-                                                <mat-select>
-                                                    <mat-option value="gender">- Select -</mat-option>
-                                                </mat-select>
-                                            </mat-form-field>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                    <div class="text-right pt-4">
-                        <button color="primary" mat-raised-button type="submit">
-                            <i class="icon icon-rotate-cw3 mr-2"></i>{{ 'changeMapping' | translate }}
-                        </button>
-                        <button mat-raised-button type="submit" class="bg-green ml-2 text-white">
-                            {{ 'importStaffs' | translate }}
-                        </button>
-                    </div>
-                </div>
-            </div>
-            <!-- End  prieview map -->
-
-            <!-- Start import data -->
-            <div class="import_data" *ngSwitchCase="'4'">
-                <div class="card px-6 py-4 mb-4">
-                    <div class="text-center py-10 px-4">
-                        <h4 class="text-primary font-semibold">
-                            Importing Staffs into database
-                        </h4>
-                        <p class="text-warn mb-10">Please do not refresh the page or click back button</p>
-                        <img src="assets/img/import-data.png" width="30%" class="inline-block">
-                    </div>
-                </div>
-
-                <div class="card px-6 py-4 mb-6">
-                    <div class="flex">
-                        <i class="icon icon-checkmark-circle text-green mt-1 text-lg"></i>
-                        <span class="text-lg inline-block align-middle text-green font-bold ml-4">Data Import
-                            Completed</span>
-                    </div>
-                    <mat-divider class="mt-4 mb-6 -mx-6"></mat-divider>
-                    <div class="grid sm:grid-cols-1 md:grid-cols-2 items-center">
-                        <div class="flex mb-4">
-                            <div class="flex-shrink-0">
-                                <div class="spinner-container">
-                                    <div class="spinner-background font-semibold text-primary">{{spinner1.value}}%</div>
-                                    <mat-progress-spinner #spinner1 color="primary" mode="determinate" value="85"
-                                        strokeWidth="5" diameter="70" class="spinner-blue">
-                                    </mat-progress-spinner>
-                                </div>
-                            </div>
-                            <div class="ml-4 flex flex-col justify-center">
-                                <h5 class="mb-2 text-lg font-semibold">17 Staffs Imported</h5>
-                                <p>3 Staffs rejected due to data error.</p>
-                            </div>
-                        </div>
-                        <div class="text-right">
-                            <button class="p-2 text-primary border-2 border-primary rounded font-medium mr-4 mb-2"
-                                type="submit">
-                                <i class="icon icon-eye mr-2"></i>View Report
-                            </button>
-                            <button class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit">
-                                <i class="icon icon-file-excel mr-2"></i>Download this report as Excel
-                            </button>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="card px-6 py-4">
-                    <h6 class="text-base mb-3">Rejection Report</h6>
-                    <div class="border-t border-normal -mx-6 mt-4">
-                        <div class="overflow-x-auto overflow-y-hidden rejection-table">
-                            <table class="w-full schedule-table">
-                                <thead>
-                                    <tr>
-                                        <th width="1%"></th>
-                                        <th>{{"firstGivenName" | translate }}</th>
-                                        <th>{{"middleName" | translate }}</th>
-                                        <th>{{"lastFamilyName" | translate }}</th>
-                                        <th>{{"alternateId " | translate }}</th>
-                                        <th>{{"dateOfBirth" | translate }}</th>
-                                        <th>{{"gender" | translate }}</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr>
-                                        <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
-                                        <td>Arthur</td>
-                                        <td>Barry</td>
-                                        <td>-</td>
-                                        <td>5421</td>
-                                        <td>-</td>
-                                        <td>Male</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
-                                        <td>-</td>
-                                        <td>-</td>
-                                        <td>Brown</td>
-                                        <td>5468</td>
-                                        <td>Jan 29, 2001</td>
-                                        <td>Female</td>
-                                    </tr>
-                                    <tr>
-                                        <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
-                                        <td>Wang</td>
-                                        <td>-</td>
-                                        <td>Fang</td>
-                                        <td>54531</td>
-                                        <td>-</td>
-                                        <td>Male</td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <!-- End import data -->
         </div>
-    </vex-page-layout-content>
-</vex-page-layout>
+    </div>
+    <!-- End map fields -->
+
+    <!-- Start prieview map -->
+    <div class="preview_map" *ngSwitchCase="'3'">
+        <div class="card px-6 py-4">
+            <h4 class="text-primary">Preview</h4>
+            <p class="text-base">
+                Please check and continue to data import
+            </p>
+            <div class="border-t border-normal -mx-6 mt-4">
+                <div class="overflow-x-auto overflow-y-hidden">
+                    <table class="w-full schedule-table">
+                        <thead>
+                            <tr>
+                                <th width="35%">This fields are in your Excel spreadsheet</th>
+                                <th width="35%"></th>
+                                <th width="30%">This are available fields in openSIS</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>{{"firstGivenName" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "firstGivenName" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="firstGivenName">First/Given Name</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"middleName" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "middleName" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="middleName">Middle Name</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"lastFamilyName" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="lastFamilyName">Last/Family Name</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"staffId" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "alternateId" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="alternateId">Alternate ID</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"dob" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "dateOfBirth" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="dob">Date Of Birth</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td>{{"gender" | translate }}</td>
+                                <td>
+                                    <span
+                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
+                                </td>
+                                <td>
+                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                        <mat-label>{{ "gender" | translate }}</mat-label>
+                                        <mat-select>
+                                            <mat-option value="gender">- Select -</mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="text-right pt-4">
+                <button color="primary" mat-raised-button type="submit">
+                    <i class="icon icon-rotate-cw3 mr-2"></i>{{ 'changeMapping' | translate }}
+                </button>
+                <button mat-raised-button type="submit" class="bg-green ml-2 text-white">
+                    {{ 'importStaffs' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+    <!-- End  prieview map -->
+
+    <!-- Start import data -->
+    <div class="import_data" *ngSwitchCase="'4'">
+        <div class="card px-6 py-4 mb-4">
+            <div class="text-center py-10 px-4">
+                <h4 class="text-primary font-semibold">
+                    Importing Staffs into database
+                </h4>
+                <p class="text-warn mb-10">Please do not refresh the page or click back button</p>
+                <img src="assets/img/import-data.png" width="30%" class="inline-block">
+            </div>
+        </div>
+
+        <div class="card px-6 py-4 mb-6">
+            <div class="flex">
+                <i class="icon icon-checkmark-circle text-green mt-1 text-lg"></i>
+                <span class="text-lg inline-block align-middle text-green font-bold ml-4">Data Import
+                    Completed</span>
+            </div>
+            <mat-divider class="mt-4 mb-6 -mx-6"></mat-divider>
+            <div class="grid sm:grid-cols-1 md:grid-cols-2 items-center">
+                <div class="flex mb-4">
+                    <div class="flex-shrink-0">
+                        <div class="spinner-container">
+                            <div class="spinner-background font-semibold text-primary">{{spinner1.value}}%</div>
+                            <mat-progress-spinner #spinner1 color="primary" mode="determinate" value="85"
+                                strokeWidth="5" diameter="70" class="spinner-blue">
+                            </mat-progress-spinner>
+                        </div>
+                    </div>
+                    <div class="ml-4 flex flex-col justify-center">
+                        <h5 class="mb-2 text-lg font-semibold">17 Staffs Imported</h5>
+                        <p>3 Staffs rejected due to data error.</p>
+                    </div>
+                </div>
+                <div class="text-right">
+                    <button class="p-2 text-primary border-2 border-primary rounded font-medium mr-4 mb-2"
+                        type="submit">
+                        <i class="icon icon-eye mr-2"></i>View Report
+                    </button>
+                    <button class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit">
+                        <i class="icon icon-file-excel mr-2"></i>Download this report as Excel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div class="card px-6 py-4">
+            <h6 class="text-base mb-3">Rejection Report</h6>
+            <div class="border-t border-normal -mx-6 mt-4">
+                <div class="overflow-x-auto overflow-y-hidden rejection-table">
+                    <table class="w-full schedule-table">
+                        <thead>
+                            <tr>
+                                <th width="1%"></th>
+                                <th>{{"firstGivenName" | translate }}</th>
+                                <th>{{"middleName" | translate }}</th>
+                                <th>{{"lastFamilyName" | translate }}</th>
+                                <th>{{"alternateId " | translate }}</th>
+                                <th>{{"dateOfBirth" | translate }}</th>
+                                <th>{{"gender" | translate }}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
+                                <td>Arthur</td>
+                                <td>Barry</td>
+                                <td>-</td>
+                                <td>5421</td>
+                                <td>-</td>
+                                <td>Male</td>
+                            </tr>
+                            <tr>
+                                <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
+                                <td>-</td>
+                                <td>-</td>
+                                <td>Brown</td>
+                                <td>5468</td>
+                                <td>Jan 29, 2001</td>
+                                <td>Female</td>
+                            </tr>
+                            <tr>
+                                <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
+                                <td>Wang</td>
+                                <td>-</td>
+                                <td>Fang</td>
+                                <td>54531</td>
+                                <td>-</td>
+                                <td>Male</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- End import data -->
+</div>

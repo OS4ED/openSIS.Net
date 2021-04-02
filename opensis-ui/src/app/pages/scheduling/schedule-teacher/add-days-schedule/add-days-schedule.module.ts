@@ -10,7 +10,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
 import { MatNativeDateModule } from '@angular/material/core';
 import { AddDaysScheduleComponent } from './add-days-schedule.component';
-
+import {SharedModuleModule} from '../../../shared-module/shared-module.module';
+import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
+import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 
 
 @NgModule({
@@ -25,7 +27,12 @@ import { AddDaysScheduleComponent } from './add-days-schedule.component';
     FlexLayoutModule,
     ReactiveFormsModule,
     MatButtonModule,
-    MatNativeDateModule
+    MatNativeDateModule,
+    SharedModuleModule,
+    AngularCalendarModule.forRoot({
+      provide: DateAdapter,
+      useFactory: adapterFactory
+    })
   ]
 })
 export class AddDaysScheduleModule { }

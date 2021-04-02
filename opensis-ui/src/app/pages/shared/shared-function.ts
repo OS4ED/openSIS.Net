@@ -134,5 +134,4 @@ export class SharedFunction {
     }
 
   }
-
 }

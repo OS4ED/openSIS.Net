@@ -1,3 +1,9 @@
+::ng-deep {
+  .mat-sidenav {
+    overflow: hidden !important;
+  }
+}
+
 .sidenav {
   color: var(--sidenav-color);
   height: 100%;
@@ -40,8 +46,28 @@
 
     &.open {
       width: var(--sidenav-width);
+
+      .expand-btn {
+        display: block;
+    }
+
+      + .collapse-btn {
+        display: none;
+  }
     }
   }
+}
+
+.expand-btn {
+  display: none;
+}
+
+.collapse-btn {
+  position: absolute;
+  top: 16px;
+  left: 236px;
+  color: #fff;
+  background: transparent;
 }
 
 .sidenav-toolbar {

@@ -76,6 +76,11 @@ namespace opensis.core.StaffSchedule.Services
             return staffSchedule;
         }
 
+        /// <summary>
+        /// Check Availability Staff CourseSection Schedule
+        /// </summary>
+        /// <param name="staffScheduleViewModel"></param>
+        /// <returns></returns>
         public StaffScheduleViewModel CheckAvailabilityStaffCourseSectionSchedule(StaffScheduleViewModel staffScheduleViewModel)
         {
             StaffScheduleViewModel staffSchedule = new StaffScheduleViewModel();

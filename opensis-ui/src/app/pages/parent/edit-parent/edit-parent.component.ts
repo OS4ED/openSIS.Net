@@ -8,11 +8,13 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import icGeneralInfo from '@iconify/icons-ic/outline-account-circle';
 import icAddress from '@iconify/icons-ic/outline-location-on';
 import icAccessInfo from '@iconify/icons-ic/outline-lock-open';
-import { ImageCropperService } from 'src/app/services/image-cropper.service';
-import { SchoolCreate } from 'src/app/enums/school-create.enum';
-import { ParentInfoService } from 'src/app/services/parent-info.service';
-import { AddParentInfoModel } from 'src/app/models/parentInfoModel';
+import { ImageCropperService } from '../../../services/image-cropper.service';
+import { SchoolCreate } from '../../../enums/school-create.enum';
+import { ParentInfoService } from '../../../services/parent-info.service';
+import { AddParentInfoModel } from '../../../models/parentInfoModel';
 import { takeUntil } from 'rxjs/operators';
+import { RolePermissionListViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-edit-parent',
@@ -26,22 +28,26 @@ import { takeUntil } from 'rxjs/operators';
 })
 export class EditParentComponent implements OnInit {
   pageStatus:string="View Parent";
+  showAddressInfo:boolean= false;
+  showGeneralInfo: boolean= false;
   icGeneralInfo = icGeneralInfo;
   icAddress = icAddress;
   icAccessInfo = icAccessInfo;
   destroySubject$: Subject<void> = new Subject();
-  pageId = 'General Info';
+  pageId:string;
   parentCreate = SchoolCreate;
   parentId: number;
   @Input() parentCreateMode: SchoolCreate = SchoolCreate.VIEW;
   addParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
   parentTitle;
   responseImage: string;
   
   enableCropTool = true;
   constructor(private layoutService: LayoutService,
     private parentInfoService:ParentInfoService,
-    private imageCropperService:ImageCropperService) {
+    private imageCropperService:ImageCropperService,
+    private cryptoService: CryptoService) {
     this.layoutService.collapseSidenav();
     this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       this.parentInfoService.setParentImage(res[1]);
@@ -56,6 +62,18 @@ export class EditParentComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    console.log(this.permissionListViewModel);
+    
+    if(this.permissionListViewModel.permissionList[3].permissionGroup.permissionCategory[0].rolePermission[0].canView){
+      this.showGeneralInfo= true;
+      this.pageId="General Info";
+    }
+    else if(this.permissionListViewModel.permissionList[3].permissionGroup.permissionCategory[1].rolePermission[0].canView){
+      this.showAddressInfo= true;
+      this.pageId="Address Info";
+    }
+
     this.parentCreateMode = this.parentCreate.VIEW;
     this.parentId = this.parentInfoService.getParentId();   
     this.getParentDetailsUsingId();

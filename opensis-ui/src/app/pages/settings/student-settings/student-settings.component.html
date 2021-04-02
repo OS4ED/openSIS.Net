@@ -1,11 +1,11 @@
 <vex-page-layout>
-    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">        
+    <vex-page-layout-header [ngClass]="pageId=='Student Bulk Data Import'?'':'pb-16'" fxLayout="column" fxLayoutAlign="center start">        
         <vex-secondary-toolbar current={{pageTitle}} [schoolSettings]="studentSettings" [pages]="pages" (selectedPage)="getSelectedPage($event)" class="w-full">
             <vex-breadcrumbs [crumbs]="['Settings','Student Settings']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
-    <vex-page-layout-content class="-mt-6">
-        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+    <vex-page-layout-content [ngClass]="pageId=='Student Bulk Data Import'?'':'-mt-6'">
+        <mat-drawer-container class="bg-transparent flex-auto flex" [ngClass]="pageId=='Student Bulk Data Import'?'':'-mt-16'" >
             <mat-drawer-content class="flex-auto flex items-start">
                 <div  class="w-full p-0">
                     <div *ngIf="pageId=='Student Fields'">
@@ -13,6 +13,9 @@
                     </div>
                     <div *ngIf="pageId=='Enrollment Codes'">
                         <vex-enrollment-codes></vex-enrollment-codes>
+                    </div>
+                    <div *ngIf="pageId=='Student Bulk Data Import'">
+                        <vex-student-data-import></vex-student-data-import>
                     </div>
                 </div>
             </mat-drawer-content>

@@ -87,6 +87,7 @@ export class CourseVariableScheduleListModel {
         this.periodId=null;
         this.roomId=null;
         this.serial=0;
+        this.takeAttendance=false;
         this.createdBy= sessionStorage.getItem("email");
         this.updatedBy=sessionStorage.getItem("email");
         this.tenantId= sessionStorage.getItem("tenantId");

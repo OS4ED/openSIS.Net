@@ -1,19 +1,13 @@
-<div (mouseenter)="onMouseEnter()"
-     (mouseleave)="onMouseLeave()"
-     [class.collapsed]="collapsed"
-     [class.open]="collapsed && collapsedOpen$ | async"
-     class="sidenav flex flex-col">
+<div (mouseenter)="onMouseEnter()" (mouseleave)="onMouseLeave()" [class.collapsed]="collapsed"
+  [class.open]="collapsed && collapsedOpen$ | async" class="sidenav flex flex-col">
   <div class="sidenav-toolbar flex-none flex items-center">
     <!-- <img [src]="imageUrl$ | async" class="w-6 select-none flex-none">
     <h2 class="title ltr:pl-4 rtl:pr-4 select-none flex-auto">{{ title$ | async }}</h2> -->
     <img src="assets/img/logo-icon.png" class="w-10 select-none flex-none">
     <h2 class="title ltr:pl-4 rtl:pr-4 select-none flex-auto text-white font-normal text-2xl">openSIS</h2>
    
-    <button (click)="toggleCollapse()"
-            *ngIf="showCollapsePin$ | async"
-            class="w-8 h-8 -mr-2 leading-none flex-none hidden lg:block"
-            mat-icon-button
-            type="button">
+    <button (click)="toggleCollapse()" *ngIf="showCollapsePin$ | async"
+      class="expand-btn w-8 h-8 -mr-2 leading-none flex-none hidden lg:block" mat-icon-button type="button">
       <mat-icon *ngIf="!collapsed" [icIcon]="icCollapseSidebar" size="20px"></mat-icon>
       <mat-icon *ngIf="collapsed" [icIcon]="icExpandSidebar" size="20px"></mat-icon>
     </button>
@@ -66,3 +60,8 @@
     </div>
   </vex-scrollbar>
 </div>
+<button (click)="toggleCollapse()" *ngIf="showCollapsePin$ | async"
+  class="collapse-btn w-8 h-8 -mr-2 leading-none flex-none hidden lg:block" mat-icon-button type="button">
+  <mat-icon *ngIf="!collapsed" [icIcon]="icCollapseSidebar" size="20px"></mat-icon>
+  <mat-icon *ngIf="collapsed" [icIcon]="icExpandSidebar" size="20px"></mat-icon>
+</button>

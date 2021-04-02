@@ -58,9 +58,8 @@
         <table mat-table [dataSource]="courseSectionList" class="mat-elevation-z8 shadow-none">
             <ng-container matColumnDef="staffSelected">
                 <th mat-header-cell *matHeaderCellDef>
-                    <mat-checkbox [ngClass]="courseSectionList?.data.length>0?'':'hidden'" color="primary" (change)="$event ? masterToggle() : null"
-                        [checked]="selection.hasValue() && isAllSelected()"
-                        [indeterminate]="selection.hasValue() && !isAllSelected()"></mat-checkbox>
+                    <mat-checkbox #masterCheckBox [ngClass]="courseSectionList?.data.length>0?'':'hidden'" color="primary" (change)="$event ? masterToggle($event.checked) : null"
+                        [checked]="selection.hasValue() && isAllSelected()"></mat-checkbox>
                 </th>
                 <td mat-cell *matCellDef="let element">
                     <mat-checkbox color="primary" (click)="$event.stopPropagation()"

@@ -26,6 +26,8 @@ import icHospital from '@iconify/icons-ic/baseline-medical-services';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
+import { RolePermissionListViewModel } from '../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -42,6 +44,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   studentCreate = SchoolCreate;
   studentCreateMode: SchoolCreate = SchoolCreate.ADD;
   fieldsCategoryListView = new FieldsCategoryListView();
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
   currentCategory: number = 3; // because 3 is the id of general info.
   indexOfCategory: number = 0;
   icSchool = icSchool;
@@ -70,7 +73,8 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     private customFieldservice: CustomFieldService,
     private imageCropperService: ImageCropperService,
     private loaderService: LoaderService,
-    private cdr: ChangeDetectorRef) {
+    private cdr: ChangeDetectorRef,
+    private cryptoService: CryptoService) {
 
     this.layoutService.collapseSidenav();
     this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
@@ -95,6 +99,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.studentCreateMode = this.studentCreate.ADD
     this.studentId = this.studentService.getStudentId();
     if (this.studentId != null || this.studentId != undefined) {
@@ -157,13 +162,27 @@ export class AddStudentComponent implements OnInit, OnDestroy {
           }
         }
         else {
-          this.fieldsCategory = res.fieldsCategoryList;
-          this.studentAddModel.fieldsCategoryList= res.fieldsCategoryList;
+          this.fieldsCategory = this.checkViewPermission(res.fieldsCategoryList);
+          
+          this.studentAddModel.fieldsCategoryList= this.checkViewPermission(res.fieldsCategoryList);
           this.studentService.sendDetails(this.studentAddModel);
         }
       }
     }
     );
+  }
+  checkViewPermission(category){
+    category = category.filter((item) => {
+     for(let permission of this.permissionListViewModel.permissionList[2].permissionGroup.permissionCategory[0].permissionSubcategory){
+      if( item.title.toLowerCase()== permission.permissionSubcategoryName.toLowerCase()){
+        if(permission.rolePermission[0].canView==true){
+          return item;
+        }
+     }
+    }
+    });
+    this.currentCategory = category[0]?.categoryId;
+    return category;
   }
 
   changeTempCategory(){
@@ -175,7 +194,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.studentService.viewStudent(this.studentAddModel).subscribe(data => {
       this.studentAddModel = data;
       this.responseImage = this.studentAddModel.studentMaster.studentPhoto;
-      this.fieldsCategory = data.fieldsCategoryList;
+      this.fieldsCategory = this.checkViewPermission(data.fieldsCategoryList);
       this.studentAddModel.studentMaster.studentPhoto=null;
       this.studentService.sendDetails(this.studentAddModel);
       this.studentTitle = this.studentAddModel.studentMaster.firstGivenName + " " + this.studentAddModel.studentMaster.lastFamilyName;

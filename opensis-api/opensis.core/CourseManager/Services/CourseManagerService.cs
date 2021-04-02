@@ -517,6 +517,34 @@ namespace opensis.core.CourseManager.Services
             }
             return searchCourseSection;
         }
+
+        /// <summary>
+        /// Get All Staff Schedule In CourseSection
+        /// </summary>
+        /// <param name="staffListViewModel"></param>
+        /// <returns></returns>
+        public StaffListViewModel GetAllStaffScheduleInCourseSection(StaffListViewModel staffListViewModel)
+        {
+            StaffListViewModel staffListView = new StaffListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(staffListViewModel._tenantName, staffListViewModel._token))
+                {
+                    staffListView = this.courseManagerRepository.GetAllStaffScheduleInCourseSection(staffListViewModel);
+                }
+                else
+                {
+                    staffListView._failure = true;
+                    staffListView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                staffListView._failure = true;
+                staffListView._message = es.Message;
+            }
+            return staffListView;
+        }
     }
 }
  

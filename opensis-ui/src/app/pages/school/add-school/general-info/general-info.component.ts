@@ -478,6 +478,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
           this.snackbar.open('General Info Submission Successful.', '', {
             duration: 10000
           });
+          this.schoolService.setSchoolId(data.schoolMaster.schoolId);
           this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
           let schoolIdToString = data.schoolMaster.schoolId.toString();
           sessionStorage.setItem("selectedSchoolId", schoolIdToString);

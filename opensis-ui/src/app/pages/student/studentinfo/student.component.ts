@@ -393,7 +393,7 @@ export class StudentComponent implements OnInit,OnDestroy {
              return {
                 Name: x.firstGivenName + middleName + x.lastFamilyName,
                 'Student ID': x.studentInternalId,
-                'Alternate Id': x.alternateId,
+                'Alternate ID': x.alternateId,
                 'Grade Level': x.studentEnrollment[0]?.gradeLevelTitle,
                 Email: x.schoolEmail,
                 Telephone: x.mobilePhone

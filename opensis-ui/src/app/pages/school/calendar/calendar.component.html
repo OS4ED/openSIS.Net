@@ -7,7 +7,7 @@
   </vex-page-layout-header>
   <div class="-mt-16 absolute w-full" vexContainer>
     <mat-drawer-container class="bg-transparent" vexContainer>
-      <mat-card class="mb-5 mx-6 pt-3 px-0 pb-0">
+      <mat-card class="mb-5 mx-6 p-0">
         <div class="flex items-center py-0 px-4" fxLayout="row" fxLayoutAlign="center center">
 
           <div class="flex-auto">
@@ -37,7 +37,7 @@
             <ic-icon [icon]="icDelete" class="text-2xl" inline="true"></ic-icon>
           </a>
         </div>
-        <hr *ngIf="showCalendarView" class="-mx-4" />
+        <hr *ngIf="showCalendarView" />
         <div class="flex-auto flex flex-col sm:flex-row justify-between items-center my-3  px-4">
           <div *ngIf="showCalendarView" class="headline text-md text-gray">
             {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</div>
@@ -77,7 +77,7 @@
             </div>
           </div>
         </ng-template>
-        <div *ngIf="showCalendarView">
+        <div *ngIf="showCalendarView" class="calendar-wrap border-t">
           <vex-scrollbar *ngIf="events$ | async; let events" [ngSwitch]="view" class="px-0 shadow flex-auto relative"
             vexContainer>
             <mwl-calendar-month-view *ngSwitchCase="'month'" [refresh]="refresh"

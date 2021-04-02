@@ -202,7 +202,7 @@ export class GetMarkingPeriodTitleListModel extends CommonField{
         }
 }
 
-class MarkingPeriodTitleList{
+export class MarkingPeriodTitleList{
     value:string;
     text:string;
     startDate:string;

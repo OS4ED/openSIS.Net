@@ -53,6 +53,15 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
     }
     else{
       this.weekArray = this.calendar.days.split('').map(x => +x);
+      let namesOfDayById=[];
+      this.weekArray?.map((item)=>{
+        this.weeks.map((week)=>{
+          if(item==week.id){
+            namesOfDayById.push(week.name);
+          }
+        })
+      });
+      this.weekArray=namesOfDayById;
     }
   }
 
@@ -129,15 +138,15 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
   }
 
   
-  selectDays(event:Event, id) {
+  selectDays(event:Event, name) {
     event.preventDefault();
-    if(this.weekArray.includes(id)){
-      var index = this.activeDays.indexOf(id);
+    if(this.weekArray.includes(name)){
+      var index = this.activeDays.indexOf(name);
       if(index>-1){
         this.activeDays.splice(index,1);
       }
       else{
-        this.activeDays.push(id);
+        this.activeDays.push(name);
       }
     }
   }

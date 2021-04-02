@@ -158,7 +158,7 @@
                   </ng-container>
         
                   <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
-                  <mat-row cdkDrag *matRowDef="let row; columns: visibleColumns" @fadeInUp></mat-row>
+                  <mat-row cdkDrag cdkDragLockAxis="y" *matRowDef="let row; columns: visibleColumns" @fadeInUp></mat-row>
                   
                   <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
                   <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="blockPeriodList?.data.length!=0"></tr>

@@ -38,6 +38,7 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
     MatProgressSpinnerModule,
     FormsModule,
     NgxDropzoneModule
-  ]
+  ],
+  exports:[StaffDataImportComponent]
 })
 export class StaffDataImportModule { }

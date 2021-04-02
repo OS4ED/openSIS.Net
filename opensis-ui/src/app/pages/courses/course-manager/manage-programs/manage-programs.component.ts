@@ -12,8 +12,9 @@ import {MatSnackBar} from  '@angular/material/snack-bar';
 import { FormBuilder,NgForm,FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
-
 import { MatDialog } from '@angular/material/dialog';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-manage-programs',
   templateUrl: './manage-programs.component.html',
@@ -42,6 +43,10 @@ export class ManageProgramsComponent implements OnInit {
   updateProgramModel: UpdateProgramModel = new UpdateProgramModel();
   massUpdateProgramModel: MassUpdateProgramModel = new MassUpdateProgramModel();
   deleteProgramModel: DeleteProgramModel = new DeleteProgramModel();
+  editPermission:boolean= false;
+  permissionList= [];
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup:RolePermissionViewModel= new RolePermissionViewModel();
   hideinput = {};
   hideDiv={};
   constructor(
@@ -50,13 +55,19 @@ export class ManageProgramsComponent implements OnInit {
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
     public translateService:TranslateService,
-    private dialog: MatDialog
+    private dialog: MatDialog,
+    private cryptoService: CryptoService
    ) { 
       translateService.use('en');   
     }
 
   ngOnInit(): void {  
     this.getAllProgramList();
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 6);
+    let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 12);
+    this.editPermission = permissionCategory.rolePermission[0].canEdit;
+     
   }
   
   getAllProgramList(){   

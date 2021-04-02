@@ -13,7 +13,7 @@ export class ViewGeneralInfoComponent implements OnInit {
   @Input() schoolCreateMode: SchoolCreate;
   @Input() categoryId;
   @Input() schoolViewDetails: SchoolAddViewModel;
-  module = "School";
+  module = 'School';
   status: string;
   mapUrl:string;
   mailText:string;
@@ -35,43 +35,42 @@ export class ViewGeneralInfoComponent implements OnInit {
     let zip = this.schoolViewDetails.schoolMaster.zip;
     let longitude=this.schoolViewDetails.schoolMaster.longitude;
     let latitude=this.schoolViewDetails.schoolMaster.latitude;
-    if(stAdd1 && country && city && zip){
-      this.mapUrl=`https://maps.google.com/?q=${stAdd1},${stAdd2},${city},${state},${zip},${country}`
-      window.open(this.mapUrl,'_blank');
-    }else{
-      this.snackbar.open('Invalid School Address', 'Ok', {
-        duration: 5000
-      });
-    }
+    this.mapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${zip?','+zip:''}${country?','+country:''}`;
+    window.open(this.mapUrl, '_blank');
   }
   goToWebsite(){
-    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].website, "_blank");
+    this.urlFormatter(this.schoolViewDetails?.schoolMaster.schoolDetail[0].website);
   }
   goToTwitter(){
-    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].twitter, "_blank");
-    
+    this.urlFormatter(this.schoolViewDetails?.schoolMaster.schoolDetail[0].twitter)
   }
   goToFacebook(){
-    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].facebook, "_blank");
-   
+    this.urlFormatter(this.schoolViewDetails?.schoolMaster.schoolDetail[0].facebook)
   }
 
-  goToInstagram(){
-    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].instagram, "_blank");
-    
+  goToInstagram(){ 
+    this.urlFormatter(this.schoolViewDetails?.schoolMaster.schoolDetail[0].instagram)
   }
   goToYoutube(){
-    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].youtube, "_blank");
-   
+    this.urlFormatter(this.schoolViewDetails?.schoolMaster.schoolDetail[0].youtube)
   }
   goToLinkedin(){
-    window.open(this.schoolViewDetails?.schoolMaster.schoolDetail[0].linkedIn, "_blank");
-   
+    this.urlFormatter(this.schoolViewDetails?.schoolMaster.schoolDetail[0].linkedIn);
   }
   goToEmail(){
     this.mailText = "mailto:"+this.schoolViewDetails?.schoolMaster.schoolDetail[0].email;
     window.open(this.mailText, "_blank");
     
+  }
+
+  urlFormatter(fullUrl){
+    let arrUrl=fullUrl.split(':'); 
+    if(arrUrl.length>1){
+      window.open(fullUrl, "_blank");
+    }
+    else{
+      window.open(`http://${fullUrl}`, "_blank");
+    }
   }
 
 }

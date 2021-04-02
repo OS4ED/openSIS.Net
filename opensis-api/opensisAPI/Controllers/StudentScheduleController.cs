@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using opensis.core.StudentSchedule.Interfaces;
+using opensis.data.Models;
 using opensis.data.ViewModels.StudentSchedule;
 using System;
 using System.Collections.Generic;
@@ -39,12 +40,12 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPost("searchScheduledStudentForGroupDrop")]
-        public ActionResult<ScheduleStudentListViewModel> SearchScheduledStudentForGroupDrop(ScheduleStudentListViewModel scheduleStudentListViewModel)
+        public ActionResult<ScheduleStudentListViewModel> SearchScheduledStudentForGroupDrop(PageResult pageResult)
         {
             ScheduleStudentListViewModel ScheduledStudentListView = new ScheduleStudentListViewModel();
             try
             {
-                ScheduledStudentListView = _studentScheduleService.SearchScheduledStudentForGroupDrop(scheduleStudentListViewModel);
+                ScheduledStudentListView = _studentScheduleService.SearchScheduledStudentForGroupDrop(pageResult);
             }
             catch (Exception es)
             {
@@ -84,6 +85,23 @@ namespace opensisAPI.Controllers
                 studentScheduleReportView._message = es.Message;
             }
             return studentScheduleReportView;
+        }
+
+        [HttpPost("deleteStudentScheduleReport")]
+        public ActionResult<StudentCourseSectionScheduleAddViewModel> DeleteStudentScheduleReport(StudentCourseSectionScheduleAddViewModel studentCourseSectionScheduleAddViewModel)
+        {
+            StudentCourseSectionScheduleAddViewModel StudentCourseSectionScheduleDelete = new StudentCourseSectionScheduleAddViewModel();
+            try
+            {
+                StudentCourseSectionScheduleDelete = _studentScheduleService.DeleteStudentScheduleReport(studentCourseSectionScheduleAddViewModel);
+
+            }
+            catch (Exception es)
+            {
+                StudentCourseSectionScheduleDelete._failure = true;
+                StudentCourseSectionScheduleDelete._message = es.Message;
+            }
+            return StudentCourseSectionScheduleDelete;
         }
     }
 }

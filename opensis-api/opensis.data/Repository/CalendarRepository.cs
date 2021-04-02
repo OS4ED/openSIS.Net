@@ -101,13 +101,23 @@ namespace opensis.data.Repository
             {
                 var calendarRepository = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == calendar.schoolCalendar.CalenderId);
 
-                var enrollmentCalendar = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == calendar.schoolCalendar.CalenderId);
+                var enrollmentCalendar = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalenderId == calendar.schoolCalendar.CalenderId && x.IsActive==true);
 
-                if(enrollmentCalendar!= null && calendar.schoolCalendar.DefaultCalender==false)
+                if(enrollmentCalendar!= null)
                 {
-                    calendar.schoolCalendar = null;
-                    calendar._failure = true;
-                    calendar._message = "Default Calendar cannot be updated because it has enrollment.";
+                    calendarRepository.Title = calendar.schoolCalendar.Title;
+                    calendar._message = "Calendar Updated Successfully";
+                    this.context.SaveChanges();
+                    return calendar;
+                }
+
+                var courseSectionCalendar = this.context?.CourseSection.FirstOrDefault(x => x.TenantId == calendar.schoolCalendar.TenantId && x.SchoolId == calendar.schoolCalendar.SchoolId && x.CalendarId == calendar.schoolCalendar.CalenderId && x.IsActive==true);
+
+                if(courseSectionCalendar != null)
+                {
+                    calendarRepository.Title = calendar.schoolCalendar.Title;
+                    calendar._message = "Calendar Updated Successfully";
+                    this.context.SaveChanges();
                     return calendar;
                 }
 

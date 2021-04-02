@@ -55,7 +55,7 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
   columns = [
     { label: 'Name', property: 'lastFamilyName', type: 'text', visible: true },
     { label: 'Staff ID', property: 'staffInternalId', type: 'text', visible: true },
-    { label: 'openSIS Profile', property: 'profile', type: 'text', visible: true },
+    { label: 'Profile', property: 'profile', type: 'text', visible: true },
     { label: 'Job Title', property: 'jobTitle', type: 'text', visible: true },
     { label: 'School Email', property: 'schoolEmail', type: 'text', visible: true },
     { label: 'Mobile Phone', property: 'mobilePhone', type: 'number', visible: true },
@@ -269,11 +269,11 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
               let middleName=x.middleName==null?' ':' '+x.middleName+' ';
               return {
                Name: x.firstGivenName+middleName+x.lastFamilyName,
-               StaffId: x.staffInternalId,
-               openSisProfile: x.profile,
-               JobTitle: x.jobTitle,
-               SchoolEmail:x.schoolEmail,
-               MobilePhone:x.mobilePhone
+               'Staff ID': x.staffInternalId,
+               Profile: x.profile,
+               'Job Title': x.jobTitle,
+               'School Email':x.schoolEmail,
+               'Mobile Phone':x.mobilePhone
              }
             });
             this.excelService.exportAsExcelFile(staffList,'Staffs_List_')

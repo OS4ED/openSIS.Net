@@ -34,7 +34,7 @@ Please Select a Calendar.
         <h4 class="font-bold mb-2">{{'meetingDays' | translate}}</h4>
         <div class="mb-6">    
             <span *ngFor="let day of weeks">
-                <mat-checkbox class="mr-5" [checked]="activeDays.indexOf(day.id) != -1" [disabled]="weekArray.indexOf(day.id) == -1" (click)="selectDays($event,day.id)"
+                <mat-checkbox class="mr-5" [checked]="activeDays.indexOf(day.name) != -1" [disabled]="weekArray.indexOf(day.name) == -1" (click)="selectDays($event,day.name)"
                     color="primary">
                     {{day.name | translate}}</mat-checkbox>
             </span>  

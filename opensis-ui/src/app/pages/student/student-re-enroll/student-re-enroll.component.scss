@@ -1,0 +1,22 @@
+.hide{
+    display: none;
+  }
+
+.table-search {
+  width: 70px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    width: 180px;
+  }
+}
+.check-wrapper {
+    width: 24px;
+    background: #ffffff;
+    height: 24px;
+    border-radius: 50%;
+    display: inline-block;
+    position: absolute;
+    right: -3px;
+    bottom: 23px;
+}

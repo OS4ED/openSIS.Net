@@ -1,6 +1,163 @@
+<!-- Fixed Schedule -->
+ <div *ngIf="scheduleDetails.scheduleType=='Fixed Schedule'">
+    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+        <h2 class="headline m-0" fxFlex="auto">
+            {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
+        </h2>
+        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+            <mat-icon [icIcon]="icClose"></mat-icon>
+        </button>
+    </div>
+    <mat-divider class="-mx-6 text-border"></mat-divider>
+<p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : Fixed Scheduling</p>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+    <ul class="grid sm:grid-cols-2 sm:col-gap-6 row-gap-6 sm:row-gap-8 my-6 px-6">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'room' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                {{scheduleDetails.courseFixedSchedule.rooms?.title}}</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'period' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                {{scheduleDetails.courseFixedSchedule.blockPeriod?.periodTitle}}</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'meetingDays' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                {{scheduleDetails.meetingDays|weekDay}}</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'takeAttendance' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                {{scheduleDetails.takeAttendanceForFixedSchedule?('yes'|translate):('no'|translate)}}
+            </p>
+        </li>
+    </ul>
+</div> 
+
+<!-- Variable Schedule -->
+ <div *ngIf="scheduleDetails.scheduleType=='Variable Schedule'">
+ <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : {{scheduleDetails.scheduleType}}</p>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<div class="-mx-6 border-t overflow-auto">
+    <table class="w-full calendar-schedule-table">
+        <thead>
+            <tr>
+                <th class="whitespace-nowrap">Day</th>
+                <th>Period</th>
+                <th>Room</th>
+                <th class="whitespace-nowrap">Take Attendance</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let details of scheduleDetails.courseVariableSchedule">
+                <td>{{details.day}}</td>
+                <td>{{details.blockPeriod.periodTitle}}</td>
+                <td>{{details.rooms.title}}</td>
+                <td>{{details.takeAttendance|EmtyBooleanCheckPipe}}</td>
+            </tr>
+        </tbody>
+    </table>
+</div> 
+</div> 
+
+<!-- Calendar Schedule -->
+<div *ngIf="scheduleDetails.scheduleType=='Calendar Schedule'" class="relative">
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
     <h2 class="headline m-0" fxFlex="auto">
-        Geometry - GEOM003
+        {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : Calendar Schedule</p>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<div class="flex justify-between items-center">
+    <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
+        <mat-icon>west</mat-icon>
+    </button>
+    <h3  class="text-blue text-center"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+    
+    <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarNextView>
+        <mat-icon>east</mat-icon>
+    </button>
+</div>
+    <hr>
+<ng-template #customCellTemplate let-day="day" let-locale="locale">
+    <div class="cal-cell-top">
+        <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+    </div>
+    <div class="cal-events px-2 pb-2 justify-center" *ngIf="day.events.length > 0">
+        <div [ngClass]="event.meta.randomColor" (click)="viewEvent(event)" class="text-xs px-2 py-1 rounded text-white" *ngFor="let event of day.events;let i = index;">
+
+            <mat-icon *ngIf="event.allDay" class="align-middle text-xs inline-block">check</mat-icon><span class="align-middle">{{ event.title }}</span>
+
+        </div>
+    </div>
+</ng-template>
+<!--Class Details-->
+<div class="absolute w-full h-full bg-gray-light z-50 p-10" *ngIf="calendarDayDetails">
+    
+    <div class="shadow-lg w-full bg-white rounded p-6">
+        <div class="flex justify-between items-center">
+          <div class="pb-4">
+              <h3>{{'classDetails' | translate}}</h3>
+          </div>
+          <button class="text-secondary" (click)="closeDetails()" mat-icon-button type="button">
+              <mat-icon [icIcon]="icClose"></mat-icon>
+          </button>
+        </div>
+          <ul class="md:grid md:grid-cols-2 col-gap-8 mt-3 md:row-gap-10">
+              <li>
+                  <label class="text-sm leading-5 text-gray">{{'date' | translate}}</label>
+                  <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{classdate | date}}</p>
+              </li>
+              <li>
+                  <label class="text-sm leading-5 text-gray">{{'period' | translate}}</label>
+                  <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{classPeriodName}}</p>
+              </li>
+              <li>
+                  <label class="text-sm leading-5 text-gray">{{'room' | translate}}</label>
+                  <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{classRoomName}}</p>
+              </li>
+              <li>
+                  <label class="text-sm leading-5 text-gray">{{'takeAttendance' | translate}}</label>
+                  <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{classtakeAttendance}}</p>
+              </li>
+          </ul>
+    </div>
+     
+  </div>
+  <!--End Class Details-->
+<div [ngSwitch]="view">
+    <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate"
+        [events]="events" [refresh]="refresh" (beforeViewRender)="beforeMonthViewRender($event)"
+        [cellTemplate]="customCellTemplate" [weekendDays]="weekendDays">
+    </mwl-calendar-month-view>
+</div>
+</div>
+
+<!-- Block Schedule -->
+<div *ngIf="scheduleDetails.scheduleType=='Block Schedule'">
+
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
     </h2>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
@@ -19,24 +176,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Mon-Thu</td>
-                <td>Period 1</td>
-                <td>Room 101</td>
-                <td>Yes</td>
-            </tr>
-            <tr>
-                <td>Mon-Thu</td>
-                <td>Period 5</td>
-                <td>Room 101</td>
-                <td>No</td>
-            </tr>
-            <tr>
-                <td>Tue-Fri</td>
-                <td>Period 5</td>
-                <td>Room 105</td>
-                <td>No</td>
+            <tr *ngFor="let blockSchedule of scheduleDetails.courseBlockSchedule">
+                <td>{{blockSchedule.block?.blockTitle}}</td>
+                <td>{{blockSchedule.blockPeriod?.periodTitle}}</td>
+                <td>{{blockSchedule.rooms.title}}</td>
+                <td>{{blockSchedule.takeAttendance | EmtyBooleanCheckPipe}}</td>
             </tr>
         </tbody>
     </table>
-</div>
+</div> 
+</div> 

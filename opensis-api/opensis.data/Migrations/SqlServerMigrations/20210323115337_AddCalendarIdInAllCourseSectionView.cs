@@ -19,7 +19,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                                 dbo.course_fixed_schedule.room_id AS fixed_room_id, dbo.course_fixed_schedule.period_id AS fixed_period_id, dbo.course_variable_schedule.day AS var_day, dbo.course_variable_schedule.period_id AS var_period_id, 
                                 dbo.course_variable_schedule.room_id AS var_room_id, dbo.course_calendar_schedule.date AS cal_date, dbo.course_calendar_schedule.period_id AS cal_period_id, dbo.course_calendar_schedule.room_id AS cal_room_id, 
                                 dbo.course_block_schedule.period_id AS block_period_id, dbo.course_block_schedule.room_id AS block_room_id, dbo.course_section.is_active, dbo.course.course_grade_level, dbo.course_section.grade_scale_id, 
-                                dbo.course_section.allow_teacher_conflict, dbo.course_section.allow_student_conflict, dbo.course_section.calendar_id
+                                dbo.course_section.allow_teacher_conflict, dbo.course_section.allow_student_conflict, dbo.course_section.calendar_id, dbo.course_section.attendance_taken
                     FROM dbo.course INNER JOIN
                                 dbo.course_section ON dbo.course.tenant_id = dbo.course_section.tenant_id AND dbo.course.school_id = dbo.course_section.school_id AND dbo.course.course_id = dbo.course_section.course_id LEFT OUTER JOIN
                                 dbo.course_fixed_schedule ON dbo.course_section.tenant_id = dbo.course_fixed_schedule.tenant_id AND dbo.course_section.school_id = dbo.course_fixed_schedule.school_id AND 

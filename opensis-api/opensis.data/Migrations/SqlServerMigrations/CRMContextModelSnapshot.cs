@@ -2324,9 +2324,9 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.Property<string>("MeetingDays")
                         .HasColumnName("meeting_days")
-                        .HasColumnType("varchar(13)")
+                        .HasColumnType("varchar(100)")
                         .HasComment("Starting Sunday as 0, 0|1|2|3|4|5|6")
-                        .HasMaxLength(13)
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<bool?>("OnlineClassRoom")
@@ -5945,15 +5945,13 @@ namespace opensis.data.Migrations.SqlServerMigrations
 
                     b.Property<string>("Affiliation")
                         .HasColumnName("affiliation")
-                        .HasColumnType("nchar(100)")
-                        .IsFixedLength(true)
-                        .HasMaxLength(100);
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
 
                     b.Property<string>("Associations")
                         .HasColumnName("associations")
-                        .HasColumnType("nchar(100)")
-                        .IsFixedLength(true)
-                        .HasMaxLength(100);
+                        .HasColumnType("varchar(max)")
+                        .IsUnicode(false);
 
                     b.Property<string>("CommonToiletAccessibility")
                         .HasColumnName("common_toilet_accessibility")
@@ -6827,11 +6825,15 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("duration_start_date")
                         .HasColumnType("date");
 
+                    b.Property<bool?>("IsAssigned")
+                        .HasColumnName("is_assigned")
+                        .HasColumnType("bit");
+
                     b.Property<string>("MeetingDays")
                         .HasColumnName("meeting_days")
-                        .HasColumnType("varchar(13)")
+                        .HasColumnType("varchar(100)")
                         .HasComment("Starting Sunday as 0, 0|1|2|3|4|5|6")
-                        .HasMaxLength(13)
+                        .HasMaxLength(100)
                         .IsUnicode(false);
 
                     b.Property<int?>("QtrMarkingPeriodId")
@@ -7562,7 +7564,7 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasMaxLength(50)
                         .IsUnicode(false);
 
-                    b.Property<int>("FirstLanguageId")
+                    b.Property<int?>("FirstLanguageId")
                         .HasColumnName("first_language_id")
                         .HasColumnType("int");
 

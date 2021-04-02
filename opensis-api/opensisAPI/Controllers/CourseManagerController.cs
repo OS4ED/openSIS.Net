@@ -341,5 +341,21 @@ namespace opensisAPI.Controllers
             }
             return searchCourseSection;
         }
+
+        [HttpPost("getAllStaffScheduleInCourseSection")]
+        public ActionResult<StaffListViewModel> GetAllStaffScheduleInCourseSection(StaffListViewModel staffListViewModel)
+        {
+            StaffListViewModel staffListView = new StaffListViewModel();
+            try
+            {
+                staffListView = _courseManagerService.GetAllStaffScheduleInCourseSection(staffListViewModel);
+            }
+            catch (Exception es)
+            {
+                staffListView._failure = true;
+                staffListView._message = es.Message;
+            }
+            return staffListView;
+        }
     }
 }

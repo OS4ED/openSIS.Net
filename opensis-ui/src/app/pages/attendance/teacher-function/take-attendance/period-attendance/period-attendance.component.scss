@@ -1,0 +1,132 @@
+.table-sticky {
+  width: 100%;
+  max-width: 100%;
+  overflow: auto;
+
+  table {
+    width: 100%;
+
+    .mat-row:hover {
+      @apply bg-skyblue-light;
+    }
+
+    td,
+    th {
+      @apply px-6;
+      @apply py-1;
+    }
+
+    th:first-child,
+    .mat-table-sticky:first-child {
+      border-right: 1px solid #e0e0e0;
+    }
+
+    th:last-child,
+    td.mat-table-sticky:last-child {
+      border-left: 1px solid #e0e0e0;
+    }
+    th:last-child {
+      width:24px;
+    }
+    td.mat-table-sticky:last-child {
+      text-align: center;
+    }
+  }
+}
+.custom-radios {
+  display: inline-block;
+
+  input[type="radio"] {
+    position: absolute;
+    opacity: 0;
+    cursor: pointer;
+
+    &:checked + .checkmark-container.present {
+      background-color: #4db050;
+      border: 2px solid #4db050;
+      color: #fff;
+    }
+    &:checked + .checkmark-container.absent {
+      background-color: #db2827;
+      border: 2px solid #db2827;
+      color: #fff;
+    }
+    &:checked + .checkmark-container.tardy {
+      background-color: #fd9800;
+      border: 2px solid #fd9800;
+      color: #fff;
+    }
+    &:checked + .checkmark-container .checkmark {
+      display: block;
+      background-color: #fff;
+      border: 2px solid #fff;
+    }
+    &:checked + .checkmark-container,
+    &:checked + .checkmark-container .checkmark:after {
+      display: inline-block;
+    }
+  }
+
+  .checkmark-container {
+    position: relative;
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    background: #fafafa;
+    padding: 6px 10px 6px 35px;
+    margin-right: 10px;
+    border-radius: 4px;
+    font-size: 15px;
+    width: 100px;
+
+    span.checkmark {
+      position: absolute;
+      top: 8px;
+      left: 7px;
+      height: 18px;
+      width: 18px;
+      background-color: #eee;
+      border-radius: 50%;
+
+      &:after {
+        content: "";
+        position: absolute;
+        display: none;
+        top: 0px;
+        left: 4px;
+        width: 6px;
+        height: 12px;
+        border: solid #000000;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+    }
+  }
+
+  .checkmark-container.present {
+    border: 2px solid #4db050;
+    color: #4db050;
+
+    span.checkmark {
+      border: 2px solid #4db050;
+    }
+  }
+  .checkmark-container.absent {
+    border: 2px solid #db2827;
+    color: #db2827;
+
+    span.checkmark {
+      border: 2px solid #db2827;
+    }
+  }
+  .checkmark-container.tardy {
+    border: 2px solid #fd9800;
+    color: #fd9800;
+
+    span.checkmark {
+      border: 2px solid #fd9800;
+    }
+  }
+}

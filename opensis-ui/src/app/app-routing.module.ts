@@ -175,7 +175,27 @@ const routes: Routes = [
             canActivate: [AuthGuard,RolePermissionGuard]            
           }
         ]
-      },         
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'take-attendance',
+            loadChildren: () => import('./pages/attendance/teacher-function/take-attendance/take-attendance.module').then(m => m.TakeAttendanceModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'student/student-re-enroll',
+            loadChildren: () => import('./pages/student/student-re-enroll/student-re-enroll.module').then(m => m.StudentReEnrollModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },        
     ]
   },
 ];

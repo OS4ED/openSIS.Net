@@ -14,7 +14,7 @@ namespace opensis.data.Models
         public string FirstGivenName { get; set; }
         public string MiddleName { get; set; }
         public string LastFamilyName { get; set; }
-        public int FirstLanguageId { get; set; }
+        public int? FirstLanguageId { get; set; }
         public int? GradeId { get; set; }
         public int CourseId { get; set; }
         public int CourseSectionId { get; set; }

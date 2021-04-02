@@ -2,12 +2,16 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddStudentComponent } from './add-student/add-student.component';
 import { AddCourseSectionComponent } from './add-course-section/add-course-section.component';
-import { ScheduleReport } from '../../../models/scheduleReportModel';
 import { TranslateService } from '@ngx-translate/core';
-import { StudentScheduleService } from 'src/app/services/student-schedule.service';
-import { StudentCourseSectionScheduleAddViewModel } from 'src/app/models/studentCourseSectionScheduleAddViewModel';
+import { StudentScheduleService } from '../../../services/student-schedule.service';
+import { StudentCourseSectionScheduleAddViewModel, StudentScheduleReportViewModel } from 'src/app/models/studentCourseSectionScheduleAddViewModel';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { LoaderService } from '../../../services/loader.service';
+import { MatTableDataSource } from '@angular/material/table';
+import { ExcelService } from '../../../services/excel.service';
+import { SharedFunction } from '../../shared/shared-function';
+import { MatSnackBar } from '@angular/material/snack-bar';
 
 @Component({
   selector: 'vex-schedule-student',
@@ -16,39 +20,47 @@ import { Subject } from 'rxjs';
 })
 export class ScheduleStudentComponent implements OnInit, OnDestroy {
   studentList = [];
+  viewReport: boolean = false;
+  showReportTable: boolean = false;
   courseSectionList = [];
   showStudentCount: boolean = false;
   showCourseSectionCount: boolean = false;
   destroySubject$: Subject<void> = new Subject();
   studentCourseSectionScheduleAddViewModel: StudentCourseSectionScheduleAddViewModel = new StudentCourseSectionScheduleAddViewModel();
- 
-  scheduleReport: ScheduleReport[] = [
-    { studentName: 'Danielle Boucher', studentId: '456123', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'Andrew Brown', studentId: '543126', geom001: true, algb001: true, whs05: true, lsc03: false },
-    { studentName: 'Lian Fang', studentId: '745632', geom001: true, algb001: false, whs05: true, lsc03: true },
-    { studentName: 'Amelia Jones', studentId: '766123', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'James Millar', studentId: '673126', geom001: true, algb001: true, whs05: true, lsc03: false },
-    { studentName: 'Lian Fang', studentId: '745632', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'Danielle Boucher', studentId: '456123', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'Andrew Brown', studentId: '543126', geom001: true, algb001: true, whs05: false, lsc03: false },
-    { studentName: 'Lian Fang', studentId: '745632', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'Amelia Jones', studentId: '766123', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'James Millar', studentId: '673126', geom001: true, algb001: true, whs05: true, lsc03: false },
-    { studentName: 'Lian Fang', studentId: '745632', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'Danielle Boucher', studentId: '456123', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'Andrew Brown', studentId: '543126', geom001: true, algb001: true, whs05: false, lsc03: false },
-    { studentName: 'Lian Fang', studentId: '745632', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'Amelia Jones', studentId: '766123', geom001: true, algb001: true, whs05: true, lsc03: true },
-    { studentName: 'James Millar', studentId: '673126', geom001: true, algb001: true, whs05: true, lsc03: false },
-    { studentName: 'Lian Fang', studentId: '745632', geom001: true, algb001: false, whs05: true, lsc03: true }
-  ];
-  displayedColumns: string[] = ['studentName', 'studentId', 'geom001', 'algb001', 'whs05', 'lsc03'];
+  studentScheduleReportViewModel: StudentScheduleReportViewModel = new StudentScheduleReportViewModel();
+  loading: boolean;
+  showCard: boolean = false;
+  scheduleReport: MatTableDataSource<any>;
+  displayedColumns: string[];
   constructor(private dialog: MatDialog, public translateService: TranslateService,
-    private studentScheduleService: StudentScheduleService) {
+    private studentScheduleService: StudentScheduleService,
+    private loaderService: LoaderService,
+    private excelService: ExcelService,
+    private snackbar: MatSnackBar) {
     translateService.use('en');
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+      this.loading = val;
+    });
   }
 
   ngOnInit(): void {
+  }
+
+  viewScheduledReport() {
+    this.studentScheduleService.studentScheduleReport(this.studentScheduleReportViewModel).subscribe(data => {
+      if (data._failure) {
+
+      }
+      else {
+        if (data.scheduleReport.length > 0) {
+          this.showReportTable = true;
+        }
+        this.displayedColumns = Object.keys(data.scheduleReport[0])
+
+        this.scheduleReport = new MatTableDataSource(data.scheduleReport);
+      }
+
+    });
   }
 
   selectStudent() {
@@ -56,27 +68,17 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
       width: '900px'
     }).afterClosed().subscribe((data) => {
       this.studentList = data;
-      if (this.studentList.length > 0) {
+      if (this.studentList?.length > 0) {
         this.showStudentCount = true;
-      }
-    });
-  }
-
-  scheduleStudent() {
-    this.studentCourseSectionScheduleAddViewModel.courseSectionList = this.courseSectionList;
-    this.studentCourseSectionScheduleAddViewModel.studentMasterList = this.studentList;
-    this.studentCourseSectionScheduleAddViewModel.createdBy = sessionStorage.getItem('user');
-    this.studentScheduleService.addStudentCourseSectionSchedule(this.studentCourseSectionScheduleAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (data._failure) {
-
+        this.viewReport = false;
+        this.showCard = false;
       }
       else {
-        this.studentCourseSectionScheduleAddViewModel = data;
+        this.showStudentCount = false;
+        this.showCard = false;
+        this.viewReport = false;
       }
-
     });
-
-
   }
 
   selectCourseSection() {
@@ -84,9 +86,77 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
       width: '900px'
     }).afterClosed().subscribe((data) => {
       this.courseSectionList = data;
-      if (this.courseSectionList.length > 0) {
+      if (this.courseSectionList?.length > 0) {
         this.showCourseSectionCount = true;
+        this.viewReport = false;
+        this.showCard = false;
       }
+      else {
+        this.showCourseSectionCount = false;
+        this.showCard = false;
+        this.viewReport = false;
+      }
+    });
+  }
+
+  scheduleStudent() {
+    this.showCard = true;
+    this.studentCourseSectionScheduleAddViewModel.courseSectionList = this.courseSectionList;
+    this.studentCourseSectionScheduleAddViewModel.studentMasterList = this.studentList;
+    this.studentCourseSectionScheduleAddViewModel.createdBy = sessionStorage.getItem('user');
+    this.studentScheduleService.addStudentCourseSectionSchedule(this.studentCourseSectionScheduleAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
+      if (data._failure) {
+        this.snackbar.open('Failed to schedule student', '', {
+          duration: 5000
+        });
+      }
+      else {
+        this.studentCourseSectionScheduleAddViewModel = data;
+        this.studentCourseSectionScheduleAddViewModel.conflictMessage = data.conflictMessage;
+        this.viewReport = true;
+      }
+    });
+  }
+
+  refreshAll() {
+    this.studentList=[];
+    this.courseSectionList=[];
+    this.showStudentCount = false;
+    this.showCourseSectionCount = false;
+    this.showCard = false;
+    this.viewReport = false;
+    this.showReportTable= false;
+  }
+
+  viewExcelReport() {
+
+    this.studentScheduleService.studentScheduleReport(this.studentScheduleReportViewModel).subscribe(data => {
+      if (data._failure) {
+
+      }
+      else {
+        let reportData = data.scheduleReport;
+        for (let report of reportData) {
+          for (var key in report) {
+            if (report.hasOwnProperty(key)) {
+              if (report[key].split('|')[0].includes('False')) {
+                report[key] = report[key].split('|')[1].trim()
+              } else if (report[key].split('|')[0].includes('True')) {
+                report[key] = ''
+              }
+            }
+          }
+        }
+        if (reportData.length > 0) {
+          this.excelService.exportAsExcelFile(reportData, 'Schedule_Report_List_')
+        }
+        else {
+          this.snackbar.open('No Records Found. Failed to Export Schedule Report', '', {
+            duration: 5000
+          });
+        }
+      }
+
     });
   }
 

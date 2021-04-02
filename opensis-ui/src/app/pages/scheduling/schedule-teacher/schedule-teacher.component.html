@@ -18,7 +18,9 @@
                         </div>
                         <div class="w-10/12 pl-6">
                             <h2 *ngIf="selectedTeachers?.length==0">Teacher</h2>
-                            <h2 *ngIf="selectedTeachers?.length>0">{{selectedTeachers.length>1?selectedTeachers?.length+' Teachers Selected':selectedTeachers?.length+' Teacher Selected'}}</h2>
+                            <h2 *ngIf="selectedTeachers?.length>0">
+                                {{selectedTeachers.length>1?selectedTeachers?.length+' Teachers
+                                Selected':selectedTeachers?.length+' Teacher Selected'}}</h2>
                             <p class="text-blue">Select Teacher to Schedule</p>
                         </div>
                     </div>
@@ -29,7 +31,9 @@
                     <div class="flex items-center">
                         <div class="w-10/12 text-right pr-6">
                             <h2 *ngIf="selectedCourseSection?.length==0">Course Section</h2>
-                            <h2 *ngIf="selectedCourseSection?.length>0">{{selectedCourseSection?.length>1?selectedCourseSection?.length+' Course Sections Selected':selectedCourseSection?.length+' Course Section Selected'}}</h2>
+                            <h2 *ngIf="selectedCourseSection?.length>0">
+                                {{selectedCourseSection?.length>1?selectedCourseSection?.length+' Course Sections
+                                Selected':selectedCourseSection?.length+' Course Section Selected'}}</h2>
 
                             <p class="text-blue">Select Course Section to Schedule</p>
                         </div>
@@ -40,183 +44,54 @@
                 </div>
             </div>
         </div>
+        <div class="fixed w-full h-full z-50 top-0 left-0" *ngIf="globalLoader && selectedTeachers.length>0 && selectedTeachers.length>0">
 
-        <div class="pt-6">
-            <h4 class="text-primary font-bold">Course Section Details</h4>
-            <p>Select course section details are given below. Check teacher availability before proceeding to scheduling.</p>
-            <div class="card mt-4 p-4">
-                <div class="teacher-info mb-2">
-                    <span class="text-lg inline-block align-middle text-green font-bold">Danielle Boucher</span>
-                    <span class="inline-block align-middle ml-3" matTooltip="Homeroom Teacher"><img
-                            src="assets/img/icons/homeroom_teacher.svg" class="w-4 opacity-50"></span>
-                    <span class="dot-separator"></span>
-                    <span>#287</span>
-                    <span class="dot-separator"></span>
-                    <span><a href="" class="hover:text-blue">danielle.boucher@example.com</a></span>
-                </div>
-                <div class="border-t border-normal -mx-4 mt-4">
-                    <div class="overflow-x-auto overflow-y-hidden">
-                        <table class="w-full calendar-schedule-table">
-                            <thead>
-                                <tr>
-                                    <th width="1%">
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </th>
-                                    <th>{{ "course" | translate }}</th>
-                                    <th>{{ "courseSection" | translate }}</th>
-                                    <th>{{ "markingPeriod" | translate }}</th>
-                                    <th>{{ "startDate" | translate }}</th>
-                                    <th>{{ "endDate" | translate }}</th>
-                                    <th>{{ "meetingDays" | translate }}</th>
-                                    <th>{{ "scheduledTeacher" | translate }}</th>
-                                    <th width="1%"></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM001</td>
-                                    <td>Quarter 1</td>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Mar 31, 2021</td>
-                                    <td>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
-                                    </td>
-                                    <td>
-                                        <button matTooltip="Jolly Holmes"
-                                            aria-label="Button that displays a tooltip when focused or hovered over"
-                                            [matTooltipPosition]="'above'">
-                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM002</td>
-                                    <td>Custom</td>
-                                    <td>Feb 01, 2021</td>
-                                    <td>Jun 10, 2021</td>
-                                    <td>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">T</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
-                                    </td>
-                                    <td>
-                                        <button matTooltip="Jolly Holmes"
-                                            aria-label="Button that displays a tooltip when focused or hovered over"
-                                            [matTooltipPosition]="'above'">
-                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM003</td>
-                                    <td>Quarter 1</td>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Mar 31, 2021</td>
-                                    <td>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
-                                    </td>
-                                    <td>
-                                        -
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM004</td>
-                                    <td>Quarter 1</td>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Mar 31, 2021</td>
-                                    <td>N/A</td>
-                                    <td>-</td>
-                                    <td>
-                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM005</td>
-                                    <td>Quarter 1</td>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Mar 31, 2021</td>
-                                    <td class="text-primary">Calendar Days</td>
-                                    <td>-</td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="text-xl" (click)="selectCalendar()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
+        </div> 
+        <div class="card mt-6 p-4" *ngIf="globalLoader && selectedTeachers.length>0 && selectedTeachers.length>0">
+        <div class="flex">
+            <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
+            <div class="ml-4">
+                <span class="text-lg inline-block align-middle text-primary font-bold">Selection Processing</span>
+                <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="checkAvailabilityLoader">Checking Availability</span>
+                <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="startSchedulingLoader">Scheduling Teachers</span>
+
+                <p class="">Please do not refresh the page or click back button.</p>
             </div>
-            <div class="card mt-4 p-4">
+        </div>
+    </div>
+        <div class="pt-6" *ngIf="staffScheduleListForView.staffScheduleViewList && !staffSchedulingFinished && selectedTeachers.length>0 && selectedCourseSection.length>0">
+            <h4 class="text-primary font-bold">Course Section Details</h4>
+            <p>Select course section details are given below. Check teacher availability before proceeding to
+                scheduling.</p>
+            <div class="card mt-4 p-4"
+                *ngFor="let teacherSchedule of staffScheduleListForView.staffScheduleViewList;let indexOfStaffGrid=index">
                 <div class="teacher-info mb-2">
-                    <span class="text-lg inline-block align-middle text-green font-bold">Lian Fang</span>
-                    <span class="inline-block align-middle ml-3" matTooltip="Homeroom Teacher"><img
-                            src="assets/img/icons/homeroom_teacher.svg" class="w-4 opacity-50"></span>
-                    <span class="dot-separator"></span>
-                    <span>#542</span>
-                    <span class="dot-separator"></span>
-                    <span><a href="" class="hover:text-blue">lian.fang@example.com</a></span>
+                    <span
+                        class="text-lg inline-block align-middle text-green font-bold">{{teacherSchedule.staffFullName}}</span>
+                    <span class="inline-block align-middle ml-3" matTooltip="Homeroom Teacher"
+                        *ngIf="teacherSchedule.homeroomTeacher"><img src="assets/img/icons/homeroom_teacher.svg"
+                            class="w-4 opacity-50"></span>
+                    <ng-container *ngIf="teacherSchedule.staffInternalId">
+                        <span class="dot-separator"></span>
+                        <span>#{{teacherSchedule.staffInternalId}}</span>
+                    </ng-container>
+                    <ng-container *ngIf="teacherSchedule.staffEmail">
+                        <span class="dot-separator"></span>
+                        <span><a href="" class="hover:text-blue">{{teacherSchedule.staffEmail}}</a></span>
+                    </ng-container>
+
                 </div>
-                <div class="border-t border-normal -mx-4 mt-4">
+                <div @fadeInUp class="border-t border-normal -mx-4 mt-4">
                     <div class="overflow-x-auto overflow-y-hidden">
                         <table class="w-full calendar-schedule-table">
                             <thead>
                                 <tr>
                                     <th width="1%">
-                                        <mat-checkbox color="primary"></mat-checkbox>
+                                        <mat-checkbox color="primary"
+                                           [disabled]="teacherSchedule.conflictStaff"
+                                            [checked]="teacherSchedule.allCourseSectionChecked && !teacherSchedule.conflictStaff"
+                                            (change)="masterCheckToggle($event.checked,indexOfStaffGrid)">
+                                        </mat-checkbox>
                                     </th>
                                     <th>{{ "course" | translate }}</th>
                                     <th>{{ "courseSection" | translate }}</th>
@@ -229,130 +104,48 @@
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
+                                <tr *ngFor="let courseSection of teacherSchedule.courseSectionViewList;let index=index">
                                     <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
+                                        <mat-checkbox color="primary" [disabled]="courseSection.conflictCourseSection" [checked]="courseSection.checked && !courseSection.conflictCourseSection"
+                                            (change)="singleSelection($event.checked,index,indexOfStaffGrid)">
+                                        </mat-checkbox>
                                     </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM001</td>
-                                    <td>Quarter 1</td>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Mar 31, 2021</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.courseTitle}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.courseSectionName}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.markingPeriodTitle}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.durationStartDate|date:'mediumDate'}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.durationEndDate|date:'mediumDate'}}</td>
                                     <td>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
+                                        <ng-container
+                                            *ngIf="courseSection.scheduleType=='Fixed Schedule' || courseSection.scheduleType=='Variable Schedule';else otherSchedule">
+                                            <ng-container *ngFor="let day of courseSection.weekDays.split('').sort()">
+                                                <span
+                                                class="w-5 h-5 text-center text-xs rounded inline-block text-white mr-1 font-medium"
+                                                [ngClass]="courseSection.meetingDays.includes(day)?'bg-primary':'bg-gray-light'"
+                                                [matTooltip]="day|weekDay:false:true" [matTooltipPosition]="'above'">{{day|weekDay:true:false}}</span>
+                                        
+                                            </ng-container>
+                                    
+                                        </ng-container>
+                                        <ng-template #otherSchedule>
+                                            <span class="text-primary">
+                                                {{courseSection.scheduleType}}
+                                            </span>
+                                        </ng-template>
                                     </td>
                                     <td>
-                                        <button matTooltip="Jolly Holmes"
+                                        <ng-container *ngFor="let staff of courseSection?.scheduledStaff?.split('|')">
+                                        <button [matTooltip]="staff"
                                             aria-label="Button that displays a tooltip when focused or hovered over"
                                             [matTooltipPosition]="'above'">
                                             <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
                                         </button>
+                                    </ng-container>
+                                    <ng-container *ngIf="courseSection.scheduledStaff==null">-</ng-container>
                                     </td>
                                     <td>
-                                        <a href="javascript:void(0);" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM002</td>
-                                    <td>Custom</td>
-                                    <td>Feb 01, 2021</td>
-                                    <td>Jun 10, 2021</td>
-                                    <td>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">T</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
-                                    </td>
-                                    <td>
-                                        <button matTooltip="Jolly Holmes"
-                                            aria-label="Button that displays a tooltip when focused or hovered over"
-                                            [matTooltipPosition]="'above'">
-                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                        </button>
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM003</td>
-                                    <td>Quarter 1</td>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Mar 31, 2021</td>
-                                    <td>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                        <span
-                                            class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
-                                    </td>
-                                    <td>
-                                        -
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary" checked="checked"></mat-checkbox>
-                                    </td>
-                                    <td>Geometry</td>
-                                    <td>GEOM003</td>
-                                    <td>Quarter 1</td>
-                                    <td>Jan 01, 2021</td>
-                                    <td>Mar 31, 2021</td>
-                                    <td class="text-primary">
-                                        Block/Rotation Days
-                                    </td>
-                                    <td>
-                                        -
-                                    </td>
-                                    <td>
-                                        <a href="javascript:void(0);" class="text-xl" (click)="selectDays()"><i class="icon icon-info2"></i></a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-checkbox color="primary"></mat-checkbox>
-                                    </td>
-                                    <td class="text-warn">Geometry</td>
-                                    <td class="text-warn">GEOM004</td>
-                                    <td class="text-warn">Quarter 1</td>
-                                    <td class="text-warn">Jan 01, 2021</td>
-                                    <td class="text-warn">Mar 31, 2021</td>
-                                    <td>N/A</td>
-                                    <td>-</td>
-                                    <td>
-                                        <a href="javascript:void();" class="text-xl" (click)="selectVariableSchedule()"><i class="icon icon-info2"></i></a>
+                                        <a href="javascript:void();" class="text-xl"
+                                            (click)="viewCorrespondingSchedule(courseSection)"><i class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -361,22 +154,34 @@
                 </div>
             </div>
             <div class="flex mt-4 items-center flex-wrap">
-                <p class="text-base mt-2 mr-10">
+                <p class="text-base mt-2 mr-10" *ngIf="!noConflictDetected && checkAvailabilityFinished">
                     <i class="icon icon-notification2 mr-2 text-warn"></i>
                     Items in red denotes teacher unavailability.You can change your selection or proceed to scheduling.
                 </p>
                 <!-- After completed conflicts below text is seen -->
-                <!-- <p class="text-base mt-2 mr-10"><i class="icon icon-checkmark-circle mr-2 text-green"></i>There are no conflicts detected. You may proceed to scheduling.</p> -->
+                <p class="text-base mt-2 mr-10" *ngIf="noConflictDetected && checkAvailabilityFinished"><i class="icon icon-checkmark-circle mr-2 text-green"></i>There are no conflicts detected. You may proceed to scheduling.</p>
+
 
                 <div class="ml-auto mt-2">
-                    <button color="primary" mat-raised-button type="submit">
-                        <i class="icon icon-loop3 mr-2"></i>{{ 'checkAvailability' | translate }}
+                    <button @stagger color="primary" [disabled]="checkAvailabilityLoader" mat-raised-button (click)="checkAvailability()">
+                        <mat-icon class="ml-2" *ngIf="checkAvailabilityLoader">
+                            <mat-spinner color="primary" diameter="20">
+                            </mat-spinner>
+                          </mat-icon>
+                        <i class="icon icon-loop3 mr-2" *ngIf="!checkAvailabilityLoader"></i>{{ 'checkAvailability' | translate }}
                     </button>
-                    <button mat-raised-button type="submit" class="bg-green ml-2 text-white">
-                        {{ 'startScheduling' | translate }}
+                    <button @stagger *ngIf="isStartSchedulingPossible" [disabled]="startSchedulingLoader" (click)="startScheduling()" mat-raised-button type="submit" class="bg-green ml-2 text-white">
+                        <mat-icon class="ml-2" *ngIf="startSchedulingLoader">
+                            <mat-spinner color="primary" diameter="20">
+                            </mat-spinner>
+                          </mat-icon>
+                      {{ 'startScheduling' | translate }}
                     </button>
                 </div>
             </div>
+        </div>
+        <div *ngIf="staffSchedulingFinished">
+              <h3 class="text-center"> Staff Scheduling Finished Successfully!</h3>
         </div>
     </vex-page-layout-content>
 </vex-page-layout>

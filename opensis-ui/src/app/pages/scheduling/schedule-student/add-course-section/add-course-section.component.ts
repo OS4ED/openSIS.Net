@@ -5,7 +5,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { CourseManagerService } from '../../../../services/course-manager.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AllCourseSectionView, GetAllCourseListModel, GetAllProgramModel, GetAllSubjectModel, SearchCourseSectionViewModel } from '../../../../models/courseManagerModel';
-import { GetMarkingPeriodTitleListModel } from '../../../../models/markingPeriodModel';
+import { GetMarkingPeriodTitleListModel, MarkingPeriodTitleList } from '../../../../models/markingPeriodModel';
 import { MarkingPeriodService } from '../../../../services/marking-period.service';
 import { LoaderService } from '../../../../services/loader.service';
 import { takeUntil } from 'rxjs/operators';
@@ -16,6 +16,7 @@ import { MatPaginator } from '@angular/material/paginator';
 import { SelectionModel } from '@angular/cdk/collections';
 import { CourseSectionService } from '../../../../services/course-section.service';
 import { MatDialogRef } from '@angular/material/dialog';
+import { MatCheckbox } from '@angular/material/checkbox';
 
 @Component({
   selector: 'vex-add-course-section',
@@ -37,10 +38,12 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   @ViewChild('f') currentForm: NgForm;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  @ViewChild('masterCheckBox') masterCheckBox: MatCheckbox;
   courseDetails: MatTableDataSource<any>;
   icClose = icClose;
   selection: SelectionModel<AllCourseSectionView> = new SelectionModel<AllCourseSectionView>(true, []);
   displayedColumns: string[] = ['courseSelected', 'course', 'courseSection', 'markingPeriod', 'startDate', 'endDate', 'seats', 'available'];
+  selectedMarkingPeriod: MarkingPeriodTitleList= new MarkingPeriodTitleList();
 
   constructor(public translateService: TranslateService,
     private dialogRef: MatDialogRef<AddCourseSectionComponent>,
@@ -87,6 +90,13 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
     });
   }
 
+  changeMarkingPeriod(markingPeriodId) {
+    let index = this.getMarkingPeriodTitleListModel.getMarkingPeriodView.findIndex((item) => {
+      return item.value == markingPeriodId
+    })
+    this.selectedMarkingPeriod = this.getMarkingPeriodTitleListModel.getMarkingPeriodView[index];
+  }
+
   getAllCourse() {
     this.courseManagerService.GetAllCourseList(this.getAllCourseListModel).subscribe(data => {
       if (data._failure) {
@@ -129,7 +139,6 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
       }
 
       if(item.yrMarkingPeriodId || item.smstrMarkingPeriodId || item.qtrMarkingPeriodId){
-        debugger;
         for(let markingPeriod of this.getMarkingPeriodTitleListModel.getMarkingPeriodView){
           if(markingPeriod.value==item.yrMarkingPeriodId){
             item.markingPeriodTitle=markingPeriod.text;
@@ -137,7 +146,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
           }else if(markingPeriod.value==item.smstrMarkingPeriodId){
             item.markingPeriodTitle=markingPeriod.text;
             break;
-          }else{
+          }else if(markingPeriod.value==item.qtrMarkingPeriodId){
             item.markingPeriodTitle=markingPeriod.text;
             break;
           }
@@ -173,18 +182,25 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
   /** Whether the number of selected elements matches the total number of rows. */
   isAllSelected() {
     const numSelected = this.selection.selected.length;
-    return numSelected === this.courseDetails.data.length;
+    return numSelected === this.courseDetails.paginator.pageSize;
   }
 
   checked(row: any) {
     this.selection.select(row)
     var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    if (this.courseDetails.data.length < 12 && this.courseDetails.data.length == this.selection.selected.length) {
+      this.masterCheckBox.checked = true;
+    }
     if (found) {
       return true;
     }
   }
 
   unChecked(row: any) {
+    if (this.courseDetails.data.length < 12) {
+      this.masterCheckBox.checked = false;
+    }
+
     var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
     // if (found) found.checked = false;
     this.selection.deselect(found);
@@ -203,12 +219,27 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
   }
 
   /** Selects all rows if they are not all selected; otherwise clear selection. */
-  masterToggle() {
+  masterToggle(event) {
     this.isAllSelected() ?
       this.selection.clear() :
-      this.courseDetails.data.forEach(row => this.selection.select(row));
+      this.selectRows();
 
+    if (!event && this.courseDetails.data.length < 12) {
+      for (let courseSection of this.courseDetails.data) {
+        this.unChecked(courseSection);
+      }
+    }
   }
+
+  selectRows() {
+    for (let index = 0; index < this.courseDetails.paginator.pageSize; index++) {
+      if (this.courseDetails.data[index]) {
+        this.selection.select(this.courseDetails.data[index]);
+      }
+      // this.selectionAmount = this.selection.selected.length;
+    }
+  }
+
 
   ngOnDestroy() {
     this.destroySubject$.next();

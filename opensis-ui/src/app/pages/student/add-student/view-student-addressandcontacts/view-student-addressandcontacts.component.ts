@@ -21,7 +21,6 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
   @Input() studentCreateMode: SchoolCreate;
   @Input() studentViewDetails: StudentAddModel;
   @Input() nameOfMiscValues;
-  homeAddressMapUrl: string;
   constructor(private snackbar: MatSnackBar) { }
 
   showHomeAddressOnGoogleMap(){
@@ -31,14 +30,9 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
     const country = this.nameOfMiscValues.countryName;
     const state = this.studentViewDetails.studentMaster.homeAddressState;
     const zip = this.studentViewDetails.studentMaster.homeAddressZip;
-    if (stAdd1 && country && city && zip){
-      this.homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1},${stAdd2},${city},${state},${zip},${country}`;
-      window.open(this.homeAddressMapUrl, '_blank');
-    }else{
-      this.snackbar.open('Invalid home address', 'Ok', {
-        duration: 5000
-      });
-    }
+    let homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${zip?','+zip:''}${country?','+country:''}`;
+    window.open(homeAddressMapUrl, '_blank');
+
   }
   showMailingAddressOnGoogleMap(){
     const stAdd1 = this.studentViewDetails.studentMaster.mailingAddressLineOne;
@@ -47,17 +41,15 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
     const country = this.nameOfMiscValues.mailingAddressCountry;
     const state = this.studentViewDetails.studentMaster.mailingAddressState;
     const zip = this.studentViewDetails.studentMaster.mailingAddressZip;
-    if (stAdd1 && country && city && zip){
-      this.homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1},${stAdd2},${city},${state},${zip},${country}`;
-      window.open(this.homeAddressMapUrl, '_blank');
-    }else{
-      this.snackbar.open('Invalid mailing address', 'Ok', {
-        duration: 5000
-      });
-    }
+
+    let mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${zip?','+zip:''}${country?','+country:''}`;
+    window.open(mailingAddressMapUrl, '_blank');
+
   }
 
   ngOnInit(): void {
+    this.nameOfMiscValues.countryName = this.nameOfMiscValues.countryName === '-' ? null : this.nameOfMiscValues.countryName;
+    this.nameOfMiscValues.mailingAddressCountry = this.nameOfMiscValues.mailingAddressCountry === '-' ? null : this.nameOfMiscValues.mailingAddressCountry;
   }
 
 }

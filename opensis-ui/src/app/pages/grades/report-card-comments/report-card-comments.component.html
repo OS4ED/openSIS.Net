@@ -1,0 +1,116 @@
+<div class="-mt-16">
+    <div class="w-full p-0">
+        <div class="mb-2 lg:flex lg:flex-wrap">
+            <div class="lg:w-3/12 lg:pr-4">
+                <div class="card mb-4 lg:mb-0">
+                    <div class="pt-4">
+                        <h4 class="px-gutter mb-4 text-gray">{{'categories'|translate}}</h4>
+                        <hr />
+                        <div class="bg-skyblue-light text-blue px-6 py-3">
+                            <p class="text-gray">{{'allCourses'|translate}}</p>
+                        </div>
+                        <hr />
+                        <div class="px-6 py-3">
+                            <p class="">{{'general'|translate}}</p>
+                        </div>
+                        <hr />
+                        <div class="flex items-center justify-between px-6 py-3">
+                            <a class="cursor-pointer">Algebra 1</a>
+                            <div>
+                                <a class="cursor-pointer mr-3">
+                                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                                </a>
+                                <a class="cursor-pointer">
+                                    <mat-icon [icIcon]="icDelete"></mat-icon>
+                                </a>
+                            </div>
+                        </div>
+                        <hr />
+                        <div class=" px-6 py-3">
+                            <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                                <mat-label>{{ "addCourse" | translate }}</mat-label>
+                                <mat-select>
+                                    <mat-option value="course1">Course 1</mat-option>
+                                    <mat-option value="course2">Course 2</mat-option>
+                                </mat-select>
+                            </mat-form-field>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="lg:w-9/12 lg:pl-4">
+                <div class="card">
+                    <div class="overflow-x-auto overflow-y-hidden">
+                        <table class="w-full schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="1%"></th>
+                                    <th>{{ "comment" | translate }}</th>
+                                    <th>{{ "actions" | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        <mat-icon>reorder</mat-icon>
+                                    </td>
+                                    <td>Good in Explanation</td>
+                                    <td>
+                                        <a class="cursor-pointer mr-3">
+                                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                                        </a>
+                                        <a class="cursor-pointer">
+                                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-icon>reorder</mat-icon>
+                                    </td>
+                                    <td>Takes an active role in discussions</td>
+                                    <td>
+                                        <a class="cursor-pointer mr-3">
+                                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                                        </a>
+                                        <a class="cursor-pointer">
+                                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>
+                                        <mat-icon>reorder</mat-icon>
+                                    </td>
+                                    <td>Lorem Ipsum dolr sit amet, consectetur elit, sed do eiusmod</td>
+                                    <td>
+                                        <a class="cursor-pointer mr-3">
+                                            <mat-icon [icIcon]="icEdit"></mat-icon>
+                                        </a>
+                                        <a class="cursor-pointer">
+                                            <mat-icon [icIcon]="icDelete"></mat-icon>
+                                        </a>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td class="text-center">
+                                        <i class="icon icon-plus3 text-lg"></i>
+                                    </td>
+                                    <td>
+                                        <div class="w-full border p-2 text-gray rounded">
+                                            <input type="text" placeholder="Add New Comments" class="w-full">
+                                        </div>
+                                    </td>
+                                    <td></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        <div class="text-right p-3">
+                            <button color="primary" mat-raised-button type="submit">Submit</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

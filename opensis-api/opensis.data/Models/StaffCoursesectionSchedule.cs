@@ -12,6 +12,7 @@ namespace opensis.data.Models
         public int CourseId { get; set; }
         public int CourseSectionId { get; set; }
         public string CourseSectionName { get; set; }
+        public bool? IsAssigned { get; set; }
         public int? YrMarkingPeriodId { get; set; }
         public int? SmstrMarkingPeriodId { get; set; }
         public int? QtrMarkingPeriodId { get; set; }
