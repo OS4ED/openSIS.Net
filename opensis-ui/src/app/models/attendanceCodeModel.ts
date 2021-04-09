@@ -7,6 +7,7 @@ export class AttendanceCodeCategoryModel extends CommonField{
         super();
         this.attendanceCodeCategories=new AttendanceCodeCategories();
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName=sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token"); 
     }
 }
@@ -20,6 +21,7 @@ export class GetAllAttendanceCategoriesListModel extends CommonField{
         this.attendanceCodeCategoriesList=null;
         this.tenantId=sessionStorage.getItem("tenantId");
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName=sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token"); 
     }
 }
@@ -30,6 +32,7 @@ export class AttendanceCodeModel extends CommonField{
         super()
         this.attendanceCode=new AttendanceCode();
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName=sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token"); 
     }
 }
@@ -44,6 +47,7 @@ export class GetAllAttendanceCodeModel extends CommonField{
         this.attendanceCodeList=null;
         this.tenantId=sessionStorage.getItem("tenantId");
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName=sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token"); 
     }
 }

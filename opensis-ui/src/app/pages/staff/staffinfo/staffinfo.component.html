@@ -71,7 +71,7 @@
                             </ic-icon>
                             <span>Add New Staff</span>
                         </button>
-                        <button [matMenuTriggerFor]="importStudents"
+                        <button *ngIf="addPermission" [matMenuTriggerFor]="importStudents"
                             class="align-middle w-8 h-9 p-0 pt-1 border border-gray rounded rounded-l-none">
                             <i class="icon icon-arrow-down5 text-lg"></i>
                         </button>

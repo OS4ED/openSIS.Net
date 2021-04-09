@@ -547,5 +547,37 @@ namespace opensisAPI.Controllers
         //    }
         //    return searchStudentView;
         //}
+
+        [HttpPost("searchStudentListForReenroll")]
+        public ActionResult<StudentListModel> SearchStudentListForReenroll(PageResult pageResult)
+        {
+            StudentListModel studentList = new StudentListModel();
+            try
+            {
+                studentList = _studentService.SearchStudentListForReenroll(pageResult);
+            }
+            catch (Exception es)
+            {
+                studentList._message = es.Message;
+                studentList._failure = true;
+            }
+            return studentList;
+        }
+
+        [HttpPost("reenrollmentForStudent")]
+        public ActionResult<StudentListModel> ReenrollmentForStudent(StudentListModel studentListModel)
+        {
+            StudentListModel studentReenrollment = new StudentListModel();
+            try
+            {
+                studentReenrollment = _studentService.ReenrollmentForStudent(studentListModel);
+            }
+            catch (Exception es)
+            {
+                studentReenrollment._message = es.Message;
+                studentReenrollment._failure = true;
+            }
+            return studentReenrollment;
+        }
     }
 }

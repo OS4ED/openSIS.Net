@@ -143,6 +143,7 @@ export class StudentAddModel extends CommonField {
         this.schoolMaster = null;
         this.studentEnrollment = null;
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -157,6 +158,7 @@ export class CheckStudentInternalIdViewModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId")
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -192,7 +194,7 @@ export class StudentResponseListModel {
 }
 
 export class StudentListModel extends CommonField {
-    public studentMaster: [];
+    public studentMaster: StudentMasterModel[];
     public totalCount: number;
     public tenantId: string;
     public schoolId: number;
@@ -201,12 +203,19 @@ export class StudentListModel extends CommonField {
     public sortingModel: sorting;
     public filterParams: filterParams[];
     public dobStartDate : string;
+    public enrollmentCode: number;
+    public gradeLevelTitle: string;
+    public gradeId: number;
+    public enrollmentDate: string;
+    public updatedBy:string;
+    public academicYear:number;
     public dobEndDate : string;
     public fullName : string;
     constructor() {
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
+        this.academicYear= +sessionStorage.getItem("academicyear");
         this.pageNumber = 1;
         this.pageSize = 10;
         this.dobStartDate = null;
@@ -214,6 +223,7 @@ export class StudentListModel extends CommonField {
         this.sortingModel = new sorting();
         this.filterParams = null;
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -265,6 +275,7 @@ export class GetAllStudentDocumentsList extends CommonField {
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.studentId = +localStorage.getItem("studentId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -301,6 +312,7 @@ export class StudentSiblingSearch extends CommonField {
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -315,6 +327,7 @@ export class StudentViewSibling extends CommonField {
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -329,6 +342,7 @@ export class StudentSiblingAssociation extends CommonField {
         this.studentMaster.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -341,6 +355,7 @@ export class StudentEnrollmentSchoolListModel extends CommonField{
         this.schoolMaster=null;
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -399,6 +414,7 @@ export class StudentEnrollmentModel extends CommonField{
         this.studentEnrollmentListForView=[new StudentEnrollmentDetails];
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.academicYear= sessionStorage.getItem("academicyear");
@@ -426,6 +442,9 @@ export class StudentMasterSearchModel {
     public otherGovtIssuedNumber: string;
     public studentPhoto: string;
     public dob: string;
+    public enrollmentDate: string;
+    public exitDate: string;
+    public exitCode: string;
     public displayAge: string;
     public gender: string;
     public race: string;

@@ -28,6 +28,7 @@ export class CountryModel extends CommonField {
         this.tableCountry= null;
         this.isCountryAvailable=false;
         this._tenantName=sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem('token');
     }
 }
@@ -39,6 +40,7 @@ export class CountryAddModel extends CommonField {
         super();
         this.country= new TableCountryModel();
         this._tenantName=sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem('token');
     }
 }

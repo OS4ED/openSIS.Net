@@ -1,0 +1,154 @@
+<div class="mb-2 lg:flex lg:flex-wrap px-6 py-4">
+    <div class="lg:w-3/12 lg:pr-4">
+        <div class="py-4 border rounded">
+            <h4 class="px-gutter mb-4">{{'gradeScale'|translate}}</h4>
+            <hr />
+            <div class="flex items-center justify-between px-6 py-3 bg-skyblue-light text-blue">
+                <a class="cursor-pointer">Standard Grade Scale</a>
+                <div>
+                    <a class="cursor-pointer mr-3">
+                        <mat-icon [icIcon]="icEdit"></mat-icon>
+                    </a>
+                    <a class="cursor-pointer">
+                        <mat-icon [icIcon]="icDelete"></mat-icon>
+                    </a>
+                </div>
+                <hr />
+            </div>
+            <hr class="mb-3" />
+            <div class="text-center px-6" *ngIf="addCategory == true; else elseBlock">
+                <h4 class="text-green">{{effortCategoryTitle|translate}}</h4>
+                <mat-form-field class="w-full mt-1" appearance="outline" color="primary">
+                    <mat-label>{{'gradeScaleName' | translate}}</mat-label>
+                    <input type="text" matInput required>
+                </mat-form-field>
+                <div class="flex">
+                    <div class="w-1/2 pr-2">
+                        <button color="primary" class="w-full" mat-raised-button type="button">
+                            {{buttonType|translate}}
+                        </button>
+                    </div>
+                    <div class="w-1/2 pl-2">
+                        <button color="" mat-button class="w-full" type="button" (click)='closeAddCategory()'>
+                            {{'cancel'|translate}}
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <ng-template #elseBlock>
+                <div class="text-center">
+                    <button class="w-full text-primary" mat-button type="button" (click)='goToAddCategory()'>
+                        <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true" size="24px">
+                        </ic-icon>
+                        <span>{{'addGradeScale'|translate}}</span>
+                    </button>
+                </div>
+            </ng-template>
+        </div>
+    </div>
+    <div class="lg:w-9/12 border rounded">
+        <div class="bg-white px-3 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+            <div class="flex w-full justify-between">
+                <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
+                    fxLayoutAlign="start center">
+
+                    <div class="flex">
+                        <input name="search" class="px-4 py-3 border-0 outline-none w-full bg-transparent"
+                            placeholder="Search..." type="search">
+                        <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                            <mat-icon [icIcon]="icSearch"></mat-icon>
+                        </button>
+                    </div>
+                </div>
+
+
+                <div fxFlex="200px" class="pt-3">
+                    <a class="cursor-pointer p-1 mt-1 inline-block align-middle" matTooltip="Export to Excel"><i
+                            class="icon icon-file-excel text-lg"></i></a>
+                    <button class="ml-4" fxFlex="none" mat-icon-button matTooltip="Filter Columns" type="button">
+                        <mat-icon [icIcon]="icFilterList"></mat-icon>
+                    </button>
+                    <button color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button" (click)="addGrade()">
+                        <ic-icon [icon]="icAdd" class="" inline="true" size="24px">
+                        </ic-icon>
+                        <span class="ml-2 hidden md:inline-block">{{'addNewGrade'|translate}}</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="overflow-x-auto overflow-y-hidden">
+            <table class="w-full schedule-table">
+                <thead>
+                    <tr>
+                        <th width="1%"></th>
+                        <th>{{ "title" | translate }}</th>
+                        <th>{{ "description" | translate }}</th>
+                        <th>{{ "actions" | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>
+                            <mat-icon>reorder</mat-icon>
+                        </td>
+                        <td>E</td>
+                        <td>Excellent</td>
+                        <td>
+                            <a class="cursor-pointer mr-3">
+                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                            </a>
+                            <a class="cursor-pointer">
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-icon>reorder</mat-icon>
+                        </td>
+                        <td>S</td>
+                        <td>Satisfactory</td>
+                        <td>
+                            <a class="cursor-pointer mr-3">
+                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                            </a>
+                            <a class="cursor-pointer">
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-icon>reorder</mat-icon>
+                        </td>
+                        <td>N</td>
+                        <td>Needs Improvement</td>
+                        <td>
+                            <a class="cursor-pointer mr-3">
+                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                            </a>
+                            <a class="cursor-pointer">
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>
+                            <mat-icon>reorder</mat-icon>
+                        </td>
+                        <td>U</td>
+                        <td>Unsatisfactory</td>
+                        <td>
+                            <a class="cursor-pointer mr-3">
+                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                            </a>
+                            <a class="cursor-pointer">
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </a>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

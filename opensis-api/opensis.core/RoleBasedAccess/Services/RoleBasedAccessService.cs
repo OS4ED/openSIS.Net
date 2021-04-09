@@ -33,7 +33,7 @@ namespace opensis.core.RoleBasedAccess.Services
             PermissionGroupListViewModel permissionGroupListView = new PermissionGroupListViewModel();
             try
             {
-                if (TokenManager.CheckToken(permissionGroupListViewModel._tenantName, permissionGroupListViewModel._token))
+                if (TokenManager.CheckToken(permissionGroupListViewModel._tenantName + permissionGroupListViewModel._userName, permissionGroupListViewModel._token))
                 {
                     permissionGroupListView = this.roleBasedAccessRepository.GetAllPermissionGroup(permissionGroupListViewModel);
                 }
@@ -61,7 +61,7 @@ namespace opensis.core.RoleBasedAccess.Services
             RolePermissionListViewModel rolePermissionListView = new RolePermissionListViewModel();
             try
             {
-                if (TokenManager.CheckToken(rolePermissionListViewModel._tenantName, rolePermissionListViewModel._token))
+                if (TokenManager.CheckToken(rolePermissionListViewModel._tenantName + rolePermissionListViewModel._userName, rolePermissionListViewModel._token))
                 {
                     rolePermissionListView = this.roleBasedAccessRepository.GetAllRolePermission(rolePermissionListViewModel);
                 }
@@ -89,7 +89,7 @@ namespace opensis.core.RoleBasedAccess.Services
             PermissionGroupAddViewModel permissionGroupUpdate = new PermissionGroupAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(permissionGroupAddViewModel._tenantName, permissionGroupAddViewModel._token))
+                if (TokenManager.CheckToken(permissionGroupAddViewModel._tenantName + permissionGroupAddViewModel._userName, permissionGroupAddViewModel._token))
                 {
                     permissionGroupUpdate = this.roleBasedAccessRepository.UpdatePermissionGroup(permissionGroupAddViewModel);
                 }
@@ -117,7 +117,7 @@ namespace opensis.core.RoleBasedAccess.Services
             PermissionGroupListViewModel rolePermissionUpdate = new PermissionGroupListViewModel();
             try
             {
-                if (TokenManager.CheckToken(permissionGroupListViewModel._tenantName, permissionGroupListViewModel._token))
+                if (TokenManager.CheckToken(permissionGroupListViewModel._tenantName + permissionGroupListViewModel._userName, permissionGroupListViewModel._token))
                 {
                     rolePermissionUpdate = this.roleBasedAccessRepository.UpdateRolePermission(permissionGroupListViewModel);
                 }

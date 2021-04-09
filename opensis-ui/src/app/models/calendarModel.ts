@@ -34,6 +34,7 @@ export class CalendarAddViewModel extends CommonField {
         super();
         this.schoolCalendar = new CalendarModel();
         this._tenantName = sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token= sessionStorage.getItem("token");
     }
 }
@@ -50,6 +51,7 @@ export class CalendarListModel extends CommonField {
         this.schoolId = + sessionStorage.getItem('selectedSchoolId');
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token= sessionStorage.getItem("token");
         this.academicYear = +sessionStorage.getItem("academicyear");
     }

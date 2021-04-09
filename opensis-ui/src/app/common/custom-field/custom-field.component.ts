@@ -207,6 +207,7 @@ export class CustomFieldComponent implements OnInit {
   updateStudent() {
     this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.studentAddViewModel._tenantName = sessionStorage.getItem("tenant");
+    this.studentAddViewModel._userName = sessionStorage.getItem("user");
     this.studentAddViewModel._token = sessionStorage.getItem("token");
     for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
       if (studentCustomField.type === "Multiple SelectBox" && this.studentMultiSelectValue !== undefined) {
@@ -277,6 +278,7 @@ export class CustomFieldComponent implements OnInit {
     this.staffAddViewModel.selectedCategoryId = this.staffAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
     this.staffAddViewModel._token = sessionStorage.getItem("token");
     this.staffAddViewModel._tenantName = sessionStorage.getItem("tenant");
+    this.staffAddViewModel._userName = sessionStorage.getItem("user");
     for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
       if (staffCustomField.type === "Multiple SelectBox" && this.staffMultiSelectValue !== undefined) {
         staffCustomField.customFieldsValue[0].customFieldValue = this.staffMultiSelectValue.toString().replaceAll(",", "|");

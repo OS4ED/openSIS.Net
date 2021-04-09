@@ -30,7 +30,7 @@ namespace opensis.core.Room.Services
         public RoomAddViewModel SaveRoom(RoomAddViewModel rooms)
         {
             RoomAddViewModel RoomAddViewModel = new RoomAddViewModel();
-            if (TokenManager.CheckToken(rooms._tenantName, rooms._token))
+            if (TokenManager.CheckToken(rooms._tenantName + rooms._userName, rooms._token))
             {
 
                 RoomAddViewModel = this.roomRepository.AddRoom(rooms);                
@@ -53,7 +53,7 @@ namespace opensis.core.Room.Services
         public RoomAddViewModel ViewRoom(RoomAddViewModel room)
         {
             RoomAddViewModel roomAddViewModel = new RoomAddViewModel();
-            if (TokenManager.CheckToken(room._tenantName, room._token))
+            if (TokenManager.CheckToken(room._tenantName + room._userName, room._token))
             {
                 roomAddViewModel = this.roomRepository.ViewRoom(room);
                 //return getAllSection();
@@ -76,7 +76,7 @@ namespace opensis.core.Room.Services
         public RoomAddViewModel UpdateRoom(RoomAddViewModel room)
         {
             RoomAddViewModel RoomAddViewModel = new RoomAddViewModel();
-            if (TokenManager.CheckToken(room._tenantName, room._token))
+            if (TokenManager.CheckToken(room._tenantName + room._userName, room._token))
             {
                 RoomAddViewModel = this.roomRepository.UpdateRoom(room);                
                 return RoomAddViewModel;
@@ -99,7 +99,7 @@ namespace opensis.core.Room.Services
             RoomListModel roomlListModel = new RoomListModel();
             try
             {
-                if (TokenManager.CheckToken(roomList._tenantName, roomList._token))
+                if (TokenManager.CheckToken(roomList._tenantName + roomList._userName, roomList._token))
                 {
                     roomlListModel = this.roomRepository.GetAllRooms(roomList);
                 }
@@ -127,7 +127,7 @@ namespace opensis.core.Room.Services
             RoomAddViewModel roomListdelete = new RoomAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(room._tenantName, room._token))
+                if (TokenManager.CheckToken(room._tenantName + room._userName, room._token))
                 {
                     roomListdelete = this.roomRepository.DeleteRoom(room);
                 }

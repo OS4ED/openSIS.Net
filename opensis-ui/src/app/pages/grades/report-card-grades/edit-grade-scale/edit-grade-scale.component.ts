@@ -39,9 +39,7 @@ export class EditGradeScaleComponent implements OnInit {
           gradeScaleName:['',[Validators.required,ValidationService.noWhitespaceValidator]],
           gradeScaleValue:['',[Validators.required,ValidationService.noWhitespaceValidator]],
           gradeScaleComment:[],
-          calculateGpa:[false],
-          useAsStandardGradeScale:[false]
-
+          calculateGpa:[false]
          }
        )
        if(data==null){
@@ -53,24 +51,16 @@ export class EditGradeScaleComponent implements OnInit {
         this.gradeScaleTitle="editGradeScale";
         this.form.controls.gradeScaleId.patchValue(this.data.gradeScaleId)
         this.form.controls.gradeScaleName.patchValue(this.data.gradeScaleName)
-        this.data.useAsStandardGradeScale?this.onStandardGradeScaleChange(this.data.useAsStandardGradeScale):this.form.controls.gradeScaleValue.patchValue(this.data.gradeScaleValue)
+        this.form.controls.gradeScaleValue.patchValue(this.data.gradeScaleValue)
         this.form.controls.gradeScaleComment.patchValue(this.data.gradeScaleComment)
         this.form.controls.calculateGpa.patchValue(this.data.calculateGpa)
-        this.form.controls.useAsStandardGradeScale.patchValue(this.data.useAsStandardGradeScale)
       }
   }
 
   ngOnInit(): void {
   }
 
-  onStandardGradeScaleChange(event){
-    if(event){
-    this.form.removeControl('gradeScaleValue'); 
-    }else{
-     this.form.setControl('gradeScaleValue', this.fb.control('', [Validators.required,ValidationService.noWhitespaceValidator])); 
-    }
-
-  }
+  
 
   
 
@@ -81,9 +71,9 @@ export class EditGradeScaleComponent implements OnInit {
         this.gradeScaleAddViewModel.gradeScale.gradeScaleId=this.form.controls.gradeScaleId.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleName=this.form.controls.gradeScaleName.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleValue=this.form.controls?.gradeScaleValue?.value;
-        this.gradeScaleAddViewModel.gradeScale.gradeScaleComment;
+        this.gradeScaleAddViewModel.gradeScale.gradeScaleComment=this.form.controls.gradeScaleComment.value;
         this.gradeScaleAddViewModel.gradeScale.calculateGpa=this.form.controls.calculateGpa.value;
-        this.gradeScaleAddViewModel.gradeScale.useAsStandardGradeScale=this.form.controls.useAsStandardGradeScale.value;
+        this.gradeScaleAddViewModel.gradeScale.useAsStandardGradeScale=false;
         this.gradesService.addGradeScale(this.gradeScaleAddViewModel).subscribe(
           (res:GradeScaleAddViewModel)=>{
             if(typeof(res)=='undefined'){
@@ -112,9 +102,9 @@ export class EditGradeScaleComponent implements OnInit {
         this.gradeScaleAddViewModel.gradeScale.gradeScaleId=this.form.controls.gradeScaleId.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleName=this.form.controls.gradeScaleName.value;
         this.gradeScaleAddViewModel.gradeScale.gradeScaleValue=this.form.controls?.gradeScaleValue?.value;
-        this.gradeScaleAddViewModel.gradeScale.gradeScaleComment;
+        this.gradeScaleAddViewModel.gradeScale.gradeScaleComment=this.form.controls.gradeScaleComment.value;
         this.gradeScaleAddViewModel.gradeScale.calculateGpa=this.form.controls.calculateGpa.value;
-        this.gradeScaleAddViewModel.gradeScale.useAsStandardGradeScale=this.form.controls.useAsStandardGradeScale.value;
+        this.gradeScaleAddViewModel.gradeScale.useAsStandardGradeScale=false;
         
         this.gradesService.updateGradeScale(this.gradeScaleAddViewModel).subscribe(
           (res:GradeScaleAddViewModel)=>{

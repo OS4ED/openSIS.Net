@@ -25,6 +25,7 @@ export class LovAddView extends CommonField{
     constructor(){
         super();
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
         this.dropdownValue= new lovModel();
     }
@@ -39,6 +40,7 @@ export class LovList extends CommonField{
         super();
         this.schoolId=+sessionStorage.getItem("selectedSchoolId");
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this.tenantId=sessionStorage.getItem("tenantId");
         this._token=sessionStorage.getItem("token");
     }

@@ -28,7 +28,7 @@ namespace opensis.core.CalendarEvents.Services
         public CalendarEventAddViewModel AddCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
             CalendarEventAddViewModel CalendarEventAddViewModel = new CalendarEventAddViewModel();
-            if (TokenManager.CheckToken(calendarEvent._tenantName, calendarEvent._token))
+            if (TokenManager.CheckToken(calendarEvent._tenantName + calendarEvent._userName, calendarEvent._token))
             {
 
                 CalendarEventAddViewModel = this.calendarEventRepository.AddCalendarEvent(calendarEvent);
@@ -52,7 +52,7 @@ namespace opensis.core.CalendarEvents.Services
         public CalendarEventAddViewModel ViewCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
             CalendarEventAddViewModel CalendarEventAddViewModel = new CalendarEventAddViewModel();
-            if (TokenManager.CheckToken(calendarEvent._tenantName, calendarEvent._token))
+            if (TokenManager.CheckToken(calendarEvent._tenantName + calendarEvent._userName, calendarEvent._token))
             {
                 CalendarEventAddViewModel = this.calendarEventRepository.ViewCalendarEvent(calendarEvent);
 
@@ -76,7 +76,7 @@ namespace opensis.core.CalendarEvents.Services
         public CalendarEventAddViewModel UpdateCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
             CalendarEventAddViewModel CalendarEventAddViewModel = new CalendarEventAddViewModel();
-            if (TokenManager.CheckToken(calendarEvent._tenantName, calendarEvent._token))
+            if (TokenManager.CheckToken(calendarEvent._tenantName + calendarEvent._userName, calendarEvent._token))
             {
                 CalendarEventAddViewModel = this.calendarEventRepository.UpdateCalendarEvent(calendarEvent);
                 return CalendarEventAddViewModel;
@@ -100,7 +100,7 @@ namespace opensis.core.CalendarEvents.Services
             CalendarEventListViewModel calendarEventListModel = new CalendarEventListViewModel();
             try
             {
-                if (TokenManager.CheckToken(calendarEventList._tenantName, calendarEventList._token))
+                if (TokenManager.CheckToken(calendarEventList._tenantName + calendarEventList._userName, calendarEventList._token))
                 {
                     calendarEventListModel = this.calendarEventRepository.GetAllCalendarEvent(calendarEventList);
                 }
@@ -128,7 +128,7 @@ namespace opensis.core.CalendarEvents.Services
         public CalendarEventAddViewModel DeleteCalendarEvent(CalendarEventAddViewModel calendarEvent)
         {
             CalendarEventAddViewModel deleteCalendarEvent = new CalendarEventAddViewModel();
-            if (TokenManager.CheckToken(calendarEvent._tenantName, calendarEvent._token))
+            if (TokenManager.CheckToken(calendarEvent._tenantName + calendarEvent._userName, calendarEvent._token))
             {
                 deleteCalendarEvent = this.calendarEventRepository.DeleteCalendarEvent(calendarEvent);
                 return deleteCalendarEvent;

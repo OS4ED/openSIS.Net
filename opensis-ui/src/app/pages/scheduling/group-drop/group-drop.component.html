@@ -57,6 +57,14 @@
                 <p class="">Please do not refresh the page or click back button.</p>
             </div>
         </div>
+        <div *ngIf="studentNotFound" class="card mt-6 p-4">
+            <div class="flex">
+                <mat-icon aria-hidden="false" aria-label="icon" class="text-red">error</mat-icon>
+                <div class="ml-4">
+                    <span class="text-lg inline-block align-middle text-red font-bold">{{dropMessage}}</span>
+                </div>
+            </div>
+        </div>
         <div *ngIf="dropSuccess" class="card mt-6 p-4">
             <div class="flex">
                 <mat-icon aria-hidden="false" aria-label="icon" class="mt-1 text-green">check_circle</mat-icon>

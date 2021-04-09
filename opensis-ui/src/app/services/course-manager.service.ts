@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { GetAllSubjectModel,AddSubjectModel,MassUpdateSubjectModel,MassUpdateProgramModel,AddProgramModel,DeleteSubjectModel,DeleteProgramModel,GetAllProgramModel} from '../models/courseManagerModel';
+import { GetAllSubjectModel,AddSubjectModel,MassUpdateSubjectModel,MassUpdateProgramModel,AddProgramModel,DeleteSubjectModel,DeleteProgramModel,GetAllProgramModel, SearchCourseForScheduleModel} from '../models/courseManagerModel';
 import { GetAllCourseListModel,AddCourseModel} from '../models/courseManagerModel';
 import { CryptoService } from './Crypto.service';
 
@@ -61,4 +61,8 @@ export class CourseManagerService {
         let apiurl = this.apiUrl + courseManager._tenantName + "/CourseManager/deleteCourse";
         return this.http.post<AddCourseModel>(apiurl, courseManager)
     }
+  searchCourseForSchedule(searchParams:SearchCourseForScheduleModel){
+    let apiurl = this.apiUrl + searchParams._tenantName + "/CourseManager/searchCourseForSchedule";
+    return this.http.post<SearchCourseForScheduleModel>(apiurl, searchParams)
+  }
 }

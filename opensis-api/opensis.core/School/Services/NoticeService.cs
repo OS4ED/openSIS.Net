@@ -23,7 +23,7 @@ namespace opensis.core.School.Services
         public NoticeAddViewModel SaveNotice(NoticeAddViewModel notice)
         {
             NoticeAddViewModel noticeAddViewModel = new NoticeAddViewModel();
-            if (TokenManager.CheckToken(notice._tenantName, notice._token))
+            if (TokenManager.CheckToken(notice._tenantName + notice._userName, notice._token))
             {
                 noticeAddViewModel = this.noticeRepository.AddNotice(notice);
                 return noticeAddViewModel;
@@ -40,7 +40,7 @@ namespace opensis.core.School.Services
         public NoticeAddViewModel UpdateNotice(NoticeAddViewModel notice)
         {
             NoticeAddViewModel noticeAddViewModel = new NoticeAddViewModel();
-            if (TokenManager.CheckToken(notice._tenantName, notice._token))
+            if (TokenManager.CheckToken(notice._tenantName + notice._userName, notice._token))
             {
                 noticeAddViewModel = this.noticeRepository.UpdateNotice(notice);
                 return noticeAddViewModel;
@@ -56,7 +56,7 @@ namespace opensis.core.School.Services
         public NoticeDeleteModel DeleteNotice(NoticeDeleteModel notice)
         {
             NoticeDeleteModel noticdeleteModel = new NoticeDeleteModel();
-            if (TokenManager.CheckToken(notice._tenantName, notice._token))
+            if (TokenManager.CheckToken(notice._tenantName + notice._userName, notice._token))
             {
                 noticdeleteModel = this.noticeRepository.DeleteNotice(notice);
                 return noticdeleteModel;
@@ -72,7 +72,7 @@ namespace opensis.core.School.Services
         public NoticeAddViewModel ViewNotice(NoticeAddViewModel notice)
         {
             NoticeAddViewModel noticeAddViewModel = new NoticeAddViewModel();
-            if (TokenManager.CheckToken(notice._tenantName, notice._token))
+            if (TokenManager.CheckToken(notice._tenantName + notice._userName, notice._token))
             {
                 noticeAddViewModel = this.noticeRepository.ViewNotice(notice);
                 //return getAllSchools();
@@ -90,7 +90,7 @@ namespace opensis.core.School.Services
         public NoticeListViewModel GetAllNotice(NoticeListViewModel noticeList)
         {
             NoticeListViewModel getAllNoticeList = new NoticeListViewModel();
-            if (TokenManager.CheckToken(noticeList._tenantName, noticeList._token))
+            if (TokenManager.CheckToken(noticeList._tenantName + noticeList._userName, noticeList._token))
             {
                 getAllNoticeList = this.noticeRepository.GetAllNotice(noticeList);
                 return getAllNoticeList;

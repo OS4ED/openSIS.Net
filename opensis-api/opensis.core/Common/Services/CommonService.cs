@@ -23,7 +23,7 @@ namespace opensis.core.Common.Services
         public CountryListModel GetAllCountries(CountryListModel country)
         {
             CountryListModel countryListModel = new CountryListModel();
-            if (TokenManager.CheckToken(country._tenantName, country._token))
+            if (TokenManager.CheckToken(country._tenantName + country._userName, country._token))
             {
                 countryListModel = this.commonRepository.GetAllCountries(country);
                 return countryListModel;
@@ -40,7 +40,7 @@ namespace opensis.core.Common.Services
         public StateListModel GetAllStatesByCountry(StateListModel state)
         {
             StateListModel stateListModel = new StateListModel();
-            if (TokenManager.CheckToken(state._tenantName, state._token))
+            if (TokenManager.CheckToken(state._tenantName + state._userName, state._token))
             {
                 stateListModel = this.commonRepository.GetAllStatesByCountry(state);
                 return stateListModel;
@@ -57,7 +57,7 @@ namespace opensis.core.Common.Services
         public CityListModel GetAllCitiesByState(CityListModel city)
         {
             CityListModel cityListModel = new CityListModel();
-            if (TokenManager.CheckToken(city._tenantName, city._token))
+            if (TokenManager.CheckToken(city._tenantName + city._userName, city._token))
             {
                 cityListModel = this.commonRepository.GetAllCitiesByState(city);
                 return cityListModel;
@@ -80,7 +80,7 @@ namespace opensis.core.Common.Services
         public LanguageAddModel AddLanguage(LanguageAddModel languageAdd)
         {
             LanguageAddModel languageAddModel = new LanguageAddModel();
-            if (TokenManager.CheckToken(languageAdd._tenantName, languageAdd._token))
+            if (TokenManager.CheckToken(languageAdd._tenantName + languageAdd._userName, languageAdd._token))
             {
                 languageAddModel = this.commonRepository.AddLanguage(languageAdd);
                 return languageAddModel;
@@ -102,7 +102,7 @@ namespace opensis.core.Common.Services
         public LanguageAddModel ViewLanguage(LanguageAddModel language)
         {
             LanguageAddModel languageViewModel = new LanguageAddModel();
-            if (TokenManager.CheckToken(language._tenantName, language._token))
+            if (TokenManager.CheckToken(language._tenantName+ language._userName, language._token))
             {
                 languageViewModel = this.commonRepository.ViewLanguage(language);
                 return languageViewModel;
@@ -125,7 +125,7 @@ namespace opensis.core.Common.Services
         public LanguageAddModel UpdateLanguage(LanguageAddModel languageUpdate)
         {
             LanguageAddModel languageUpdateModel = new LanguageAddModel();
-            if (TokenManager.CheckToken(languageUpdate._tenantName, languageUpdate._token))
+            if (TokenManager.CheckToken(languageUpdate._tenantName + languageUpdate._userName, languageUpdate._token))
             {
                 languageUpdateModel = this.commonRepository.UpdateLanguage(languageUpdate);
                 return languageUpdateModel;
@@ -165,7 +165,7 @@ namespace opensis.core.Common.Services
         public LanguageAddModel DeleteLanguage(LanguageAddModel languageDelete)
         {
             LanguageAddModel languageModel = new LanguageAddModel();
-            if (TokenManager.CheckToken(languageDelete._tenantName, languageDelete._token))
+            if (TokenManager.CheckToken(languageDelete._tenantName + languageDelete._userName, languageDelete._token))
             {
                 languageModel = this.commonRepository.DeleteLanguage(languageDelete);
                 return languageModel;
@@ -188,7 +188,7 @@ namespace opensis.core.Common.Services
         public DropdownValueAddModel AddDropdownValue(DropdownValueAddModel dpdownValue)
         {
             DropdownValueAddModel dropdownValueModel = new DropdownValueAddModel();
-            if (TokenManager.CheckToken(dpdownValue._tenantName, dpdownValue._token))
+            if (TokenManager.CheckToken(dpdownValue._tenantName + dpdownValue._userName, dpdownValue._token))
             {
                 dropdownValueModel = this.commonRepository.AddDropdownValue(dpdownValue);
                 return dropdownValueModel;
@@ -209,7 +209,7 @@ namespace opensis.core.Common.Services
         public DropdownValueAddModel ViewDropdownValue(DropdownValueAddModel dpdownValue)
         {
             DropdownValueAddModel dropdownValueModel = new DropdownValueAddModel();
-            if (TokenManager.CheckToken(dpdownValue._tenantName, dpdownValue._token))
+            if (TokenManager.CheckToken(dpdownValue._tenantName + dpdownValue._userName, dpdownValue._token))
             {
                 dropdownValueModel = this.commonRepository.ViewDropdownValue(dpdownValue);
                 return dropdownValueModel;
@@ -231,7 +231,7 @@ namespace opensis.core.Common.Services
         public DropdownValueAddModel UpdateDropdownValue(DropdownValueAddModel dpdownValue)
         {
             DropdownValueAddModel dropdownValueAddModel = new DropdownValueAddModel();
-            if (TokenManager.CheckToken(dpdownValue._tenantName, dpdownValue._token))
+            if (TokenManager.CheckToken(dpdownValue._tenantName + dpdownValue._userName, dpdownValue._token))
             {
                 dropdownValueAddModel = this.commonRepository.UpdateDropdownValue(dpdownValue);
                 return dropdownValueAddModel;
@@ -254,7 +254,7 @@ namespace opensis.core.Common.Services
             DropdownValueListModel dropdownValueListModel = new DropdownValueListModel();
             try
             {
-                if (TokenManager.CheckToken(dpdownList._tenantName, dpdownList._token))
+                if (TokenManager.CheckToken(dpdownList._tenantName + dpdownList._userName, dpdownList._token))
                 {
                     dropdownValueListModel = this.commonRepository.GetAllDropdownValues(dpdownList);
                 }
@@ -281,7 +281,7 @@ namespace opensis.core.Common.Services
         public CountryAddModel AddCountry(CountryAddModel countryAddModel)
         {
             CountryAddModel countryAdd = new CountryAddModel();
-            if (TokenManager.CheckToken(countryAddModel._tenantName, countryAddModel._token))
+            if (TokenManager.CheckToken(countryAddModel._tenantName + countryAddModel._userName, countryAddModel._token))
             {
                 countryAdd = this.commonRepository.AddCountry(countryAddModel);
             }
@@ -301,7 +301,7 @@ namespace opensis.core.Common.Services
         public CountryAddModel UpdateCountry(CountryAddModel countryAddModel)
         {
             CountryAddModel countryUpdate = new CountryAddModel();
-            if (TokenManager.CheckToken(countryAddModel._tenantName, countryAddModel._token))
+            if (TokenManager.CheckToken(countryAddModel._tenantName + countryAddModel._userName, countryAddModel._token))
             {
                 countryUpdate = this.commonRepository.UpdateCountry(countryAddModel);
             }
@@ -321,7 +321,7 @@ namespace opensis.core.Common.Services
         public CountryAddModel DeleteCountry(CountryAddModel countryDeleteModel)
         {
             CountryAddModel countryModel = new CountryAddModel();
-            if (TokenManager.CheckToken(countryDeleteModel._tenantName, countryDeleteModel._token))
+            if (TokenManager.CheckToken(countryDeleteModel._tenantName + countryDeleteModel._userName, countryDeleteModel._token))
             {
                 countryModel = this.commonRepository.DeleteCountry(countryDeleteModel);
                 return countryModel;
@@ -344,7 +344,7 @@ namespace opensis.core.Common.Services
         public DropdownValueAddModel DeleteDropdownValue(DropdownValueAddModel dpdownValue)
         {
             DropdownValueAddModel dropdownValueModel = new DropdownValueAddModel();
-            if (TokenManager.CheckToken(dpdownValue._tenantName, dpdownValue._token))
+            if (TokenManager.CheckToken(dpdownValue._tenantName + dpdownValue._userName, dpdownValue._token))
             {
                 dropdownValueModel = this.commonRepository.DeleteDropdownValue(dpdownValue);
                 return dropdownValueModel;
@@ -390,7 +390,7 @@ namespace opensis.core.Common.Services
         public DashboardViewModel GetDashboardView(DashboardViewModel dashboardViewModel)
         {
             DashboardViewModel dashboardView = new DashboardViewModel();
-            if (TokenManager.CheckToken(dashboardViewModel._tenantName, dashboardViewModel._token))
+            if (TokenManager.CheckToken(dashboardViewModel._tenantName + dashboardViewModel._userName, dashboardViewModel._token))
             {
                 dashboardView = this.commonRepository.GetDashboardView(dashboardViewModel);
             }
@@ -433,7 +433,7 @@ namespace opensis.core.Common.Services
             SearchFilterAddViewModel SearchFilterAddModel = new SearchFilterAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName, searchFilterAddViewModel._token))
+                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName + searchFilterAddViewModel._userName, searchFilterAddViewModel._token))
                 {
                     SearchFilterAddModel = this.commonRepository.AddSearchFilter(searchFilterAddViewModel);
                 }
@@ -461,7 +461,7 @@ namespace opensis.core.Common.Services
             SearchFilterAddViewModel SearchFilterUpdateModel = new SearchFilterAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName, searchFilterAddViewModel._token))
+                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName + searchFilterAddViewModel._userName, searchFilterAddViewModel._token))
                 {
                     SearchFilterUpdateModel = this.commonRepository.UpdateSearchFilter(searchFilterAddViewModel);
                 }
@@ -490,7 +490,7 @@ namespace opensis.core.Common.Services
             SearchFilterAddViewModel searchFilterDeleteModel = new SearchFilterAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName, searchFilterAddViewModel._token))
+                if (TokenManager.CheckToken(searchFilterAddViewModel._tenantName + searchFilterAddViewModel._userName, searchFilterAddViewModel._token))
                 {
                     searchFilterDeleteModel = this.commonRepository.DeleteSearchFilter(searchFilterAddViewModel);
                 }
@@ -517,7 +517,7 @@ namespace opensis.core.Common.Services
             SearchFilterListViewModel searchFilterListModel = new SearchFilterListViewModel();
             try
             {
-                if (TokenManager.CheckToken(searchFilterListViewModel._tenantName, searchFilterListViewModel._token))
+                if (TokenManager.CheckToken(searchFilterListViewModel._tenantName + searchFilterListViewModel._userName, searchFilterListViewModel._token))
                 {
                     searchFilterListModel = this.commonRepository.GetAllSearchFilter(searchFilterListViewModel);
                 }
@@ -540,7 +540,7 @@ namespace opensis.core.Common.Services
             GradeAgeRangeListViewModel gradeAgeRangelListModel = new GradeAgeRangeListViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeAgeRangeListViewModel._tenantName, gradeAgeRangeListViewModel._token))
+                if (TokenManager.CheckToken(gradeAgeRangeListViewModel._tenantName + gradeAgeRangeListViewModel._userName, gradeAgeRangeListViewModel._token))
                 {
                     gradeAgeRangelListModel = this.commonRepository.GetAllGradeAgeRange(gradeAgeRangeListViewModel);
                 }
@@ -564,7 +564,7 @@ namespace opensis.core.Common.Services
             GradeEducationalStageListViewModel gradeEducationalStagelListModel = new GradeEducationalStageListViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeEducationalStageListViewModel._tenantName, gradeEducationalStageListViewModel._token))
+                if (TokenManager.CheckToken(gradeEducationalStageListViewModel._tenantName + gradeEducationalStageListViewModel._userName, gradeEducationalStageListViewModel._token))
                 {
                     gradeEducationalStagelListModel = this.commonRepository.GetAllGradeEducationalStage(gradeEducationalStageListViewModel);
                 }

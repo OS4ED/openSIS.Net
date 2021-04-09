@@ -93,6 +93,7 @@ export class AddParentInfoModel extends CommonField {
         this.parentInfo = new ParentInfoModel();
         this.parentAssociationship = new ParentAssociationshipModel();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.getStudentForView = null;
 
@@ -129,6 +130,7 @@ export class ParentInfoList extends CommonField{
         this.zip=null;   
         this.schoolId= +sessionStorage.getItem("selectedSchoolId");       
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }  
@@ -142,6 +144,7 @@ export class ViewParentInfoModel extends CommonField {
         super()
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this.tenantId = sessionStorage.getItem("tenantId");
         this._token = sessionStorage.getItem("token");
     }
@@ -155,6 +158,7 @@ export class GetAllParentModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -170,6 +174,7 @@ export class GetAllParentInfoModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");       
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -186,6 +191,7 @@ export class RemoveAssociateParent extends CommonField{
         super();
         this.parentInfo = new ParentInfoModel();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");      
 
     }

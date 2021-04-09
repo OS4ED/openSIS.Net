@@ -30,7 +30,7 @@ namespace opensis.core.SchoolPeriod.Services
         public SchoolPeriodAddViewModel SaveSchoolPeriod(SchoolPeriodAddViewModel schoolPeriod)
         {
             SchoolPeriodAddViewModel schoolPeriodAddViewModel = new SchoolPeriodAddViewModel();
-            if (TokenManager.CheckToken(schoolPeriod._tenantName, schoolPeriod._token))
+            if (TokenManager.CheckToken(schoolPeriod._tenantName+ schoolPeriod._userName, schoolPeriod._token))
             {
 
                 schoolPeriodAddViewModel = this.schoolPeriodRepository.AddSchoolPeriod(schoolPeriod);
@@ -54,7 +54,7 @@ namespace opensis.core.SchoolPeriod.Services
         public SchoolPeriodAddViewModel UpdateSchoolPeriod(SchoolPeriodAddViewModel schoolPeriod)
         {
             SchoolPeriodAddViewModel schoolPeriodUpdate = new SchoolPeriodAddViewModel();
-            if (TokenManager.CheckToken(schoolPeriod._tenantName, schoolPeriod._token))
+            if (TokenManager.CheckToken(schoolPeriod._tenantName + schoolPeriod._userName, schoolPeriod._token))
             {
                 schoolPeriodUpdate = this.schoolPeriodRepository.UpdateSchoolPeriod(schoolPeriod);
 
@@ -77,7 +77,7 @@ namespace opensis.core.SchoolPeriod.Services
         public SchoolPeriodAddViewModel ViewSchoolPeriod(SchoolPeriodAddViewModel schoolPeriod)
         {
             SchoolPeriodAddViewModel schoolPeriodView = new SchoolPeriodAddViewModel();
-            if (TokenManager.CheckToken(schoolPeriod._tenantName, schoolPeriod._token))
+            if (TokenManager.CheckToken(schoolPeriod._tenantName + schoolPeriod._userName, schoolPeriod._token))
             {
                 schoolPeriodView = this.schoolPeriodRepository.ViewSchoolPeriod(schoolPeriod);
                 return schoolPeriodView;
@@ -100,7 +100,7 @@ namespace opensis.core.SchoolPeriod.Services
             SchoolPeriodAddViewModel schoolPeriodDelete = new SchoolPeriodAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(schoolPeriod._tenantName, schoolPeriod._token))
+                if (TokenManager.CheckToken(schoolPeriod._tenantName + schoolPeriod._userName, schoolPeriod._token))
                 {
                     schoolPeriodDelete = this.schoolPeriodRepository.DeleteSchoolPeriod(schoolPeriod);
                 }

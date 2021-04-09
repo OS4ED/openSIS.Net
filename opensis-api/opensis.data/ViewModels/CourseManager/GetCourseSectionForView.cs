@@ -23,5 +23,6 @@ namespace opensis.data.ViewModels.CourseManager
         public int? AvailableSeat { get; set; }
         public int? TotalStudentSchedule { get; set; }
         public int? TotalStaffSchedule { get; set; }
+        public string StaffName { get; set; }
     }
 }

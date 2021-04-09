@@ -235,6 +235,11 @@ export class ParentinfoComponent implements OnInit {
     let filterFunction = function(data, filter): boolean {
       if(typeof JSON.parse(filter)!='string' ){
         let searchTerms = JSON.parse(filter);
+        for (const key in searchTerms) {
+          if(searchTerms[key]){
+            searchTerms[key]=searchTerms[key].toLowerCase()
+          }          
+      }
         return (
           data.firstname.toLowerCase().indexOf(searchTerms.firstname) !== -1 
           &&
@@ -278,7 +283,7 @@ export class ParentinfoComponent implements OnInit {
             data.zip?.toLowerCase().indexOf(searchTerms.zip) !== -1
         );
       }else{
-        filter=JSON.parse(filter);
+        filter=JSON.parse(filter).toLowerCase();
         return (
           data.name?.toLowerCase().includes(filter)
           ||

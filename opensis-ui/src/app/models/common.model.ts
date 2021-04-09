@@ -5,6 +5,7 @@ export class AgeRangeList extends CommonField{
     constructor(){
         super();
         this._tenantName=sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem('token');
     }
 }
@@ -19,6 +20,7 @@ export class EducationalStage extends CommonField{
     constructor(){
         super();
         this._tenantName=sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem('token');
     }
 }

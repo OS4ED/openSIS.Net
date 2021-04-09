@@ -12,10 +12,12 @@ namespace opensis.data.ViewModels.StudentSchedule
         public string FirstGivenName { get; set; }
         public string LastFamilyName { get; set; }
         public string AlternateId { get; set; }
+        public string StudentInternalId { get; set; }
         public string GradeLevel { get; set; }
         public string Section { get; set; }
         public string PhoneNumber { get; set; }
         public bool? Action { get; set; }
+        public byte[] StudentPhoto { get; set; }
         public DateTime? ScheduleDate { get; set; }
     }
 }

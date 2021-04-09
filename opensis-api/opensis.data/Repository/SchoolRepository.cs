@@ -45,56 +45,64 @@ namespace opensis.data.Repository
             int resultData;
             SchoolListModel schoolListModel = new SchoolListModel();
             IQueryable<SchoolMaster> transactionIQ = null;
-            var SchoolMasterList = this.context?.SchoolMaster
-                       .Include(d => d.SchoolDetail)
-                       .Where(x => x.TenantId == pageResult.TenantId);
+            
+                var SchoolMasterList = this.context?.SchoolMaster
+                         .Include(d => d.SchoolDetail)
+                         .Where(x => x.TenantId == pageResult.TenantId && pageResult.IncludeInactive == false ? x.SchoolDetail.FirstOrDefault().Status == true : true);
+
+                
             try
             {
-                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
-                {
-                    //string sortField = "SchoolName"; string sortOrder = "desc";
-
-                    transactionIQ = SchoolMasterList;
-                }
-                else
-                {
-                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                    if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
                     {
-                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
-                        transactionIQ = SchoolMasterList.Where(x => x.SchoolName.ToLower().Contains(Columnvalue.ToLower()) || x.StreetAddress1.ToLower().Contains(Columnvalue.ToLower()) || x.StreetAddress2.ToLower().Contains(Columnvalue.ToLower()) || x.Zip.ToLower().Contains(Columnvalue.ToLower()) || x.State.ToLower().Contains(Columnvalue.ToLower()) || x.City.ToLower().Contains(Columnvalue.ToLower()) || x.Country.ToLower().Contains(Columnvalue.ToLower()));
+                        //string sortField = "SchoolName"; string sortOrder = "desc";
 
-                        var childTelephoneFilter = SchoolMasterList.Where(x => x.SchoolDetail.FirstOrDefault() != null ? x.SchoolDetail.FirstOrDefault().Telephone.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
-
-                        if (childTelephoneFilter.ToList().Count > 0)
-                        {
-                            transactionIQ = transactionIQ.Concat(childTelephoneFilter);
-                        }
-
-                        var childNameOfPrincipalFilter = SchoolMasterList.Where(x => x.SchoolDetail.FirstOrDefault() != null ? x.SchoolDetail.FirstOrDefault().NameOfPrincipal.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
-                        if (childNameOfPrincipalFilter.ToList().Count > 0)
-                        {
-                            transactionIQ = transactionIQ.Concat(childNameOfPrincipalFilter);
-                        }
-                        //var countryFilter = this.context?.Country.Where(x => x.Name.ToLower().Contains(Columnvalue.ToLower()));
-                        //if (countryFilter.ToList().Count > 0)
-                        //{
-                        //    foreach (var country in countryFilter.ToList())
-                        //    {
-                        //        var countrySearch = SchoolMasterList.Where(x => x.Country == country.Id.ToString());
-
-                        //        if (countrySearch.ToList().Count > 0)
-                        //        {
-                        //            transactionIQ = transactionIQ.Concat(countrySearch);
-                        //        }
-                        //    }
-                        //}
+                        transactionIQ = SchoolMasterList;
                     }
+
+
                     else
                     {
-                        transactionIQ = Utility.FilteredData(pageResult.FilterParams, SchoolMasterList).AsQueryable();
+                        if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                        {
+                            string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+                            transactionIQ = SchoolMasterList.Where(x => x.SchoolName.ToLower().Contains(Columnvalue.ToLower()) || x.StreetAddress1.ToLower().Contains(Columnvalue.ToLower()) || x.StreetAddress2.ToLower().Contains(Columnvalue.ToLower()) || x.Zip.ToLower().Contains(Columnvalue.ToLower()) || x.State.ToLower().Contains(Columnvalue.ToLower()) || x.City.ToLower().Contains(Columnvalue.ToLower()) || x.Country.ToLower().Contains(Columnvalue.ToLower()));
+
+                            var childTelephoneFilter = SchoolMasterList.Where(x => x.SchoolDetail.FirstOrDefault() != null ? x.SchoolDetail.FirstOrDefault().Telephone.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
+
+                            if (childTelephoneFilter.ToList().Count > 0)
+                            {
+                                transactionIQ = transactionIQ.Concat(childTelephoneFilter);
+                            }
+
+                            var childNameOfPrincipalFilter = SchoolMasterList.Where(x => x.SchoolDetail.FirstOrDefault() != null ? x.SchoolDetail.FirstOrDefault().NameOfPrincipal.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue));
+                            if (childNameOfPrincipalFilter.ToList().Count > 0)
+                            {
+                                transactionIQ = transactionIQ.Concat(childNameOfPrincipalFilter);
+                            }
+                            //var countryFilter = this.context?.Country.Where(x => x.Name.ToLower().Contains(Columnvalue.ToLower()));
+                            //if (countryFilter.ToList().Count > 0)
+                            //{
+                            //    foreach (var country in countryFilter.ToList())
+                            //    {
+                            //        var countrySearch = SchoolMasterList.Where(x => x.Country == country.Id.ToString());
+
+                            //        if (countrySearch.ToList().Count > 0)
+                            //        {
+                            //            transactionIQ = transactionIQ.Concat(countrySearch);
+                            //        }
+                            //    }
+                            //}
+                        }
+                        else
+                        {
+                            transactionIQ = Utility.FilteredData(pageResult.FilterParams, SchoolMasterList).AsQueryable();
+                        }
+
+                        transactionIQ = transactionIQ.Distinct();
                     }
-                    transactionIQ = transactionIQ.Distinct();
-                }
+                
+            
                 if (pageResult.SortingModel != null)
                 {
                     switch (pageResult.SortingModel.SortColumn.ToLower())
@@ -695,7 +703,7 @@ namespace opensis.data.Repository
             SchoolListViewModel schoolListView = new SchoolListViewModel();
             try
             {
-                var schoolListWithGradeLevel = this.context?.SchoolMaster.Include(x=>x.Gradelevels).Include(x=>x.StudentEnrollmentCode).Where(x => x.TenantId == schoolListViewModel.TenantId).ToList();
+                var schoolListWithGradeLevel = this.context?.SchoolMaster.Include(x=>x.SchoolDetail).Include(x=>x.Gradelevels).Include(x=>x.StudentEnrollmentCode).Where(x => x.TenantId == schoolListViewModel.TenantId && x.SchoolDetail.FirstOrDefault().Status==true).ToList();
                 schoolListView.schoolMaster = schoolListWithGradeLevel;
                 schoolListView._tenantName = schoolListViewModel._tenantName;
                 schoolListView._token = schoolListViewModel._token;

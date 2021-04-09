@@ -8,6 +8,7 @@ export class NoticeDeleteModel extends CommonField {
         super();
         this.NoticeId = 0;
         this._tenantName=sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem('token');
         this.schoolId =  + sessionStorage.getItem('selectedSchoolId');
         this.tenantId = sessionStorage.getItem("tenantId");

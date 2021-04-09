@@ -12,6 +12,7 @@ export class MarkingPeriodListModel  extends CommonField{
         this.academicYear= +sessionStorage.getItem("academicyear");
         this.schoolId= +sessionStorage.getItem("selectedSchoolId");
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }
@@ -50,6 +51,7 @@ export class MarkingPeriodAddModel  extends CommonField{
         this.schoolMaster=null;
         this.semesters=null;
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }
@@ -90,6 +92,7 @@ export class SemesterAddModel  extends CommonField{
         this.schoolYears=null;
         this.quarters=null;
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }
@@ -133,6 +136,7 @@ export class QuarterAddModel  extends CommonField{
         this.semesters=null;
         this.progressPeriods=null;
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }
@@ -172,6 +176,7 @@ export class ProgressPeriodAddModel  extends CommonField{
         this.tableProgressPeriods= new TableProgressPeriod(); 
            
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }
@@ -184,6 +189,7 @@ export class GetAcademicYearListModel extends CommonField{
         super();
         this.tenantId=sessionStorage.getItem("tenantId");
         this._tenantName=sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }
@@ -198,6 +204,7 @@ export class GetMarkingPeriodTitleListModel extends CommonField{
             super();
             this.tenantId=sessionStorage.getItem("tenantId");
             this._tenantName=sessionStorage.getItem('tenant');
+            this._userName = sessionStorage.getItem("user");
             this._token=sessionStorage.getItem("token");
         }
 }
@@ -217,6 +224,7 @@ export class GetAllMarkingPeriodTitle extends CommonField{
         super();
         this.tenantId=sessionStorage.getItem("tenantId");
         this._tenantName=sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }

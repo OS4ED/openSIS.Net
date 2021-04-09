@@ -151,6 +151,7 @@ export class EditCourseComponent implements OnInit {
   getAllGradeLevelList(){   
     this.getAllGradeLevelsModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.getAllGradeLevelsModel._tenantName = sessionStorage.getItem("tenant");
+    this.getAllGradeLevelsModel._userName = sessionStorage.getItem("user");
     this.getAllGradeLevelsModel._token = sessionStorage.getItem("token");
     this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevelsModel).subscribe(data => {          
       this.gradeLevelList=data.tableGradelevelList;      

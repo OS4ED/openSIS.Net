@@ -8,6 +8,9 @@ import { filter, map, startWith, withLatestFrom } from 'rxjs/operators';
 import { checkRouterChildsData } from '../utils/check-router-childs-data';
 import { DOCUMENT } from '@angular/common';
 import { ConfigService } from '../services/config.service';
+import * as jwt_decode from 'jwt-decode';
+import { MatDialog } from '@angular/material/dialog';
+import { SessionExpireAlertComponent } from './session-expire/session-expire-alert/session-expire-alert.component';
 
 @UntilDestroy()
 @Component({
@@ -53,7 +56,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
               private layoutService: LayoutService,
               private configService: ConfigService,
               private router: Router,
-              @Inject(DOCUMENT) private document: Document) { }
+              @Inject(DOCUMENT) private document: Document,
+              private dialog: MatDialog) { }
 
   ngOnInit() {
     /**
@@ -88,6 +92,8 @@ export class LayoutComponent implements OnInit, AfterViewInit {
       filter(([event, matches]) => !matches),
       untilDestroyed(this)
     ).subscribe(() => this.sidenav.close());
+
+    this.checkToken();
   }
 
   ngAfterViewInit(): void {
@@ -131,5 +137,46 @@ export class LayoutComponent implements OnInit, AfterViewInit {
         });
       }
     });
+  }
+
+  clearStorage(){
+    localStorage.clear();
+    let schoolId = sessionStorage.getItem('selectedSchoolId');
+    sessionStorage.clear();
+    if(schoolId){
+    sessionStorage.setItem('selectedSchoolId',schoolId);
+    }
+  }
+
+  checkToken() { 
+    let decoded = JSON.parse(JSON.stringify(jwt_decode.default(sessionStorage.getItem('token'))));
+    let date1:any = new Date(decoded.exp*1000)
+    let date2:any = new Date();
+    let res = Math.abs(date1 - date2) / 1000;
+    let minutes = Math.floor(res / 60) % 60;
+    let tokenEndTime=(minutes-1)*60*1000;
+    const tokenExpired = Date.now() > (decoded.exp * 1000-120000);
+
+    if (!tokenExpired) {
+      setTimeout(() => {
+        if(this.router.url != '/'){
+          this.dialog.open(SessionExpireAlertComponent, {
+            maxWidth: '600px',
+            disableClose:true
+          }).afterClosed().subscribe(token => {
+            if (token){
+              sessionStorage.setItem('token', token);
+              this.checkToken();
+              return;
+            }
+             this.clearStorage();
+             this.router.navigateByUrl('/');
+         });
+        }
+      }, tokenEndTime);
+    } else {
+      this.clearStorage();
+      this.router.navigateByUrl('/');
+    }
   }
 }

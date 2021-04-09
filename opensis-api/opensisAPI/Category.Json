@@ -120,7 +120,7 @@
     "PermissionGroupId": "3",
     "PermissionCategoryName": "Student Re Enroll",
     "ShortCode": "sre",
-    "Path": "disabled",
+    "Path": "/school/student/student-re-enroll",
     "Title": "Student Re Enroll",
     "Type": "link",
     "EnableView": true,

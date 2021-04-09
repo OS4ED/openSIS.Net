@@ -30,6 +30,7 @@ export class EnrollmentCodeAddView extends CommonField{
     constructor(){
         super();
         this._tenantName=sessionStorage.getItem("tenant")
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token")
         this.studentEnrollmentCode=new EnrollmentCodeModel()
     }
@@ -43,6 +44,7 @@ export class EnrollmentCodeListView extends CommonField{
     super();
     this.studentEnrollmentCodeList=null
     this._tenantName=sessionStorage.getItem('tenant');
+    this._userName = sessionStorage.getItem("user");
     this._token=sessionStorage.getItem('token'); 
     this.tenantId=sessionStorage.getItem("tenantId");
     this.schoolId=+sessionStorage.getItem("selectedSchoolId"); 

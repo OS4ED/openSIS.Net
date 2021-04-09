@@ -32,7 +32,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoAddViewModel ParentInfoAddModel = new ParentInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName, parentInfoAddViewModel._token))
+                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName + parentInfoAddViewModel._userName, parentInfoAddViewModel._token))
                 {
 
                     ParentInfoAddModel = this.parentInfoRepository.AddParentForStudent(parentInfoAddViewModel);
@@ -64,7 +64,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoListModel parentInfoViewListModel = new ParentInfoListModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoList._tenantName, parentInfoList._token))
+                if (TokenManager.CheckToken(parentInfoList._tenantName + parentInfoList._userName, parentInfoList._token))
                 {
                     parentInfoViewListModel = this.parentInfoRepository.ViewParentListForStudent(parentInfoList);
                 }
@@ -92,7 +92,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoAddViewModel parentInfoUpdateModel = new ParentInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName, parentInfoAddViewModel._token))
+                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName + parentInfoAddViewModel._userName, parentInfoAddViewModel._token))
                 {
                     parentInfoUpdateModel = this.parentInfoRepository.UpdateParentInfo(parentInfoAddViewModel);
                 }
@@ -121,7 +121,7 @@ namespace opensis.core.ParentInfo.Services
             GetAllParentInfoListForView parentInfoList = new GetAllParentInfoListForView();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName+pageResult._userName, pageResult._token))
                 {
                     parentInfoList = this.parentInfoRepository.GetAllParentInfoList(pageResult);
                     if (parentInfoList.parentInfoForView.Count > 0)
@@ -166,7 +166,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoAddViewModel ParentInfodelete = new ParentInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName, parentInfoAddViewModel._token))
+                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName + parentInfoAddViewModel._userName, parentInfoAddViewModel._token))
                 {
                     ParentInfodelete = this.parentInfoRepository.DeleteParentInfo(parentInfoAddViewModel);
                 }
@@ -195,7 +195,7 @@ namespace opensis.core.ParentInfo.Services
             GetAllParentInfoListForView parentInfoList = new GetAllParentInfoListForView();
             try
             {
-                if (TokenManager.CheckToken(getAllParentInfoListForView._tenantName, getAllParentInfoListForView._token))
+                if (TokenManager.CheckToken(getAllParentInfoListForView._tenantName + getAllParentInfoListForView._userName, getAllParentInfoListForView._token))
                 {
                     parentInfoList = this.parentInfoRepository.SearchParentInfoForStudent(getAllParentInfoListForView);
                     parentInfoList._message = SUCCESS;
@@ -228,7 +228,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoAddViewModel parentInfoViewModel = new ParentInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName, parentInfoAddViewModel._token))
+                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName+ parentInfoAddViewModel._userName, parentInfoAddViewModel._token))
                 {
                     parentInfoViewModel = this.parentInfoRepository.ViewParentInfo(parentInfoAddViewModel);
                     parentInfoViewModel._message = SUCCESS;
@@ -260,7 +260,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoAddViewModel ParentInfoAddModel = new ParentInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName, parentInfoAddViewModel._token))
+                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName + parentInfoAddViewModel._userName, parentInfoAddViewModel._token))
                 {
                     ParentInfoAddModel = this.parentInfoRepository.AddParentInfo(parentInfoAddViewModel);
                 }
@@ -289,7 +289,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoDeleteViewModel parentAssociationshipDelete = new ParentInfoDeleteViewModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoDeleteViewModel._tenantName, parentInfoDeleteViewModel._token))
+                if (TokenManager.CheckToken(parentInfoDeleteViewModel._tenantName + parentInfoDeleteViewModel._userName, parentInfoDeleteViewModel._token))
                 {
                     parentAssociationshipDelete = this.parentInfoRepository.RemoveAssociatedParent(parentInfoDeleteViewModel);
                 }
@@ -318,7 +318,7 @@ namespace opensis.core.ParentInfo.Services
             ParentInfoAddViewModel parentPhotoUpdate = new ParentInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName, parentInfoAddViewModel._token))
+                if (TokenManager.CheckToken(parentInfoAddViewModel._tenantName + parentInfoAddViewModel._userName, parentInfoAddViewModel._token))
                 {
                     parentPhotoUpdate = this.parentInfoRepository.AddUpdateParentPhoto(parentInfoAddViewModel);
                 }

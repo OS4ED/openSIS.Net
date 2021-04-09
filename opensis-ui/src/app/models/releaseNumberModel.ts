@@ -18,6 +18,7 @@ export class ReleaseNumberAddViewModel extends CommonField {
         super();
         this.releaseNumber = new ReleaseNumber();
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
         
     }

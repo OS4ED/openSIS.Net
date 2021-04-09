@@ -31,7 +31,7 @@ namespace opensis.core.Staff.Services
             StaffAddViewModel staffInfoAddViewModel = new StaffAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffAddViewModel._tenantName, staffAddViewModel._token))
+                if (TokenManager.CheckToken(staffAddViewModel._tenantName + staffAddViewModel._userName, staffAddViewModel._token))
                 {
 
                     staffInfoAddViewModel = this.staffRepository.AddStaff(staffAddViewModel);
@@ -65,7 +65,7 @@ namespace opensis.core.Staff.Services
             StaffListModel staffList = new StaffListModel();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName+pageResult._userName, pageResult._token))
                 {
                     staffList = this.staffRepository.GetAllStaffList(pageResult);
                     if (staffList.staffMaster.Count > 0)
@@ -105,7 +105,7 @@ namespace opensis.core.Staff.Services
         public StaffAddViewModel ViewStaff(StaffAddViewModel staffAddViewModel)
         {
             StaffAddViewModel staffView = new StaffAddViewModel();
-            if (TokenManager.CheckToken(staffAddViewModel._tenantName, staffAddViewModel._token))
+            if (TokenManager.CheckToken(staffAddViewModel._tenantName + staffAddViewModel._userName, staffAddViewModel._token))
             {
                 staffView = this.staffRepository.ViewStaff(staffAddViewModel);
             }
@@ -125,7 +125,7 @@ namespace opensis.core.Staff.Services
         public StaffAddViewModel UpdateStaff(StaffAddViewModel staffAddViewModel)
         {
             StaffAddViewModel staffUpdate = new StaffAddViewModel();
-            if (TokenManager.CheckToken(staffAddViewModel._tenantName, staffAddViewModel._token))
+            if (TokenManager.CheckToken(staffAddViewModel._tenantName + staffAddViewModel._userName, staffAddViewModel._token))
             {
                 staffUpdate = this.staffRepository.UpdateStaff(staffAddViewModel);
             }
@@ -145,7 +145,7 @@ namespace opensis.core.Staff.Services
         public CheckStaffInternalIdViewModel CheckStaffInternalId(CheckStaffInternalIdViewModel checkStaffInternalIdViewModel)
         {
             CheckStaffInternalIdViewModel checkInternalId = new CheckStaffInternalIdViewModel();
-            if (TokenManager.CheckToken(checkStaffInternalIdViewModel._tenantName, checkStaffInternalIdViewModel._token))
+            if (TokenManager.CheckToken(checkStaffInternalIdViewModel._tenantName + checkStaffInternalIdViewModel._userName, checkStaffInternalIdViewModel._token))
             {
                 checkInternalId = this.staffRepository.CheckStaffInternalId(checkStaffInternalIdViewModel);
             }
@@ -167,7 +167,7 @@ namespace opensis.core.Staff.Services
             StaffSchoolInfoAddViewModel staffSchoolInfoAdd = new StaffSchoolInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffSchoolInfoAddViewModel._tenantName, staffSchoolInfoAddViewModel._token))
+                if (TokenManager.CheckToken(staffSchoolInfoAddViewModel._tenantName + staffSchoolInfoAddViewModel._userName, staffSchoolInfoAddViewModel._token))
                 {
                     staffSchoolInfoAdd = this.staffRepository.AddStaffSchoolInfo(staffSchoolInfoAddViewModel);
                 }
@@ -193,7 +193,7 @@ namespace opensis.core.Staff.Services
         public StaffSchoolInfoAddViewModel ViewStaffSchoolInfo(StaffSchoolInfoAddViewModel staffSchoolInfoAddViewModel)
         {
             StaffSchoolInfoAddViewModel staffSchoolInfoView = new StaffSchoolInfoAddViewModel();
-            if (TokenManager.CheckToken(staffSchoolInfoAddViewModel._tenantName, staffSchoolInfoAddViewModel._token))
+            if (TokenManager.CheckToken(staffSchoolInfoAddViewModel._tenantName + staffSchoolInfoAddViewModel._userName, staffSchoolInfoAddViewModel._token))
             {
                 staffSchoolInfoView = this.staffRepository.ViewStaffSchoolInfo(staffSchoolInfoAddViewModel);
             }
@@ -215,7 +215,7 @@ namespace opensis.core.Staff.Services
             StaffSchoolInfoAddViewModel staffSchoolInfoUpdate = new StaffSchoolInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffSchoolInfoAddViewModel._tenantName, staffSchoolInfoAddViewModel._token))
+                if (TokenManager.CheckToken(staffSchoolInfoAddViewModel._tenantName + staffSchoolInfoAddViewModel._userName, staffSchoolInfoAddViewModel._token))
                 {
                     staffSchoolInfoUpdate = this.staffRepository.UpdateStaffSchoolInfo(staffSchoolInfoAddViewModel);
                 }
@@ -243,7 +243,7 @@ namespace opensis.core.Staff.Services
             StaffCertificateInfoAddViewModel staffCertificateInfoAdd = new StaffCertificateInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffCertificateInfoAddViewModel._tenantName, staffCertificateInfoAddViewModel._token))
+                if (TokenManager.CheckToken(staffCertificateInfoAddViewModel._tenantName + staffCertificateInfoAddViewModel._userName, staffCertificateInfoAddViewModel._token))
                 {
 
                     staffCertificateInfoAdd = this.staffRepository.AddStaffCertificateInfo(staffCertificateInfoAddViewModel);
@@ -274,7 +274,7 @@ namespace opensis.core.Staff.Services
             StaffCertificateInfoListModel staffCertificateInfoListView = new StaffCertificateInfoListModel();
             try
             {
-                if (TokenManager.CheckToken(staffCertificateInfoListModel._tenantName, staffCertificateInfoListModel._token))
+                if (TokenManager.CheckToken(staffCertificateInfoListModel._tenantName + staffCertificateInfoListModel._userName, staffCertificateInfoListModel._token))
                 {
                     staffCertificateInfoListView = this.staffRepository.GetAllStaffCertificateInfo(staffCertificateInfoListModel);
                 }
@@ -301,7 +301,7 @@ namespace opensis.core.Staff.Services
             StaffCertificateInfoAddViewModel staffCertificateInfoUpdate = new StaffCertificateInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffCertificateInfoAddViewModel._tenantName, staffCertificateInfoAddViewModel._token))
+                if (TokenManager.CheckToken(staffCertificateInfoAddViewModel._tenantName + staffCertificateInfoAddViewModel._userName, staffCertificateInfoAddViewModel._token))
                 {
                     staffCertificateInfoUpdate = this.staffRepository.UpdateStaffCertificateInfo(staffCertificateInfoAddViewModel);
                 }
@@ -328,7 +328,7 @@ namespace opensis.core.Staff.Services
             StaffCertificateInfoAddViewModel staffCertificateInfoDelete = new StaffCertificateInfoAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffCertificateInfoAddViewModel._tenantName, staffCertificateInfoAddViewModel._token))
+                if (TokenManager.CheckToken(staffCertificateInfoAddViewModel._tenantName + staffCertificateInfoAddViewModel._userName, staffCertificateInfoAddViewModel._token))
                 {
                     staffCertificateInfoDelete = this.staffRepository.DeleteStaffCertificateInfo(staffCertificateInfoAddViewModel);
                 }
@@ -354,7 +354,7 @@ namespace opensis.core.Staff.Services
         public StaffAddViewModel AddUpdateStaffPhoto(StaffAddViewModel staffAddViewModel)
         {
             StaffAddViewModel staffPhotoUpdate = new StaffAddViewModel();
-            if (TokenManager.CheckToken(staffAddViewModel._tenantName, staffAddViewModel._token))
+            if (TokenManager.CheckToken(staffAddViewModel._tenantName + staffAddViewModel._userName, staffAddViewModel._token))
             {
                 staffPhotoUpdate = this.staffRepository.AddUpdateStaffPhoto(staffAddViewModel);
             }

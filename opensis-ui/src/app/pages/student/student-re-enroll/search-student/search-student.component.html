@@ -1,8 +1,8 @@
-<form>
+<form (ngSubmit)="submit()" #f="ngForm">
     <div class="search-body">
         <div class="flex justify-between px-6 py-4">
             <h4 class="font-bold">{{'advanceSearch' | translate}}</h4>
-            <a  (click)="hideAdvanceSearch()" class="cursor-pointer">
+            <a (click)="hideAdvanceSearch()" class="cursor-pointer">
                 <mat-icon [icIcon]="icClose"></mat-icon>
             </a>
         </div>
@@ -18,43 +18,45 @@
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "firstGivenName" | translate }}</mat-label>
-                            <input name="firstGivenName" matInput>
+                            <input [(ngModel)]="studentMasterSearchModel.firstGivenName" name="firstGivenName" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "middleName" | translate }}</mat-label>
-                            <input name="middleName" matInput>
+                            <input [(ngModel)]="studentMasterSearchModel.middleName" name="middleName" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
-                            <input name="lastFamilyName" matInput>
+                            <input [(ngModel)]="studentMasterSearchModel.lastFamilyName" name="lastFamilyName" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "studentID" | translate }}</mat-label>
-                            <input name="studentID" matInput>
+                            <input [(ngModel)]="studentMasterSearchModel.studentInternalId" name="studentInternalId"
+                                matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "alternateID" | translate }}</mat-label>
-                            <input name="alternateID" matInput>
+                            <input [(ngModel)]="studentMasterSearchModel.alternateId" name="alternateId" matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "admissionNumber" | translate }}</mat-label>
-                            <input name="admissionNumber" matInput>
+                            <input [(ngModel)]="studentMasterSearchModel.admissionNumber" name="admissionNumber"
+                                matInput>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "rollNumber" | translate }}</mat-label>
-                            <input name="rollNumber" matInput>
+                            <input [(ngModel)]="studentMasterSearchModel.rollNumber" name="rollNumber" matInput>
                         </mat-form-field>
                     </li>
                 </ul>
@@ -72,7 +74,8 @@
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "enrollmentDate" | translate }}</mat-label>
-                            <input matInput name="enrollmentDate" [matDatepicker]="frompicker">
+                            <input matInput [(ngModel)]="studentMasterSearchModel.enrollmentDate" name="enrollmentDate"
+                                [matDatepicker]="frompicker">
                             <mat-datepicker-toggle matSuffix [for]="frompicker"></mat-datepicker-toggle>
                             <mat-datepicker #frompicker></mat-datepicker>
                         </mat-form-field>
@@ -80,7 +83,8 @@
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "exitDate" | translate }}</mat-label>
-                            <input matInput name="exitDate" [matDatepicker]="exitDate">
+                            <input matInput [(ngModel)]="studentMasterSearchModel.exitDate" name="exitDate"
+                                [matDatepicker]="exitDate">
                             <mat-datepicker-toggle matSuffix [for]="exitDate"></mat-datepicker-toggle>
                             <mat-datepicker #exitDate></mat-datepicker>
                         </mat-form-field>
@@ -88,8 +92,9 @@
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "exitCode" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="Grade 9">Grade 9</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.exitCode" name="exitCode">
+                                <mat-option *ngFor="let enrollment of enrollmentList" [value]="enrollment.title">
+                                    {{enrollment.title}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -108,7 +113,8 @@
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "dateOfBirth" | translate }}</mat-label>
-                            <input matInput name="dateOfBirth" [matDatepicker]="dateOfBirth">
+                            <input matInput matInput [(ngModel)]="studentMasterSearchModel.dob" name="dob"
+                                [matDatepicker]="dateOfBirth">
                             <mat-datepicker-toggle matSuffix [for]="dateOfBirth"></mat-datepicker-toggle>
                             <mat-datepicker #dateOfBirth></mat-datepicker>
                         </mat-form-field>
@@ -116,86 +122,106 @@
                     <li>
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{ "gender" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="male">Male</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.gender" name="gender">
+                                <mat-option *ngFor="let gender of genderList" [value]="gender.lovColumnValue">
+                                    {{gender.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "race" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="Race1">Race 1</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.race" name="race">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let race of raceList" [value]="race.lovColumnValue">
+                                    {{race.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "ethnicity" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="ethnicity">Ethnicity</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.ethnicity" name="ethnicity">
+                                <mat-option *ngFor="let ethnicity of ethnicityList" [value]="ethnicity.lovColumnValue">
+                                    {{ethnicity.lovColumnValue}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "maritalStatus" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="single">Single</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.maritalStatus" name="maritalStatus">
+                                <mat-option *ngFor="let maritalStatus of maritalStatusList"
+                                    [value]="maritalStatus.lovColumnValue">
+                                    {{maritalStatus.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "countryOfBirth" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="india">India</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.countryOfBirth" name="countryOfBirth">
+                                <mat-option *ngFor="let country of countryListArr" [value]='country.id'>
+                                    {{country.name}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "nationality" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="indian">Indian</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.nationality" name="nationality">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let country of countryListArr" [value]='country.id'>
+                                    {{country.name}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "firstLanguage" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="english">English</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.firstLanguageId" name="firstLanguageId">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let language of languageList" [value]="language.langId">
+                                    {{language.locale}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "secondLanguage" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="bengali">Bengali</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.secondLanguageId" name="secondLanguageId">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let language of languageList" [value]="language.langId">
+                                    {{language.locale}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{ "thirdLanguage" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="arabic">Arabic</mat-option>
+                            <mat-select [(ngModel)]="studentMasterSearchModel.thirdLanguageId" name="thirdLanguageId">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let language of languageList" [value]="language.langId">
+                                    {{language.locale}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
                 </ul>
             </mat-expansion-panel>
-            
+
         </mat-accordion>
         <div class="px-6 py-4">
-            <mat-slide-toggle color="primary" class="mr-5">{{'searchAllSchools' | translate}}</mat-slide-toggle>
-            <mat-slide-toggle color="primary">{{'includeInactiveStudents' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle color="primary" (change)="searchAllSchools($event)" class="mr-5">{{'searchAllSchools' | translate}}</mat-slide-toggle>
         </div>
     </div>
     <div class="search-toolbar py-3 px-6 text-right">
-        <button color="" mat-button type="button" class="mr-3">{{'reset' | translate}}</button>
+        <button color="" mat-button type="button" (click)="resetData()" class="mr-3">{{'reset' | translate}}</button>
         <button color="primary" mat-raised-button>{{'search' | translate}}</button>
     </div>
 

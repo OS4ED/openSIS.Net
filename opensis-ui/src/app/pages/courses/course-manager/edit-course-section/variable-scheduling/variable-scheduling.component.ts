@@ -64,7 +64,7 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
         this.courseSectionAddViewModel.courseVariableScheduleList[i] = this.detailsFromParentModal.courseSectionDetails.courseVariableSchedule[i];
         this.weekDaysList.map(val => {
           if (this.courseSectionAddViewModel.courseVariableScheduleList[i].day === val.label) {
-            this.courseSectionAddViewModel.courseVariableScheduleList[i].day = val.value;
+            this.courseSectionAddViewModel.courseVariableScheduleList[i].day = val.label;
           }
         })
         this.divCount[i] = i;
@@ -77,7 +77,7 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
         if(i!=0){
           this.courseSectionAddViewModel.courseVariableScheduleList.push(new CourseVariableSchedule());
         }
-        this.courseSectionAddViewModel.courseVariableScheduleList[i].day=item.value
+        this.courseSectionAddViewModel.courseVariableScheduleList[i].day=item.label
       this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
       this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
 
@@ -214,9 +214,10 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
     }
   }
   checkDuplicateRow() {
+    debugger;
     let Ids = [];
     for (let [i, val] of this.courseSectionAddViewModel.courseVariableScheduleList.entries()) {
-      Ids[i] = +this.courseSectionAddViewModel.courseVariableScheduleList[i].day.toString()
+      Ids[i] = this.courseSectionAddViewModel.courseVariableScheduleList[i].day
         + this.courseSectionAddViewModel.courseVariableScheduleList[i].periodId.toString()
         + this.courseSectionAddViewModel.courseVariableScheduleList[i].roomId
     }

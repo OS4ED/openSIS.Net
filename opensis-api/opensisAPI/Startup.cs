@@ -64,6 +64,8 @@ using opensis.core.StudentSchedule.Interfaces;
 using opensis.core.StudentSchedule.Services;
 using opensis.core.StaffSchedule.Interfaces;
 using opensis.core.StaffSchedule.Services;
+using opensis.core.StudentAttendances.Interfaces;
+using opensis.core.StudentAttendances.Services;
 
 namespace opensisAPI
 {
@@ -134,6 +136,8 @@ namespace opensisAPI
 
             services.AddScoped<IStaffScheduleRepository, StaffScheduleRepository>();
             services.AddScoped<IStaffScheduleService, StaffScheduleServices>();
+            services.AddScoped<IStudentAttendanceRepository, StudentAttendanceRepository>();
+            services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
 
 
 

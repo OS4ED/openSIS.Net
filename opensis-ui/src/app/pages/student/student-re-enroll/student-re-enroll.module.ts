@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { StudentReEnrollRoutingModule } from './student-re-enroll-routing.module';
 import { StudentReEnrollComponent } from './student-re-enroll.component';
 import { SecondaryToolbarModule } from '../../../../@vex/components/secondary-toolbar/secondary-toolbar.module';
@@ -28,7 +28,8 @@ import { SearchStudentComponent } from './search-student/search-student.componen
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatExpansionModule } from '@angular/material/expansion';
 import { IconModule } from '@visurel/iconify-angular';
-
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [StudentReEnrollComponent, SearchStudentComponent],
@@ -60,7 +61,10 @@ import { IconModule } from '@visurel/iconify-angular';
     FormsModule,
     ReactiveFormsModule,
     MatExpansionModule,
-    IconModule
-  ]
+    IconModule,
+    MatProgressSpinnerModule,
+    SharedModuleModule
+  ],
+  providers: [DatePipe]
 })
 export class StudentReEnrollModule { }

@@ -53,6 +53,7 @@ export class SchoolAddViewModel extends CommonField {
     this.schoolMaster.latitude = null;
     this.schoolMaster.longitude = null;
     this._tenantName = sessionStorage.getItem('tenant');
+    this._userName = sessionStorage.getItem("user");
     this._token = sessionStorage.getItem('token');
     this.selectedCategoryId = 0;
 
@@ -67,6 +68,7 @@ export class CheckSchoolInternalIdViewModel extends CommonField {
     super();
     this.tenantId = sessionStorage.getItem("tenantId");
     this._tenantName = sessionStorage.getItem("tenant");
+    this._userName = sessionStorage.getItem("user");
     this._token = sessionStorage.getItem("token");
   }
 }

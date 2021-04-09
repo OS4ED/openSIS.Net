@@ -29,7 +29,7 @@ namespace opensis.core.GradeLevel.Services
             GradelevelViewModel gradelevelViewModel = new GradelevelViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradelevel._tenantName, gradelevel._token))
+                if (TokenManager.CheckToken(gradelevel._tenantName + gradelevel._userName, gradelevel._token))
                 {
                     gradelevelViewModel = this.gradelevelRepository.AddGradelevel(gradelevel);
                 }
@@ -57,7 +57,7 @@ namespace opensis.core.GradeLevel.Services
             GradelevelViewModel gradelevelViewModel = new GradelevelViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradelevel._tenantName, gradelevel._token))
+                if (TokenManager.CheckToken(gradelevel._tenantName + gradelevel._userName, gradelevel._token))
                 {
                     gradelevelViewModel = this.gradelevelRepository.ViewGradelevel(gradelevel);
                 }
@@ -84,7 +84,7 @@ namespace opensis.core.GradeLevel.Services
             GradelevelViewModel gradelevelUpdate = new GradelevelViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradelevel._tenantName, gradelevel._token))
+                if (TokenManager.CheckToken(gradelevel._tenantName + gradelevel._userName, gradelevel._token))
                 {
                     gradelevelUpdate = this.gradelevelRepository.UpdateGradelevel(gradelevel);
                 }
@@ -112,7 +112,7 @@ namespace opensis.core.GradeLevel.Services
             GradelevelViewModel gradelevelDelete = new GradelevelViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradelevel._tenantName, gradelevel._token))
+                if (TokenManager.CheckToken(gradelevel._tenantName + gradelevel._userName, gradelevel._token))
                 {
                     gradelevelDelete = this.gradelevelRepository.DeleteGradelevel(gradelevel);
                 }
@@ -140,7 +140,7 @@ namespace opensis.core.GradeLevel.Services
             GradelevelListViewModel gradelevelList = new GradelevelListViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradelevel._tenantName, gradelevel._token))
+                if (TokenManager.CheckToken(gradelevel._tenantName + gradelevel._userName, gradelevel._token))
                 {
                     gradelevelList = this.gradelevelRepository.GetAllGradeLevels(gradelevel);
                 }
@@ -170,7 +170,7 @@ namespace opensis.core.GradeLevel.Services
             {
                 //gradeEquivalencyListViewModel = this.gradelevelRepository.GetAllGradeEquivalency(gradeEquivalencyListModel);
                 //return gradeEquivalencyListViewModel;
-                if (TokenManager.CheckToken(gradeEquivalencyListModel._tenantName, gradeEquivalencyListModel._token))
+                if (TokenManager.CheckToken(gradeEquivalencyListModel._tenantName + gradeEquivalencyListModel._userName, gradeEquivalencyListModel._token))
                 {
                     gradeEquivalencyListViewModel = this.gradelevelRepository.GetAllGradeEquivalency(gradeEquivalencyListModel);
                 }

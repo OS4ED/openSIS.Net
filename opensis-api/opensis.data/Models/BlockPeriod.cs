@@ -11,6 +11,7 @@ namespace opensis.data.Models
             CourseCalendarSchedule = new HashSet<CourseCalendarSchedule>();
             CourseFixedSchedule = new HashSet<CourseFixedSchedule>();
             CourseVariableSchedule = new HashSet<CourseVariableSchedule>();
+            StudentAttendance = new HashSet<StudentAttendance>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -32,5 +33,6 @@ namespace opensis.data.Models
         public virtual ICollection<CourseCalendarSchedule> CourseCalendarSchedule { get; set; }
         public virtual ICollection<CourseFixedSchedule> CourseFixedSchedule { get; set; }
         public virtual ICollection<CourseVariableSchedule> CourseVariableSchedule { get; set; }
+        public virtual ICollection<StudentAttendance> StudentAttendance { get; set; }
     }
 }

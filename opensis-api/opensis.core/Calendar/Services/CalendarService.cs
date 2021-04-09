@@ -29,7 +29,7 @@ namespace opensis.core.Calender.Services
         public CalendarAddViewModel AddCalendar(CalendarAddViewModel calendar)
         {
             CalendarAddViewModel calenderAddViewModel = new CalendarAddViewModel();
-            if (TokenManager.CheckToken(calendar._tenantName, calendar._token))
+            if (TokenManager.CheckToken(calendar._tenantName + calendar._userName, calendar._token))
             {
 
                 calenderAddViewModel = this.calendarRepository.AddCalendar(calendar);
@@ -53,7 +53,7 @@ namespace opensis.core.Calender.Services
         public CalendarAddViewModel ViewCalendar(CalendarAddViewModel calendar)
         {
             CalendarAddViewModel calendarAddViewModel = new CalendarAddViewModel();
-            if (TokenManager.CheckToken(calendar._tenantName, calendar._token))
+            if (TokenManager.CheckToken(calendar._tenantName + calendar._userName, calendar._token))
             {
                 calendarAddViewModel = this.calendarRepository.ViewCalendar(calendar);
                 
@@ -77,7 +77,7 @@ namespace opensis.core.Calender.Services
         public CalendarAddViewModel UpdateCalendar(CalendarAddViewModel calendar)
         {
             CalendarAddViewModel calendarAddViewModel = new CalendarAddViewModel();
-            if (TokenManager.CheckToken(calendar._tenantName, calendar._token))
+            if (TokenManager.CheckToken(calendar._tenantName + calendar._userName, calendar._token))
             {
                 calendarAddViewModel = this.calendarRepository.UpdateCalendar(calendar);
                 return calendarAddViewModel;
@@ -101,7 +101,7 @@ namespace opensis.core.Calender.Services
             CalendarListModel calendarListModel = new CalendarListModel();
             try
             {
-                if (TokenManager.CheckToken(calendarList._tenantName, calendarList._token))
+                if (TokenManager.CheckToken(calendarList._tenantName + calendarList._userName, calendarList._token))
                 {
                     calendarListModel = this.calendarRepository.GetAllCalendar(calendarList);
                 }
@@ -130,7 +130,7 @@ namespace opensis.core.Calender.Services
             CalendarAddViewModel calendarDelete = new CalendarAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(calendar._tenantName, calendar._token))
+                if (TokenManager.CheckToken(calendar._tenantName + calendar._userName, calendar._token))
                 {
                     calendarDelete = this.calendarRepository.DeleteCalendar(calendar);
                 }

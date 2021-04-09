@@ -128,7 +128,7 @@
         </mat-paginator>
     </div>
 </mat-dialog-content>
-<mat-dialog-actions *ngIf="isSearchRecordAvailable" fxLayout="row" fxLayoutAlign="end center" class="py-0 mb-2">
+<mat-dialog-actions *ngIf="courseSectionList?.data?.length>0" fxLayout="row" fxLayoutAlign="end center" class="py-0 mb-2">
     <button color="primary" mat-raised-button type="submit" (click)="selectedCourseSection()">
         {{ 'selectCourseSections' | translate }}
     </button>

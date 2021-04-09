@@ -43,7 +43,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
   icClose = icClose;
   selection: SelectionModel<AllCourseSectionView> = new SelectionModel<AllCourseSectionView>(true, []);
   displayedColumns: string[] = ['courseSelected', 'course', 'courseSection', 'markingPeriod', 'startDate', 'endDate', 'seats', 'available'];
-  selectedMarkingPeriod: MarkingPeriodTitleList= new MarkingPeriodTitleList();
+  selectedMarkingPeriod: MarkingPeriodTitleList = new MarkingPeriodTitleList();
 
   constructor(public translateService: TranslateService,
     private dialogRef: MatDialogRef<AddCourseSectionComponent>,
@@ -138,21 +138,21 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
         item.qtrMarkingPeriodId = '2_' + item.qtrMarkingPeriodId;
       }
 
-      if(item.yrMarkingPeriodId || item.smstrMarkingPeriodId || item.qtrMarkingPeriodId){
-        for(let markingPeriod of this.getMarkingPeriodTitleListModel.getMarkingPeriodView){
-          if(markingPeriod.value==item.yrMarkingPeriodId){
-            item.markingPeriodTitle=markingPeriod.text;
+      if (item.yrMarkingPeriodId || item.smstrMarkingPeriodId || item.qtrMarkingPeriodId) {
+        for (let markingPeriod of this.getMarkingPeriodTitleListModel.getMarkingPeriodView) {
+          if (markingPeriod.value == item.yrMarkingPeriodId) {
+            item.markingPeriodTitle = markingPeriod.text;
             break;
-          }else if(markingPeriod.value==item.smstrMarkingPeriodId){
-            item.markingPeriodTitle=markingPeriod.text;
+          } else if (markingPeriod.value == item.smstrMarkingPeriodId) {
+            item.markingPeriodTitle = markingPeriod.text;
             break;
-          }else if(markingPeriod.value==item.qtrMarkingPeriodId){
-            item.markingPeriodTitle=markingPeriod.text;
+          } else if (markingPeriod.value == item.qtrMarkingPeriodId) {
+            item.markingPeriodTitle = markingPeriod.text;
             break;
           }
         }
-      }else{
-        item.markingPeriodTitle='Custom'
+      } else {
+        item.markingPeriodTitle = 'Custom'
       }
       return item;
     });
@@ -175,8 +175,15 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
       }
       return item;
     })
-   
-    this.dialogRef.close(courseSectionReturnList);
+    if (courseSectionReturnList.length > 0) {
+      this.dialogRef.close(courseSectionReturnList);
+
+    } else {
+      this.snackbar.open('Please select at least 1 course section', '', {
+        duration: 2000
+      });
+    }
+
   }
 
   /** Whether the number of selected elements matches the total number of rows. */

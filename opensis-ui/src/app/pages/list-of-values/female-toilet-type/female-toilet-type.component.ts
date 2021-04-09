@@ -22,6 +22,8 @@ import { CommonService } from './../../../services/common.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { ExcelService } from '../../../services/excel.service';
 import { SharedFunction } from '../../shared/shared-function';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-female-toilet-type',
@@ -60,6 +62,11 @@ export class FemaleToiletTypeComponent implements OnInit {
   femaleToiletTypeList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   listCount;
 
   constructor(
@@ -70,7 +77,8 @@ export class FemaleToiletTypeComponent implements OnInit {
     private commonService:CommonService,
     private loaderService:LoaderService,
     private excelService:ExcelService,
-    public commonfunction:SharedFunction
+    public commonfunction:SharedFunction,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -79,6 +87,13 @@ export class FemaleToiletTypeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 28);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 36);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllFemaleToiletType();
   }
   

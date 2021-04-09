@@ -17,8 +17,9 @@ import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSelectModule } from '@angular/material/select';
 import { MatTableModule } from '@angular/material/table';
 import { TranslateModule } from '@ngx-translate/core';
-
-
+import { FormsModule } from '@angular/forms';
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { SharedModuleModule } from '../../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [AddTeacherComponent],
@@ -39,7 +40,10 @@ import { TranslateModule } from '@ngx-translate/core';
     MatCheckboxModule,
     MatSelectModule,
     MatTableModule,
-    TranslateModule
+    TranslateModule,
+    FormsModule,
+    MatPaginatorModule,
+    SharedModuleModule
   ]
 })
 export class AddTeacherModule { }

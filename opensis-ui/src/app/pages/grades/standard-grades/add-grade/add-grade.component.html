@@ -1,0 +1,31 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "addGrade" | translate }}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content>
+    <ul class="mt-4">
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "title" | translate }} <span>*</span></mat-label>
+                <input name="title" matInput />
+            </mat-form-field>
+        </li>
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "description" | translate }} <span>*</span></mat-label>
+                <input name="description" matInput />
+            </mat-form-field>
+        </li>
+    </ul>
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-4">
+    <button mat-flat-button class="uppercase">Cancel</button>
+    <button color="primary" mat-raised-button type="submit" class="uppercase">Submit</button>
+</mat-dialog-actions>

@@ -82,11 +82,8 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
     this.fixedSchedulingModel.courseFixedSchedule.gradeScaleId=this.detailsFromParentModal.courseSectionDetails.courseSection.gradeScaleId;
     this.fixedSchedulingModel.courseFixedSchedule.tenantId=sessionStorage.getItem('tenantId')
     this.fixedSchedulingModel.courseFixedSchedule.updatedBy=sessionStorage.getItem("email");
-    let days = this.detailsFromParentModal.courseSectionDetails.courseSection.meetingDays.split('|').join('');
-    for(let i=0;i<days.length;i++){
-      this.activeDays.push(parseInt(days[i]));
-    }
-  }
+    this.activeDays = this.detailsFromParentModal.courseSectionDetails.courseSection.meetingDays.split('|');
+      }
  
   getAllRooms(){
     this.roomService.getAllRoom(this.roomListViewModel).subscribe(
@@ -139,6 +136,7 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
 
   
   selectDays(event:Event, name) {
+
     event.preventDefault();
     if(this.weekArray.includes(name)){
       var index = this.activeDays.indexOf(name);

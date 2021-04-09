@@ -23,6 +23,7 @@ export class GetAllSectionModel extends CommonField{
         this.tenantId= sessionStorage.getItem("tenantId");
         this.schoolId= +sessionStorage.getItem("selectedSchoolId");
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
         this.isSectionAvailable=false;
     }
@@ -51,6 +52,7 @@ export class SectionAddModel extends CommonField {
         super(); 
         this.tableSections= new TableSection();
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 

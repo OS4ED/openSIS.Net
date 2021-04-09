@@ -30,7 +30,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeAddViewModel AttendanceCodeAddModel = new AttendanceCodeAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName, attendanceCodeAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName+ attendanceCodeAddViewModel._userName, attendanceCodeAddViewModel._token))
                 {
 
                     AttendanceCodeAddModel = this.attendanceCodeRepository.AddAttendanceCode(attendanceCodeAddViewModel);                
@@ -62,7 +62,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeAddViewModel attendanceCodeViewModel = new AttendanceCodeAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName, attendanceCodeAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName + attendanceCodeAddViewModel._userName, attendanceCodeAddViewModel._token))
                 {
                     attendanceCodeViewModel = this.attendanceCodeRepository.ViewAttendanceCode(attendanceCodeAddViewModel);
                 }
@@ -89,7 +89,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeAddViewModel attendanceCodeUpdateModel = new AttendanceCodeAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName, attendanceCodeAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName + attendanceCodeAddViewModel._userName, attendanceCodeAddViewModel._token))
                 {
                     attendanceCodeUpdateModel = this.attendanceCodeRepository.UpdateAttendanceCode(attendanceCodeAddViewModel);
                 }
@@ -117,7 +117,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeListViewModel attendanceCodeListModel = new AttendanceCodeListViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeListViewModel._tenantName, attendanceCodeListViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeListViewModel._tenantName + attendanceCodeListViewModel._userName, attendanceCodeListViewModel._token))
                 {
                     attendanceCodeListModel = this.attendanceCodeRepository.GetAllAttendanceCode(attendanceCodeListViewModel);
                 }
@@ -145,7 +145,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeAddViewModel attendanceCodeDeleteModel = new AttendanceCodeAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName, attendanceCodeAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeAddViewModel._tenantName + attendanceCodeAddViewModel._userName, attendanceCodeAddViewModel._token))
                 {
                     attendanceCodeDeleteModel = this.attendanceCodeRepository.DeleteAttendanceCode(attendanceCodeAddViewModel);
                 }
@@ -173,7 +173,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeCategoriesAddViewModel AttendanceCodeCategoriesAddModel = new AttendanceCodeCategoriesAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName + attendanceCodeCategoriesAddViewModel._userName, attendanceCodeCategoriesAddViewModel._token))
                 {
 
                     AttendanceCodeCategoriesAddModel = this.attendanceCodeRepository.AddAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);                 
@@ -203,7 +203,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesViewModel = new AttendanceCodeCategoriesAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName + attendanceCodeCategoriesAddViewModel._userName, attendanceCodeCategoriesAddViewModel._token))
                 {
                     attendanceCodeCategoriesViewModel = this.attendanceCodeRepository.ViewAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
                 }
@@ -230,7 +230,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesUpdateModel = new AttendanceCodeCategoriesAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName + attendanceCodeCategoriesAddViewModel._userName, attendanceCodeCategoriesAddViewModel._token))
                 {
                     attendanceCodeCategoriesUpdateModel = this.attendanceCodeRepository.UpdateAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
                 }
@@ -258,7 +258,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeCategoriesListViewModel attendanceCodeCategoriesListModel = new AttendanceCodeCategoriesListViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeCategoriesListViewModel._tenantName, attendanceCodeCategoriesListViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeCategoriesListViewModel._tenantName + attendanceCodeCategoriesListViewModel._userName, attendanceCodeCategoriesListViewModel._token))
                 {
                     attendanceCodeCategoriesListModel = this.attendanceCodeRepository.GetAllAttendanceCodeCategories(attendanceCodeCategoriesListViewModel);
                 }
@@ -286,7 +286,7 @@ namespace opensis.core.AttendanceCode.Services
             AttendanceCodeCategoriesAddViewModel attendanceCodeCategoriesDeleteModel = new AttendanceCodeCategoriesAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName, attendanceCodeCategoriesAddViewModel._token))
+                if (TokenManager.CheckToken(attendanceCodeCategoriesAddViewModel._tenantName + attendanceCodeCategoriesAddViewModel._userName, attendanceCodeCategoriesAddViewModel._token))
                 {
                     attendanceCodeCategoriesDeleteModel = this.attendanceCodeRepository.DeleteAttendanceCodeCategories(attendanceCodeCategoriesAddViewModel);
                 }

@@ -130,6 +130,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
   submit() {
     this.addParentInfoModel._token = sessionStorage.getItem("token");
     this.addParentInfoModel._tenantName = sessionStorage.getItem("tenant");
+    this.addParentInfoModel._userName= sessionStorage.getItem("user");
     this.parentInfoService.updateParentInfo(this.addParentInfoModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Address Updation failed. ' + sessionStorage.getItem("httpError"), '', {

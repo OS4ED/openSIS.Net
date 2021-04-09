@@ -12,6 +12,8 @@ import { ContainerModule } from '../../../../@vex/directives/container/container
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
+import { MatRadioModule } from '@angular/material/radio';
 
 
 
@@ -28,7 +30,10 @@ import { TranslateModule } from '@ngx-translate/core';
     ContainerModule,
     MatCheckboxModule,
     MatTooltipModule,
-    TranslateModule
+    TranslateModule,
+    SharedModuleModule,
+    MatRadioModule
+    
   ]
 })
 export class TeacherReassignmentModule { }

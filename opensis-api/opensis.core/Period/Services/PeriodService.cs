@@ -33,7 +33,7 @@ namespace opensis.core.Period.Services
             BlockAddViewModel blockAdd = new BlockAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockAddViewModel._tenantName, blockAddViewModel._token))
+                if (TokenManager.CheckToken(blockAddViewModel._tenantName + blockAddViewModel._userName, blockAddViewModel._token))
                 {
                     blockAdd = this.periodRepository.AddBlock(blockAddViewModel);
                 }
@@ -61,7 +61,7 @@ namespace opensis.core.Period.Services
             BlockAddViewModel blockUpdate = new BlockAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockAddViewModel._tenantName, blockAddViewModel._token))
+                if (TokenManager.CheckToken(blockAddViewModel._tenantName + blockAddViewModel._userName, blockAddViewModel._token))
                 {
                     blockUpdate = this.periodRepository.UpdateBlock(blockAddViewModel);
                 }
@@ -89,7 +89,7 @@ namespace opensis.core.Period.Services
             BlockAddViewModel blockDelete = new BlockAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockAddViewModel._tenantName, blockAddViewModel._token))
+                if (TokenManager.CheckToken(blockAddViewModel._tenantName + blockAddViewModel._userName, blockAddViewModel._token))
                 {
                     blockDelete = this.periodRepository.DeleteBlock(blockAddViewModel);
                 }
@@ -117,7 +117,7 @@ namespace opensis.core.Period.Services
             BlockPeriodAddViewModel blockPeriodAdd = new BlockPeriodAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockPeriodAddViewModel._tenantName, blockPeriodAddViewModel._token))
+                if (TokenManager.CheckToken(blockPeriodAddViewModel._tenantName + blockPeriodAddViewModel._userName, blockPeriodAddViewModel._token))
                 {
                     blockPeriodAdd = this.periodRepository.AddBlockPeriod(blockPeriodAddViewModel);
                 }
@@ -145,7 +145,7 @@ namespace opensis.core.Period.Services
             BlockPeriodAddViewModel blockPeriodUpdatet = new BlockPeriodAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockPeriodAddViewModel._tenantName, blockPeriodAddViewModel._token))
+                if (TokenManager.CheckToken(blockPeriodAddViewModel._tenantName + blockPeriodAddViewModel._userName, blockPeriodAddViewModel._token))
                 {
                     blockPeriodUpdatet = this.periodRepository.UpdateBlockPeriod(blockPeriodAddViewModel);
                 }
@@ -173,7 +173,7 @@ namespace opensis.core.Period.Services
             BlockPeriodAddViewModel blockPeriodDelete = new BlockPeriodAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockPeriodAddViewModel._tenantName, blockPeriodAddViewModel._token))
+                if (TokenManager.CheckToken(blockPeriodAddViewModel._tenantName + blockPeriodAddViewModel._userName, blockPeriodAddViewModel._token))
                 {
                     blockPeriodDelete = this.periodRepository.DeleteBlockPeriod(blockPeriodAddViewModel);
                 }
@@ -201,7 +201,7 @@ namespace opensis.core.Period.Services
             BlockListViewModel blockList = new BlockListViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockListViewModel._tenantName, blockListViewModel._token))
+                if (TokenManager.CheckToken(blockListViewModel._tenantName + blockListViewModel._userName, blockListViewModel._token))
                 {
                     blockList = this.periodRepository.GetAllBlockList(blockListViewModel);
                 }
@@ -229,7 +229,7 @@ namespace opensis.core.Period.Services
             BlockPeriodSortOrderViewModel blockPeriodSortOrderUpdate = new BlockPeriodSortOrderViewModel();
             try
             {
-                if (TokenManager.CheckToken(blockPeriodSortOrderViewModel._tenantName, blockPeriodSortOrderViewModel._token))
+                if (TokenManager.CheckToken(blockPeriodSortOrderViewModel._tenantName + blockPeriodSortOrderViewModel._userName, blockPeriodSortOrderViewModel._token))
                 {
                     blockPeriodSortOrderUpdate = this.periodRepository.UpdateBlockPeriodSortOrder(blockPeriodSortOrderViewModel);
                 }

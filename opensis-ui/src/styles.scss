@@ -276,7 +276,7 @@
     background  : #fff;
     border-top  : 1px solid #eee;
     border-right: 1px solid rgb(228, 228, 228);
-    height      : calc(100vh - 64px);
+    height      : calc(100vh - 120px);
 
     .mat-expansion-panel:not([class*="mat-elevation-z"]) {
       box-shadow: none;
@@ -309,13 +309,13 @@
     }
 
     .simplebar-wrapper {
-      height      : calc(100vh - 65px);
+      height      : calc(100vh - 121px);
 
       .simplebar-mask {
-        height      : calc(100vh - 65px);
+        height      : calc(100vh - 121px);
 
         .simplebar-content-wrapper {
-          height      : calc(100vh - 65px);
+          height      : calc(100vh - 121px);
         }
       }
     }
@@ -323,7 +323,7 @@
 
   .right-content {
     width: calc(100% - 240px);
-    height      : calc(100vh - 64px);
+    height      : calc(100vh - 120px);
     overflow: auto;
   }
 }

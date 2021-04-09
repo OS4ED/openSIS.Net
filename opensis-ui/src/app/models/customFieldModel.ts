@@ -44,6 +44,7 @@ export class CustomFieldAddView extends CommonField{
     constructor(){
         super();
         this._tenantName=sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
         this.customFields=new CustomFieldModel()
     }
@@ -55,6 +56,7 @@ export class CustomFieldListViewModel extends CommonField {
     constructor() {
         super();
         this._tenantName=sessionStorage.getItem("tenant")
+        this._userName = sessionStorage.getItem("user");
         this.tenantId=sessionStorage.getItem("tenantId")
         this.schoolId=+sessionStorage.getItem("selectedSchoolId")
         this._token=sessionStorage.getItem("token")
@@ -69,6 +71,7 @@ export class CustomFieldDragDropModel extends CommonField{
     constructor(){
         super();
         this._tenantName=sessionStorage.getItem("tenant")
+        this._userName = sessionStorage.getItem("user");
         this.schoolId=+sessionStorage.getItem("selectedSchoolId")
         this._token=sessionStorage.getItem("token")
         this.previousSortOrder=0;

@@ -1,6 +1,7 @@
 ﻿using opensis.core.helper;
 using opensis.core.StaffSchedule.Interfaces;
 using opensis.data.Interface;
+using opensis.data.ViewModels.CourseManager;
 using opensis.data.ViewModels.StaffSchedule;
 using System;
 using System.Collections.Generic;
@@ -30,7 +31,7 @@ namespace opensis.core.StaffSchedule.Services
             StaffScheduleViewModel staffSchedule = new StaffScheduleViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffScheduleViewModel._tenantName, staffScheduleViewModel._token))
+                if (TokenManager.CheckToken(staffScheduleViewModel._tenantName + staffScheduleViewModel._userName, staffScheduleViewModel._token))
                 {
                     staffSchedule = this.staffScheduleRepository.StaffScheduleViewForCourseSection(staffScheduleViewModel);
                 }
@@ -58,7 +59,7 @@ namespace opensis.core.StaffSchedule.Services
             StaffScheduleViewModel staffSchedule = new StaffScheduleViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffScheduleViewModel._tenantName, staffScheduleViewModel._token))
+                if (TokenManager.CheckToken(staffScheduleViewModel._tenantName + staffScheduleViewModel._userName, staffScheduleViewModel._token))
                 {
                     staffSchedule = this.staffScheduleRepository.AddStaffCourseSectionSchedule(staffScheduleViewModel);
                 }
@@ -86,7 +87,7 @@ namespace opensis.core.StaffSchedule.Services
             StaffScheduleViewModel staffSchedule = new StaffScheduleViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffScheduleViewModel._tenantName, staffScheduleViewModel._token))
+                if (TokenManager.CheckToken(staffScheduleViewModel._tenantName + staffScheduleViewModel._userName, staffScheduleViewModel._token))
                 {
                     staffSchedule = this.staffScheduleRepository.CheckAvailabilityStaffCourseSectionSchedule(staffScheduleViewModel);
                 }
@@ -102,6 +103,113 @@ namespace opensis.core.StaffSchedule.Services
                 staffSchedule._message = es.Message;
             }
             return staffSchedule;
+        }
+
+        /// <summary>
+        /// Get All Scheduled CourseSection For Staff
+        /// </summary>
+        /// <param name="scheduledCourseSectionViewModel"></param>
+        /// <returns></returns>
+        public ScheduledCourseSectionViewModel GetAllScheduledCourseSectionForStaff(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel scheduledCourseSectionView = new ScheduledCourseSectionViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(scheduledCourseSectionViewModel._tenantName + scheduledCourseSectionViewModel._userName, scheduledCourseSectionViewModel._token))
+                {
+                    scheduledCourseSectionView = this.staffScheduleRepository.GetAllScheduledCourseSectionForStaff(scheduledCourseSectionViewModel);
+                }
+                else
+                {
+                    scheduledCourseSectionView._failure = true;
+                    scheduledCourseSectionView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                scheduledCourseSectionView._failure = true;
+                scheduledCourseSectionView._message = es.Message;
+            }
+            return scheduledCourseSectionView;
+        }
+
+        /// <summary>
+        /// Add Staff CourseSection ReSchedule
+        /// </summary>
+        /// <param name="staffScheduleViewModel"></param>
+        /// <returns></returns>
+        public StaffScheduleViewModel AddStaffCourseSectionReSchedule(StaffScheduleViewModel staffScheduleViewModel)
+        {
+            StaffScheduleViewModel staffSchedule = new StaffScheduleViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(staffScheduleViewModel._tenantName + staffScheduleViewModel._userName, staffScheduleViewModel._token))
+                {
+                    staffSchedule = this.staffScheduleRepository.AddStaffCourseSectionReSchedule(staffScheduleViewModel);
+                }
+                else
+                {
+                    staffSchedule._failure = true;
+                    staffSchedule._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                staffSchedule._failure = true;
+                staffSchedule._message = es.Message;
+            }
+            return staffSchedule;
+        }
+
+        public StaffListViewModel checkAvailabilityStaffCourseSectionReSchedule(StaffListViewModel staffListViewModel)
+        {
+            StaffListViewModel staffListView = new StaffListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(staffListViewModel._tenantName + staffListViewModel._userName, staffListViewModel._token))
+                {
+                    staffListView = this.staffScheduleRepository.checkAvailabilityStaffCourseSectionReSchedule(staffListViewModel);
+                }
+                else
+                {
+                    staffListView._failure = true;
+                    staffListView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                staffListView._failure = true;
+                staffListView._message = es.Message;
+            }
+            return staffListView;
+        }
+
+        /// <summary>
+        ///  Add Staff CourseSection Re-Schedule By Course Wise
+        /// </summary>
+        /// <param name="staffListViewModel"></param>
+        /// <returns></returns>
+        public StaffListViewModel AddStaffCourseSectionReScheduleByCourse(StaffListViewModel staffListViewModel)
+        {
+            StaffListViewModel staffListView = new StaffListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(staffListViewModel._tenantName + staffListViewModel._userName, staffListViewModel._token))
+                {
+                    staffListView = this.staffScheduleRepository.AddStaffCourseSectionReScheduleByCourse(staffListViewModel);
+                }
+                else
+                {
+                    staffListView._failure = true;
+                    staffListView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                staffListView._failure = true;
+                staffListView._message = es.Message;
+            }
+            return staffListView;
         }
     }
 }

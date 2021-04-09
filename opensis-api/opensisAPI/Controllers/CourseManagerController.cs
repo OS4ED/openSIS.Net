@@ -289,42 +289,42 @@ namespace opensisAPI.Controllers
             return courseSectionDelete;
         }
 
-        /// <summary>
-        /// Get All CourseStandard For Course
-        /// </summary>
-        /// <param name="courseStandardForCourseViewModel"></param>
-        /// <returns></returns>
-        [HttpPost("getAllCourseStandardForCourseSection")]
-        public ActionResult<CourseStandardForCourseViewModel> GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
-        {
-            CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
-            try
-            {
-                courseStandardForCourseView = _courseManagerService.GetAllCourseStandardForCourseSection(courseStandardForCourseViewModel);
-            }
-            catch (Exception es)
-            {
-                courseStandardForCourseView._failure = true;
-                courseStandardForCourseView._message = es.Message;
-            }
-            return courseStandardForCourseView;
-        }
+        ///// <summary>
+        ///// Get All CourseStandard For Course
+        ///// </summary>
+        ///// <param name="courseStandardForCourseViewModel"></param>
+        ///// <returns></returns>
+        //[HttpPost("getAllCourseStandardForCourseSection")]
+        //public ActionResult<CourseStandardForCourseViewModel> GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
+        //{
+        //    CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
+        //    try
+        //    {
+        //        courseStandardForCourseView = _courseManagerService.GetAllCourseStandardForCourseSection(courseStandardForCourseViewModel);
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        courseStandardForCourseView._failure = true;
+        //        courseStandardForCourseView._message = es.Message;
+        //    }
+        //    return courseStandardForCourseView;
+        //}
 
-        [HttpPost("deleteSchedule")]
-        public ActionResult<DeleteScheduleViewModel> DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel)
-        {
-            DeleteScheduleViewModel deleteSchedule = new DeleteScheduleViewModel();
-            try
-            {
-                deleteSchedule = _courseManagerService.DeleteSchedule(deleteScheduleViewModel);
-            }
-            catch (Exception es)
-            {
-                deleteSchedule._failure = true;
-                deleteSchedule._message = es.Message;
-            }
-            return deleteSchedule;
-        }
+        //[HttpPost("deleteSchedule")]
+        //public ActionResult<DeleteScheduleViewModel> DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel)
+        //{
+        //    DeleteScheduleViewModel deleteSchedule = new DeleteScheduleViewModel();
+        //    try
+        //    {
+        //        deleteSchedule = _courseManagerService.DeleteSchedule(deleteScheduleViewModel);
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        deleteSchedule._failure = true;
+        //        deleteSchedule._message = es.Message;
+        //    }
+        //    return deleteSchedule;
+        //}
 
         [HttpPost("searchCourseSectionForSchedule")]
         public ActionResult<SearchCourseSectionViewModel> SearchCourseSectionForSchedule(SearchCourseSectionViewModel searchCourseSectionViewModel)
@@ -357,5 +357,28 @@ namespace opensisAPI.Controllers
             }
             return staffListView;
         }
+
+
+     [HttpPost("searchCourseForSchedule")]
+     
+     public ActionResult <SearchCourseScheduleViewModel> SearchCourseForSchedule(SearchCourseScheduleViewModel searchCourseScheduleViewModel)
+        {
+            SearchCourseScheduleViewModel SearchCourseSchedule = new SearchCourseScheduleViewModel();
+
+            try
+            {
+                SearchCourseSchedule = _courseManagerService.SearchCourseForSchedule(searchCourseScheduleViewModel);
+
+            }
+
+            catch(Exception ex)
+            {
+                SearchCourseSchedule._failure = true;
+                SearchCourseSchedule._message = ex.Message;
+            }
+
+            return SearchCourseSchedule;
+        }
+
     }
 }

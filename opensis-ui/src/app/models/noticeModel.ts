@@ -39,6 +39,7 @@ export class NoticeListViewModel extends CommonField {
         this.schoolId = + sessionStorage.getItem('selectedSchoolId');
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem('tenant');
+        this._userName = sessionStorage.getItem("user");
         this._token= sessionStorage.getItem("token");
     }
 }

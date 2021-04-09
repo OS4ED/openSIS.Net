@@ -29,6 +29,7 @@ export class BlockAddViewModel extends CommonField {
     constructor() {
         super();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.block = new Block()
     }
@@ -65,6 +66,7 @@ export class BlockListViewModel extends CommonField {
     constructor() {
         super();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.tenantId = sessionStorage.getItem('tenantId');
         this.schoolId = +sessionStorage.getItem('selectedSchoolId');
@@ -105,6 +107,7 @@ export class BlockPeriodAddViewModel extends CommonField {
     constructor() {
         super();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.blockPeriod = new BlockPeriod();
     }
@@ -120,6 +123,7 @@ export class BlockPeriodSortOrderViewModel extends CommonField {
     constructor() {
         super();
         this._tenantName = sessionStorage.getItem("tenant")
+        this._userName = sessionStorage.getItem("user");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId")
         this.tenantId = sessionStorage.getItem('tenantId')
         this._token = sessionStorage.getItem("token")

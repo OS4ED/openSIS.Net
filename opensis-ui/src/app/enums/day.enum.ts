@@ -7,3 +7,5 @@ export enum weekDay{
   "Friday"=5,
   "Saturday"=6 
   }
+
+  

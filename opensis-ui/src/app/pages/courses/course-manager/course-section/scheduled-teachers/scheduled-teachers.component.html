@@ -1,0 +1,24 @@
+<ul class="grid sm:grid-cols-2 sm:col-gap-6 row-gap-6 sm:row-gap-8 my-6 px-6" *ngIf="scheduledTeacher?.courseSectionsList.length>0;else noTeachers">
+    <li *ngFor="let staff of scheduledTeacher.courseSectionsList[0]?.staffCoursesectionSchedule">
+        <div class="bg-white rounded border px-4 py-3">
+            <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" class="items-center">
+                <div class="relative" fxFlex="none">
+                    <img src="{{staff.staffMaster.staffPhoto==null?'assets/img/default-person.jpg':'data:image/png;base64,'+ staff.staffPhoto}}" class="avatar">
+                </div>
+                <div class="overflow-hidden" fxFlex="auto">
+                    <a routerLink="" class="subheading-2 leading-snug text-blue cursor-pointer">{{staff.staffMaster.firstGivenName+' '+staff.staffMaster.lastFamilyName}}</a>
+                </div>
+                <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
+                        <a *ngIf="staff.staffMaster.staffEmail" [href]="'mailTo:'+staff.staffMaster.staffEmail">
+                            <mat-icon [icIcon]="icEmail"></mat-icon>
+                        </a>
+                </div>
+            </div>
+        </div>
+    </li>
+   
+</ul>
+
+<ng-template #noTeachers>
+    <p class="text-center">Teacher(s) has not scheduled yet.</p>
+</ng-template>

@@ -260,7 +260,7 @@ namespace opensis.data.Repository
 
                     var getStudentLanguageData = this.context?.StudentMaster.Where(x => x.FirstLanguageId == languageAddModel.Language.LangId || x.SecondLanguageId == languageAddModel.Language.LangId || x.ThirdLanguageId == languageAddModel.Language.LangId).ToList();
 
-                    if (getLanguageValue.Lcid.ToLower() == "en-us".ToLower() || getLanguageValue.Lcid.ToLower() == "fr-fr".ToLower() || getLanguageValue.Lcid.ToLower() == "es-es".ToLower())
+                    if (getLanguageValue.Lcid != null && (getLanguageValue.Lcid.ToLower() == "en-us".ToLower() || getLanguageValue.Lcid.ToLower() == "fr-fr".ToLower() || getLanguageValue.Lcid.ToLower() == "es-es".ToLower()))
                     {
                         deleteLanguageModel._message = "This Language is not deletable";
                         deleteLanguageModel._failure = true;
@@ -908,7 +908,7 @@ namespace opensis.data.Repository
                     dashboardView.schoolCalendar = defaultCalender;
                     dashboardView.schoolCalendar.SchoolMaster = null;
 
-                    var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalender.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true) &&(x.StartDate >= todayDate || (x.StartDate <= todayDate && todayDate <= x.EndDate))).ToList();
+                    var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalender.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true) /*&&(x.StartDate >= todayDate || (x.StartDate <= todayDate && todayDate <= x.EndDate))*/).ToList();
                     if (Events.Count > 0)
                     {
                         dashboardView.calendarEventList = Events;

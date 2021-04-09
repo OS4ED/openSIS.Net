@@ -136,7 +136,6 @@
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>{{'maritalStatus'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentMasterSearchModel.maritalStatus" name="maritalStatus">
-                                <mat-option value=""></mat-option>
                                 <mat-option *ngFor="let maritalStatus of maritalStatusList" [value]="maritalStatus.lovColumnValue">
                                     {{maritalStatus.lovColumnValue}}</mat-option>
                             </mat-select>
@@ -293,24 +292,6 @@
                         <mat-form-field appearance="outline" color="primary">
                             <mat-label>School Email</mat-label>
                             <input [(ngModel)]="studentMasterSearchModel.schoolEmail" name="schoolEmail" matInput>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field appearance="outline" color="primary">
-                            <mat-label>City</mat-label>
-                            <input [(ngModel)]="studentMasterSearchModel.homeAddressCity" name="homeAddressCity" matInput>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field appearance="outline" color="primary">
-                            <mat-label>Zip/Postal Code</mat-label>
-                            <input [(ngModel)]="studentMasterSearchModel.homeAddressZip" name="homeAddressZip" matInput>
-                        </mat-form-field>
-                    </li>
-                    <li>
-                        <mat-form-field appearance="outline" color="primary">
-                            <mat-label>Bus No</mat-label>
-                            <input [(ngModel)]="studentMasterSearchModel.busNo" name="busNo" matInput>
                         </mat-form-field>
                     </li>
                 </ul>

@@ -14,7 +14,6 @@ import { GetAllMembersList } from '../../../../models/membershipModel';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StaffService } from '../../../../services/staff.service';
 import { MatTableDataSource } from '@angular/material/table';
-import { SelectionModel } from '@angular/cdk/collections';
 import { LoaderService } from '../../../../services/loader.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -143,10 +142,11 @@ export class AddTeacherComponent implements OnInit {
   }
 
   submit(){
+    this.filterParams=[]
     for (var key in this.staffMasterSearchModel) {
 
       if (this.staffMasterSearchModel.hasOwnProperty(key))
-        if (this.staffMasterSearchModel[key] !== null) {
+        if (this.staffMasterSearchModel[key]) {
           this.filterParams.push({ "columnName": key, "filterOption": this.findFilterOption(key), "filterValue": this.staffMasterSearchModel[key] })
         }
     }

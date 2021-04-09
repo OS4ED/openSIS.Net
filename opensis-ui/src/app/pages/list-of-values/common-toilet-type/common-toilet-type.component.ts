@@ -21,7 +21,8 @@ import { LovList, LovAddView } from './../../../models/lovModel';
 import { ExcelService } from '../../../services/excel.service';
 import { SharedFunction } from '../../shared/shared-function';
 import { CommonService } from './../../../services/common.service';
-
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
   selector: 'vex-common-toilet-type',
@@ -60,6 +61,11 @@ export class CommonToiletTypeComponent implements OnInit {
   commonToiletTypeList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   listCount;
+  editPermission = false;
+  deletePermission = false;
+  addPermission = false;
+  permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
+  permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(
     private router: Router,
@@ -69,7 +75,8 @@ export class CommonToiletTypeComponent implements OnInit {
     private commonService:CommonService,
     private loaderService:LoaderService,
     private excelService:ExcelService,
-    public commonfunction:SharedFunction
+    public commonfunction:SharedFunction,
+    private cryptoService: CryptoService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -78,6 +85,13 @@ export class CommonToiletTypeComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 12);
+    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 28);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 40);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllCommonToiletType();
   }
 

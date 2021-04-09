@@ -7,6 +7,9 @@
             <li [ngClass]="activeLink =='schoolSpecificStandards' ? 'active' : ''"><a (click)="updateActiveLink('schoolSpecificStandards')"
                     class="cursor-pointer px-6 py-4 inline-block hover:bg-skyblue-light">{{'schoolSpecificStandards'|translate}}</a>
             </li>
+            <li [ngClass]="activeLink =='standardGrades' ? 'active' : ''"><a (click)="updateActiveLink('standardGrades')"
+                class="cursor-pointer px-6 py-4 inline-block hover:bg-skyblue-light">{{'standardGrades'|translate}}</a>
+            </li>
         </ul>
     </div>
 
@@ -16,5 +19,9 @@
 
     <div *ngIf="activeLink === 'schoolSpecificStandards'">
         <vex-school-specific-standards></vex-school-specific-standards>
+    </div>
+
+    <div *ngIf="activeLink === 'standardGrades'">
+        <vex-standard-grades></vex-standard-grades>
     </div>
 </div>

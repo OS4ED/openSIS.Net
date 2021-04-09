@@ -82,6 +82,7 @@ namespace opensis.data.Models
         public virtual DbSet<StaffScheduleView> StaffScheduleView { get; set; }
         public virtual DbSet<StaffSchoolInfo> StaffSchoolInfo { get; set; }
         public virtual DbSet<State> State { get; set; }
+        public virtual DbSet<StudentAttendance> StudentAttendance { get; set; }
         public virtual DbSet<StudentComments> StudentComments { get; set; }
         public virtual DbSet<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
         public virtual DbSet<StudentDocuments> StudentDocuments { get; set; }
@@ -3496,7 +3497,13 @@ namespace opensis.data.Models
                     .HasColumnName("duration_start_date")
                     .HasColumnType("date");
 
+                entity.Property(e => e.EffectiveDropDate)
+                   .HasColumnName("effective_drop_date")
+                   .HasColumnType("datetime");
+
                 entity.Property(e => e.IsAssigned).HasColumnName("is_assigned");
+
+                entity.Property(e => e.IsDropped).HasColumnName("is_dropped");
 
                 entity.Property(e => e.MeetingDays)
                     .HasColumnName("meeting_days")
@@ -4021,6 +4028,96 @@ namespace opensis.data.Models
                     .HasForeignKey(d => d.CountryId)
                     .HasConstraintName("FK_state_country");
 
+            });
+
+            modelBuilder.Entity<StudentAttendance>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.StaffId, e.CourseId, e.CourseSectionId, e.AttendanceCategoryId, e.AttendanceCode, e.AttendanceDate });
+
+                entity.ToTable("student_attendance");
+
+                entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.CourseSectionId })
+                    .HasName("IX_student_attendance_1");
+
+                entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.StaffId })
+                    .HasName("IX_student_attendance_2");
+
+                entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.StudentId })
+                    .HasName("IX_student_attendance");
+
+                entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.StudentId, e.AttendanceDate })
+                    .HasName("IX_student_attendance_3");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.StaffId).HasColumnName("staff_id");
+
+                entity.Property(e => e.CourseId).HasColumnName("course_id");
+
+                entity.Property(e => e.CourseSectionId).HasColumnName("course_section_id");
+
+                entity.Property(e => e.AttendanceCategoryId).HasColumnName("attendance_category_id");
+
+                entity.Property(e => e.AttendanceCode).HasColumnName("attendance_code");
+
+                entity.Property(e => e.AttendanceDate)
+                    .HasColumnName("attendance_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.BlockId).HasColumnName("block_id");
+
+                entity.Property(e => e.PeriodId).HasColumnName("period_id");
+
+                entity.Property(e => e.Comments)
+                    .HasColumnName("comments")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.AttendanceCodeNavigation)
+                    .WithMany(p => p.StudentAttendance)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.AttendanceCategoryId, d.AttendanceCode })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_attendance_attendance_code");
+
+                entity.HasOne(d => d.BlockPeriod)
+                    .WithMany(p => p.StudentAttendance)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.BlockId, d.PeriodId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_attendance_block_period");
+
+                entity.HasOne(d => d.StaffCoursesectionSchedule)
+                    .WithMany(p => p.StudentAttendance)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StaffId, d.CourseId, d.CourseSectionId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_attendance_staff_coursesection_schedule");
+
+                entity.HasOne(d => d.StudentCoursesectionSchedule)
+                    .WithMany(p => p.StudentAttendance)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId, d.CourseId, d.CourseSectionId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_attendance_student_coursesection_schedule");
             });
 
             modelBuilder.Entity<StudentComments>(entity =>

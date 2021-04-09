@@ -10,6 +10,8 @@ export class GetAllSchoolModel {
     _token: string;
     _failure: boolean;
     _message: string;
+    _userName: string;
+    includeInactive:boolean;
 constructor() {
     this.tenantId= sessionStorage.getItem("tenantId");
     this.pageNumber=1;
@@ -17,7 +19,9 @@ constructor() {
     this.sortingModel=new sorting();
     this.filterParams=null;
     this._tenantName=sessionStorage.getItem("tenant");
+    this._userName = sessionStorage.getItem("user");
     this._token=sessionStorage.getItem("token");
+    this.includeInactive=false;
     this._failure=false;
     this._message="";
 }
@@ -53,6 +57,7 @@ export class OnlySchoolListModel{
       pageNumber: number;
       _pageSize: number;
       _tenantName: string;
+      _userName:string;
       _token: string;
       _failure: boolean;
       _message: string
@@ -63,6 +68,7 @@ export class OnlySchoolListModel{
         this.pageNumber=null;
         this._pageSize=null;
         this._tenantName="";
+        this._userName="";
         this._token="";
         this._failure=false;
         this._message="";

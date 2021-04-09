@@ -13,6 +13,7 @@ export class GetAllGradeLevelsModel extends CommonField{
         super();
         this.schoolId=+sessionStorage.getItem('selectedSchoolId');
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.tenantId = sessionStorage.getItem("tenantId");
     }
@@ -44,6 +45,7 @@ export class AddGradeLevelModel extends CommonField{
         constructor(){
             super();
             this.tblGradelevel = new tblGradelevel();
+            this._userName = sessionStorage.getItem("user");
         }
 
 }

@@ -6825,8 +6825,16 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .HasColumnName("duration_start_date")
                         .HasColumnType("date");
 
+                    b.Property<DateTime?>("EffectiveDropDate")
+                        .HasColumnName("effective_drop_date")
+                        .HasColumnType("datetime");
+
                     b.Property<bool?>("IsAssigned")
                         .HasColumnName("is_assigned")
+                        .HasColumnType("bit");
+
+                    b.Property<bool?>("IsDropped")
+                        .HasColumnName("is_dropped")
                         .HasColumnType("bit");
 
                     b.Property<string>("MeetingDays")
@@ -7461,6 +7469,103 @@ namespace opensis.data.Migrations.SqlServerMigrations
                     b.HasIndex("CountryId");
 
                     b.ToTable("state");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentAttendance", b =>
+                {
+                    b.Property<Guid>("TenantId")
+                        .HasColumnName("tenant_id")
+                        .HasColumnType("uniqueidentifier");
+
+                    b.Property<int>("SchoolId")
+                        .HasColumnName("school_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StudentId")
+                        .HasColumnName("student_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("StaffId")
+                        .HasColumnName("staff_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseId")
+                        .HasColumnName("course_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("CourseSectionId")
+                        .HasColumnName("course_section_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttendanceCategoryId")
+                        .HasColumnName("attendance_category_id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AttendanceCode")
+                        .HasColumnName("attendance_code")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("AttendanceDate")
+                        .HasColumnName("attendance_date")
+                        .HasColumnType("date");
+
+                    b.Property<int>("BlockId")
+                        .HasColumnName("block_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Comments")
+                        .HasColumnName("comments")
+                        .HasColumnType("varchar(250)")
+                        .HasMaxLength(250)
+                        .IsUnicode(false);
+
+                    b.Property<string>("CreatedBy")
+                        .HasColumnName("created_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("CreatedOn")
+                        .HasColumnName("created_on")
+                        .HasColumnType("datetime");
+
+                    b.Property<int>("PeriodId")
+                        .HasColumnName("period_id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UpdatedBy")
+                        .HasColumnName("updated_by")
+                        .HasColumnType("varchar(150)")
+                        .HasMaxLength(150)
+                        .IsUnicode(false);
+
+                    b.Property<DateTime?>("UpdatedOn")
+                        .HasColumnName("updated_on")
+                        .HasColumnType("datetime");
+
+                    b.HasKey("TenantId", "SchoolId", "StudentId", "StaffId", "CourseId", "CourseSectionId", "AttendanceCategoryId", "AttendanceCode", "AttendanceDate");
+
+                    b.HasIndex("TenantId", "SchoolId", "CourseSectionId")
+                        .HasName("IX_student_attendance_1");
+
+                    b.HasIndex("TenantId", "SchoolId", "StaffId")
+                        .HasName("IX_student_attendance_2");
+
+                    b.HasIndex("TenantId", "SchoolId", "StudentId")
+                        .HasName("IX_student_attendance");
+
+                    b.HasIndex("TenantId", "SchoolId", "AttendanceCategoryId", "AttendanceCode");
+
+                    b.HasIndex("TenantId", "SchoolId", "BlockId", "PeriodId");
+
+                    b.HasIndex("TenantId", "SchoolId", "StudentId", "AttendanceDate")
+                        .HasName("IX_student_attendance_3");
+
+                    b.HasIndex("TenantId", "SchoolId", "StaffId", "CourseId", "CourseSectionId");
+
+                    b.HasIndex("TenantId", "SchoolId", "StudentId", "CourseId", "CourseSectionId");
+
+                    b.ToTable("student_attendance");
                 });
 
             modelBuilder.Entity("opensis.data.Models.StudentComments", b =>
@@ -9033,6 +9138,33 @@ namespace opensis.data.Migrations.SqlServerMigrations
                         .WithMany("State")
                         .HasForeignKey("CountryId")
                         .HasConstraintName("FK_state_country");
+                });
+
+            modelBuilder.Entity("opensis.data.Models.StudentAttendance", b =>
+                {
+                    b.HasOne("opensis.data.Models.AttendanceCode", "AttendanceCodeNavigation")
+                        .WithMany("StudentAttendance")
+                        .HasForeignKey("TenantId", "SchoolId", "AttendanceCategoryId", "AttendanceCode")
+                        .HasConstraintName("FK_student_attendance_attendance_code")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.BlockPeriod", "BlockPeriod")
+                        .WithMany("StudentAttendance")
+                        .HasForeignKey("TenantId", "SchoolId", "BlockId", "PeriodId")
+                        .HasConstraintName("FK_student_attendance_block_period")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.StaffCoursesectionSchedule", "StaffCoursesectionSchedule")
+                        .WithMany("StudentAttendance")
+                        .HasForeignKey("TenantId", "SchoolId", "StaffId", "CourseId", "CourseSectionId")
+                        .HasConstraintName("FK_student_attendance_staff_coursesection_schedule")
+                        .IsRequired();
+
+                    b.HasOne("opensis.data.Models.StudentCoursesectionSchedule", "StudentCoursesectionSchedule")
+                        .WithMany("StudentAttendance")
+                        .HasForeignKey("TenantId", "SchoolId", "StudentId", "CourseId", "CourseSectionId")
+                        .HasConstraintName("FK_student_attendance_student_coursesection_schedule")
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("opensis.data.Models.StudentComments", b =>

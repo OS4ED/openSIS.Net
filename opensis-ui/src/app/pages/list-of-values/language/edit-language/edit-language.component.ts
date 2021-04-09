@@ -60,6 +60,7 @@ export class EditLanguageComponent implements OnInit {
         this.languageModel.language.languageCode=this.form.controls.languageCode.value;
         this.languageModel.language.createdBy = sessionStorage.getItem("email");
         this.languageModel._tenantName = sessionStorage.getItem("tenant");
+        this.languageModel._userName = sessionStorage.getItem("user");
         this.languageModel._token = sessionStorage.getItem("token");
         this.commonService.AddLanguage(this.languageModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
@@ -87,6 +88,7 @@ export class EditLanguageComponent implements OnInit {
         this.languageModel.language.languageCode=this.form.controls.languageCode.value;
         this.languageModel.language.updatedBy = sessionStorage.getItem("email");
         this.languageModel._tenantName = sessionStorage.getItem("tenant");
+        this.languageModel._userName = sessionStorage.getItem("user");
         this.languageModel._token = sessionStorage.getItem("token");
         this.commonService.UpdateLanguage(this.languageModel).subscribe(data => {
           if (typeof (data) == 'undefined') {

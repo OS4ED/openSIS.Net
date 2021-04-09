@@ -215,9 +215,10 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
           var checkCalendarEvent= res.calendarEventList;
           if(res.noticeTitle !==null){
             this.noticeTitle = res.noticeTitle;
+            this.noticeHide = true;
           }
           else{
-            this.noticeTitle = "No notice found!"
+            
             this.noticeHide = false;
           }
          
@@ -235,7 +236,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     }),
       map(({ calendarEventList }: { calendarEventList: CalendarEventModel[] }) => {
         if(calendarEventList !==null ){
-          return calendarEventList.map((calendar: CalendarEventModel) => {
+          let eventList= calendarEventList.map((calendar: CalendarEventModel) => {
 
             return {
               id: calendar.eventId,
@@ -249,6 +250,17 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
               draggable: true
             };
           });
+          return eventList.sort((n1,n2) => {
+            if (n1.start > n2.start) {
+                return 1;
+            }
+        
+            if (n1.start < n2.start) {
+                return -1;
+            }
+        
+            return 0;
+        });
         }
         
       })

@@ -15,35 +15,42 @@ export class SchoolService {
   private messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
   apiUrl: string = environment.apiURL;
+  userName = sessionStorage.getItem('user');
   constructor(private http: HttpClient) {
   }
 
   GetAllSchoolList(obj: GetAllSchoolModel) {
+    obj._userName = this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/School/getAllSchoolList";
     return this.http.post<AllSchoolListModel>(apiurl, obj)
   }
 
   GetAllSchools(obj: OnlySchoolListModel) {
+    obj._userName = this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/School/getAllSchools";
     return this.http.post<AllSchoolListModel>(apiurl, obj);
   }
 
   ViewSchool(obj: SchoolAddViewModel) {
+    obj._userName = this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/School/viewSchool";
     return this.http.post<SchoolAddViewModel>(apiurl, obj)
   }
 
   AddSchool(obj: SchoolAddViewModel) {
+    obj._userName = this.userName;
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/addSchool";
     return this.http.post<SchoolAddViewModel>(apiurl, obj)
   }
   UpdateSchool(obj: SchoolAddViewModel) {
+    obj._userName = this.userName;
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/updateSchool";
     return this.http.put<SchoolAddViewModel>(apiurl, obj)
   }
   checkSchoolInternalId(obj: CheckSchoolInternalIdViewModel) {
+    obj._userName = this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/School/checkSchoolInternalId";
     return this.http.post<CheckSchoolInternalIdViewModel>(apiurl, obj)
   }
@@ -112,6 +119,7 @@ export class SchoolService {
   }
 
   addUpdateSchoolLogo(obj: SchoolAddViewModel){
+    obj._userName = this.userName;
     obj.schoolMaster.schoolId = this.getSchoolId();
     obj.schoolMaster.schoolDetail[0].id = this.getSchoolId();
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;

@@ -6,13 +6,16 @@ export class StaffScheduleViewModel extends CommonField{
     courseSectionViewList:CourseSectionList[];
     tenantId:string;
     schoolId:number;
+    createdBy: string;
+    existingStaff: number;
     constructor(){
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");         
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
-
+        this.createdBy= sessionStorage.getItem("email");
     }
 }
 
@@ -51,3 +54,13 @@ export class StaffScheduleView{
     checked:boolean; //This is only used for front end.
     conflictCourseSection:boolean;
   }
+
+  export class AllScheduledCourseSectionForStaffModel extends CommonField{
+    courseSectionViewList:CourseSectionList[];
+    staffId: number;
+    constructor(){
+        super();
+    }
+  }
+
+  

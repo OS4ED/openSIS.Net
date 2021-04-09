@@ -65,7 +65,7 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
   getAllSchool: GetAllSchoolModel = new GetAllSchoolModel();
   SchoolModelList: MatTableDataSource<any>;
   destroySubject$: Subject<void> = new Subject();
-
+  showInactiveSchools:boolean=false;
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort:MatSort
 
@@ -73,7 +73,6 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     private snackbar: MatSnackBar,
     private router: Router,
     private loaderService:LoaderService,
-    private imageCropperService:ImageCropperService,
     private layoutService: LayoutService,
     private excelService:ExcelService,
     public translateService: TranslateService,
@@ -103,8 +102,8 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     this.permissionListViewModel= JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
     let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
-    
-    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+    let permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 1);
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
   }
   ngAfterViewInit() {
     //  Sorting
@@ -172,6 +171,27 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     this.router.navigate(["school/schoolinfo/add-school"]);
   }  
 
+  includeInactiveSchools(event){
+    if(this.sort.active!=undefined && this.sort.direction!=""){
+      this.getAllSchool.sortingModel.sortColumn=this.sort.active;
+      this.getAllSchool.sortingModel.sortDirection=this.sort.direction;
+    }
+    if(this.searchCtrl.value!=null && this.searchCtrl.value!=""){
+      let filterParams=[
+        {
+         columnName:null,
+         filterValue:this.searchCtrl.value,
+         filterOption:3
+        }
+      ]
+     Object.assign(this.getAllSchool,{filterParams: filterParams});
+    }
+    this.getAllSchool.pageNumber=1;
+    this.paginator.pageIndex=0;
+    this.getAllSchool.pageSize=this.pageSize;
+    this.callAllSchool();
+  }
+
   getPageEvent(event){
     if(this.sort.active!=undefined && this.sort.direction!=""){
       this.getAllSchool.sortingModel.sortColumn=this.sort.active;
@@ -200,6 +220,7 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     if(this.getAllSchool.sortingModel?.sortColumn==""){
       this.getAllSchool.sortingModel=null
     }
+    this.getAllSchool.includeInactive=this.showInactiveSchools;
     this.schoolService.GetAllSchoolList(this.getAllSchool).subscribe(data => {
       if(data._failure){
         this.snackbar.open(data._message, '', {
@@ -240,6 +261,7 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     getAllSchool.pageNumber=0;
     getAllSchool.pageSize=0;
     getAllSchool.sortingModel=null;
+    getAllSchool.includeInactive=this.showInactiveSchools;
       this.schoolService.GetAllSchoolList(getAllSchool).subscribe(res => {
         if(res._failure){
           this.snackbar.open('Failed to Export School List.'+ res._message, '', {

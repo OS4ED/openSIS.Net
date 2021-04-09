@@ -127,6 +127,7 @@ export class PermissionGroupListViewModel extends CommonField {
         this.tenantId = sessionStorage.getItem('tenantId');
         this.schoolId = + sessionStorage.getItem('selectedSchoolId');
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -143,6 +144,7 @@ export class RolePermissionListViewModel extends CommonField{
         this.tenantId = sessionStorage.getItem('tenantId');
         this.schoolId = + sessionStorage.getItem('selectedSchoolId');
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
         this.membershipId=+sessionStorage.getItem("userMembershipID");
     }
@@ -161,6 +163,7 @@ export class PermissionGroupAddViewModel extends CommonField{
     constructor(){
         super()
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 

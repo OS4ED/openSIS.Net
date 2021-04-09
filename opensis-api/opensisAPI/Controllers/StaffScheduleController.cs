@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using opensis.core.StaffSchedule.Interfaces;
+using opensis.data.ViewModels.CourseManager;
 using opensis.data.ViewModels.StaffSchedule;
 using System;
 using System.Collections.Generic;
@@ -67,6 +68,70 @@ namespace opensisAPI.Controllers
                 staffSchedule._failure = true;
             }
             return staffSchedule;
+        }
+
+        [HttpPost("getAllScheduledCourseSectionForStaff")]
+        public ActionResult<ScheduledCourseSectionViewModel> GetAllScheduledCourseSectionForStaff(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel scheduledCourseSectionView = new ScheduledCourseSectionViewModel();
+            try
+            {
+                scheduledCourseSectionView = _staffScheduleService.GetAllScheduledCourseSectionForStaff(scheduledCourseSectionViewModel);
+            }
+            catch (Exception es)
+            {
+                scheduledCourseSectionView._message = es.Message;
+                scheduledCourseSectionView._failure = true;
+            }
+            return scheduledCourseSectionView;
+        }
+
+        [HttpPost("addStaffCourseSectionReSchedule")]
+        public ActionResult<StaffScheduleViewModel> AddStaffCourseSectionReSchedule(StaffScheduleViewModel staffScheduleViewModel)
+        {
+            StaffScheduleViewModel staffSchedule = new StaffScheduleViewModel();
+            try
+            {
+                staffSchedule = _staffScheduleService.AddStaffCourseSectionReSchedule(staffScheduleViewModel);
+            }
+            catch (Exception es)
+            {
+                staffSchedule._message = es.Message;
+                staffSchedule._failure = true;
+            }
+            return staffSchedule;
+        }
+
+        [HttpPost("checkAvailabilityStaffCourseSectionReSchedule")]
+        public ActionResult<StaffListViewModel> checkAvailabilityStaffCourseSectionReSchedule(StaffListViewModel staffListViewModel)
+        {
+            StaffListViewModel staffListView = new StaffListViewModel();
+            try
+            {
+                staffListView = _staffScheduleService.checkAvailabilityStaffCourseSectionReSchedule(staffListViewModel);
+            }
+            catch (Exception es)
+            {
+                staffListView._message = es.Message;
+                staffListView._failure = true;
+            }
+            return staffListView;
+        }
+
+        [HttpPost("addStaffCourseSectionReScheduleByCourse")]
+        public ActionResult<StaffListViewModel> AddStaffCourseSectionReScheduleByCourse(StaffListViewModel staffListViewModel)
+        {
+            StaffListViewModel staffListView = new StaffListViewModel();
+            try
+            {
+                staffListView = _staffScheduleService.AddStaffCourseSectionReScheduleByCourse(staffListViewModel);
+            }
+            catch (Exception es)
+            {
+                staffListView._message = es.Message;
+                staffListView._failure = true;
+            }
+            return staffListView;
         }
     }
 }

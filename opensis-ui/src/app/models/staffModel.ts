@@ -95,6 +95,7 @@ export class StaffAddModel extends CommonField {
         super();
         this.staffMaster = new StaffMasterModel();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -108,6 +109,7 @@ export class CheckStaffInternalIdViewModel extends CommonField {
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -142,6 +144,7 @@ export class GetAllStaffModel {
     _token: string;
     _failure: boolean;
     _message: string;
+    _userName: string;
     public dobStartDate : string;
     public dobEndDate : string;
     public fullName:string;
@@ -154,6 +157,7 @@ export class GetAllStaffModel {
         this.sortingModel = new sorting();
         this.filterParams = null;
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this._failure = false;
         this._message = "";
@@ -185,8 +189,9 @@ export class StaffCertificateModel extends CommonField {
     staffCertificateInfo: CertificateModel;
     constructor() {
         super();
-        this._tenantName = sessionStorage.getItem("tenant")
-        this._token = sessionStorage.getItem("token")
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
+        this._token = sessionStorage.getItem("token");
         this.staffCertificateInfo = new CertificateModel();
     }
 }
@@ -207,6 +212,7 @@ export class StaffCertificateListModel extends CommonField {
         this.filterParams = null;
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -231,6 +237,7 @@ export class StaffSchoolInfoListModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this._failure = false;
     }
@@ -256,6 +263,7 @@ export class StaffSchoolInfoModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this._failure = false;
     }

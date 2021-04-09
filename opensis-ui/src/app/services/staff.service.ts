@@ -11,7 +11,7 @@ export class StaffService {
   apiUrl: string = environment.apiURL;
   private currentYear = new BehaviorSubject(false);
   currentY = this.currentYear.asObservable();
-
+  userName = sessionStorage.getItem('user');
   constructor(private http: HttpClient, private cryptoService: CryptoService) { }
 
   private staffImage;
@@ -80,6 +80,7 @@ export class StaffService {
 
 
   addStaff(obj: StaffAddModel) {
+    obj._userName= this.userName;
     obj.passwordHash = this.cryptoService.encrypt(obj.passwordHash);
     obj.staffMaster.staffPhoto=this.staffImage;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/addStaff";
@@ -89,55 +90,66 @@ export class StaffService {
   updateStaff(obj: StaffAddModel) {
     obj.passwordHash = this.cryptoService.encrypt(obj.passwordHash);
     obj.staffMaster.staffPhoto=this.staffImage;
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/updateStaff";
     return this.http.put<StaffAddModel>(apiurl, obj)
   }
 
   viewStaff(obj: StaffAddModel) {
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/viewStaff";
     return this.http.post<StaffAddModel>(apiurl, obj)
   }
   
   getAllStaffList(obj:GetAllStaffModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/getAllStaffList";
     return this.http.post<GetAllStaffModel>(apiurl, obj)
   }
 
   //Staff Certificate Services 
   getAllStaffCertificateInfo(obj:StaffCertificateListModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/getAllStaffCertificateInfo";
     return this.http.post<StaffCertificateListModel>(apiurl,obj);
   }
 
   addStaffCertificateInfo(obj:StaffCertificateModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/addStaffCertificateInfo";
     return this.http.post<StaffCertificateModel>(apiurl,obj); 
   }
   deleteStaffCertificateInfo(obj:StaffCertificateModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/deleteStaffCertificateInfo";
     return this.http.post<StaffCertificateModel>(apiurl,obj);
   }
   updateStaffCertificateInfo(obj:StaffCertificateModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/updateStaffCertificateInfo";
     return this.http.put<StaffCertificateModel>(apiurl,obj); 
   }
 
   addStaffSchoolInfo(obj:StaffSchoolInfoModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/addStaffSchoolInfo";
     return this.http.post<StaffSchoolInfoModel>(apiurl, obj)
   }
 
   viewStaffSchoolInfo(obj:StaffSchoolInfoModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/viewStaffSchoolInfo";
     return this.http.post<StaffSchoolInfoModel>(apiurl, obj)
   }
 
   updateStaffSchoolInfo(obj:StaffSchoolInfoModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/updateStaffSchoolInfo";
     return this.http.put<StaffSchoolInfoModel>(apiurl, obj)
   }
 
   addUpdateStaffPhoto(obj:StaffAddModel){
+    obj._userName= this.userName;
     obj.staffMaster.staffId = this.getStaffId();
     obj.staffMaster.staffPhoto = this.staffImage;
     let apiurl = this.apiUrl + obj._tenantName + "/Staff/addUpdateStaffPhoto";

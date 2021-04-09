@@ -422,6 +422,8 @@ namespace opensis.data.Repository
                 HomeAddressZip = e.HomeAddressZip,
                 BusNo=e.BusNo,
                 FirstLanguageId=e.FirstLanguageId,
+                SecondLanguageId=e.SecondLanguageId,
+                ThirdLanguageId=e.ThirdLanguageId,
                 SectionId=e.SectionId,
                 StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == true).Select(s => new StudentEnrollment
                 {
@@ -1147,6 +1149,13 @@ namespace opensis.data.Repository
                                         studentEnrollment.StudentGuid = studentEnrollmentUpdate.StudentGuid;
                                         studentEnrollment.IsActive = true;
                                         this.context?.StudentEnrollment.Add(studentEnrollment);
+
+                                        if (studentExitCode.Type.ToLower() == "Drop".ToLower() && studentEnrollmentListModel.RollingOption.ToLower() == "Do not enroll after this school year".ToLower())
+                                        {
+                                            this.context?.StudentMaster.Where(x => x.StudentGuid == studentEnrollmentList.StudentGuid).ToList().ForEach(x => x.IsActive = false);
+                                            this.context?.SaveChanges();
+                                        }
+
                                         EnrollmentId++;
                                     }                                  
                                 }
@@ -1847,7 +1856,7 @@ namespace opensis.data.Repository
 
         //        searchStudentView.searchStudentForView = xyz.ToList();
 
-                
+
         //    }
         //    catch (Exception es)
         //    {
@@ -1857,6 +1866,558 @@ namespace opensis.data.Repository
         //    return searchStudentView;
         //}
 
+        /// <summary>
+        /// Search Student List For Reenroll
+        /// </summary>
+        /// <param name="pageResult"></param>
+        /// <returns></returns>
+        public StudentListModel SearchStudentListForReenroll(PageResult pageResult)
+        {            
+            StudentListModel studentListModel = new StudentListModel();
+            List<StudentMaster> Student = new List<StudentMaster>();
+            IQueryable<StudentMaster> transactionIQ = null;
+            try
+            {
+                     var studentDataList = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x=> (pageResult.SchoolId >0) ? x.SchoolId== pageResult.SchoolId && x.TenantId==pageResult.TenantId && x.IsActive==false : x.TenantId == pageResult.TenantId && x.IsActive == false).AsNoTracking().Select(e => new StudentMaster
+                    {
+                        TenantId = e.TenantId,
+                        SchoolId = e.SchoolId,
+                        StudentId = e.StudentId,
+                        FirstGivenName = e.FirstGivenName,
+                        MiddleName = e.MiddleName,
+                        LastFamilyName = e.LastFamilyName,
+                        AlternateId = e.AlternateId,
+                        StudentInternalId = e.StudentInternalId,
+                        MobilePhone = e.MobilePhone,
+                        HomePhone = e.HomePhone,
+                        PersonalEmail = e.PersonalEmail,
+                        SchoolEmail = e.SchoolEmail,
+                        StudentGuid = e.StudentGuid,
+                        AdmissionNumber = e.AdmissionNumber,
+                        RollNumber = e.RollNumber,
+                        Dob = e.Dob,
+                        Gender = e.Gender,
+                        Race = e.Race,
+                        Ethnicity = e.Ethnicity,
+                        MaritalStatus = e.MaritalStatus,
+                        CountryOfBirth = e.CountryOfBirth,
+                        Nationality = e.Nationality,
+                        FirstLanguage = e.FirstLanguage,
+                        SecondLanguage = e.SecondLanguage,
+                        ThirdLanguage = e.ThirdLanguage,
+                        HomeAddressLineOne = e.HomeAddressLineOne,
+                        HomeAddressLineTwo = e.HomeAddressLineTwo,
+                        HomeAddressCity = e.HomeAddressCity,
+                        HomeAddressCountry = e.HomeAddressCountry,
+                        HomeAddressState = e.HomeAddressState,
+                        HomeAddressZip = e.HomeAddressZip,
+                        BusNo = e.BusNo,
+                        FirstLanguageId = e.FirstLanguageId,
+                        SectionId = e.SectionId,
+                        StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == false).OrderByDescending(a => a.EnrollmentDate).Select(s => new StudentEnrollment
+                        {
+                            EnrollmentDate = s.EnrollmentDate,
+                            GradeLevelTitle = s.GradeLevelTitle,
+                            TenantId = s.TenantId,
+                            SchoolId = s.SchoolId,
+                            StudentId = s.StudentId,
+                            EnrollmentId = s.EnrollmentId,
+                            StudentGuid = s.StudentGuid,
+                            GradeId = s.GradeId,
+                            ExitDate = s.ExitDate,
+                            ExitCode = s.ExitCode
+                        }).ToList()
+                    }).ToList();                
+                
+                if (studentDataList.Count>0)
+                {                    
+                    Guid studentGuidData = new Guid();
+                    foreach (var studentData in studentDataList)
+                    {
+                        if (studentData.StudentGuid!= studentGuidData)
+                        {
+                            var checkEnrolledStudent = this.context?.StudentMaster.FirstOrDefault(c => c.StudentGuid == studentData.StudentGuid && c.IsActive == true);
+
+                            if (checkEnrolledStudent==null)
+                            {
+                                Student.Add(studentData);
+                                studentGuidData = studentData.StudentGuid;
+                            }
+                            else
+                            {
+                                studentGuidData = studentData.StudentGuid;
+                            }                            
+                        }                        
+                    }
+                }
+
+                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
+                {
+                    transactionIQ = Student.AsQueryable();
+                }
+                else
+                {
+                    string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                    {
+                        transactionIQ = Student.AsQueryable().Where(x => x.FirstGivenName != null && x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) ||
+                                                                    x.MiddleName != null && x.MiddleName.ToLower().Contains(Columnvalue.ToLower()) ||
+                                                                    x.LastFamilyName != null && x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) ||
+                                                                    x.StudentInternalId != null && x.StudentInternalId.ToLower().Contains(Columnvalue.ToLower()) ||
+                                                                    x.MobilePhone != null && x.MobilePhone.Contains(Columnvalue) ||
+                                                                    x.PersonalEmail != null && x.PersonalEmail.Contains(Columnvalue));
+
+                        //for StudentEnrollment Searching
+
+                        var studentEnrollmentFilter = Student.AsQueryable().AsNoTracking().ToList().Where(x => x.StudentEnrollment.ToList().Count > 0 ? x.StudentEnrollment.FirstOrDefault().GradeLevelTitle.ToLower().Contains(Columnvalue.ToLower()) : string.Empty.Contains(Columnvalue)).AsQueryable();
+
+                        if (studentEnrollmentFilter.ToList().Count > 0)
+                        {
+                            transactionIQ = transactionIQ.AsNoTracking().ToList().Concat(studentEnrollmentFilter).AsQueryable();
+                            //transactionIQ = gradeLevelFilter;
+                        }
+                    }
+                    else
+                    {
+                        if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "enrollmentdate" || x.ColumnName.ToLower() == "exitdate" || x.ColumnName.ToLower() == "exitcode"))
+                        {
+                            
+                            var enrollmentData = Student.AsQueryable();
+                            foreach (var filterParam in pageResult.FilterParams)
+                            {
+                                if (filterParam.ColumnName.ToLower() == "enrollmentdate" || filterParam.ColumnName.ToLower() == "exitdate" || filterParam.ColumnName.ToLower() == "exitcode")
+                                {
+                                    var columnName = filterParam.ColumnName;
+                                    var filterValue = filterParam.FilterValue;
+
+                                    if (filterValue != null)
+                                    {
+                                        if (columnName.ToLower() == "enrollmentdate")
+                                        {
+                                            enrollmentData = enrollmentData.AsQueryable().AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().EnrollmentDate == Convert.ToDateTime(filterValue)).AsQueryable();
+                                        }
+                                        if (columnName.ToLower() == "exitdate")
+                                        {
+                                            enrollmentData = enrollmentData.AsQueryable().AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().ExitDate == Convert.ToDateTime(filterValue)).AsQueryable();
+                                        }
+                                        if (columnName.ToLower() == "exitcode")
+                                        {
+                                            enrollmentData = enrollmentData.AsQueryable().AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().ExitCode.ToLower() == filterValue.ToString().ToLower()).AsQueryable();
+                                        }
+                                    }
+                                }
+                            }
+                            pageResult.FilterParams.RemoveAll(x => x.ColumnName.ToLower() == "enrollmentdate" || x.ColumnName.ToLower() == "exitdate" || x.ColumnName.ToLower() == "exitcode");
+
+                            if (pageResult.FilterParams.Count > 0)
+                            {
+                                transactionIQ = Utility.FilteredData(pageResult.FilterParams, enrollmentData).AsQueryable();
+                            }
+                            else
+                            {
+                                transactionIQ = enrollmentData;
+                            }
+                        }
+
+
+
+                        //    if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "enrollmentdate"))
+                        //    {
+                        //        var filterValue = Convert.ToDateTime(pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "enrollmentdate").Select(x => x.FilterValue).FirstOrDefault());
+
+                        //        var studentEnrollmentData = Student.AsQueryable().AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().EnrollmentDate == filterValue).AsQueryable();
+                        //        var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "enrollmentdate");
+                        //        pageResult.FilterParams.RemoveAt(indexValue);
+
+                        //        if (studentEnrollmentData.ToList().Count() > 0)
+                        //        {
+                        //            transactionIQ = studentEnrollmentData.AsNoTracking().ToList().AsQueryable();
+
+                        //        }
+                        //    }
+                        //    if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "exitdate"))
+                        //    {
+                        //        var filterValue = Convert.ToDateTime(pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "exitdate").Select(x => x.FilterValue).FirstOrDefault());
+
+                        //        var studentExitDate = Student.AsQueryable().AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().ExitDate == filterValue).AsQueryable();
+                        //        var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "exitdate");
+                        //        pageResult.FilterParams.RemoveAt(indexValue);
+
+                        //        if (studentExitDate.ToList().Count() > 0)
+                        //        {
+                        //            transactionIQ = studentExitDate.AsNoTracking().ToList().AsQueryable();
+
+                        //        }
+                        //    }
+                        //    if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "exitcode"))
+                        //    {
+                        //        var filterValue = pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "exitcode").Select(x => x.FilterValue).FirstOrDefault();
+
+                        //        var studentEnrollmentCode = Student.AsQueryable().AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().ExitCode.ToLower() == filterValue.ToLower()).AsQueryable();
+                        //        var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "exitcode");
+                        //        pageResult.FilterParams.RemoveAt(indexValue);
+
+                        //        if (studentEnrollmentCode.ToList().Count() > 0)
+                        //        {
+                        //            transactionIQ = studentEnrollmentCode.AsNoTracking().ToList().AsQueryable();
+                        //        }
+                        //    }
+                        //    if (transactionIQ != null && pageResult.FilterParams.Count() > 0)
+                        //    {
+                        //        transactionIQ = Utility.FilteredData(pageResult.FilterParams, transactionIQ).AsQueryable();
+                        //    }
+                        //}
+                        else
+                        {
+                            transactionIQ = Utility.FilteredData(pageResult.FilterParams, Student).AsQueryable();
+                        }
+                    }
+
+                }                
+                if (pageResult.SortingModel != null)
+                {
+                    switch (pageResult.SortingModel.SortColumn.ToLower())
+                    {
+                        //For GradeLevel Sorting
+                        case "gradeleveltitle":
+
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderBy(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().GradeLevelTitle : null).AsQueryable();
+                            }
+                            else
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderByDescending(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().GradeLevelTitle : null).AsQueryable();
+                            }
+                            break;
+
+                        //For Student Enrollment Date Sorting
+                        case "enrollmentdate":
+
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderBy(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().EnrollmentDate : null).AsQueryable();
+                            }
+                            else
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderByDescending(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().EnrollmentDate : null).AsQueryable();
+                            }
+                            break;
+
+                        //For Student Enrollment Exit Date Sorting
+                        case "exitdate":
+
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderBy(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().ExitDate : null).AsQueryable();
+                            }
+                            else
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderByDescending(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().ExitDate : null).AsQueryable();
+                            }
+                            break;
+
+                        //For Student Enrollment Exit Code Sorting
+                        case "exitcode":
+
+                            if (pageResult.SortingModel.SortDirection.ToLower() == "asc")
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderBy(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().ExitCode : null).AsQueryable();
+                            }
+                            else
+                            {
+
+                                transactionIQ = transactionIQ.AsNoTracking().ToList().OrderByDescending(a => a.StudentEnrollment.Count > 0 ? a.StudentEnrollment.FirstOrDefault().ExitCode : null).AsQueryable();
+                            }
+                            break;
+
+                        default:
+                            transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                            break;
+                    }
+
+                }
+                
+                if (transactionIQ != null)
+                {
+                    //transactionIQ = transactionIQ.Distinct();
+                    int totalCount = transactionIQ.AsNoTracking().ToList().Count();
+                    if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
+                    {
+                        transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                    }
+                    studentListModel.studentMaster = transactionIQ.ToList();
+                    studentListModel.TotalCount = totalCount;
+                }
+                else
+                {
+                    //studentListModel.studentMaster = null;
+                    studentListModel.TotalCount = 0;
+                }
+
+
+                studentListModel.TenantId = pageResult.TenantId;
+                studentListModel.SchoolId = pageResult.SchoolId;               
+                studentListModel.PageNumber = pageResult.PageNumber;
+                studentListModel._pageSize = pageResult.PageSize;
+                studentListModel._tenantName = pageResult._tenantName;
+                studentListModel._token = pageResult._token;
+                studentListModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                studentListModel._message = es.Message;
+                studentListModel._failure = true;
+                studentListModel._tenantName = pageResult._tenantName;
+                studentListModel._token = pageResult._token;
+            }
+            return studentListModel;
+        }
+        /// <summary>
+        /// Re enrollment For Student
+        /// </summary>
+        /// <param name="studentListModel"></param>
+        /// <returns></returns>
+        public StudentListModel ReenrollmentForStudent(StudentListModel studentListModel)
+        {
+            using (var transaction = this.context.Database.BeginTransaction())
+            {
+                try
+                {
+                    if (studentListModel.studentMaster.Count > 0)
+                    {
+                        int? calenderId = null;
+                        var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == studentListModel.TenantId && x.SchoolId == studentListModel.SchoolId && x.AcademicYear.ToString() == studentListModel.AcademicYear && x.DefaultCalender == true);
+
+                        if (defaultCalender != null)
+                        {
+                            calenderId = defaultCalender.CalenderId;
+                        }
+
+                        var enrollmenttitle = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == studentListModel.TenantId && x.SchoolId == studentListModel.SchoolId && x.EnrollmentCode == studentListModel.EnrollmentCode)?.Title;
+
+                        foreach (var studentData in studentListModel.studentMaster)
+                        {                           
+                            var activeEnrollment = this.context?.StudentEnrollment.Where(x => x.StudentGuid == studentData.StudentGuid && x.IsActive == true).FirstOrDefault();
+
+                            this.context?.StudentEnrollment.Where(x => x.StudentGuid == studentData.StudentGuid && x.IsActive == true).ToList().ForEach(x => { x.IsActive = false; x.ExitCode = activeEnrollment.EnrollmentCode; x.ExitDate = studentListModel.EnrollmentDate; });
+                            
+                            int? EnrollmentId = 1;
+                            //EnrollmentId = Utility.GetMaxPK(this.context, new Func<StudentEnrollment, int>(x => x.EnrollmentId));
+
+                            var studentEnrollmentData = this.context?.StudentEnrollment.Where(x => x.StudentGuid == studentData.StudentGuid).OrderByDescending(x => x.EnrollmentId).FirstOrDefault();
+
+                            if (studentEnrollmentData != null)
+                            {
+                                EnrollmentId = studentEnrollmentData.EnrollmentId + 1;
+                            }
+
+                            var existingStudentData = this.context?.StudentMaster.FirstOrDefault(s => s.SchoolId == studentListModel.SchoolId && s.TenantId == studentListModel.TenantId && s.StudentGuid == studentData.StudentGuid);
+
+                            if (existingStudentData != null)
+                            {
+                                existingStudentData.IsActive = true;                                
+                                
+                                var StudentEnrollmentData = new StudentEnrollment()
+                                {
+                                    TenantId = studentData.TenantId,
+                                    SchoolId = (int)studentListModel.SchoolId,
+                                    StudentId = existingStudentData.StudentId,
+                                    EnrollmentId = (int)EnrollmentId,
+                                    EnrollmentCode = enrollmenttitle,
+                                    EnrollmentDate = studentListModel.EnrollmentDate,
+                                    GradeLevelTitle = studentListModel.GradeLevelTitle,
+                                    GradeId = studentListModel.GradeId,
+                                    LastUpdated = DateTime.UtcNow,
+                                    RollingOption = "Next Grade at Current School",
+                                    StudentGuid = studentData.StudentGuid,
+                                    IsActive = true,
+                                    SchoolName = this.context?.SchoolMaster.FirstOrDefault(x => x.SchoolId == studentListModel.SchoolId)?.SchoolName,
+                                    UpdatedBy=studentListModel.UpdatedBy,
+                                    CalenderId= calenderId
+                                };
+                                this.context?.StudentEnrollment.Add(StudentEnrollmentData);
+                            }
+                            else
+                            {
+
+                                var studentInfo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentGuid == studentData.StudentGuid);
+
+                                int? MasterStudentId = 0;
+
+                                var studentId = this.context?.StudentMaster.Where(x => x.SchoolId == studentListModel.SchoolId && x.TenantId == studentListModel.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
+
+                                if (studentId != null)
+                                {
+                                    MasterStudentId = studentId.StudentId + 1;
+                                }
+                                else
+                                {
+                                    MasterStudentId = 1;
+                                }
+
+                                var StudentMasterData = new StudentMaster()
+                                {
+                                    TenantId = studentInfo.TenantId,
+                                    SchoolId = (int)studentListModel.SchoolId,
+                                    StudentId = (int)MasterStudentId,
+                                    AlternateId = studentInfo.AlternateId,
+                                    DistrictId = studentInfo.DistrictId,
+                                    StateId = studentInfo.StateId,
+                                    AdmissionNumber = studentInfo.AdmissionNumber,
+                                    RollNumber = studentInfo.RollNumber,
+                                    Salutation = studentInfo.Salutation,
+                                    FirstGivenName = studentInfo.FirstGivenName,
+                                    MiddleName = studentInfo.MiddleName,
+                                    LastFamilyName = studentInfo.LastFamilyName,
+                                    Suffix = studentInfo.Suffix,
+                                    PreferredName = studentInfo.PreferredName,
+                                    PreviousName = studentInfo.PreviousName,
+                                    SocialSecurityNumber = studentInfo.SocialSecurityNumber,
+                                    OtherGovtIssuedNumber = studentInfo.OtherGovtIssuedNumber,
+                                    StudentPhoto = studentInfo.StudentPhoto,
+                                    Dob = studentInfo.Dob,
+                                    Gender = studentInfo.Gender,
+                                    Race = studentInfo.Race,
+                                    Ethnicity = studentInfo.Ethnicity,
+                                    MaritalStatus = studentInfo.MaritalStatus,
+                                    CountryOfBirth = studentInfo.CountryOfBirth,
+                                    Nationality = studentInfo.Nationality,
+                                    FirstLanguageId = studentInfo.FirstLanguageId,
+                                    SecondLanguageId = studentInfo.SecondLanguageId,
+                                    ThirdLanguageId = studentInfo.ThirdLanguageId,
+                                    HomePhone = studentInfo.HomePhone,
+                                    MobilePhone = studentInfo.MobilePhone,
+                                    PersonalEmail = studentInfo.PersonalEmail,
+                                    SchoolEmail = studentInfo.SchoolEmail,
+                                    Twitter = studentInfo.Twitter,
+                                    Facebook = studentInfo.Facebook,
+                                    Instagram = studentInfo.Instagram,
+                                    Youtube = studentInfo.Youtube,
+                                    Linkedin = studentInfo.Linkedin,
+                                    HomeAddressLineOne = studentInfo.HomeAddressLineOne,
+                                    HomeAddressLineTwo = studentInfo.HomeAddressLineTwo,
+                                    HomeAddressCountry = studentInfo.HomeAddressCountry,
+                                    HomeAddressState = studentInfo.HomeAddressState,
+                                    HomeAddressCity = studentInfo.HomeAddressCity,
+                                    HomeAddressZip = studentInfo.HomeAddressZip,
+                                    BusNo = studentInfo.BusNo,
+                                    SchoolBusPickUp = studentInfo.SchoolBusPickUp,
+                                    SchoolBusDropOff = studentInfo.SchoolBusDropOff,
+                                    MailingAddressSameToHome = studentInfo.MailingAddressSameToHome,
+                                    MailingAddressLineOne = studentInfo.MailingAddressLineOne,
+                                    MailingAddressLineTwo = studentInfo.MailingAddressLineTwo,
+                                    MailingAddressCountry = studentInfo.MailingAddressCountry,
+                                    MailingAddressState = studentInfo.MailingAddressState,
+                                    MailingAddressCity = studentInfo.MailingAddressCity,
+                                    MailingAddressZip = studentInfo.MailingAddressZip,
+                                    StudentPortalId = studentInfo.StudentPortalId,
+                                    AlertDescription = studentInfo.AlertDescription,
+                                    CriticalAlert = studentInfo.CriticalAlert,
+                                    Dentist = studentInfo.Dentist,
+                                    DentistPhone = studentInfo.DentistPhone,
+                                    InsuranceCompany = studentInfo.InsuranceCompany,
+                                    InsuranceCompanyPhone = studentInfo.InsuranceCompanyPhone,
+                                    MedicalFacility = studentInfo.MedicalFacility,
+                                    MedicalFacilityPhone = studentInfo.MedicalFacilityPhone,
+                                    PolicyHolder = studentInfo.PolicyHolder,
+                                    PolicyNumber = studentInfo.PolicyNumber,
+                                    PrimaryCarePhysician = studentInfo.PrimaryCarePhysician,
+                                    PrimaryCarePhysicianPhone = studentInfo.PrimaryCarePhysicianPhone,
+                                    Vision = studentInfo.Vision,
+                                    VisionPhone = studentInfo.VisionPhone,
+                                    Associationship = studentInfo.Associationship,
+                                    EconomicDisadvantage = studentInfo.EconomicDisadvantage,
+                                    Eligibility504 = studentInfo.Eligibility504,
+                                    EstimatedGradDate = studentInfo.EstimatedGradDate,
+                                    FreeLunchEligibility = studentInfo.FreeLunchEligibility,
+                                    LepIndicator = studentInfo.LepIndicator,
+                                    SectionId = null,
+                                    SpecialEducationIndicator = studentInfo.SpecialEducationIndicator,
+                                    StudentInternalId = studentInfo.StudentInternalId,
+                                    LastUpdated = DateTime.UtcNow,
+                                    UpdatedBy = studentInfo.UpdatedBy,
+                                    EnrollmentType = "Internal",
+                                    IsActive = true,
+                                    StudentGuid = studentData.StudentGuid
+
+                                };
+                                this.context?.StudentMaster.Add(StudentMasterData);
+
+                                var StudentEnrollmentData = new StudentEnrollment()
+                                {
+                                    TenantId = studentData.TenantId,
+                                    SchoolId = (int)studentListModel.SchoolId,
+                                    StudentId = (int)MasterStudentId,
+                                    EnrollmentId = (int)EnrollmentId,
+                                    EnrollmentCode = enrollmenttitle,
+                                    EnrollmentDate = studentListModel.EnrollmentDate,
+                                    GradeLevelTitle = studentListModel.GradeLevelTitle,
+                                    LastUpdated = DateTime.UtcNow,
+                                    RollingOption = "Next Grade at Current School",
+                                    StudentGuid = studentData.StudentGuid,
+                                    IsActive = true,
+                                    SchoolName = this.context?.SchoolMaster.FirstOrDefault(x => x.SchoolId == studentListModel.SchoolId)?.SchoolName,
+                                    UpdatedBy=studentListModel.UpdatedBy,
+                                    GradeId= studentListModel.GradeId,
+                                    CalenderId=calenderId
+                                };
+                                this.context?.StudentEnrollment.Add(StudentEnrollmentData);
+
+                                //Student Protal Access
+                                if (studentData.StudentPortalId != null)
+                                {
+                                    var userMasterData = this.context?.UserMaster.FirstOrDefault(x => x.EmailAddress == studentData.StudentPortalId && x.TenantId == studentData.TenantId);
+                                    if (userMasterData != null)
+                                    {
+                                        userMasterData.IsActive = false;
+                                        
+                                        UserMaster userMaster = new UserMaster();
+                                        userMaster.TenantId = studentData.TenantId;
+                                        userMaster.SchoolId = (int)studentListModel.SchoolId;
+                                        userMaster.UserId = (int)MasterStudentId;
+                                        userMaster.Name = userMasterData.Name;
+                                        userMaster.EmailAddress = userMasterData.EmailAddress;
+                                        userMaster.PasswordHash = userMasterData.PasswordHash;
+                                        userMaster.LangId = userMasterData.LangId;
+                                        var membershipsId = this.context?.Membership.Where(x => x.SchoolId == (int)studentListModel.SchoolId && x.TenantId == studentListModel.TenantId && x.Profile == "Student").Select(x => x.MembershipId).FirstOrDefault();
+                                        userMaster.MembershipId = (int)membershipsId;
+                                        userMaster.LastUpdated = DateTime.UtcNow;
+                                        userMaster.UpdatedBy = studentListModel.UpdatedBy;
+                                        userMaster.IsActive = true;
+                                        this.context?.UserMaster.Add(userMaster);
+                                    }
+                                }
+                            }
+                            this.context?.SaveChanges();
+                        }
+                        //this.context?.SaveChanges();
+                        transaction.Commit();
+                        studentListModel._failure = false;
+                        studentListModel._message = "Student Re-enrollment Added Successfully";
+                    }
+                    else
+                    {
+                        studentListModel._failure = true;
+                        studentListModel._message = "Atleast Select One Student";
+                    }
+                }
+                catch (Exception es)
+                {
+                    transaction.Rollback();
+                    studentListModel._message = es.Message;
+                    studentListModel._failure = true;
+                }
+                return studentListModel;
+            }
+        }
     }
 }
 

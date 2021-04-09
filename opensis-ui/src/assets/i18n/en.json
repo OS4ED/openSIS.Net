@@ -116,6 +116,7 @@
     "noDataFound":"No Data Found",
     "addMarkingPeriod": "Add Marking Period",
     "addAFullYearToBegin":"Add a Full Year to Begin",
+    "addASchoolYearToBegin":"Add a School Year to begin",
     "clickAnItemToViewDetailsOnTheRightSide": "Click an Item to View Details on the Right Side",
     "markingPeriodsList":"Marking Periods List",
     "addChildMarkingPeriod": "Add Child Marking Period",
@@ -745,9 +746,15 @@
     "showShortName": "Show Short Name",
     "importStaffs": "Import Staffs",
     "searchAndUpdateFilter":"Search And Update Filter",
-    "addCourse": "Add Course",
     "allCourses": "All Courses",
     "general": "General",
     "lastGradeLevel": "Last Grade Level",
-    "reenrollmentDate": "Re-enrollment Date"
+    "reenrollmentDate": "Re-enrollment Date",
+    "scheduleDate":"Schedule Date",
+    "standardGrades": "Standard Grades",
+    "addNewGradeScale": "Add New Grade Scale",
+    "keepMeLoggedIn": "Keep me logged in",
+    "logout":"Logout",
+    "ReenrollSelectedStudents" :"Re-enroll Selected Students",
+    "reenrollmentDateIsRequired":"Re-enrollment Date Is Required"
 }

@@ -4,6 +4,8 @@ import { GradeScaleModel } from "./grades.model";
 import {AttendanceCodeCategories} from './attendanceCodeModel';
 import { RoomModel } from "./roomModel";
 import { BlockPeriod, GetBlockListForView } from "./schoolPeriodModel";
+import { StaffMasterModel } from "./staffModel";
+import { tableLanguage } from "./languageModel";
 
 export class FixedSchedulingCourseSectionAddModel extends CommonField {
     public courseSection: CourseSection;
@@ -13,6 +15,7 @@ export class FixedSchedulingCourseSectionAddModel extends CommonField {
         this.courseSection = new CourseSection();
         this.courseFixedSchedule = new CourseFixedSchedule();         
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     } 
 }
@@ -59,6 +62,7 @@ export class VariableSchedulingCourseSectionAddModel extends CommonField{
         this.courseCalendarSchedule=null;  
         this.courseBlockScheduleList=null;          
         this._tenantName= sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token=sessionStorage.getItem("token");
     }
 }
@@ -104,6 +108,7 @@ export class CalendarSchedulingCourseSectionAddModel extends CommonField {
         this.courseSection = new CourseSection();
         this.courseCalendarScheduleList = [];
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -154,6 +159,7 @@ export class BlockedSchedulingCourseSectionAddModel extends CommonField {
         this.courseBlockScheduleList = [new CourseBlockSchedule()];
         this.duration = null;
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -260,6 +266,7 @@ export class GetAllCourseSectionModel extends CommonField {
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");        
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -325,6 +332,9 @@ export class CourseSectionAddViewModel extends CommonField {
     public markingPeriodId: string;
     public markingPeriod: string;
     public standardGradeScaleName:string;
+    public availableSeat:number;
+    public totalStudentSchedule:number;
+    public totalStaffSchedule:number;
     constructor() {
         super();
         this.courseSection = new CourseSection();
@@ -333,6 +343,7 @@ export class CourseSectionAddViewModel extends CommonField {
         this.courseCalendarScheduleList = null;
         this.courseBlockScheduleList = [new CourseBlockSchedule()];
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 
@@ -348,6 +359,7 @@ export class GetAllCourseStandardForCourseSectionModel extends CommonField{
         super();
         this.schoolId=+sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.tenantId = sessionStorage.getItem("tenantId");
     }
@@ -378,7 +390,56 @@ export class DeleteCourseSectionSchedule extends CommonField{
         super();
         this.schoolId=+sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.tenantId = sessionStorage.getItem("tenantId");
     }
+
+}
+
+
+export class ScheduledStaffForCourseSection extends CommonField{
+    courseSectionsList:ScheduledStaffCourseSection[]
+    schoolId: number;
+    courseId: number;
+    courseSectionId: number;
+    tenantId:string;
+    reScheduleStaffId:number;
+    conflictIndexNo:string;
+    createdBy:string;
+    constructor(){
+        super();
+        this.courseSectionsList=[]
+        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._token = sessionStorage.getItem("token");
+        this.tenantId = sessionStorage.getItem("tenantId");
+        this._userName=sessionStorage.getItem('user');
+        this.createdBy=sessionStorage.getItem('email');
+    }
+
+}
+
+class ScheduledStaffCourseSection extends CourseSection{
+    staffCoursesectionSchedule:StaffList[]
+}
+
+class StaffList{
+    staffId:number;
+    courseId:number;
+    courseSectionId:number;
+    courseSectionName:string;
+    staffMaster:StaffModel;
+    checked:boolean; //This is for Front End Uses
+    conflict:boolean; //This is for Front End Uses
+}
+
+class StaffModel extends StaffMasterModel{
+    staffEmail:string; //This is only for Frontend Uses
+    firstLanguageNavigation:tableLanguage;
+    secondLanguageNavigation:tableLanguage;
+    thirdLanguageNavigation:tableLanguage;
+    firstLanguageName:string; // Front End Uses
+    secondLanguageName:string; // Front End Uses
+    thirdLanguageName:string; // Front End Uses
 }

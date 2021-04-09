@@ -49,7 +49,7 @@ namespace opensis.data.Repository
 
                     if (gradeScaleSortOrder != null)
                     {
-                        SortOrder = gradeScaleData.SortOrder + 1;
+                        SortOrder = gradeScaleSortOrder.SortOrder + 1;
                     }
 
                     gradeScaleAddViewModel.gradeScale.GradeScaleId = (int)GradeScaleId;

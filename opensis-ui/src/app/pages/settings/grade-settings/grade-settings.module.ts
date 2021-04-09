@@ -38,6 +38,7 @@ import { SharedModuleModule } from '../../../pages/shared-module/shared-module.m
 import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ReportCardCommentsComponent } from '../../grades/report-card-comments/report-card-comments.component';
+import { StandardGradesComponent } from '../../grades/standard-grades/standard-grades.component';
 
 
 
@@ -52,7 +53,8 @@ import { ReportCardCommentsComponent } from '../../grades/report-card-comments/r
     EffortGradeScaleComponent,
     ReportCardGradesComponent,
     HonorRollSetupComponent,
-    ReportCardCommentsComponent
+    ReportCardCommentsComponent,
+    StandardGradesComponent
   ],
   imports: [
     CommonModule,

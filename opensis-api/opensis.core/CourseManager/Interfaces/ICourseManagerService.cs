@@ -23,10 +23,12 @@ namespace opensis.core.CourseManager.Interfaces
         public CourseSectionViewModel GetAllCourseSection(CourseSectionViewModel courseSectionViewModel);
         public CourseSectionAddViewModel UpdateCourseSection(CourseSectionAddViewModel courseSectionAddViewModel);
         public CourseSectionAddViewModel DeleteCourseSection(CourseSectionAddViewModel courseSectionAddViewModel);
-        public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel);
-        public DeleteScheduleViewModel DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel);
+        //public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel);
+        //public DeleteScheduleViewModel DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel);
         public SearchCourseSectionViewModel SearchCourseSectionForSchedule(SearchCourseSectionViewModel searchCourseSectionViewModel);
         public StaffListViewModel GetAllStaffScheduleInCourseSection(StaffListViewModel staffListViewModel);
+
+        public SearchCourseScheduleViewModel SearchCourseForSchedule(SearchCourseScheduleViewModel searchCourseScheduleViewModel);
     }
 }
 

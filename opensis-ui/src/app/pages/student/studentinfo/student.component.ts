@@ -123,9 +123,10 @@ export class StudentComponent implements OnInit,OnDestroy {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
-    this.editPermission = permissionCategory.rolePermission[0].canEdit;
-    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
-    this.addPermission = permissionCategory.rolePermission[0].canAdd;
+    let permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 3);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.searchCtrl = new FormControl();
     this.getAllSearchFilter();
   }

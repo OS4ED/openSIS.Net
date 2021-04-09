@@ -32,7 +32,7 @@ namespace opensis.core.StudentSchedule.Services
             StudentCourseSectionScheduleAddViewModel studentCourseSectionScheduleAddModel = new StudentCourseSectionScheduleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(studentCourseSectionScheduleAddViewModel._tenantName, studentCourseSectionScheduleAddViewModel._token))
+                if (TokenManager.CheckToken(studentCourseSectionScheduleAddViewModel._tenantName + studentCourseSectionScheduleAddViewModel._userName, studentCourseSectionScheduleAddViewModel._token))
                 {
                     studentCourseSectionScheduleAddModel = this.studentScheduleRepository.AddStudentCourseSectionSchedule(studentCourseSectionScheduleAddViewModel);
                 }
@@ -61,7 +61,7 @@ namespace opensis.core.StudentSchedule.Services
             ScheduleStudentListViewModel ScheduledStudentListView = new ScheduleStudentListViewModel();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName + pageResult._userName, pageResult._token))
                 {
                     ScheduledStudentListView = this.studentScheduleRepository.SearchScheduledStudentForGroupDrop(pageResult);
                 }
@@ -85,7 +85,7 @@ namespace opensis.core.StudentSchedule.Services
             ScheduledStudentDropModel ScheduledStudentDrop = new ScheduledStudentDropModel();
             try
             {
-                if (TokenManager.CheckToken(scheduledStudentDropModel._tenantName, scheduledStudentDropModel._token))
+                if (TokenManager.CheckToken(scheduledStudentDropModel._tenantName + scheduledStudentDropModel._userName, scheduledStudentDropModel._token))
                 {
                     ScheduledStudentDrop = this.studentScheduleRepository.GroupDropForScheduledStudent(scheduledStudentDropModel);
                 }
@@ -109,7 +109,7 @@ namespace opensis.core.StudentSchedule.Services
             StudentScheduleReportViewModel studentScheduleReportView = new StudentScheduleReportViewModel();
             try
             {
-                if (TokenManager.CheckToken(studentScheduleReportViewModel._tenantName, studentScheduleReportViewModel._token))
+                if (TokenManager.CheckToken(studentScheduleReportViewModel._tenantName + studentScheduleReportViewModel._userName, studentScheduleReportViewModel._token))
                 {
                     studentScheduleReportView = this.studentScheduleRepository.StudentScheduleReport(studentScheduleReportViewModel);
                 }
@@ -138,7 +138,7 @@ namespace opensis.core.StudentSchedule.Services
             StudentCourseSectionScheduleAddViewModel studentCourseSectionScheduleDeleteModel = new StudentCourseSectionScheduleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(studentCourseSectionScheduleAddViewModel._tenantName, studentCourseSectionScheduleAddViewModel._token))
+                if (TokenManager.CheckToken(studentCourseSectionScheduleAddViewModel._tenantName + studentCourseSectionScheduleAddViewModel._userName, studentCourseSectionScheduleAddViewModel._token))
                 {
                     studentCourseSectionScheduleDeleteModel = this.studentScheduleRepository.DeleteStudentScheduleReport(studentCourseSectionScheduleAddViewModel);
                 }

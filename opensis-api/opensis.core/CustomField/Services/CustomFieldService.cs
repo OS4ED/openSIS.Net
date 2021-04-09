@@ -31,7 +31,7 @@ namespace opensis.core.CustomField.Services
         public CustomFieldAddViewModel SaveCustomField(CustomFieldAddViewModel customFieldAddViewModel)
         {
             CustomFieldAddViewModel customFieldAdd = new CustomFieldAddViewModel();
-            if (TokenManager.CheckToken(customFieldAddViewModel._tenantName, customFieldAddViewModel._token))
+            if (TokenManager.CheckToken(customFieldAddViewModel._tenantName + customFieldAddViewModel._userName, customFieldAddViewModel._token))
             {
                 customFieldAdd = this.customFieldRepository.AddCustomField(customFieldAddViewModel);
             }
@@ -82,7 +82,7 @@ namespace opensis.core.CustomField.Services
             CustomFieldAddViewModel customFieldUpdate = new CustomFieldAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(customFieldAddViewModel._tenantName, customFieldAddViewModel._token))
+                if (TokenManager.CheckToken(customFieldAddViewModel._tenantName + customFieldAddViewModel._userName, customFieldAddViewModel._token))
                 {
                     customFieldUpdate = this.customFieldRepository.UpdateCustomField(customFieldAddViewModel);
                 }
@@ -110,7 +110,7 @@ namespace opensis.core.CustomField.Services
             CustomFieldAddViewModel customFieldDelete = new CustomFieldAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(customFieldAddViewModel._tenantName, customFieldAddViewModel._token))
+                if (TokenManager.CheckToken(customFieldAddViewModel._tenantName + customFieldAddViewModel._userName, customFieldAddViewModel._token))
                 {
                     customFieldDelete = this.customFieldRepository.DeleteCustomField(customFieldAddViewModel);
                 }
@@ -138,7 +138,7 @@ namespace opensis.core.CustomField.Services
             FieldsCategoryAddViewModel FieldsCategoryAddModel = new FieldsCategoryAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
+                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName + fieldsCategoryAddViewModel._userName, fieldsCategoryAddViewModel._token))
                 {
 
                     FieldsCategoryAddModel = this.customFieldRepository.AddFieldsCategory(fieldsCategoryAddViewModel);
@@ -196,7 +196,7 @@ namespace opensis.core.CustomField.Services
             FieldsCategoryAddViewModel fieldsCategoryUpdateModel = new FieldsCategoryAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
+                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName + fieldsCategoryAddViewModel._userName, fieldsCategoryAddViewModel._token))
                 {
                     fieldsCategoryUpdateModel = this.customFieldRepository.UpdateFieldsCategory(fieldsCategoryAddViewModel);
                 }
@@ -224,7 +224,7 @@ namespace opensis.core.CustomField.Services
             FieldsCategoryAddViewModel fieldsCategoryDeleteModel = new FieldsCategoryAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName, fieldsCategoryAddViewModel._token))
+                if (TokenManager.CheckToken(fieldsCategoryAddViewModel._tenantName + fieldsCategoryAddViewModel._userName, fieldsCategoryAddViewModel._token))
                 {
                     fieldsCategoryDeleteModel = this.customFieldRepository.DeleteFieldsCategory(fieldsCategoryAddViewModel);
                 }
@@ -252,7 +252,7 @@ namespace opensis.core.CustomField.Services
             FieldsCategoryListViewModel fieldsCategoryListModel = new FieldsCategoryListViewModel();
             try
             {
-                if (TokenManager.CheckToken(fieldsCategoryListViewModel._tenantName, fieldsCategoryListViewModel._token))
+                if (TokenManager.CheckToken(fieldsCategoryListViewModel._tenantName + fieldsCategoryListViewModel._userName, fieldsCategoryListViewModel._token))
                 {
                     fieldsCategoryListModel = this.customFieldRepository.GetAllFieldsCategory(fieldsCategoryListViewModel);
                 }
@@ -280,7 +280,7 @@ namespace opensis.core.CustomField.Services
             CustomFieldSortOrderModel customFieldSortOrderUpdateModel = new CustomFieldSortOrderModel();
             try
             {
-                if (TokenManager.CheckToken(customFieldSortOrderModel._tenantName, customFieldSortOrderModel._token))
+                if (TokenManager.CheckToken(customFieldSortOrderModel._tenantName + customFieldSortOrderModel._userName, customFieldSortOrderModel._token))
                 {
                     customFieldSortOrderUpdateModel = this.customFieldRepository.UpdateCustomFieldSortOrder(customFieldSortOrderModel);
                 }

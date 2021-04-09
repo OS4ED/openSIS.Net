@@ -18,5 +18,6 @@ namespace opensis.data.ViewModels.StaffSchedule
         public bool? HomeroomTeacher { get; set; }
         public Guid? StaffGuid { get; set; }
         public bool? ConflictStaff { get; set; }
+
     }
 }

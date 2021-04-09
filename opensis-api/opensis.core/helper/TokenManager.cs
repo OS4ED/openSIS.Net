@@ -11,23 +11,86 @@ namespace opensis.core.helper
 {
     public class TokenManager
     {
-        private static string Secret = "ERMN05OPLoDvbTTa/QkqLNMI7cPLguaRyHzyg7n5qNBVjQmtBhz4SzYh4NBVCXi3KJHlSXKP+oi2+bXr6CUYTR==";
+        private const string Secret = "ERMN05OPLoDvbTTa/QkqLNMI7cPLguaRyHzyg7n5qNBVjQmtBhz4SzYh4NBVCXi3KJHlSXKP+oi2+bXr6CUYTR==";
+
         public static string GenerateToken(string username)
         {
+            //byte[] key = Convert.FromBase64String(Secret);
+            //SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
+            //SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
+            //{
+            //    Subject = new ClaimsIdentity(new[] {
+            //          new Claim(ClaimTypes.Name, username)}),
+            //    Expires = DateTime.UtcNow.AddMinutes(30),
+            //    SigningCredentials = new SigningCredentials(securityKey,
+            //        SecurityAlgorithms.HmacSha256Signature)
+            //};
+
+            //JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
+            //JwtSecurityToken token = handler.CreateJwtSecurityToken(descriptor);
+            //return handler.WriteToken(token);
+
+            return GenerateTokenWithExpiry(username).Token;
+        }
+
+        public static (string Token, DateTimeOffset Expiry) GenerateTokenWithExpiry(string username)
+        {
+            DateTimeOffset expiry = DateTimeOffset.UtcNow.AddMinutes(30);
             byte[] key = Convert.FromBase64String(Secret);
             SymmetricSecurityKey securityKey = new SymmetricSecurityKey(key);
             SecurityTokenDescriptor descriptor = new SecurityTokenDescriptor
             {
                 Subject = new ClaimsIdentity(new[] {
                       new Claim(ClaimTypes.Name, username)}),
-                Expires = DateTime.UtcNow.AddMinutes(30),
+                Expires = expiry.UtcDateTime,
                 SigningCredentials = new SigningCredentials(securityKey,
-                SecurityAlgorithms.HmacSha256Signature)
+                    SecurityAlgorithms.HmacSha256Signature)
             };
 
             JwtSecurityTokenHandler handler = new JwtSecurityTokenHandler();
             JwtSecurityToken token = handler.CreateJwtSecurityToken(descriptor);
-            return handler.WriteToken(token);
+            var jwtToken = handler.WriteToken(token);
+            return (jwtToken, expiry);
+        }
+
+        public static string RefreshToken(string token, string user_name)
+        {
+            string newToken = "";
+            try
+            {
+                newToken= RefreshTokenWithExpiry(token, user_name).Token;
+
+                //if (user_name != null && token != null)
+                //{
+                //    string tokenusername = TokenManager.ValidateToken(token);
+                //    if (tokenusername != null)
+                //    {
+                //        if (tokenusername.Equals(user_name))
+                //        {
+                //            newToken = GenerateToken(user_name);
+                //        }
+                //    }
+                //}
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return newToken;
+        }
+
+        public static (string Token, DateTimeOffset Expiry) RefreshTokenWithExpiry(string token, string user_name)
+        {
+            try
+            {
+                if (CheckToken(user_name, token))
+                    return GenerateTokenWithExpiry(user_name);
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return default((string, DateTimeOffset));
         }
 
         public static ClaimsPrincipal GetPrincipal(string token)
@@ -51,9 +114,10 @@ namespace opensis.core.helper
                       parameters, out securityToken);
                 return principal;
             }
-            catch
+            catch (Exception)
             {
-                return null;
+                throw;
+                //return null;
             }
         }
 
@@ -79,17 +143,25 @@ namespace opensis.core.helper
 
         public static bool CheckToken(string user_name, string token)
         {
-            if (user_name != null && token != null)
+            try
             {
-               string tokenusername = TokenManager.ValidateToken(token);
-
-                if (tokenusername.Equals(user_name))
+                if (user_name != null && token != null)
                 {
-                    return true;
+                    string tokenusername = TokenManager.ValidateToken(token);
+                    if (tokenusername != null)
+                    {
+                        if (tokenusername.Equals(user_name))
+                        {
+                            return true;
+                        }
+                    }
                 }
+                return false;
             }
-            return false;
+            catch (Exception)
+            {
+                return false;
+            }
         }
-
     }
 }

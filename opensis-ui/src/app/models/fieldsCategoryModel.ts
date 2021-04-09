@@ -37,6 +37,7 @@ export class FieldsCategoryAddView extends CommonField {
     constructor() {
         super();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.fieldsCategory = new FieldsCategoryModel()
     }
@@ -50,6 +51,7 @@ export class FieldsCategoryListView extends CommonField {
         super();
         this.module = "";
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.tenantId = sessionStorage.getItem('tenantId');
         this.schoolId = +sessionStorage.getItem('selectedSchoolId');

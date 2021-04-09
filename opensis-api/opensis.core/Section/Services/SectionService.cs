@@ -31,7 +31,7 @@ namespace opensis.core.Section.Services
         public SectionAddViewModel SaveSection(SectionAddViewModel section)
         {
             SectionAddViewModel sectionAddViewModel = new SectionAddViewModel();
-            if (TokenManager.CheckToken(section._tenantName, section._token))
+            if (TokenManager.CheckToken(section._tenantName + section._userName, section._token))
             {
 
                 sectionAddViewModel = this.sectionRepository.AddSection(section);
@@ -55,7 +55,7 @@ namespace opensis.core.Section.Services
         public SectionAddViewModel UpdateSection(SectionAddViewModel section)
         {
             SectionAddViewModel sectionUpdate = new SectionAddViewModel();
-            if (TokenManager.CheckToken(section._tenantName, section._token))
+            if (TokenManager.CheckToken(section._tenantName + section._userName, section._token))
             {
                 sectionUpdate = this.sectionRepository.UpdateSection(section);
               
@@ -78,7 +78,7 @@ namespace opensis.core.Section.Services
         public SectionAddViewModel ViewSection(SectionAddViewModel section)
         {
             SectionAddViewModel sectionView = new SectionAddViewModel();
-            if (TokenManager.CheckToken(section._tenantName, section._token))
+            if (TokenManager.CheckToken(section._tenantName + section._userName, section._token))
             {
                 sectionView = this.sectionRepository.ViewSection(section);
 
@@ -103,7 +103,7 @@ namespace opensis.core.Section.Services
             SectionListViewModel sectionList = new SectionListViewModel();
             try
             {
-                if (TokenManager.CheckToken(section._tenantName, section._token))
+                if (TokenManager.CheckToken(section._tenantName + section._userName, section._token))
                 {
                     sectionList = this.sectionRepository.GetAllsection(section);
                 }
@@ -132,7 +132,7 @@ namespace opensis.core.Section.Services
             SectionAddViewModel sectionDelete = new SectionAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(section._tenantName, section._token))
+                if (TokenManager.CheckToken(section._tenantName + section._userName, section._token))
                 {
                     sectionDelete = this.sectionRepository.DeleteSection(section);
                 }

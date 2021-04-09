@@ -19,8 +19,11 @@ export class UserViewModel extends CommonField {
         this.schoolId=+sessionStorage.getItem("selectedSchoolId")==0?null:+sessionStorage.getItem("selectedSchoolId");
         this.tenantId ="1E93C7BF-0FAE-42BB-9E09-A1CEDC8C0355";
         this.userId = 0;
-        this.email="";
-        this.password = "";
+        this.email=sessionStorage.getItem("email");
+        this.password ="";
+        this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
+        this._token = sessionStorage.getItem("token");
     }
 }
 
@@ -32,6 +35,7 @@ export class CheckUserEmailAddressViewModel extends CommonField {
         super();
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }

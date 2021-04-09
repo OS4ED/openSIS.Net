@@ -20,7 +20,10 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 })
 export class ScheduleStudentComponent implements OnInit, OnDestroy {
   studentList = [];
+  studentText:string;
+  sectionText:string;
   viewReport: boolean = false;
+  failedScheduling:boolean=false
   showReportTable: boolean = false;
   courseSectionList = [];
   showStudentCount: boolean = false;
@@ -69,6 +72,12 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
     }).afterClosed().subscribe((data) => {
       this.studentList = data;
       if (this.studentList?.length > 0) {
+        if(this.studentList?.length > 1){
+            this.studentText='s';
+        }
+        else{
+          this.studentText='';
+        }
         this.showStudentCount = true;
         this.viewReport = false;
         this.showCard = false;
@@ -87,6 +96,12 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
     }).afterClosed().subscribe((data) => {
       this.courseSectionList = data;
       if (this.courseSectionList?.length > 0) {
+        if(this.studentList?.length > 1){
+          this.sectionText='s' ;
+      }
+      else{
+        this.sectionText='';
+      }
         this.showCourseSectionCount = true;
         this.viewReport = false;
         this.showCard = false;
@@ -106,9 +121,8 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
     this.studentCourseSectionScheduleAddViewModel.createdBy = sessionStorage.getItem('user');
     this.studentScheduleService.addStudentCourseSectionSchedule(this.studentCourseSectionScheduleAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
       if (data._failure) {
-        this.snackbar.open('Failed to schedule student', '', {
-          duration: 5000
-        });
+        this.studentCourseSectionScheduleAddViewModel.conflictMessage = 'Failed to schedule student(s) to course section(s)';
+        this.failedScheduling = true;
       }
       else {
         this.studentCourseSectionScheduleAddViewModel = data;

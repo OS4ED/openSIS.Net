@@ -320,8 +320,8 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     }
     for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments.length; i++) {
       this.selectedExitCodes[i] = null;
-      this.cloneStudentEnrollment.studentEnrollments[i].schoolId = this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId.toString();
-      this.cloneStudentEnrollment.studentEnrollments[i].gradeId = this.studentEnrollmentModel.studentEnrollmentListForView[i].gradeId.toString();
+      this.cloneStudentEnrollment.studentEnrollments[i].schoolId = this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId?.toString();
+      this.cloneStudentEnrollment.studentEnrollments[i].gradeId = this.studentEnrollmentModel.studentEnrollmentListForView[i].gradeId?.toString();
     }
     this.findCalendarNameById();
   }
@@ -355,6 +355,8 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
 
     this.studentEnrollmentModel.academicYear = sessionStorage.getItem("academicyear");
     this.studentEnrollmentModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
+    this.studentEnrollmentModel._userName = sessionStorage.getItem("user");
+
     this.studentService.updateStudentEnrollment(this.studentEnrollmentModel).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Enrollment Update failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -370,6 +372,14 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           this.snackbar.open(res._message, '', {
             duration: 10000
           });
+          if(res.rollingOption===RollingOptionsEnum['Do not enroll after this school year']){
+            res.studentEnrollments.map((item)=>{
+                if(+item.exitCode==2){
+              this.router.navigate(["school/students"]);
+                }
+            })
+           
+          }
           for (let i = 0; i < res.studentEnrollments?.length; i++) {
             if (res.studentEnrollments[i].enrollmentCode == "Transferred In") {
               this.router.navigate(["school/students"]);

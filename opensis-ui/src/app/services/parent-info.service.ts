@@ -12,6 +12,7 @@ export class ParentInfoService {
   apiUrl: string = environment.apiURL;
   private parentId;
   private parentDetails;
+  userName = sessionStorage.getItem('user');
   
   constructor(private http: HttpClient, private cryptoService: CryptoService) { }
 
@@ -38,49 +39,59 @@ export class ParentInfoService {
  } 
 
   ViewParentListForStudent(parentInfo: ViewParentInfoModel) {
+    parentInfo._userName= this.userName;
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/ViewParentListForStudent";
     return this.http.post<ViewParentInfoModel>(apiurl, parentInfo)
   }
   viewParentInfo(parentInfo: AddParentInfoModel) {
+    parentInfo._userName= this.userName;
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/viewParentInfo";
     return this.http.post<AddParentInfoModel>(apiurl, parentInfo)
   }
 
   updateParentInfo(parentInfo: AddParentInfoModel) {
+    parentInfo._userName= this.userName;
     parentInfo.parentInfo.parentPhoto = this.parentImage;
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/updateParentInfo";
     return this.http.put<AddParentInfoModel>(apiurl, parentInfo)
   }
   getAllParentInfo(Obj: GetAllParentModel) {
+    Obj._userName= this.userName;
     let apiurl = this.apiUrl + Obj._tenantName + "/ParentInfo/getAllParentInfo";
     return this.http.post<GetAllParentModel>(apiurl, Obj)
   }
   addParentForStudent(obj: AddParentInfoModel){
+    obj._userName= this.userName;
     obj.passwordHash = this.cryptoService.encrypt(obj.passwordHash);
     obj.parentInfo.parentPhoto = this.parentImage;
     let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/addParentForStudent";   
     return this.http.post<AddParentInfoModel>(apiurl,obj)
   }
   deleteParentInfo(obj: AddParentInfoModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/deleteParentInfo";   
     return this.http.post<AddParentInfoModel>(apiurl,obj)
   }
   searchParentInfoForStudent(obj: ParentInfoList){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/searchParentInfoForStudent";   
     return this.http.post<ParentInfoList>(apiurl,obj)
   }
 
   viewParentListForStudent(obj: GetAllParentInfoModel){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/viewParentListForStudent";   
     return this.http.post<GetAllParentInfoModel>(apiurl,obj)
   }
 
   removeAssociatedParent(obj: RemoveAssociateParent){
+    obj._userName= this.userName;
     let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/removeAssociatedParent";   
     return this.http.post<RemoveAssociateParent>(apiurl,obj)
   }
 
   addUpdateParentPhoto(obj: AddParentInfoModel){
+    obj._userName= this.userName;
     obj.parentInfo.parentId = this.getParentId();
     obj.parentInfo.parentPhoto = this.parentImage;
     let apiurl = this.apiUrl + obj._tenantName+ "/ParentInfo/addUpdateParentPhoto";   

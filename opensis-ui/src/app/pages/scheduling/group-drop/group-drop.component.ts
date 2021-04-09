@@ -31,22 +31,23 @@ export class GroupDropComponent implements OnInit, OnDestroy {
   selectDropDate: string;
   courseSectionData;
   startDate = new Date();
-  listOfStudent=[];
-  selectedStudent=[];
-  totalCount:number=0;
-  pageNumber:number;
-  pageSize:number;
+  listOfStudent = [];
+  selectedStudent = [];
+  totalCount: number = 0;
+  pageNumber: number;
+  pageSize: number;
   endDate;
   loading: boolean;
-  dropSuccess: boolean= false;
-  startDropping: boolean= false;
+  dropSuccess: boolean = false;
+  startDropping: boolean = false;
+  studentNotFound: boolean = false;
   dropMessage: string;
   destroySubject$: Subject<void> = new Subject();
   scheduleStudentListViewModel: ScheduleStudentListViewModel = new ScheduleStudentListViewModel();
   scheduledStudentDropModel: ScheduledStudentDropModel = new ScheduledStudentDropModel();
   showcourseSectionCount: boolean;
   studentMasterList: ScheduleStudentForView[];
-  @ViewChild( MatPaginator) paginator: MatPaginator;
+  @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('masterCheckBox') masterCheckBox: MatCheckbox;
   studentDetails: MatTableDataSource<ScheduleStudentForView>;
   selection: SelectionModel<ScheduleStudentForView> = new SelectionModel<ScheduleStudentForView>(true, []);
@@ -62,7 +63,7 @@ export class GroupDropComponent implements OnInit, OnDestroy {
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
-    
+
   }
 
 
@@ -81,86 +82,86 @@ export class GroupDropComponent implements OnInit, OnDestroy {
         this.showcourseSectionCount = true;
         this.searchScheduledStudentForGroupDrop(this.courseSectionData.courseSectionId);
       }
-      else{
+      else {
         this.showcourseSectionCount = false;
       }
     });
   }
 
-  someComplete():boolean{
-    let indetermine=false;
-      for(let user of this.listOfStudent){
-        for(let selectedUser of this.selectedStudent){
-          if(user.StudentId==selectedUser.StudentId){
-            indetermine=true;
+  someComplete(): boolean {
+    let indetermine = false;
+    for (let user of this.listOfStudent) {
+      for (let selectedUser of this.selectedStudent) {
+        if (user.StudentId == selectedUser.StudentId) {
+          indetermine = true;
+        }
+      }
+    }
+    if (indetermine) {
+      this.masterCheckBox.checked = this.listOfStudent.every((item) => {
+        return item.checked;
+      })
+      if (this.masterCheckBox.checked) {
+        return false;
+      } else {
+        return true;
+      }
+    }
+
+  }
+
+  setAll(event) {
+    this.listOfStudent.forEach(user => {
+      user.checked = event;
+    });
+    this.studentDetails = new MatTableDataSource(this.listOfStudent);
+    this.decideCheckUncheck();
+  }
+
+  onChangeSelection(eventStatus: boolean, id) {
+    for (let item of this.listOfStudent) {
+      if (item.studentId == id) {
+        item.checked = eventStatus;
+        break;
+      }
+    }
+    this.studentDetails = new MatTableDataSource(this.listOfStudent);
+    this.masterCheckBox.checked = this.listOfStudent.every((item) => {
+      return item.checked;
+    });
+
+    this.decideCheckUncheck();
+  }
+
+  decideCheckUncheck() {
+    this.listOfStudent.map((item) => {
+      let isIdIncludesInSelectedList = false;
+      if (item.checked) {
+        for (let selectedUser of this.selectedStudent) {
+          if (item.studentId == selectedUser.studentId) {
+            isIdIncludesInSelectedList = true;
+            break;
+          }
+        }
+        if (!isIdIncludesInSelectedList) {
+          this.selectedStudent.push(item);
+        }
+      } else {
+        for (let selectedUser of this.selectedStudent) {
+          if (item.studentId == selectedUser.studentId) {
+            this.selectedStudent = this.selectedStudent.filter((user) => user.studentId != item.studentId);
+            break;
           }
         }
       }
-      if(indetermine){
-        this.masterCheckBox.checked=this.listOfStudent.every((item)=>{
-          return item.checked;
-        })
-        if(this.masterCheckBox.checked){
-          return false;
-        }else{
-          return true;
-        }
-      }
-      
-  }
-  
-  setAll(event){
-    this.listOfStudent.forEach(user => {
-        user.checked = event;
+      isIdIncludesInSelectedList = false;
+
     });
-    this.studentDetails=new MatTableDataSource(this.listOfStudent);
-    this.decideCheckUncheck();
+    this.selectedStudent = this.selectedStudent.filter((item) => item.checked);
   }
-  
-    onChangeSelection(eventStatus:boolean,id){
-      for(let item of this.listOfStudent){
-        if(item.studentId==id){
-          item.checked=eventStatus;
-          break;
-        }
-      }
-      this.studentDetails=new MatTableDataSource(this.listOfStudent);
-      this.masterCheckBox.checked=this.listOfStudent.every((item)=>{
-        return item.checked;
-      });
-    
-     this.decideCheckUncheck();
-    }
-  
-  decideCheckUncheck(){
-    this.listOfStudent.map((item)=>{
-      let isIdIncludesInSelectedList=false;
-      if(item.checked){
-        for(let selectedUser of this.selectedStudent){
-          if(item.studentId==selectedUser.studentId){
-            isIdIncludesInSelectedList=true;
-            break;
-           }
-        }
-        if(!isIdIncludesInSelectedList){
-          this.selectedStudent.push(item);
-        }
-      }else{
-        for(let selectedUser of this.selectedStudent){
-          if(item.studentId==selectedUser.studentId){
-            this.selectedStudent=this.selectedStudent.filter((user)=>user.studentId!=item.studentId);
-            break;
-           }
-        }
-      }
-      isIdIncludesInSelectedList=false;
-      
-    });
-    this.selectedStudent=this.selectedStudent.filter((item)=>item.checked);
-  }
-  getPageEvent(event){
-    this.scheduleStudentListViewModel.pageNumber=event.pageIndex+1;
-    this.scheduleStudentListViewModel._pageSize=event.pageSize;
+  getPageEvent(event) {
+    this.scheduleStudentListViewModel.pageNumber = event.pageIndex + 1;
+    this.scheduleStudentListViewModel._pageSize = event.pageSize;
     this.searchScheduledStudentForGroupDrop(this.courseSectionData.courseSectionId);
   }
 
@@ -168,42 +169,41 @@ export class GroupDropComponent implements OnInit, OnDestroy {
     this.selection = new SelectionModel<ScheduleStudentForView>(true, []);
     this.scheduleStudentListViewModel.courseSectionId = courseSectionId
     this.studentScheduleService.searchScheduledStudentForGroupDrop(this.scheduleStudentListViewModel).subscribe((res) => {
-      if(res._failure){
-        if(res.scheduleStudentForView===null){
-            this.studentDetails = new MatTableDataSource([]);   
-            this.snackbar.open( res._message, '', {
-              duration: 10000
-            });
-        } else{
-          this.studentDetails = new MatTableDataSource([]); 
-          this.totalCount= res.totalCount;  
+      if (res._failure) {
+        this.studentNotFound = true;
+        this.dropMessage = res._message;
+        this.studentDetails = new MatTableDataSource([]);
+        this.totalCount = res.totalCount;
+      } else {
+        this.totalCount = res.totalCount;
+        if (res.totalCount === 0 || res.totalCount === null) {
+          this.studentNotFound = true;
+          this.dropMessage = 'Student not found';
         }
-      }else{
-        this.totalCount= res.totalCount;
         this.pageNumber = res.pageNumber;
         this.pageSize = res._pageSize;
         this.studentMasterList = res.scheduleStudentForView;
         this.studentDetails = new MatTableDataSource(this.studentMasterList);
         this.studentMasterList.forEach(user => {
-          user.checked=false
+          user.checked = false
         });
-        let response=this.studentMasterList.map((item)=>{
-          this.selectedStudent.map((selectedUser)=>{
-            if(item.studentId==selectedUser.studentId){
-              item.checked=true;
+        let response = this.studentMasterList.map((item) => {
+          this.selectedStudent.map((selectedUser) => {
+            if (item.studentId == selectedUser.studentId) {
+              item.checked = true;
               return item;
             }
           });
           return item;
         });
-        this.listOfStudent=response;
-        this.scheduleStudentListViewModel=new ScheduleStudentListViewModel();     
+        this.listOfStudent = response;
+        this.scheduleStudentListViewModel = new ScheduleStudentListViewModel();
       }
     });
   }
 
   dropGroupStudents() {
-    let selectedStudents = this.selectedStudent.filter(item=>item.action !== true);
+    let selectedStudents = this.selectedStudent.filter(item => item.action !== true);
     if (this.selectDropDate == undefined) {
       this.snackbar.open('Please select drop date', '', {
         duration: 5000
@@ -217,7 +217,7 @@ export class GroupDropComponent implements OnInit, OnDestroy {
       return;
     }
     else {
-      this.startDropping= true;
+      this.startDropping = true;
       this.scheduledStudentDropModel.studentCoursesectionScheduleList = selectedStudents;
       this.scheduledStudentDropModel.effectiveDropDate = this.commonFunction.formatDateSaveWithoutTime(this.selectDropDate);
       this.scheduledStudentDropModel.courseSectionId = this.courseSectionData.courseSectionId;
@@ -226,14 +226,15 @@ export class GroupDropComponent implements OnInit, OnDestroy {
           this.snackbar.open(res._message, '', {
             duration: 5000
           });
-          this.dropMessage= res._message;
+          this.dropMessage = res._message;
+          this.studentNotFound = true;
         } else {
-          this.dropMessage= res._message;
-          this.dropSuccess= true;
-          this.studentDetails=new MatTableDataSource([]);
-          this.showcourseSectionCount= false;
-          this.selectDropDate= null;
-          this.totalCount=0;
+          this.dropMessage = res._message;
+          this.dropSuccess = true;
+          this.studentDetails = new MatTableDataSource([]);
+          this.showcourseSectionCount = false;
+          this.selectDropDate = null;
+          this.totalCount = 0;
         }
       })
     }

@@ -39,5 +39,6 @@ namespace opensis.data.Models
         public DateTime? DobEndDate { get; set; }
         public string FullName { get; set; }
         public bool? ProfilePhoto { get; set; }
+        public bool? IncludeInactive { get; set; }
     }
 }

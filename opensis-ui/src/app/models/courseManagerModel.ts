@@ -9,6 +9,7 @@ export class GetAllSubjectModel extends CommonField{
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId"); 
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -38,6 +39,7 @@ export class AddSubjectModel extends CommonField{
         super();
         this.subjectList = [new SubjectModel()];   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -48,6 +50,7 @@ export class UpdateSubjectModel extends CommonField{
         super();
         this.subjectList = [new SubjectModel()];   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -57,6 +60,7 @@ export class MassUpdateSubjectModel extends CommonField{
         super();
         this.subjectList = [{}];   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -66,6 +70,7 @@ export class DeleteSubjectModel extends CommonField{
         super();
         this.subject = new SubjectModel();   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -97,6 +102,7 @@ export class GetAllProgramModel extends CommonField{
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -106,6 +112,7 @@ export class AddProgramModel extends CommonField{
         super();
         this.programList = [new ProgramsModel()];   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -116,6 +123,7 @@ export class UpdateProgramModel extends CommonField{
         super();
         this.programList = [new ProgramsModel()];   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -126,6 +134,7 @@ export class MassUpdateProgramModel extends CommonField{
         super();
         this.programList = [{}];   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -135,6 +144,7 @@ export class DeleteProgramModel extends CommonField{
         super();
         this.programs = new ProgramsModel();   
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -148,6 +158,7 @@ export class GetAllCourseListModel extends CommonField{
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -177,7 +188,7 @@ export class CourseModel {
     public courseProgram: string;
     public courseSubject: string;
     public courseCategory: number;
-    public creditHours: string;
+    public creditHours: number;
     public courseDescription: string;
     public isCourseActive: boolean;
     public createdBy: string;
@@ -201,6 +212,7 @@ export class AddCourseModel extends CommonField{
         super();
         this.course = new CourseModel();          
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 } 
@@ -230,6 +242,7 @@ export class CourseListFilterModel{
         this.tenantId = sessionStorage.getItem("tenantId");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");         
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
   }
@@ -265,4 +278,14 @@ export class CourseListFilterModel{
     public blockRoomId : number;
     public isActive: boolean;
     public markingPeriodTitle:string; // This is only for Front End to extract the marking period title based on ID
+  }
+
+
+  export class SearchCourseForScheduleModel extends CommonField{
+    course:CourseModel[]
+    courseSubject: string;
+    courseProgram:string;
+    constructor(){
+        super();
+    }
   }

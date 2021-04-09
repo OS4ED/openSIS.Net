@@ -8,30 +8,33 @@
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-content>
+<mat-dialog-content [formGroup]="form" >
     <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 row-gap-2 mt-4">
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "subject" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="mbathemaicst">Mathemaicst</mat-option>
+                <mat-select formControlName="subject">
+                    <mat-option value=''>All Subject</mat-option>
+                    <mat-option *ngFor="let subject of getAllSubjectModel.subjectList" [value]="subject.subjectName">{{subject.subjectName}}</mat-option>
+
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "program" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="allProgram">All Program</mat-option>
+                <mat-select formControlName="program">
+                    <mat-option value=''>All Program</mat-option>
+                    <mat-option *ngFor="let program of getAllProgramModel.programList" [value]="program.programName">{{program.programName}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
-            <button color="primary" mat-raised-button type="submit" class="mt-2">Search</button>
+            <button color="primary" mat-raised-button type="submit" class="mt-2" (click)="SearchCourseForSchedule()">Search</button>
         </li>
     </ul>
 </mat-dialog-content>
-<div class="-mx-4 border-t overflow-x-auto overflow-y-hidden">
+<div class="-mx-4 border-t overflow-x-auto overflow-y-hidden" *ngIf="searchedCourseDetails?.length>0">
     <table class="w-full schedule-table">
         <thead>
             <tr>
@@ -44,29 +47,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr>
-                <td>Mathematics</td>
-                <td>-</td>
-                <td class="text-primary"><a href="javascript:void(0);">Algebra</a></td>
-                <td>Grade 6</td>
-                <td>Core</td>
-                <td>4.00</td>
-            </tr>
-            <tr>
-                <td>Mathematics</td>
-                <td>-</td>
-                <td class="text-primary"><a href="javascript:void(0);">Algebra 2</a></td>
-                <td>Grade 6</td>
-                <td>Core</td>
-                <td>3.00</td>
-            </tr>
-            <tr>
-                <td>Mathematics</td>
-                <td>-</td>
-                <td class="text-primary"><a href="javascript:void(0);">AP Calculus</a></td>
-                <td>Grade 8</td>
-                <td>Core</td>
-                <td>4.00</td>
+            <tr *ngFor="let course of searchedCourseDetails">
+                <td>{{course.courseSubject|EmtyValueCheckPipe}}</td>
+                <td>{{course.courseProgram|EmtyValueCheckPipe}}</td>
+                <td class="text-primary"><a href="javascript:void(0);" (click)="selectCourse(course)">{{course.courseTitle|EmtyValueCheckPipe}}</a></td>
+                <td>{{course.courseGradeLevel|EmtyValueCheckPipe}}</td>
+                <td>{{course.courseCategory|EmtyValueCheckPipe}}</td>
+                <td>{{course.creditHours?(course.creditHours | number:'0.2'):course.creditHours==0?'0.00':'-'}}</td>
             </tr>
         </tbody>
     </table>

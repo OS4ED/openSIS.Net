@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { SearchCourseSectionViewModel } from '../models/courseManagerModel';
-import { CourseSectionAddViewModel, DeleteCourseSectionSchedule, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel} from '../models/courseSectionModel';
+import { CourseSectionAddViewModel, DeleteCourseSectionSchedule, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel, ScheduledStaffForCourseSection} from '../models/courseSectionModel';
 import { CryptoService } from './Crypto.service';
 
 @Injectable({
@@ -14,7 +14,6 @@ export class CourseSectionService {
   constructor(private http: HttpClient, private cryptoService: CryptoService) { }
 
      getAllCourseSection(courseSection: GetAllCourseSectionModel) {
-      
         let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllCourseSection";
         return this.http.post<GetAllCourseSectionModel>(apiurl, courseSection)
     }
@@ -60,5 +59,9 @@ export class CourseSectionService {
     searchCourseSectionForSchedule(courseSection : SearchCourseSectionViewModel){
       let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/searchCourseSectionForSchedule";
       return this.http.post<SearchCourseSectionViewModel>(apiurl, courseSection)
+    }
+    getAllStaffScheduleInCourseSection(courseSection : ScheduledStaffForCourseSection){
+      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllStaffScheduleInCourseSection";
+      return this.http.post<ScheduledStaffForCourseSection>(apiurl, courseSection)
     }
 }

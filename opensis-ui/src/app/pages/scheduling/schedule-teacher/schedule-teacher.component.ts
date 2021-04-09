@@ -235,6 +235,7 @@ checkAvailabilityFinished:boolean=false;
     this.checkAvailabilityLoader=true;
     this.cloneStaffScheduleList=JSON.parse(JSON.stringify(this.cloneStaffScheduleListForCheckAvailibility));
     this.onlySendCheckedCourseSections();
+    this.cloneStaffScheduleList._userName=sessionStorage.getItem('user');
     this.staffScheduleService.checkAvailabilityStaffCourseSectionSchedule(this.cloneStaffScheduleList).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.cloneStaffScheduleList.staffScheduleViewList = [];

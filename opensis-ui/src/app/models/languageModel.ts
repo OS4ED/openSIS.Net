@@ -1,7 +1,7 @@
 
 
 
-class tableLanguage {
+export class tableLanguage {
     langId: number;
     lcid: string;
     locale: string;
@@ -18,6 +18,7 @@ export class LanguageAddModel {
     public _failure: boolean;
     public _message:string;
     public _tenantName:string;
+    public _userName: string;
     public _token:string;
     
     constructor() {       
@@ -26,7 +27,7 @@ export class LanguageAddModel {
         this._message="";
         this._tenantName="";
         this._token="";
-          
+          this._userName="";
     }
 }
 
@@ -36,6 +37,7 @@ export class LanguageModel  {
     public _failure: boolean;
     public _message:string;
     public _tenantName:string;
+    public _userName: string;
     public _token:string;
     constructor() {       
         this.tableLanguage=null;   
@@ -43,7 +45,8 @@ export class LanguageModel  {
         this._failure=false;
         this._message="";
         this._tenantName="";
-        this._token="";  
+        this._token=""; 
+        this._userName="" ;
     }
 }
 

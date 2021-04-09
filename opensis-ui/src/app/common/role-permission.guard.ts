@@ -11,7 +11,7 @@ export class RolePermissionGuard implements CanActivate {
   constructor(private cryptoService:CryptoService,private router: Router){}
 
   canActivate(route: ActivatedRouteSnapshot,state: RouterStateSnapshot):boolean {
-      let permissions:RolePermissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    let permissions:RolePermissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
       let isValidRole=false;
       for(let [i,item] of permissions.permissionList.entries()){
         if(item.permissionGroup.path==state.url && item.permissionGroup.rolePermission[0].canView){

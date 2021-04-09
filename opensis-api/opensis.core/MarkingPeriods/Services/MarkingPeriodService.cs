@@ -28,7 +28,7 @@ namespace opensis.core.MarkingPeriods.Services
             MarkingPeriod markingPeriodModel = new MarkingPeriod();
             try
             {
-                if (TokenManager.CheckToken(markingPeriod._tenantName, markingPeriod._token))
+                if (TokenManager.CheckToken(markingPeriod._tenantName + markingPeriod._userName, markingPeriod._token))
                 {
                     markingPeriodModel = this.markingperiodRepository.GetMarkingPeriod(markingPeriod);
                 }
@@ -49,7 +49,7 @@ namespace opensis.core.MarkingPeriods.Services
         public SchoolYearsAddViewModel SaveSchoolYear(SchoolYearsAddViewModel schoolYear)
         {
             SchoolYearsAddViewModel schoolYearAddViewModel = new SchoolYearsAddViewModel();
-            if (TokenManager.CheckToken(schoolYear._tenantName, schoolYear._token))
+            if (TokenManager.CheckToken(schoolYear._tenantName+ schoolYear._userName, schoolYear._token))
             {
 
                 schoolYearAddViewModel = this.markingperiodRepository.AddSchoolYear(schoolYear);
@@ -72,7 +72,7 @@ namespace opensis.core.MarkingPeriods.Services
         public SchoolYearsAddViewModel ViewSchoolYear(SchoolYearsAddViewModel schoolYear)
         {
             SchoolYearsAddViewModel schoolYearAddViewModel = new SchoolYearsAddViewModel();
-            if (TokenManager.CheckToken(schoolYear._tenantName, schoolYear._token))
+            if (TokenManager.CheckToken(schoolYear._tenantName + schoolYear._userName, schoolYear._token))
             {
                 schoolYearAddViewModel = this.markingperiodRepository.ViewSchoolYear(schoolYear);
                 return schoolYearAddViewModel;
@@ -93,7 +93,7 @@ namespace opensis.core.MarkingPeriods.Services
         public SchoolYearsAddViewModel UpdateSchoolYear(SchoolYearsAddViewModel schoolYear)
         {
             SchoolYearsAddViewModel schoolYearAddViewModel = new SchoolYearsAddViewModel();
-            if (TokenManager.CheckToken(schoolYear._tenantName, schoolYear._token))
+            if (TokenManager.CheckToken(schoolYear._tenantName + schoolYear._userName, schoolYear._token))
             {
                 schoolYearAddViewModel = this.markingperiodRepository.UpdateSchoolYear(schoolYear);
                 return schoolYearAddViewModel;
@@ -117,7 +117,7 @@ namespace opensis.core.MarkingPeriods.Services
             SchoolYearsAddViewModel schoolYearListdelete = new SchoolYearsAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(schoolYear._tenantName, schoolYear._token))
+                if (TokenManager.CheckToken(schoolYear._tenantName + schoolYear._userName, schoolYear._token))
                 {
                     schoolYearListdelete = this.markingperiodRepository.DeleteSchoolYear(schoolYear);
                 }
@@ -138,7 +138,7 @@ namespace opensis.core.MarkingPeriods.Services
         public QuarterAddViewModel SaveQuarter(QuarterAddViewModel quarter)
         {
             QuarterAddViewModel QuarterAddViewModel = new QuarterAddViewModel();
-            if (TokenManager.CheckToken(quarter._tenantName, quarter._token))
+            if (TokenManager.CheckToken(quarter._tenantName + quarter._userName, quarter._token))
             {
 
                 QuarterAddViewModel = this.markingperiodRepository.AddQuarter(quarter);
@@ -160,7 +160,7 @@ namespace opensis.core.MarkingPeriods.Services
         public QuarterAddViewModel ViewQuarter(QuarterAddViewModel quarter)
         {
             QuarterAddViewModel quarterAddViewModel = new QuarterAddViewModel();
-            if (TokenManager.CheckToken(quarter._tenantName, quarter._token))
+            if (TokenManager.CheckToken(quarter._tenantName + quarter._userName, quarter._token))
             {
                 quarterAddViewModel = this.markingperiodRepository.ViewQuarter(quarter);
                 return quarterAddViewModel;
@@ -182,7 +182,7 @@ namespace opensis.core.MarkingPeriods.Services
         public QuarterAddViewModel UpdateQuarter(QuarterAddViewModel quarter)
         {
             QuarterAddViewModel quarterAddViewModel = new QuarterAddViewModel();
-            if (TokenManager.CheckToken(quarter._tenantName, quarter._token))
+            if (TokenManager.CheckToken(quarter._tenantName + quarter._userName, quarter._token))
             {
                 quarterAddViewModel = this.markingperiodRepository.UpdateQuarter(quarter);
                 return quarterAddViewModel;
@@ -204,7 +204,7 @@ namespace opensis.core.MarkingPeriods.Services
             QuarterAddViewModel quarterListdelete = new QuarterAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(quarter._tenantName, quarter._token))
+                if (TokenManager.CheckToken(quarter._tenantName + quarter._userName, quarter._token))
                 {
                     quarterListdelete = this.markingperiodRepository.DeleteQuarter(quarter);
                 }
@@ -226,7 +226,7 @@ namespace opensis.core.MarkingPeriods.Services
         public SemesterAddViewModel SaveSemester(SemesterAddViewModel semester)
         {
             SemesterAddViewModel semesterAddViewModel = new SemesterAddViewModel();
-            if (TokenManager.CheckToken(semester._tenantName, semester._token))
+            if (TokenManager.CheckToken(semester._tenantName + semester._userName, semester._token))
             {
 
                 semesterAddViewModel = this.markingperiodRepository.AddSemester(semester);
@@ -244,7 +244,7 @@ namespace opensis.core.MarkingPeriods.Services
         public SemesterAddViewModel UpdateSemester(SemesterAddViewModel semester)
         {
             SemesterAddViewModel semesterUpdate = new SemesterAddViewModel();
-            if (TokenManager.CheckToken(semester._tenantName, semester._token))
+            if (TokenManager.CheckToken(semester._tenantName + semester._userName, semester._token))
             {
                 semesterUpdate = this.markingperiodRepository.UpdateSemester(semester);
 
@@ -261,7 +261,7 @@ namespace opensis.core.MarkingPeriods.Services
         public SemesterAddViewModel ViewSemester(SemesterAddViewModel semester)
         {
             SemesterAddViewModel semesterView = new SemesterAddViewModel();
-            if (TokenManager.CheckToken(semester._tenantName, semester._token))
+            if (TokenManager.CheckToken(semester._tenantName + semester._userName, semester._token))
             {
                 semesterView = this.markingperiodRepository.ViewSemester(semester);
                 return semesterView;
@@ -279,7 +279,7 @@ namespace opensis.core.MarkingPeriods.Services
             SemesterAddViewModel semesterDelete = new SemesterAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(semester._tenantName, semester._token))
+                if (TokenManager.CheckToken(semester._tenantName + semester._userName, semester._token))
                 {
                     semesterDelete = this.markingperiodRepository.DeleteSemester(semester);
                 }
@@ -301,7 +301,7 @@ namespace opensis.core.MarkingPeriods.Services
         public ProgressPeriodAddViewModel SaveProgressPeriod(ProgressPeriodAddViewModel progressPeriod)
         {
             ProgressPeriodAddViewModel progressPeriodAddViewModel = new ProgressPeriodAddViewModel();
-            if (TokenManager.CheckToken(progressPeriod._tenantName, progressPeriod._token))
+            if (TokenManager.CheckToken(progressPeriod._tenantName + progressPeriod._userName, progressPeriod._token))
             {
 
                 progressPeriodAddViewModel = this.markingperiodRepository.AddProgressPeriod(progressPeriod);
@@ -319,7 +319,7 @@ namespace opensis.core.MarkingPeriods.Services
         public ProgressPeriodAddViewModel UpdateProgressPeriod(ProgressPeriodAddViewModel progressPeriod)
         {
             ProgressPeriodAddViewModel progressUpdate = new ProgressPeriodAddViewModel();
-            if (TokenManager.CheckToken(progressPeriod._tenantName, progressPeriod._token))
+            if (TokenManager.CheckToken(progressPeriod._tenantName + progressPeriod._userName, progressPeriod._token))
             {
                 progressUpdate = this.markingperiodRepository.UpdateProgressPeriod(progressPeriod);
 
@@ -336,7 +336,7 @@ namespace opensis.core.MarkingPeriods.Services
         public ProgressPeriodAddViewModel ViewProgressPeriod(ProgressPeriodAddViewModel progressPeriod)
         {
             ProgressPeriodAddViewModel progressPeriodView = new ProgressPeriodAddViewModel();
-            if (TokenManager.CheckToken(progressPeriod._tenantName, progressPeriod._token))
+            if (TokenManager.CheckToken(progressPeriod._tenantName + progressPeriod._userName, progressPeriod._token))
             {
                 progressPeriodView = this.markingperiodRepository.ViewProgressPeriod(progressPeriod);
                 return progressPeriodView;
@@ -354,7 +354,7 @@ namespace opensis.core.MarkingPeriods.Services
             ProgressPeriodAddViewModel progressPeriodDelete = new ProgressPeriodAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(progressPeriod._tenantName, progressPeriod._token))
+                if (TokenManager.CheckToken(progressPeriod._tenantName + progressPeriod._userName, progressPeriod._token))
                 {
                     progressPeriodDelete = this.markingperiodRepository.DeleteProgressPeriod(progressPeriod);
                 }
@@ -378,7 +378,7 @@ namespace opensis.core.MarkingPeriods.Services
             DropDownViewModel dropDownViewModel = new DropDownViewModel();
             try
             {
-                if (TokenManager.CheckToken(dropdownModel._tenantName, dropdownModel._token))
+                if (TokenManager.CheckToken(dropdownModel._tenantName + dropdownModel._userName, dropdownModel._token))
                 {
                     dropDownViewModel = this.markingperiodRepository.GetAcademicYearList(dropdownModel);
                 }
@@ -401,7 +401,7 @@ namespace opensis.core.MarkingPeriods.Services
             PeriodViewModel dropDownViewModel = new PeriodViewModel();
             try
             {
-                if (TokenManager.CheckToken(dropdownModel._tenantName, dropdownModel._token))
+                if (TokenManager.CheckToken(dropdownModel._tenantName + dropdownModel._userName, dropdownModel._token))
                 {
                     dropDownViewModel = this.markingperiodRepository.GetMarkingPeriodTitleList(dropdownModel);
                 }
@@ -425,7 +425,7 @@ namespace opensis.core.MarkingPeriods.Services
             MarkingPeriodListViewModel markingPeriodList = new MarkingPeriodListViewModel();
             try
             {
-                if (TokenManager.CheckToken(markingPeriodListViewModel._tenantName, markingPeriodListViewModel._token))
+                if (TokenManager.CheckToken(markingPeriodListViewModel._tenantName + markingPeriodListViewModel._userName, markingPeriodListViewModel._token))
                 {
                     markingPeriodList = this.markingperiodRepository.GetAllMarkingPeriodList(markingPeriodListViewModel);
                 }

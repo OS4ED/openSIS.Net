@@ -22,7 +22,7 @@ namespace opensis.core.School.Services
         {
             GetAllMembersList getAllMembers = new GetAllMembersList();
 
-            if (TokenManager.CheckToken(allMembersList._tenantName, allMembersList._token))
+            if (TokenManager.CheckToken(allMembersList._tenantName + allMembersList._userName, allMembersList._token))
             {
                 getAllMembers = this.membershipRepository.GetAllMemberList(allMembersList);
                 return getAllMembers;
@@ -45,7 +45,7 @@ namespace opensis.core.School.Services
             MembershipAddViewModel MembershipAddModel = new MembershipAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(membershipAddViewModel._tenantName, membershipAddViewModel._token))
+                if (TokenManager.CheckToken(membershipAddViewModel._tenantName + membershipAddViewModel._userName, membershipAddViewModel._token))
                 {
                     MembershipAddModel = this.membershipRepository.AddMembership(membershipAddViewModel);
                 }
@@ -73,7 +73,7 @@ namespace opensis.core.School.Services
             MembershipAddViewModel MembershipUpdateModel = new MembershipAddViewModel();
             try
             { 
-                if (TokenManager.CheckToken(membershipAddViewModel._tenantName, membershipAddViewModel._token))
+                if (TokenManager.CheckToken(membershipAddViewModel._tenantName + membershipAddViewModel._userName, membershipAddViewModel._token))
                 {
                     MembershipUpdateModel = this.membershipRepository.UpdateMembership(membershipAddViewModel);                    
                 }
@@ -101,7 +101,7 @@ namespace opensis.core.School.Services
             MembershipAddViewModel MembershipDeleteModel = new MembershipAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(membershipAddViewModel._tenantName, membershipAddViewModel._token))
+                if (TokenManager.CheckToken(membershipAddViewModel._tenantName + membershipAddViewModel._userName, membershipAddViewModel._token))
                 {
                     MembershipDeleteModel = this.membershipRepository.DeleteMembership(membershipAddViewModel);
                 }

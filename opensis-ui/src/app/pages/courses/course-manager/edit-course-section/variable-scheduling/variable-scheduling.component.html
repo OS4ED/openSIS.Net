@@ -18,7 +18,7 @@
                 <select #day="ngModel" name="{{'day'+index}}" class="border border-normal rounded px-3 py-2 w-full"
                      [(ngModel)]="courseSectionAddViewModel.courseVariableScheduleList[index].day" required>
                      <option selected [value]=selected>Select</option>
-                    <option *ngFor="let weekDays of weekDaysList" [value]="weekDays.value">
+                    <option *ngFor="let weekDays of weekDaysList" [value]="weekDays.label">
                         {{weekDays.label}}</option>
                 </select>
                 <mat-error *ngIf="day.errors?.required && day.touched">

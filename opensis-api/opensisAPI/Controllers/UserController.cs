@@ -2,9 +2,13 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Antiforgery;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using opensis.core.User.Interfaces;
 using opensis.data.ViewModels.User;
 
@@ -16,10 +20,15 @@ namespace opensisAPI.Controllers
     public class UserController : ControllerBase
     {
         private IUserService _userService;
-
-        public UserController(IUserService userService)
+        private readonly IAntiforgery _antiForgery;
+        private readonly IConfiguration _configuration;
+        public UserController(IUserService userService,IServiceProvider serviceProvider, IConfiguration configuration)
         {
             _userService = userService;
+            this._configuration = configuration;
+
+            if (this._configuration.GetValue<bool>("AntiForgeryTokenValidationEnabled"))
+                this._antiForgery = serviceProvider.GetService<IAntiforgery>();
         }
 
         /// <summary>
@@ -31,7 +40,10 @@ namespace opensisAPI.Controllers
         [HttpPost("ValidateLogin")]
         public ActionResult<LoginViewModel> ValidateLogin(LoginViewModel objModel)
         {
-            return  _userService.ValidateUserLogin(objModel);
+            var response=  _userService.ValidateUserLogin(objModel);
+            if (this._configuration.GetValue<bool>("AntiForgeryTokenValidationEnabled"))
+                this.GenerateAntiForgeryToken(response._tokenExpiry);
+            return response;
         }
 
         [HttpPost("checkUserLoginEmail")]
@@ -49,6 +61,30 @@ namespace opensisAPI.Controllers
                 checkUserEmailAddress._failure = true;
             }
             return checkUserEmailAddress;
+        }
+
+        [HttpPost("RefreshToken")]
+        [AllowAnonymous]
+        public ActionResult<LoginViewModel> RefreshToken(LoginViewModel objModel)
+        {
+            var response = _userService.RefreshToken(objModel);
+
+            if (this._configuration.GetValue<bool>("AntiForgeryTokenValidationEnabled"))
+                this.GenerateAntiForgeryToken(response._tokenExpiry);
+
+            return response;
+        }
+        private void GenerateAntiForgeryToken(System.DateTimeOffset tokenExpiry)
+        {
+            var tokens = _antiForgery.GetAndStoreTokens(HttpContext);
+            var cookieOptions = new CookieOptions()
+            {
+                Domain = $"{HttpContext.Request.Scheme}://{HttpContext.Request.Host.Value}",
+                Expires = tokenExpiry,
+                HttpOnly = this._configuration.GetValue<bool>("AntiForgeryHttpOnly"),
+                Secure = this._configuration.GetValue<bool>("AntiForgerySecureCookie")
+            };
+            Response.Cookies.Append("XSRF-TOKEN", tokens.RequestToken, options: cookieOptions);
         }
     }
 }

@@ -15,6 +15,7 @@ export class StudentCourseSectionScheduleAddViewModel extends CommonField {
     constructor() {
         super();
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.tenantId = sessionStorage.getItem("tenantId");
@@ -27,12 +28,15 @@ export class ScheduleStudentListViewModel extends CommonField {
     public tenantId: string;
     public schoolId: number;
     public courseSectionId: number;
-    public totalCount: number;
-    public pageNumber: number;
-    public _pageSize: number;
+    public filterParams:filterParams;
+    public pageSize:number;
+    public pageNumber:number;
+    public totalCount:number;
+    public _pageSize:number; //this is from response.
     constructor() {
         super()
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.tenantId = sessionStorage.getItem("tenantId");
@@ -41,16 +45,30 @@ export class ScheduleStudentListViewModel extends CommonField {
     }
 }
 
+export class filterParams{
+    columnName: string;
+    filterValue: string;
+    filterOption: number;
+ constructor(){
+     this.columnName=null;
+     this.filterOption=1;
+     this.filterValue=null;
+ }
+}
+
 export class ScheduleStudentForView {
     public tenantId: string;
     public schoolId: number;
     public studentId: number;
+    public firstGivenName:string;
+    public lastFamilyName:string;
     public alternateId: string;
     public gradeLevel: string;
     public section: string;
     public phoneNumber: string;
     public action: string;
     public checked:boolean;
+    public scheduleDate:string;
 }
 
 
@@ -61,6 +79,7 @@ export class ScheduledStudentDropModel extends CommonField {
     constructor() {
         super()
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }
@@ -84,6 +103,7 @@ export class StudentScheduleReportViewModel extends CommonField{
         this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.tenantId = sessionStorage.getItem("tenantId");
         this._tenantName = sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
         this._token = sessionStorage.getItem("token");
     }
 }

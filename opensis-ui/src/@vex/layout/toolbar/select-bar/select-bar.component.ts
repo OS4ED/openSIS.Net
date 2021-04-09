@@ -62,6 +62,7 @@ export class SelectBarComponent implements OnInit {
   callAllSchool() {
     this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
     this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
+    this.getSchoolList._userName = sessionStorage.getItem("user");
     this.getSchoolList._token = sessionStorage.getItem("token");
 
     this.schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {

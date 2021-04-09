@@ -33,7 +33,7 @@ namespace opensis.core.Grade.Services
             GradeScaleAddViewModel GradeScaleAddModel = new GradeScaleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeScaleAddViewModel._tenantName, gradeScaleAddViewModel._token))
+                if (TokenManager.CheckToken(gradeScaleAddViewModel._tenantName + gradeScaleAddViewModel._userName, gradeScaleAddViewModel._token))
                 {
                     GradeScaleAddModel = this.gradeRepository.AddGradeScale(gradeScaleAddViewModel);
                 }
@@ -61,7 +61,7 @@ namespace opensis.core.Grade.Services
             GradeScaleAddViewModel GradeScaleUpdateModel = new GradeScaleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeScaleAddViewModel._tenantName, gradeScaleAddViewModel._token))
+                if (TokenManager.CheckToken(gradeScaleAddViewModel._tenantName + gradeScaleAddViewModel._userName, gradeScaleAddViewModel._token))
                 {
                     GradeScaleUpdateModel = this.gradeRepository.UpdateGradeScale(gradeScaleAddViewModel);
                 }
@@ -89,7 +89,7 @@ namespace opensis.core.Grade.Services
             GradeScaleAddViewModel gradeScaleDeleteModel = new GradeScaleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeScaleAddViewModel._tenantName, gradeScaleAddViewModel._token))
+                if (TokenManager.CheckToken(gradeScaleAddViewModel._tenantName + gradeScaleAddViewModel._userName, gradeScaleAddViewModel._token))
                 {
                     gradeScaleDeleteModel = this.gradeRepository.DeleteGradeScale(gradeScaleAddViewModel);
                 }
@@ -117,7 +117,7 @@ namespace opensis.core.Grade.Services
             GradeAddViewModel GradeAddModel = new GradeAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeAddViewModel._tenantName, gradeAddViewModel._token))
+                if (TokenManager.CheckToken(gradeAddViewModel._tenantName + gradeAddViewModel._userName, gradeAddViewModel._token))
                 {
                     GradeAddModel = this.gradeRepository.AddGrade(gradeAddViewModel);
                 }
@@ -145,7 +145,7 @@ namespace opensis.core.Grade.Services
             GradeAddViewModel GradeUpdateModel = new GradeAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeAddViewModel._tenantName, gradeAddViewModel._token))
+                if (TokenManager.CheckToken(gradeAddViewModel._tenantName + gradeAddViewModel._userName, gradeAddViewModel._token))
                 {
                     GradeUpdateModel = this.gradeRepository.UpdateGrade(gradeAddViewModel);
                 }
@@ -173,7 +173,7 @@ namespace opensis.core.Grade.Services
             GradeAddViewModel gradeDeleteModel = new GradeAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeAddViewModel._tenantName, gradeAddViewModel._token))
+                if (TokenManager.CheckToken(gradeAddViewModel._tenantName + gradeAddViewModel._userName, gradeAddViewModel._token))
                 {
                     gradeDeleteModel = this.gradeRepository.DeleteGrade(gradeAddViewModel);
                 }
@@ -201,7 +201,7 @@ namespace opensis.core.Grade.Services
             GradeScaleListViewModel GradeScaleListModel = new GradeScaleListViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeScaleListViewModel._tenantName, gradeScaleListViewModel._token))
+                if (TokenManager.CheckToken(gradeScaleListViewModel._tenantName + gradeScaleListViewModel._userName, gradeScaleListViewModel._token))
                 {
                     GradeScaleListModel = this.gradeRepository.GetAllGradeScaleList(gradeScaleListViewModel);
                 }
@@ -228,7 +228,7 @@ namespace opensis.core.Grade.Services
             GradeSortOrderModel gradeSortOrderUpdateModel = new GradeSortOrderModel();
             try
             {
-                if (TokenManager.CheckToken(gradeSortOrderModel._tenantName, gradeSortOrderModel._token))
+                if (TokenManager.CheckToken(gradeSortOrderModel._tenantName + gradeSortOrderModel._userName, gradeSortOrderModel._token))
                 {
                     gradeSortOrderUpdateModel = this.gradeRepository.UpdateGradeSortOrder(gradeSortOrderModel);
                 }
@@ -255,7 +255,7 @@ namespace opensis.core.Grade.Services
             EffortGradeLibraryCategoryAddViewModel EffortGradeLibraryCategoryAddModel = new EffortGradeLibraryCategoryAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeLibraryCategoryAddViewModel._tenantName, effortGradeLibraryCategoryAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeLibraryCategoryAddViewModel._tenantName + effortGradeLibraryCategoryAddViewModel._userName, effortGradeLibraryCategoryAddViewModel._token))
                 {
                     EffortGradeLibraryCategoryAddModel = this.gradeRepository.AddEffortGradeLibraryCategory(effortGradeLibraryCategoryAddViewModel);
                 }
@@ -283,7 +283,7 @@ namespace opensis.core.Grade.Services
             EffortGradeLibraryCategoryAddViewModel EffortGradeLibraryCategoryUpdateModel = new EffortGradeLibraryCategoryAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeLibraryCategoryAddViewModel._tenantName, effortGradeLibraryCategoryAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeLibraryCategoryAddViewModel._tenantName + effortGradeLibraryCategoryAddViewModel._userName, effortGradeLibraryCategoryAddViewModel._token))
                 {
                     EffortGradeLibraryCategoryUpdateModel = this.gradeRepository.UpdateEffortGradeLibraryCategory(effortGradeLibraryCategoryAddViewModel);
                 }
@@ -311,7 +311,7 @@ namespace opensis.core.Grade.Services
             EffortGradeLibraryCategoryAddViewModel effortGradeLibraryCategoryDeleteModel = new EffortGradeLibraryCategoryAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeLibraryCategoryAddViewModel._tenantName, effortGradeLibraryCategoryAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeLibraryCategoryAddViewModel._tenantName + effortGradeLibraryCategoryAddViewModel._userName, effortGradeLibraryCategoryAddViewModel._token))
                 {
                     effortGradeLibraryCategoryDeleteModel = this.gradeRepository.DeleteEffortGradeLibraryCategory(effortGradeLibraryCategoryAddViewModel);
                 }
@@ -339,7 +339,7 @@ namespace opensis.core.Grade.Services
             EffortGradeLibraryCategoryItemAddViewModel EffortGradeLibraryCategoryItemAddModel = new EffortGradeLibraryCategoryItemAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeLibraryCategoryItemAddViewModel._tenantName, effortGradeLibraryCategoryItemAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeLibraryCategoryItemAddViewModel._tenantName + effortGradeLibraryCategoryItemAddViewModel._userName, effortGradeLibraryCategoryItemAddViewModel._token))
                 {
                     EffortGradeLibraryCategoryItemAddModel = this.gradeRepository.AddEffortGradeLibraryCategoryItem(effortGradeLibraryCategoryItemAddViewModel);
                 }
@@ -367,7 +367,7 @@ namespace opensis.core.Grade.Services
             EffortGradeLibraryCategoryItemAddViewModel EffortGradeLibraryCategoryItemUpdateModel = new EffortGradeLibraryCategoryItemAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeLibraryCategoryItemAddViewModel._tenantName, effortGradeLibraryCategoryItemAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeLibraryCategoryItemAddViewModel._tenantName + effortGradeLibraryCategoryItemAddViewModel._userName, effortGradeLibraryCategoryItemAddViewModel._token))
                 {
                     EffortGradeLibraryCategoryItemUpdateModel = this.gradeRepository.UpdateEffortGradeLibraryCategoryItem(effortGradeLibraryCategoryItemAddViewModel);
                 }
@@ -395,7 +395,7 @@ namespace opensis.core.Grade.Services
             EffortGradeLibraryCategoryItemAddViewModel effortGradeLibraryCategoryItemDeleteModel = new EffortGradeLibraryCategoryItemAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeLibraryCategoryItemAddViewModel._tenantName, effortGradeLibraryCategoryItemAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeLibraryCategoryItemAddViewModel._tenantName+ effortGradeLibraryCategoryItemAddViewModel._userName, effortGradeLibraryCategoryItemAddViewModel._token))
                 {
                     effortGradeLibraryCategoryItemDeleteModel = this.gradeRepository.DeleteEffortGradeLibraryCategoryItem(effortGradeLibraryCategoryItemAddViewModel);
                 }
@@ -423,7 +423,7 @@ namespace opensis.core.Grade.Services
             EffortGradeLlibraryCategoryListViewModel effortGradeLlibraryCategoryListModel = new EffortGradeLlibraryCategoryListViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeLlibraryCategoryListViewModel._tenantName, effortGradeLlibraryCategoryListViewModel._token))
+                if (TokenManager.CheckToken(effortGradeLlibraryCategoryListViewModel._tenantName + effortGradeLlibraryCategoryListViewModel._userName, effortGradeLlibraryCategoryListViewModel._token))
                 {
                     effortGradeLlibraryCategoryListModel = this.gradeRepository.GetAllEffortGradeLlibraryCategoryList(effortGradeLlibraryCategoryListViewModel);
                 }
@@ -450,7 +450,7 @@ namespace opensis.core.Grade.Services
             EffortgradeLibraryCategorySortOrderModel effortgradeLibraryCategorySortOrderUpdateModel = new EffortgradeLibraryCategorySortOrderModel();
             try
             {
-                if (TokenManager.CheckToken(effortgradeLibraryCategorySortOrderModel._tenantName, effortgradeLibraryCategorySortOrderModel._token))
+                if (TokenManager.CheckToken(effortgradeLibraryCategorySortOrderModel._tenantName + effortgradeLibraryCategorySortOrderModel._userName, effortgradeLibraryCategorySortOrderModel._token))
                 {
                     effortgradeLibraryCategorySortOrderUpdateModel = this.gradeRepository.UpdateEffortGradeLlibraryCategorySortOrder(effortgradeLibraryCategorySortOrderModel);
                 }
@@ -478,7 +478,7 @@ namespace opensis.core.Grade.Services
             EffortGradeScaleAddViewModel effortGradeScaleAdd = new EffortGradeScaleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeScaleAddViewModel._tenantName, effortGradeScaleAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeScaleAddViewModel._tenantName + effortGradeScaleAddViewModel._userName, effortGradeScaleAddViewModel._token))
                 {
                     effortGradeScaleAdd = this.gradeRepository.AddEffortGradeScale(effortGradeScaleAddViewModel);
                 }
@@ -506,7 +506,7 @@ namespace opensis.core.Grade.Services
             EffortGradeScaleAddViewModel effortGradeScaleUpdate = new EffortGradeScaleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeScaleAddViewModel._tenantName, effortGradeScaleAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeScaleAddViewModel._tenantName + effortGradeScaleAddViewModel._userName, effortGradeScaleAddViewModel._token))
                 {
                     effortGradeScaleUpdate = this.gradeRepository.UpdateEffortGradeScale(effortGradeScaleAddViewModel);
                 }
@@ -534,7 +534,7 @@ namespace opensis.core.Grade.Services
             EffortGradeScaleAddViewModel effortGradeScaleDelete = new EffortGradeScaleAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeScaleAddViewModel._tenantName, effortGradeScaleAddViewModel._token))
+                if (TokenManager.CheckToken(effortGradeScaleAddViewModel._tenantName + effortGradeScaleAddViewModel._userName, effortGradeScaleAddViewModel._token))
                 {
                     effortGradeScaleDelete = this.gradeRepository.DeleteEffortGradeScale(effortGradeScaleAddViewModel);
                 }
@@ -563,7 +563,7 @@ namespace opensis.core.Grade.Services
             EffortGradeScaleListModel effortGradeScaleList = new EffortGradeScaleListModel();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName+pageResult._userName, pageResult._token))
                 {
                     effortGradeScaleList = this.gradeRepository.GetAllEffortGradeScale(pageResult);
                     effortGradeScaleList._message = SUCCESS;
@@ -596,7 +596,7 @@ namespace opensis.core.Grade.Services
             EffortGradeScaleSortOrderViewModel effortGradeScaleSortOrderUpdate = new EffortGradeScaleSortOrderViewModel();
             try
             {
-                if (TokenManager.CheckToken(effortGradeScaleSortOrderViewModel._tenantName, effortGradeScaleSortOrderViewModel._token))
+                if (TokenManager.CheckToken(effortGradeScaleSortOrderViewModel._tenantName + effortGradeScaleSortOrderViewModel._userName, effortGradeScaleSortOrderViewModel._token))
                 {
                     effortGradeScaleSortOrderUpdate = this.gradeRepository.UpdateEffortGradeScaleSortOrder(effortGradeScaleSortOrderViewModel);
                 }
@@ -624,7 +624,7 @@ namespace opensis.core.Grade.Services
             GradeUsStandardAddViewModel gradeUsStandardAdd = new GradeUsStandardAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName, gradeUsStandardAddViewModel._token))
+                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName + gradeUsStandardAddViewModel._userName, gradeUsStandardAddViewModel._token))
                 {
                     gradeUsStandardAdd = this.gradeRepository.AddGradeUsStandard(gradeUsStandardAddViewModel);
                 }
@@ -652,7 +652,7 @@ namespace opensis.core.Grade.Services
             GradeUsStandardAddViewModel gradeUsStandardUpdate = new GradeUsStandardAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName, gradeUsStandardAddViewModel._token))
+                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName + gradeUsStandardAddViewModel._userName, gradeUsStandardAddViewModel._token))
                 {
                     gradeUsStandardUpdate = this.gradeRepository.UpdateGradeUsStandard(gradeUsStandardAddViewModel);
                 }
@@ -680,7 +680,7 @@ namespace opensis.core.Grade.Services
             GradeUsStandardAddViewModel gradeUsStandardDelete = new GradeUsStandardAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName, gradeUsStandardAddViewModel._token))
+                if (TokenManager.CheckToken(gradeUsStandardAddViewModel._tenantName + gradeUsStandardAddViewModel._userName, gradeUsStandardAddViewModel._token))
                 {
                     gradeUsStandardDelete = this.gradeRepository.DeleteGradeUsStandard(gradeUsStandardAddViewModel);
                 }
@@ -709,7 +709,7 @@ namespace opensis.core.Grade.Services
             GradeUsStandardListModel gradeUsStandardList = new GradeUsStandardListModel();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName+pageResult._userName, pageResult._token))
                 {
                     gradeUsStandardList = this.gradeRepository.GetAllGradeUsStandardList(pageResult);
                     gradeUsStandardList._message = SUCCESS;
@@ -742,7 +742,7 @@ namespace opensis.core.Grade.Services
             GradeUsStandardListModel subjectStandardList = new GradeUsStandardListModel();
             try
             {
-                if (TokenManager.CheckToken(gradeUsStandardListModel._tenantName, gradeUsStandardListModel._token))
+                if (TokenManager.CheckToken(gradeUsStandardListModel._tenantName + gradeUsStandardListModel._userName, gradeUsStandardListModel._token))
                 {
                     subjectStandardList = this.gradeRepository.GetAllSubjectStandardList(gradeUsStandardListModel);
                 }
@@ -770,7 +770,7 @@ namespace opensis.core.Grade.Services
             GradeUsStandardListModel courseStandardList = new GradeUsStandardListModel();
             try
             {
-                if (TokenManager.CheckToken(gradeUsStandardListModel._tenantName, gradeUsStandardListModel._token))
+                if (TokenManager.CheckToken(gradeUsStandardListModel._tenantName + gradeUsStandardListModel._userName, gradeUsStandardListModel._token))
                 {
                     courseStandardList = this.gradeRepository.GetAllCourseStandardList(gradeUsStandardListModel);
                 }
@@ -798,7 +798,7 @@ namespace opensis.core.Grade.Services
             CheckStandardRefNoViewModel checkStandardRefNo = new CheckStandardRefNoViewModel();
             try
             {
-                if (TokenManager.CheckToken(checkStandardRefNoViewModel._tenantName, checkStandardRefNoViewModel._token))
+                if (TokenManager.CheckToken(checkStandardRefNoViewModel._tenantName + checkStandardRefNoViewModel._userName, checkStandardRefNoViewModel._token))
                 {
                     checkStandardRefNo = this.gradeRepository.CheckStandardRefNo(checkStandardRefNoViewModel);
                 }
@@ -825,7 +825,7 @@ namespace opensis.core.Grade.Services
             HonorRollsAddViewModel HonorRollsdAdd = new HonorRollsAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName, honorRollsAddViewModel._token))
+                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName+honorRollsAddViewModel._userName, honorRollsAddViewModel._token))
                 {
                     HonorRollsdAdd = this.gradeRepository.AddHonorRoll(honorRollsAddViewModel);
                 }
@@ -852,7 +852,7 @@ namespace opensis.core.Grade.Services
             HonorRollsAddViewModel honorRollUpdate = new HonorRollsAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName, honorRollsAddViewModel._token))
+                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName + honorRollsAddViewModel._userName, honorRollsAddViewModel._token))
                 {
                     honorRollUpdate = this.gradeRepository.UpdateHonorRoll(honorRollsAddViewModel);
                 }
@@ -880,7 +880,7 @@ namespace opensis.core.Grade.Services
             HonorRollsListViewModel honorRollList = new HonorRollsListViewModel();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName + pageResult._userName, pageResult._token))
                 {
                     honorRollList = this.gradeRepository.GetAllHonorRollList(pageResult);
                     honorRollList._message = SUCCESS;
@@ -912,7 +912,7 @@ namespace opensis.core.Grade.Services
             HonorRollsAddViewModel honorRollDelete = new HonorRollsAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName, honorRollsAddViewModel._token))
+                if (TokenManager.CheckToken(honorRollsAddViewModel._tenantName + honorRollsAddViewModel._userName, honorRollsAddViewModel._token))
                 {
                     honorRollDelete = this.gradeRepository.DeleteHonorRoll(honorRollsAddViewModel);
                 }

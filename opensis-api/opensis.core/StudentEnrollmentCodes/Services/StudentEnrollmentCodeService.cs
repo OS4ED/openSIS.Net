@@ -30,7 +30,7 @@ namespace opensis.core.StudentEnrollmentCodes.Services
         public StudentEnrollmentCodeAddViewModel SaveStudentEnrollmentCode(StudentEnrollmentCodeAddViewModel studentEnrollmentCodeAddViewModel)
         {
             StudentEnrollmentCodeAddViewModel studentEnrollmentCodeAdd = new StudentEnrollmentCodeAddViewModel();
-            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName, studentEnrollmentCodeAddViewModel._token))
+            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName + studentEnrollmentCodeAddViewModel._userName, studentEnrollmentCodeAddViewModel._token))
             {
                 studentEnrollmentCodeAdd = this.studentEnrollmentCodeRepository.AddStudentEnrollmentCode(studentEnrollmentCodeAddViewModel);
 
@@ -51,7 +51,7 @@ namespace opensis.core.StudentEnrollmentCodes.Services
         public StudentEnrollmentCodeAddViewModel ViewStudentEnrollmentCode(StudentEnrollmentCodeAddViewModel studentEnrollmentCodeAddViewModel)
         {
             StudentEnrollmentCodeAddViewModel studentEnrollmentCodeView = new StudentEnrollmentCodeAddViewModel();
-            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName, studentEnrollmentCodeAddViewModel._token))
+            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName + studentEnrollmentCodeAddViewModel._userName, studentEnrollmentCodeAddViewModel._token))
             {
                 studentEnrollmentCodeView = this.studentEnrollmentCodeRepository.ViewStudentEnrollmentCode(studentEnrollmentCodeAddViewModel);
 
@@ -72,7 +72,7 @@ namespace opensis.core.StudentEnrollmentCodes.Services
         public StudentEnrollmentCodeAddViewModel DeleteStudentEnrollmentCode(StudentEnrollmentCodeAddViewModel studentEnrollmentCodeAddViewModel)
         {
             StudentEnrollmentCodeAddViewModel studentEnrollmentCodeDel = new StudentEnrollmentCodeAddViewModel();
-            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName, studentEnrollmentCodeAddViewModel._token))
+            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName + studentEnrollmentCodeAddViewModel._userName, studentEnrollmentCodeAddViewModel._token))
             {
                 studentEnrollmentCodeDel = this.studentEnrollmentCodeRepository.DeleteStudentEnrollmentCode(studentEnrollmentCodeAddViewModel);             
             }
@@ -92,7 +92,7 @@ namespace opensis.core.StudentEnrollmentCodes.Services
         public StudentEnrollmentCodeAddViewModel UpdateStudentEnrollmentCode(StudentEnrollmentCodeAddViewModel studentEnrollmentCodeAddViewModel)
         {
             StudentEnrollmentCodeAddViewModel studentEnrollmentCodeUpdate = new StudentEnrollmentCodeAddViewModel();
-            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName, studentEnrollmentCodeAddViewModel._token))
+            if (TokenManager.CheckToken(studentEnrollmentCodeAddViewModel._tenantName + studentEnrollmentCodeAddViewModel._userName, studentEnrollmentCodeAddViewModel._token))
             {
                 studentEnrollmentCodeUpdate = this.studentEnrollmentCodeRepository.UpdateStudentEnrollmentCode(studentEnrollmentCodeAddViewModel);
             }
@@ -111,7 +111,7 @@ namespace opensis.core.StudentEnrollmentCodes.Services
         public StudentEnrollmentCodeListViewModel GetAllStudentEnrollmentCode(StudentEnrollmentCodeListViewModel studentEnrollmentCodeListView)
         {
             StudentEnrollmentCodeListViewModel studentEnrollmentCodeList = new StudentEnrollmentCodeListViewModel();
-            if (TokenManager.CheckToken(studentEnrollmentCodeListView._tenantName, studentEnrollmentCodeListView._token))
+            if (TokenManager.CheckToken(studentEnrollmentCodeListView._tenantName + studentEnrollmentCodeListView._userName, studentEnrollmentCodeListView._token))
             {
                 studentEnrollmentCodeList = this.studentEnrollmentCodeRepository.GetAllStudentEnrollmentCode(studentEnrollmentCodeListView);
                 

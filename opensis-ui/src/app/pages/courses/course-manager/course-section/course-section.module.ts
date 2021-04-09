@@ -23,9 +23,12 @@ import { MatMenuModule } from '@angular/material/menu';
 import { MatTableModule } from '@angular/material/table';
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { ScheduledStudentsComponent } from './scheduled-students/scheduled-students.component';
+import { ScheduledTeachersComponent } from './scheduled-teachers/scheduled-teachers.component';
+import { MatPaginatorModule } from '@angular/material/paginator';
 
 @NgModule({
-  declarations: [CourseSectionComponent],
+  declarations: [CourseSectionComponent, ScheduledStudentsComponent, ScheduledTeachersComponent],
   imports: [
     CommonModule,
     AngularCalendarModule.forRoot({
@@ -53,7 +56,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     MatTooltipModule,
     MatSlideToggleModule,
     FlexLayoutModule,
-    MatTableModule
+    MatTableModule,
+    MatPaginatorModule
     ],
   exports:[CourseSectionComponent]
 })

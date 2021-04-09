@@ -5,6 +5,10 @@ namespace opensis.data.Models
 {
     public partial class StudentCoursesectionSchedule
     {
+        public StudentCoursesectionSchedule()
+        {
+            StudentAttendance = new HashSet<StudentAttendance>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StudentId { get; set; }
@@ -32,5 +36,7 @@ namespace opensis.data.Models
         public virtual CourseSection CourseSection { get; set; }
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual StudentMaster StudentMaster { get; set; }
+
+        public virtual ICollection<StudentAttendance> StudentAttendance { get; set; }
     }
 }

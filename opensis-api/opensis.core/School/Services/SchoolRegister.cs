@@ -34,7 +34,7 @@ namespace opensis.core.School.Services
             SchoolListModel schoolList = new SchoolListModel();
             try
             {
-                if (TokenManager.CheckToken(school._tenantName, school._token))
+                if (TokenManager.CheckToken(school._tenantName + school._userName, school._token))
                 {
                     schoolList = this.schoolRepository.GetAllSchools(school);
                     schoolList._message = SUCCESS;
@@ -67,7 +67,7 @@ namespace opensis.core.School.Services
             SchoolListModel schoolList = new SchoolListModel();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName+pageResult._userName, pageResult._token))
                 {
                     schoolList = this.schoolRepository.GetAllSchoolList(pageResult);
                     schoolList._message = SUCCESS;
@@ -99,7 +99,7 @@ namespace opensis.core.School.Services
         public SchoolAddViewModel UpdateSchool(SchoolAddViewModel schools)
         {
             SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
-            if (TokenManager.CheckToken(schools._tenantName, schools._token))
+            if (TokenManager.CheckToken(schools._tenantName + schools._userName, schools._token))
             {
                 SchoolAddViewModel =  this.schoolRepository.UpdateSchool(schools);
                 //return getAllSchools();
@@ -117,7 +117,7 @@ namespace opensis.core.School.Services
         public SchoolAddViewModel SaveSchool(SchoolAddViewModel schools)
         {
             SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
-            if (TokenManager.CheckToken(schools._tenantName, schools._token))
+            if (TokenManager.CheckToken(schools._tenantName + schools._userName, schools._token))
             {
                 
                     SchoolAddViewModel = this.schoolRepository.AddSchool(schools);
@@ -136,7 +136,7 @@ namespace opensis.core.School.Services
         public SchoolAddViewModel ViewSchool(SchoolAddViewModel schools)
         {
             SchoolAddViewModel SchoolAddViewModel = new SchoolAddViewModel();
-            if (TokenManager.CheckToken(schools._tenantName, schools._token))
+            if (TokenManager.CheckToken(schools._tenantName + schools._userName, schools._token))
             {
                 SchoolAddViewModel =  this.schoolRepository.ViewSchool(schools);
                 //return getAllSchools();
@@ -160,7 +160,7 @@ namespace opensis.core.School.Services
         public CheckSchoolInternalIdViewModel CheckSchoolInternalId(CheckSchoolInternalIdViewModel checkSchoolInternalIdViewModel)
         {
             CheckSchoolInternalIdViewModel checkInternalId = new CheckSchoolInternalIdViewModel();
-            if (TokenManager.CheckToken(checkSchoolInternalIdViewModel._tenantName, checkSchoolInternalIdViewModel._token))
+            if (TokenManager.CheckToken(checkSchoolInternalIdViewModel._tenantName + checkSchoolInternalIdViewModel._userName, checkSchoolInternalIdViewModel._token))
             {
                 checkInternalId = this.schoolRepository.CheckSchoolInternalId(checkSchoolInternalIdViewModel);
             }
@@ -193,7 +193,7 @@ namespace opensis.core.School.Services
             SchoolListViewModel schoolListView = new SchoolListViewModel();
             try
             {
-                if (TokenManager.CheckToken(schoolListViewModel._tenantName, schoolListViewModel._token))
+                if (TokenManager.CheckToken(schoolListViewModel._tenantName + schoolListViewModel._userName, schoolListViewModel._token))
                 {
                     schoolListView = this.schoolRepository.StudentEnrollmentSchoolList(schoolListViewModel);
                     schoolListView._message = SUCCESS;
@@ -225,7 +225,7 @@ namespace opensis.core.School.Services
             SchoolAddViewModel schoolLogoUpdate = new SchoolAddViewModel();
             try
             {               
-                if (TokenManager.CheckToken(schoolAddViewModel._tenantName, schoolAddViewModel._token))
+                if (TokenManager.CheckToken(schoolAddViewModel._tenantName + schoolAddViewModel._userName, schoolAddViewModel._token))
                 {
                     schoolLogoUpdate = this.schoolRepository.AddUpdateSchoolLogo(schoolAddViewModel);
                 }

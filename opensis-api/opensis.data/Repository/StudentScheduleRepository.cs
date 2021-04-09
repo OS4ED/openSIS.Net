@@ -79,7 +79,7 @@ namespace opensis.data.Repository
                                                             CourseSectionId = courseSection.CourseSectionId,
                                                             CourseSectionName = courseSection.CourseSectionName,
                                                             StudentInternalId = restStudent.StudentInternalId,
-                                                            StudentName = restStudent.FirstGivenName,
+                                                            StudentName = restStudent.FirstGivenName + " " + restStudent.MiddleName + " " + restStudent.LastFamilyName,
                                                             Scheduled = false,
                                                             ConflictComment = "Seats Not Avalaible"
                                                         };
@@ -112,7 +112,7 @@ namespace opensis.data.Repository
                                                     CourseSectionId = courseSection.CourseSectionId,
                                                     CourseSectionName = courseSection.CourseSectionName,
                                                     StudentInternalId = student.StudentInternalId,
-                                                    StudentName = student.FirstGivenName,
+                                                    StudentName = student.FirstGivenName +" "+ student.MiddleName +" "+ student.LastFamilyName,
                                                     Scheduled = false,
                                                     ConflictComment = "Student is already scheduled in the course section"
                                                 };
@@ -121,7 +121,9 @@ namespace opensis.data.Repository
                                             }
                                             else
                                             {
-                                                if (courseSection.AllowStudentConflict != null && (bool)courseSection.AllowStudentConflict)
+                                                var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.TenantId == courseSection.TenantId && c.SchoolId == courseSection.SchoolId && c.CourseSectionId == courseSection.CourseSectionId).ToList();
+
+                                                if (courseSectionAllData.FirstOrDefault().AllowStudentConflict == true)
                                                 {
                                                     var studentCourseScheduling = new StudentCoursesectionSchedule()
                                                     {
@@ -156,14 +158,14 @@ namespace opensis.data.Repository
                                                         CourseSectionId = courseSection.CourseSectionId,
                                                         CourseSectionName = courseSection.CourseSectionName,
                                                         StudentInternalId = student.StudentInternalId,
-                                                        StudentName = student.FirstGivenName,
+                                                        StudentName = student.FirstGivenName + " " + student.MiddleName + " " + student.LastFamilyName,
                                                         Scheduled = true,
                                                     };
                                                     this.context?.StudentScheduleView.Add(conflictStudent);
                                                 }
                                                 else
                                                 {
-                                                    var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.TenantId == courseSection.TenantId && c.SchoolId == courseSection.SchoolId && c.CourseSectionId == courseSection.CourseSectionId).ToList();
+                                                    //var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.TenantId == courseSection.TenantId && c.SchoolId == courseSection.SchoolId && c.CourseSectionId == courseSection.CourseSectionId).ToList();
 
 
                                                     if (courseSectionAllData.Count > 0)
@@ -346,11 +348,13 @@ namespace opensis.data.Repository
                                         FirstGivenName = ssv.sm.FirstGivenName,
                                         LastFamilyName = ssv.sm.LastFamilyName,
                                         AlternateId = ssv.sm.AlternateId,
+                                        StudentInternalId=ssv.sm.StudentInternalId,
                                         GradeLevel = this.context.Gradelevels.FirstOrDefault(c => c.TenantId == ssv.sm.TenantId && c.SchoolId == ssv.sm.SchoolId && c.GradeId == ssv.scs.GradeId)?.Title,
                                         Section = this.context.Sections.FirstOrDefault(c => c.TenantId == ssv.sm.TenantId && c.SchoolId == ssv.sm.SchoolId && c.SectionId == ssv.sm.SectionId)?.Name,
                                         PhoneNumber = ssv.sm.MobilePhone,
                                         Action = ssv.scs.IsDropped,
-                                        ScheduleDate = ssv.scs.CreatedOn
+                                        ScheduleDate = ssv.scs.CreatedOn,
+                                        StudentPhoto=(pageResult.ProfilePhoto ==true)?ssv.sm.StudentPhoto:null
                                     }).ToList();
 
                 if (scheduledStudentData.Count > 0)

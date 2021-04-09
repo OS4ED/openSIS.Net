@@ -9,9 +9,6 @@ import icInfo from '@iconify/icons-ic/info';
 import icClose from '@iconify/icons-ic/twotone-close';
 import icCheckboxChecked from '@iconify/icons-ic/check-box';
 import icCheckboxUnchecked from '@iconify/icons-ic/check-box-outline-blank';
-import icSearch from '@iconify/icons-ic/search';
-import icFilterList from '@iconify/icons-ic/filter-list';
-import icEmail from '@iconify/icons-ic/twotone-email';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCourseSectionComponent } from '../edit-course-section/edit-course-section.component';
@@ -28,6 +25,7 @@ import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/co
 import { CryptoService } from '../../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
 import { GradeScaleModel } from '../../../../models/grades.model';
+import { stagger40ms } from '../../../../../@vex/animations/stagger.animation';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
   selector: 'vex-course-section',
@@ -42,12 +40,14 @@ import { GradeScaleModel } from '../../../../models/grades.model';
       }
     `,
   ],
+  animations: [
+    stagger40ms
+  ]
 })
 export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked{
   icAdd = icAdd;
   icEdit = icEdit;
   icDelete = icDelete;
-  icEmail = icEmail;
   icMoreVertical = icMoreVertical;
   icRemoveCircle = icRemoveCircle;
   icInfo = icInfo;
@@ -55,8 +55,7 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   icClose = icClose;
   icCheckboxChecked = icCheckboxChecked;
   icCheckboxUnchecked = icCheckboxUnchecked;
-  icFilterList = icFilterList;
-  icSearch = icSearch;
+
   courseDetails = 0;
   selectedTab = 'overview';
   @Input() courseDetailsFromParent;

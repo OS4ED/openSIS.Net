@@ -5,6 +5,10 @@ namespace opensis.data.Models
 {
     public partial class StaffCoursesectionSchedule
     {
+        public StaffCoursesectionSchedule()
+        {
+            StudentAttendance = new HashSet<StudentAttendance>();
+        }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
         public int StaffId { get; set; }
@@ -12,6 +16,8 @@ namespace opensis.data.Models
         public int CourseId { get; set; }
         public int CourseSectionId { get; set; }
         public string CourseSectionName { get; set; }
+        public bool? IsDropped { get; set; }
+        public DateTime? EffectiveDropDate { get; set; }
         public bool? IsAssigned { get; set; }
         public int? YrMarkingPeriodId { get; set; }
         public int? SmstrMarkingPeriodId { get; set; }
@@ -29,5 +35,6 @@ namespace opensis.data.Models
         public virtual SchoolYears SchoolYears { get; set; }
         public virtual Semesters Semesters { get; set; }
         public virtual StaffMaster StaffMaster { get; set; }
+        public virtual ICollection<StudentAttendance> StudentAttendance { get; set; }
     }
 }

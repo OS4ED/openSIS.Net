@@ -32,7 +32,10 @@ namespace opensis.core.User.Services
                 ReturnModel = this.userRepository.ValidateUserLogin(ObjModel);
                 if (ReturnModel._failure == false)
                 {
-                    ReturnModel._token = TokenManager.GenerateToken(ReturnModel._tenantName);
+                    var tokenInfo = TokenManager.GenerateTokenWithExpiry(ReturnModel._tenantName + ReturnModel.Name);
+                    // ReturnModel._token = TokenManager.GenerateToken(ReturnModel._tenantName);
+                    ReturnModel._token = tokenInfo.Token;
+                    ReturnModel._tokenExpiry = tokenInfo.Expiry;
                     logger.Info("Method ValidateLogin end with success.");
                 }
 
@@ -51,7 +54,7 @@ namespace opensis.core.User.Services
         public CheckUserEmailAddressViewModel CheckUserLoginEmail(CheckUserEmailAddressViewModel checkUserEmailAddressViewModel)
         {
             CheckUserEmailAddressViewModel checkUserLoginEmail = new CheckUserEmailAddressViewModel();
-            if (TokenManager.CheckToken(checkUserEmailAddressViewModel._tenantName, checkUserEmailAddressViewModel._token))
+            if (TokenManager.CheckToken(checkUserEmailAddressViewModel._tenantName+checkUserEmailAddressViewModel._userName, checkUserEmailAddressViewModel._token))
             {
                 checkUserLoginEmail = this.userRepository.CheckUserLoginEmail(checkUserEmailAddressViewModel);
             }
@@ -62,5 +65,30 @@ namespace opensis.core.User.Services
             }
             return checkUserLoginEmail;
         }
+
+        public LoginViewModel RefreshToken(LoginViewModel ObjModel)
+        {
+            logger.Info("Method ValidateLogin called.");
+            LoginViewModel ReturnModel = new LoginViewModel();
+            try
+            {
+                //var tokenInfo = TokenManager.GenerateTokenWithExpiry(ReturnModel._tenantName + ReturnModel.Name);
+                ReturnModel._token = TokenManager.RefreshToken(ObjModel._token, ObjModel._tenantName + ObjModel._userName);
+
+                //ReturnModel._token = tokenInfo.Token;
+                //ReturnModel._tokenExpiry = tokenInfo.Expiry;
+                logger.Info("Method RefreshToken end with success.");
+
+            }
+            catch (Exception ex)
+            {
+                ReturnModel._failure = true;
+                ReturnModel._message = ex.Message;
+                logger.Info("Method RefreshToken end with error :" + ex.Message);
+            }
+
+            return ReturnModel;
+        }
+
     }
 }

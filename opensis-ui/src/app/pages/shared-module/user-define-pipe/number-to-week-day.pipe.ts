@@ -37,7 +37,7 @@ export class WeekDayPipe implements PipeTransform {
                 return fullName;
             }else{
                 let finalString = [];
-                value = value.split('|').join('')
+                value = value.split('|');
                 for (let j = 0; j < this.weeks.length; j++) {
                     for (let i = 0; i < value.length; i++) {
                         if (value[i] == this.weeks[j].fullName.toLowerCase()) {

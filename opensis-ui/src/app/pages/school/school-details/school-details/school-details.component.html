@@ -27,7 +27,7 @@
 
 
                     <div fxFlex="350px" class="pt-3">
-                      <mat-slide-toggle color="primary" class="mr-6 align-middle">Show Inactive School</mat-slide-toggle>
+                      <mat-slide-toggle color="primary" class="mr-6 align-middle" [(ngModel)]="showInactiveSchools" (change)="includeInactiveSchools($event)">Show Inactive School</mat-slide-toggle>
                       <a (click)="exportSchoolListToExcel()" class="cursor-pointer p-1 mt-1 inline-block align-middle"
                       matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
                         <button 

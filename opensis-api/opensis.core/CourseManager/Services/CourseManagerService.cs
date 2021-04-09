@@ -60,7 +60,7 @@ namespace opensis.core.CourseManager.Services
             ProgramListViewModel ProgramListModel = new ProgramListViewModel();
             try
             {
-                if (TokenManager.CheckToken(programListViewModel._tenantName, programListViewModel._token))
+                if (TokenManager.CheckToken(programListViewModel._tenantName + programListViewModel._userName, programListViewModel._token))
                 {
                     ProgramListModel = this.courseManagerRepository.GetAllProgram(programListViewModel);
                 }
@@ -88,7 +88,7 @@ namespace opensis.core.CourseManager.Services
             ProgramListViewModel ProgramUpdateModel = new ProgramListViewModel();
             try
             {
-                if (TokenManager.CheckToken(programListViewModel._tenantName, programListViewModel._token))
+                if (TokenManager.CheckToken(programListViewModel._tenantName + programListViewModel._userName, programListViewModel._token))
                 {
                     ProgramUpdateModel = this.courseManagerRepository.AddEditProgram(programListViewModel);
                 }
@@ -116,7 +116,7 @@ namespace opensis.core.CourseManager.Services
             ProgramAddViewModel programDeleteModel = new ProgramAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(programAddViewModel._tenantName, programAddViewModel._token))
+                if (TokenManager.CheckToken(programAddViewModel._tenantName + programAddViewModel._userName, programAddViewModel._token))
                 {
                     programDeleteModel = this.courseManagerRepository.DeleteProgram(programAddViewModel);
                 }
@@ -163,7 +163,7 @@ namespace opensis.core.CourseManager.Services
         public SubjectListViewModel AddEditSubject(SubjectListViewModel subjectListViewModel)
         {
             SubjectListViewModel subjectAddUpdate = new SubjectListViewModel();
-            if (TokenManager.CheckToken(subjectListViewModel._tenantName, subjectListViewModel._token))
+            if (TokenManager.CheckToken(subjectListViewModel._tenantName + subjectListViewModel._userName, subjectListViewModel._token))
             {
                 subjectAddUpdate = this.courseManagerRepository.AddEditSubject(subjectListViewModel);
             }
@@ -183,7 +183,7 @@ namespace opensis.core.CourseManager.Services
         public SubjectListViewModel GetAllSubjectList(SubjectListViewModel subjectListViewModel)
         {
             SubjectListViewModel subjectList = new SubjectListViewModel();
-            if (TokenManager.CheckToken(subjectListViewModel._tenantName, subjectListViewModel._token))
+            if (TokenManager.CheckToken(subjectListViewModel._tenantName + subjectListViewModel._userName, subjectListViewModel._token))
             {
                 subjectList = this.courseManagerRepository.GetAllSubjectList(subjectListViewModel);
             }
@@ -203,7 +203,7 @@ namespace opensis.core.CourseManager.Services
         public SubjectAddViewModel DeleteSubject(SubjectAddViewModel subjectAddViewModel)
         {
             SubjectAddViewModel subjectDelete = new SubjectAddViewModel();
-            if (TokenManager.CheckToken(subjectAddViewModel._tenantName, subjectAddViewModel._token))
+            if (TokenManager.CheckToken(subjectAddViewModel._tenantName + subjectAddViewModel._userName, subjectAddViewModel._token))
             {
                 subjectDelete = this.courseManagerRepository.DeleteSubject(subjectAddViewModel);
             }
@@ -225,7 +225,7 @@ namespace opensis.core.CourseManager.Services
             CourseAddViewModel courseAdd = new CourseAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseAddViewModel._tenantName, courseAddViewModel._token))
+                if (TokenManager.CheckToken(courseAddViewModel._tenantName + courseAddViewModel._userName, courseAddViewModel._token))
                 {
                     courseAdd = this.courseManagerRepository.AddCourse(courseAddViewModel);
                 }
@@ -253,7 +253,7 @@ namespace opensis.core.CourseManager.Services
             CourseAddViewModel courseUpdate = new CourseAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseAddViewModel._tenantName, courseAddViewModel._token))
+                if (TokenManager.CheckToken(courseAddViewModel._tenantName + courseAddViewModel._userName, courseAddViewModel._token))
                 {
                     courseUpdate = this.courseManagerRepository.UpdateCourse(courseAddViewModel);
                 }
@@ -281,7 +281,7 @@ namespace opensis.core.CourseManager.Services
             CourseAddViewModel courseDelete = new CourseAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseAddViewModel._tenantName, courseAddViewModel._token))
+                if (TokenManager.CheckToken(courseAddViewModel._tenantName + courseAddViewModel._userName, courseAddViewModel._token))
                 {
                     courseDelete = this.courseManagerRepository.DeleteCourse(courseAddViewModel);
                 }
@@ -309,7 +309,7 @@ namespace opensis.core.CourseManager.Services
             CourseListViewModel CourseListModel = new CourseListViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseListViewModel._tenantName, courseListViewModel._token))
+                if (TokenManager.CheckToken(courseListViewModel._tenantName + courseListViewModel._userName, courseListViewModel._token))
                 {
                     CourseListModel = this.courseManagerRepository.GetAllCourseList(courseListViewModel);
                 }
@@ -337,7 +337,7 @@ namespace opensis.core.CourseManager.Services
             CourseSectionAddViewModel courseSectionAdd = new CourseSectionAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName, courseSectionAddViewModel._token))
+                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName + courseSectionAddViewModel._userName, courseSectionAddViewModel._token))
                 {
                     courseSectionAdd = this.courseManagerRepository.AddCourseSection(courseSectionAddViewModel);
                 }
@@ -365,7 +365,7 @@ namespace opensis.core.CourseManager.Services
             CourseSectionViewModel courseSectionView = new CourseSectionViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseSectionViewModel._tenantName, courseSectionViewModel._token))
+                if (TokenManager.CheckToken(courseSectionViewModel._tenantName + courseSectionViewModel._userName, courseSectionViewModel._token))
                 {
                     courseSectionView = this.courseManagerRepository.GetAllCourseSection(courseSectionViewModel);
                 }
@@ -393,7 +393,7 @@ namespace opensis.core.CourseManager.Services
             CourseSectionAddViewModel courseSectionUpdate = new CourseSectionAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName, courseSectionAddViewModel._token))
+                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName + courseSectionAddViewModel._userName, courseSectionAddViewModel._token))
                 {
                     courseSectionUpdate = this.courseManagerRepository.UpdateCourseSection(courseSectionAddViewModel);
                 }
@@ -421,7 +421,7 @@ namespace opensis.core.CourseManager.Services
             CourseSectionAddViewModel courseSectionDelete = new CourseSectionAddViewModel();
             try
             {
-                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName, courseSectionAddViewModel._token))
+                if (TokenManager.CheckToken(courseSectionAddViewModel._tenantName + courseSectionAddViewModel._userName, courseSectionAddViewModel._token))
                 {
                     courseSectionDelete = this.courseManagerRepository.DeleteCourseSection(courseSectionAddViewModel);
                 }
@@ -439,68 +439,68 @@ namespace opensis.core.CourseManager.Services
             return courseSectionDelete;
         }
 
-        /// <summary>
-        /// Get All Course Standard For Course Section
-        /// </summary>
-        /// <param name="courseStandardForCourseViewModel"></param>
-        /// <returns></returns>
-        public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
-        {
-            CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
-            try
-            {
-                if (TokenManager.CheckToken(courseStandardForCourseViewModel._tenantName, courseStandardForCourseViewModel._token))
-                {
-                    courseStandardForCourseView = this.courseManagerRepository.GetAllCourseStandardForCourseSection(courseStandardForCourseViewModel);
-                }
-                else
-                {
-                    courseStandardForCourseView._failure = true;
-                    courseStandardForCourseView._message = TOKENINVALID;
-                }
-            }
-            catch (Exception es)
-            {
-                courseStandardForCourseView._failure = true;
-                courseStandardForCourseView._message = es.Message;
-            }
-            return courseStandardForCourseView;
-        }
+        ///// <summary>
+        ///// Get All Course Standard For Course Section
+        ///// </summary>
+        ///// <param name="courseStandardForCourseViewModel"></param>
+        ///// <returns></returns>
+        //public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
+        //{
+        //    CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
+        //    try
+        //    {
+        //        if (TokenManager.CheckToken(courseStandardForCourseViewModel._tenantName + courseStandardForCourseViewModel._userName, courseStandardForCourseViewModel._token))
+        //        {
+        //            courseStandardForCourseView = this.courseManagerRepository.GetAllCourseStandardForCourseSection(courseStandardForCourseViewModel);
+        //        }
+        //        else
+        //        {
+        //            courseStandardForCourseView._failure = true;
+        //            courseStandardForCourseView._message = TOKENINVALID;
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        courseStandardForCourseView._failure = true;
+        //        courseStandardForCourseView._message = es.Message;
+        //    }
+        //    return courseStandardForCourseView;
+        //}
 
-        /// <summary>
-        /// Delete Course Section  For Specific Schedule Type
-        /// </summary>
-        /// <param name="deleteScheduleViewModel"></param>
-        /// <returns></returns>
-        public DeleteScheduleViewModel DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel)
-        {
-            DeleteScheduleViewModel deleteSchedule = new DeleteScheduleViewModel();
-            try
-            {
-                if (TokenManager.CheckToken(deleteScheduleViewModel._tenantName, deleteScheduleViewModel._token))
-                {
-                    deleteSchedule = this.courseManagerRepository.DeleteSchedule(deleteScheduleViewModel);
-                }
-                else
-                {
-                    deleteSchedule._failure = true;
-                    deleteSchedule._message = TOKENINVALID;
-                }
-            }
-            catch (Exception es)
-            {
-                deleteSchedule._failure = true;
-                deleteSchedule._message = es.Message;
-            }
-            return deleteSchedule;
-        }
+        ///// <summary>
+        ///// Delete Course Section  For Specific Schedule Type
+        ///// </summary>
+        ///// <param name="deleteScheduleViewModel"></param>
+        ///// <returns></returns>
+        //public DeleteScheduleViewModel DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel)
+        //{
+        //    DeleteScheduleViewModel deleteSchedule = new DeleteScheduleViewModel();
+        //    try
+        //    {
+        //        if (TokenManager.CheckToken(deleteScheduleViewModel._tenantName + deleteScheduleViewModel._userName, deleteScheduleViewModel._token))
+        //        {
+        //            deleteSchedule = this.courseManagerRepository.DeleteSchedule(deleteScheduleViewModel);
+        //        }
+        //        else
+        //        {
+        //            deleteSchedule._failure = true;
+        //            deleteSchedule._message = TOKENINVALID;
+        //        }
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        deleteSchedule._failure = true;
+        //        deleteSchedule._message = es.Message;
+        //    }
+        //    return deleteSchedule;
+        //}
 
         public SearchCourseSectionViewModel SearchCourseSectionForSchedule(SearchCourseSectionViewModel searchCourseSectionViewModel)
         {
             SearchCourseSectionViewModel searchCourseSection = new SearchCourseSectionViewModel();
             try
             {
-                if (TokenManager.CheckToken(searchCourseSectionViewModel._tenantName, searchCourseSectionViewModel._token))
+                if (TokenManager.CheckToken(searchCourseSectionViewModel._tenantName + searchCourseSectionViewModel._userName, searchCourseSectionViewModel._token))
                 {
                     searchCourseSection = this.courseManagerRepository.SearchCourseSectionForSchedule(searchCourseSectionViewModel);
                 }
@@ -519,7 +519,7 @@ namespace opensis.core.CourseManager.Services
         }
 
         /// <summary>
-        /// Get All Staff Schedule In CourseSection
+        /// Get All Staff Schedule In CourseSection  & Course
         /// </summary>
         /// <param name="staffListViewModel"></param>
         /// <returns></returns>
@@ -528,7 +528,7 @@ namespace opensis.core.CourseManager.Services
             StaffListViewModel staffListView = new StaffListViewModel();
             try
             {
-                if (TokenManager.CheckToken(staffListViewModel._tenantName, staffListViewModel._token))
+                if (TokenManager.CheckToken(staffListViewModel._tenantName + staffListViewModel._userName, staffListViewModel._token))
                 {
                     staffListView = this.courseManagerRepository.GetAllStaffScheduleInCourseSection(staffListViewModel);
                 }
@@ -544,6 +544,37 @@ namespace opensis.core.CourseManager.Services
                 staffListView._message = es.Message;
             }
             return staffListView;
+        }
+
+
+        /// <summary>
+        /// Search Course For Schedule 
+        /// </summary>
+        /// <param name="searchCourseScheduleViewModel"></param>
+        /// <returns></returns>
+        public SearchCourseScheduleViewModel SearchCourseForSchedule(SearchCourseScheduleViewModel searchCourseScheduleViewModel)
+        {
+            SearchCourseScheduleViewModel searchCourseSchedule = new SearchCourseScheduleViewModel();
+
+            try
+            {
+                if (TokenManager.CheckToken(searchCourseScheduleViewModel._tenantName + searchCourseScheduleViewModel._userName, searchCourseScheduleViewModel._token))
+                {
+                    searchCourseSchedule = this.courseManagerRepository.SearchCourseForSchedule(searchCourseScheduleViewModel);
+                }
+                else
+                {
+                    searchCourseSchedule._failure = true;
+                    searchCourseSchedule._message = TOKENINVALID;
+                }
+            }
+
+            catch (Exception es)
+            {
+                searchCourseSchedule._failure = true;
+                searchCourseSchedule._message = es.Message;
+            }
+            return searchCourseSchedule;
         }
     }
 }

@@ -126,10 +126,10 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
-    this.editPermission = permissionCategory.rolePermission[0].canEdit;
-    this.deletePermission = permissionCategory.rolePermission[0].canDelete;
-    this.addPermission = permissionCategory.rolePermission[0].canAdd;
-
+    let permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 13);
+    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
+    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
+    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
   }
 
   ngAfterViewInit() {
@@ -239,10 +239,15 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
     }
     this.staffService.getAllStaffList(this.getAllStaff).subscribe(res => {
       if (res._failure) {
+        if(res.staffMaster==null){
+          this.snackbar.open(res._message, '', {
+            duration: 10000
+          });
         this.staffList = new MatTableDataSource([]);
-        this.snackbar.open('Staff information failed. ' + res._message, '', {
-          duration: 10000
-        });
+        }else{
+          this.staffList = new MatTableDataSource([]);
+        }
+       
       } else {
         this.totalCount = res.totalCount;
         this.pageNumber = res.pageNumber;

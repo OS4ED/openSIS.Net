@@ -31,7 +31,7 @@ namespace opensis.core.Student.Services
         public StudentAddViewModel SaveStudent(StudentAddViewModel student)
         {
             StudentAddViewModel studentAddViewModel = new StudentAddViewModel();
-            if (TokenManager.CheckToken(student._tenantName, student._token))
+            if (TokenManager.CheckToken(student._tenantName + student._userName, student._token))
             {
                 studentAddViewModel = this.studentRepository.AddStudent(student);
             }
@@ -51,7 +51,7 @@ namespace opensis.core.Student.Services
         public StudentAddViewModel UpdateStudent(StudentAddViewModel student)
         {
             StudentAddViewModel studentUpdate = new StudentAddViewModel();
-            if (TokenManager.CheckToken(student._tenantName, student._token))
+            if (TokenManager.CheckToken(student._tenantName + student._userName, student._token))
             {
 
                 studentUpdate = this.studentRepository.UpdateStudent(student);
@@ -76,7 +76,7 @@ namespace opensis.core.Student.Services
             StudentListModel studentList = new StudentListModel();
             try
             {
-                if (TokenManager.CheckToken(pageResult._tenantName, pageResult._token))
+                if (TokenManager.CheckToken(pageResult._tenantName + pageResult._userName, pageResult._token))
                 {
                     studentList = this.studentRepository.GetAllStudentList(pageResult);
                     if (studentList.studentMaster.Count > 0)
@@ -117,7 +117,7 @@ namespace opensis.core.Student.Services
         public StudentDocumentAddViewModel SaveStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
         {
             StudentDocumentAddViewModel studentDocumentAdd = new StudentDocumentAddViewModel();
-            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName, studentDocumentAddViewModel._token))
+            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName + studentDocumentAddViewModel._userName, studentDocumentAddViewModel._token))
             {
                 studentDocumentAdd = this.studentRepository.AddStudentDocument(studentDocumentAddViewModel);
             }
@@ -136,7 +136,7 @@ namespace opensis.core.Student.Services
         public StudentDocumentAddViewModel UpdateStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
         {
             StudentDocumentAddViewModel studentDocumentUpdate = new StudentDocumentAddViewModel();
-            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName, studentDocumentAddViewModel._token))
+            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName + studentDocumentAddViewModel._userName, studentDocumentAddViewModel._token))
             {
                 studentDocumentUpdate = this.studentRepository.UpdateStudentDocument(studentDocumentAddViewModel);
             }
@@ -155,7 +155,7 @@ namespace opensis.core.Student.Services
         public StudentDocumentListViewModel GetAllStudentDocumentsList(StudentDocumentListViewModel studentDocumentListViewModel)
         {
             StudentDocumentListViewModel studentDocumentsList = new StudentDocumentListViewModel();
-            if (TokenManager.CheckToken(studentDocumentListViewModel._tenantName, studentDocumentListViewModel._token))
+            if (TokenManager.CheckToken(studentDocumentListViewModel._tenantName + studentDocumentListViewModel._userName, studentDocumentListViewModel._token))
             {
                 studentDocumentsList = this.studentRepository.GetAllStudentDocumentsList(studentDocumentListViewModel);
             }
@@ -174,7 +174,7 @@ namespace opensis.core.Student.Services
         public StudentDocumentAddViewModel DeleteStudentDocument(StudentDocumentAddViewModel studentDocumentAddViewModel)
         {
             StudentDocumentAddViewModel studentDocumentdelete = new StudentDocumentAddViewModel();
-            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName, studentDocumentAddViewModel._token))
+            if (TokenManager.CheckToken(studentDocumentAddViewModel._tenantName + studentDocumentAddViewModel._userName, studentDocumentAddViewModel._token))
             {
                 studentDocumentdelete = this.studentRepository.DeleteStudentDocument(studentDocumentAddViewModel);
             }
@@ -194,7 +194,7 @@ namespace opensis.core.Student.Services
         public LoginInfoAddModel AddStudentLoginInfo(LoginInfoAddModel login)
         {
             LoginInfoAddModel loginInfo = new LoginInfoAddModel();
-            if (TokenManager.CheckToken(login._tenantName, login._token))
+            if (TokenManager.CheckToken(login._tenantName + login._userName, login._token))
             {
 
                 loginInfo = this.studentRepository.AddStudentLoginInfo(login);
@@ -215,7 +215,7 @@ namespace opensis.core.Student.Services
         public StudentCommentAddViewModel SaveStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
         {
             StudentCommentAddViewModel studentCommentAdd = new StudentCommentAddViewModel();
-            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName, studentCommentAddViewModel._token))
+            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName + studentCommentAddViewModel._userName, studentCommentAddViewModel._token))
             {
                 studentCommentAdd = this.studentRepository.AddStudentComment(studentCommentAddViewModel);
             }
@@ -234,7 +234,7 @@ namespace opensis.core.Student.Services
         public StudentCommentAddViewModel UpdateStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
         {
             StudentCommentAddViewModel studentCommentUpdate = new StudentCommentAddViewModel();
-            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName, studentCommentAddViewModel._token))
+            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName + studentCommentAddViewModel._userName, studentCommentAddViewModel._token))
             {
                 studentCommentUpdate = this.studentRepository.UpdateStudentComment(studentCommentAddViewModel);
             }
@@ -253,7 +253,7 @@ namespace opensis.core.Student.Services
         public StudentCommentListViewModel GetAllStudentCommentsList(StudentCommentListViewModel studentCommentListViewModel)
         {
             StudentCommentListViewModel studentCommentsList = new StudentCommentListViewModel();
-            if (TokenManager.CheckToken(studentCommentListViewModel._tenantName, studentCommentListViewModel._token))
+            if (TokenManager.CheckToken(studentCommentListViewModel._tenantName + studentCommentListViewModel._userName, studentCommentListViewModel._token))
             {
                 studentCommentsList = this.studentRepository.GetAllStudentCommentsList(studentCommentListViewModel);
             }
@@ -272,7 +272,7 @@ namespace opensis.core.Student.Services
         public StudentCommentAddViewModel DeleteStudentComment(StudentCommentAddViewModel studentCommentAddViewModel)
         {
             StudentCommentAddViewModel studentCommentDelete = new StudentCommentAddViewModel();
-            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName, studentCommentAddViewModel._token))
+            if (TokenManager.CheckToken(studentCommentAddViewModel._tenantName + studentCommentAddViewModel._userName, studentCommentAddViewModel._token))
             {
                 studentCommentDelete = this.studentRepository.DeleteStudentComment(studentCommentAddViewModel);
             }
@@ -302,7 +302,7 @@ namespace opensis.core.Student.Services
         public StudentAddViewModel ViewStudent(StudentAddViewModel student)
         {
             StudentAddViewModel studentView = new StudentAddViewModel();
-            if (TokenManager.CheckToken(student._tenantName, student._token))
+            if (TokenManager.CheckToken(student._tenantName + student._userName, student._token))
             {
 
                 studentView = this.studentRepository.ViewStudent(student);
@@ -348,7 +348,7 @@ namespace opensis.core.Student.Services
         public SiblingSearchForStudentListModel SearchSiblingForStudent(SiblingSearchForStudentListModel studentSiblingListViewModel)
         {
             SiblingSearchForStudentListModel studentSiblingList = new SiblingSearchForStudentListModel();
-            if (TokenManager.CheckToken(studentSiblingListViewModel._tenantName, studentSiblingListViewModel._token))
+            if (TokenManager.CheckToken(studentSiblingListViewModel._tenantName + studentSiblingListViewModel._userName, studentSiblingListViewModel._token))
             {
                 studentSiblingList = this.studentRepository.SearchSiblingForStudent(studentSiblingListViewModel);
             }
@@ -370,7 +370,7 @@ namespace opensis.core.Student.Services
             SiblingAddUpdateForStudentModel siblingAddUpdateForStudent = new SiblingAddUpdateForStudentModel();
             try
             {
-                if (TokenManager.CheckToken(siblingAddUpdateForStudentModel._tenantName, siblingAddUpdateForStudentModel._token))
+                if (TokenManager.CheckToken(siblingAddUpdateForStudentModel._tenantName + siblingAddUpdateForStudentModel._userName, siblingAddUpdateForStudentModel._token))
                 {
                     siblingAddUpdateForStudent = this.studentRepository.AssociationSibling(siblingAddUpdateForStudentModel);
                 }
@@ -399,7 +399,7 @@ namespace opensis.core.Student.Services
             StudentListModel studentList = new StudentListModel();
             try
             {
-                if (TokenManager.CheckToken(studentListModel._tenantName, studentListModel._token))
+                if (TokenManager.CheckToken(studentListModel._tenantName + studentListModel._userName, studentListModel._token))
                 {
                     studentList = this.studentRepository.ViewAllSibling(studentListModel);
                     studentList._message = SUCCESS;
@@ -434,7 +434,7 @@ namespace opensis.core.Student.Services
             SiblingAddUpdateForStudentModel associationshipDelete = new SiblingAddUpdateForStudentModel();
             try
             {
-                if (TokenManager.CheckToken(siblingAddUpdateForStudentModel._tenantName, siblingAddUpdateForStudentModel._token))
+                if (TokenManager.CheckToken(siblingAddUpdateForStudentModel._tenantName + siblingAddUpdateForStudentModel._userName, siblingAddUpdateForStudentModel._token))
                 {
                     associationshipDelete = this.studentRepository.RemoveSibling(siblingAddUpdateForStudentModel);
                 }
@@ -460,7 +460,7 @@ namespace opensis.core.Student.Services
         public CheckStudentInternalIdViewModel CheckStudentInternalId(CheckStudentInternalIdViewModel checkStudentInternalIdViewModel)
         {
             CheckStudentInternalIdViewModel checkInternalId = new CheckStudentInternalIdViewModel();
-            if (TokenManager.CheckToken(checkStudentInternalIdViewModel._tenantName, checkStudentInternalIdViewModel._token))
+            if (TokenManager.CheckToken(checkStudentInternalIdViewModel._tenantName + checkStudentInternalIdViewModel._userName, checkStudentInternalIdViewModel._token))
             {
                 checkInternalId = this.studentRepository.CheckStudentInternalId(checkStudentInternalIdViewModel);
             }
@@ -479,7 +479,7 @@ namespace opensis.core.Student.Services
         public StudentEnrollmentListModel AddStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
         {
             StudentEnrollmentListModel studentEnrollmentAddModel = new StudentEnrollmentListModel();
-            if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
+            if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName + studentEnrollmentListModel._userName, studentEnrollmentListModel._token))
             {
                 studentEnrollmentAddModel = this.studentRepository.AddStudentEnrollment(studentEnrollmentListModel);
             }
@@ -500,7 +500,7 @@ namespace opensis.core.Student.Services
             StudentEnrollmentListViewModel studentEnrollmentListView = new StudentEnrollmentListViewModel();
             try
             {
-                if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
+                if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName + studentEnrollmentListModel._userName, studentEnrollmentListModel._token))
                 {
                     studentEnrollmentListView = this.studentRepository.GetAllStudentEnrollment(studentEnrollmentListModel);
                 }
@@ -526,7 +526,7 @@ namespace opensis.core.Student.Services
         public StudentEnrollmentListModel UpdateStudentEnrollment(StudentEnrollmentListModel studentEnrollmentListModel)
         {
             StudentEnrollmentListModel studentEnrollmentUpdate = new StudentEnrollmentListModel();
-            if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName, studentEnrollmentListModel._token))
+            if (TokenManager.CheckToken(studentEnrollmentListModel._tenantName + studentEnrollmentListModel._userName, studentEnrollmentListModel._token))
             {
 
                 studentEnrollmentUpdate = this.studentRepository.UpdateStudentEnrollment(studentEnrollmentListModel);
@@ -547,7 +547,7 @@ namespace opensis.core.Student.Services
         public StudentAddViewModel AddUpdateStudentPhoto(StudentAddViewModel studentAddViewModel)
         {
             StudentAddViewModel studentPhotoUpdate = new StudentAddViewModel();
-            if (TokenManager.CheckToken(studentAddViewModel._tenantName, studentAddViewModel._token))
+            if (TokenManager.CheckToken(studentAddViewModel._tenantName + studentAddViewModel._userName, studentAddViewModel._token))
             {
                 studentPhotoUpdate = this.studentRepository.AddUpdateStudentPhoto(studentAddViewModel);
             }
@@ -573,5 +573,68 @@ namespace opensis.core.Student.Services
         //    }
         //    return searchStudentView;
         //}
+
+        /// <summary>
+        /// Search Student List For Reenroll
+        /// </summary>
+        /// <param name="pageResult"></param>
+        /// <returns></returns>
+        public StudentListModel SearchStudentListForReenroll(PageResult pageResult)
+        {
+            logger.Info("Method searchStudentForReenroll called.");
+            StudentListModel studentList = new StudentListModel();
+            try
+            {
+                if (TokenManager.CheckToken(pageResult._tenantName + pageResult._userName, pageResult._token))
+                {
+                    studentList = this.studentRepository.SearchStudentListForReenroll(pageResult);
+                    if (studentList.studentMaster.Count > 0)
+                    {
+                        studentList._message = SUCCESS;
+                        studentList._failure = false;
+                    }
+                    else
+                    {
+                        studentList._message = "NO RECORD FOUND";
+                        studentList._failure = true;
+                    }
+                    logger.Info("Method searchStudentForReenroll end with success.");
+                }
+                else
+                {
+                    studentList._failure = true;
+                    studentList._message = TOKENINVALID;
+                    return studentList;
+                }
+            }
+            catch (Exception ex)
+            {
+                studentList._message = ex.Message;
+                studentList._failure = true;
+                logger.Error("Method searchStudentForReenroll end with error :" + ex.Message);
+            }
+            return studentList;
+        }
+
+        /// <summary>
+        /// Re enrollment For Student
+        /// </summary>
+        /// <param name="studentListModel"></param>
+        /// <returns></returns>
+        public StudentListModel ReenrollmentForStudent(StudentListModel studentListModel)
+        {
+            StudentListModel studentReenrollment = new StudentListModel();
+            if (TokenManager.CheckToken(studentListModel._tenantName + studentListModel._userName, studentListModel._token))
+            {
+
+                studentReenrollment = this.studentRepository.ReenrollmentForStudent(studentListModel);
+            }
+            else
+            {
+                studentReenrollment._failure = true;
+                studentReenrollment._message = TOKENINVALID;
+            }
+            return studentReenrollment;
+        }
     }
 }

@@ -23,6 +23,7 @@ export class StudentCommentsModel{
           super();
           this.studentComments= new StudentCommentsModel();
           this._tenantName=sessionStorage.getItem("tenant");
+          this._userName = sessionStorage.getItem("user");
           this._token=sessionStorage.getItem('token');
       }
   }
@@ -35,9 +36,10 @@ export class StudentCommentsModel{
         super();
         this.schoolId=+sessionStorage.getItem("selectedSchoolId");;
         this.studentId=0;
-        this._tenantName=sessionStorage.getItem("tenant")
-        this.tenantId=sessionStorage.getItem("tenantId")
-        this._token=sessionStorage.getItem("token")
+        this._tenantName=sessionStorage.getItem("tenant");
+        this._userName = sessionStorage.getItem("user");
+        this.tenantId=sessionStorage.getItem("tenantId");
+        this._token=sessionStorage.getItem("token");
     }
 }
   

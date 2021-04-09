@@ -16,7 +16,7 @@
 </div>
 
     <div class="card my-4">
-      <div class="px-6 py-4">
+      <div *ngIf="noticeHide" class="px-6 py-4">
         <h3 class="text-primary font-bold">{{noticeTitle}}</h3>
       </div>
       <hr *ngIf="noticeHide" />
@@ -41,7 +41,11 @@
 
     <div class="card my-4">
       <div *ngIf="!showCalendarView"class="px-6 py-4">
-        <h3 class="text-primary font-bold">No calendar found!</h3>
+        <h3 class="text-primary font-bold">
+          No school calendar found. 
+          <a class="cursor-pointer" [routerLink]="['/school/schoolcalendars']">
+            Create a Calendar</a>
+          </h3>
       </div>
       <div *ngIf="showCalendarView" class="px-6 py-4 flex justify-between">
         <h3 class="text-primary font-bold">{{calendarTitle}}</h3>
