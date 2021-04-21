@@ -13,12 +13,12 @@ import icExpand from '@iconify/icons-ic/outline-add-box';
 import icCollapse from '@iconify/icons-ic/outline-indeterminate-check-box';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import {AddCourseModel,GetAllProgramModel,GetAllSubjectModel,GetAllCourseListModel,CourseStandardModel} from '../../../../models/courseManagerModel';
+import {AddCourseModel,GetAllProgramModel,GetAllSubjectModel,GetAllCourseListModel,CourseStandardModel} from '../../../../models/course-manager.model';
 import {CourseManagerService} from '../../../../services/course-manager.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {GradeLevelService} from '../../../../services/grade-level.service';
-import {GetAllGradeLevelsModel } from '../../../../models/gradeLevelModel';
-import {MassUpdateProgramModel,MassUpdateSubjectModel} from '../../../../models/courseManagerModel';
+import {GetAllGradeLevelsModel } from '../../../../models/grade-level.model';
+import {MassUpdateProgramModel,MassUpdateSubjectModel} from '../../../../models/course-manager.model';
 import { MatDialog } from '@angular/material/dialog';
 import { GetAllSchoolSpecificListModel, GradeStandardSubjectCourseListModel, SchoolSpecificStandarModel, StandardView } from '../../../../models/grades.model';
 import { GradesService } from '../../../../services/grades.service';
@@ -148,11 +148,7 @@ export class EditCourseComponent implements OnInit {
       this.subjectList=data.subjectList;      
     });
   }
-  getAllGradeLevelList(){   
-    this.getAllGradeLevelsModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.getAllGradeLevelsModel._tenantName = sessionStorage.getItem("tenant");
-    this.getAllGradeLevelsModel._userName = sessionStorage.getItem("user");
-    this.getAllGradeLevelsModel._token = sessionStorage.getItem("token");
+  getAllGradeLevelList(){ 
     this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevelsModel).subscribe(data => {          
       this.gradeLevelList=data.tableGradelevelList;      
     });

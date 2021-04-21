@@ -21,7 +21,7 @@ import { PopoverService } from '../../components/popover/popover.service';
 import { MegaMenuComponent } from '../../components/mega-menu/mega-menu.component';
 import { fadeInUp400ms } from '../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../@vex/animations/stagger.animation';
-import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from 'src/app/services/Crypto.service';
 import { Subject } from 'rxjs';
 @Component({

@@ -7,9 +7,9 @@ import { StudentService } from '../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonService } from '../../../../services/common.service';
-import { CheckStudentInternalIdViewModel, StudentAddModel } from '../../../../models/studentModel';
-import { CountryModel } from '../../../../models/countryModel';
-import { LanguageModel } from '../../../../models/languageModel';
+import { CheckStudentInternalIdViewModel, StudentAddModel } from '../../../../models/student.model';
+import { CountryModel } from '../../../../models/country.model';
+import { LanguageModel } from '../../../../models/language.model';
 import { LoginService } from '../../../../services/login.service';
 import * as _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
@@ -24,15 +24,15 @@ import { auditTime, debounceTime, distinctUntilChanged, takeUntil, shareReplay }
 import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
 import { SectionService } from '../../../../services/section.service';
-import { GetAllSectionModel, TableSectionList } from '../../../../models/sectionModel';
-import { CheckUserEmailAddressViewModel } from '../../../../models/userModel';
+import { GetAllSectionModel, TableSectionList } from '../../../../models/section.model';
+import { CheckUserEmailAddressViewModel } from '../../../../models/user.model';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
-import { LovList } from '../../../../models/lovModel';
+import { LovList } from '../../../../models/lov.model';
 import {MiscModel} from '../../../../models/misc-data-student.model';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import {ModuleIdentifier} from '../../../../enums/module-identifier.enum'
 import { CryptoService } from '../../../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { Router } from '@angular/router';
 @Component({
   selector: 'vex-student-generalinfo',
@@ -344,8 +344,8 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
 
   findCountryNationalityById(){
     this.countryListArr.map((val) => {
-      var countryInNumber = +this.data.countryOfBirth;
-      var nationality = +this.data.nationality;
+      let countryInNumber = +this.data.countryOfBirth;
+      let nationality = +this.data.nationality;
       if (val.id === countryInNumber) {
         this.nameOfMiscValuesForView.countryName = val.name;
       }
@@ -447,8 +447,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       this.invalidScroll();
       return
     }
-    this.studentAddModel._token = sessionStorage.getItem("token");
-    this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
     this.studentService.UpdateStudent(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Student Update failed. ' + sessionStorage.getItem("httpError"), '', {

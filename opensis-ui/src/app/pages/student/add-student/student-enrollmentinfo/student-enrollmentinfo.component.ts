@@ -7,9 +7,9 @@ import icAdd from '@iconify/icons-ic/baseline-add';
 import icClear from '@iconify/icons-ic/baseline-clear';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { RollingOptionsEnum } from '../../../../enums/rolling-retention-option.enum';
-import { CalendarListModel } from '../../../../models/calendarModel';
+import { CalendarListModel } from '../../../../models/calendar.model';
 import { CalendarService } from '../../../../services/calendar.service';
-import { StudentEnrollmentDetails, StudentEnrollmentModel, StudentEnrollmentSchoolListModel } from '../../../../models/studentModel';
+import { StudentEnrollmentDetails, StudentEnrollmentModel, StudentEnrollmentSchoolListModel } from '../../../../models/student.model';
 import { StudentService } from '../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import icEdit from '@iconify/icons-ic/edit';
@@ -24,15 +24,16 @@ import icCollapse from '@iconify/icons-ic/baseline-arrow-drop-down';
 import icTrasnferIn from '@iconify/icons-ic/baseline-call-received';
 import icTrasnferOut from '@iconify/icons-ic/baseline-call-made';
 import icDrop from '@iconify/icons-ic/vertical-align-bottom';
-import { EnrollmentCodeListView } from '../../../../models/enrollmentCodeModel';
+import { EnrollmentCodeListView } from '../../../../models/enrollment-code.model';
 import { Router } from '@angular/router';
 import { SharedFunction} from '../../../shared/shared-function';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
-import { GetAllSectionModel } from '../../../../models/sectionModel';
+import { GetAllSectionModel } from '../../../../models/section.model';
 import { SectionService } from '../../../../services/section.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 @Component({
   selector: 'vex-student-enrollmentinfo',
   templateUrl: './student-enrollmentinfo.component.html',
@@ -97,7 +98,8 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     private cryptoService:CryptoService,
     private router: Router,
     private commonFunction:SharedFunction,
-    private sectionService:SectionService) {
+    private sectionService:SectionService,
+    private defaultValueService:DefaultValuesService) {
   }
 
   ngOnInit(): void {
@@ -115,12 +117,11 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       this.studentCreateMode = this.studentCreate.ADD;
     }
     if (this.studentCreateMode == this.studentCreate.ADD) {
-      this.getAllCalendar();
+      // this.getAllCalendar();
       this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
       this.getAllStudentEnrollments();
       this.studentService.changePageMode(this.studentCreateMode);
     } else if (this.studentCreateMode == this.studentCreate.VIEW) {
-      this.getAllCalendar();
       // this.getAllSchoolListWithGradeLevels();
       this.getAllStudentEnrollments();
       this.studentService.changePageMode(this.studentCreateMode);
@@ -178,9 +179,11 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     this.calendarService.getAllCalendar(this.calendarListModel).subscribe((res) => {
       let allCalendarsInCurrentSchool = res.calendarList;
       this.calendarListModel.calendarList = allCalendarsInCurrentSchool.filter((x) => {
-        return (x.academicYear == +sessionStorage.getItem("academicyear") && x.defaultCalender);
-      })
+        return (x.academicYear == +this.defaultValueService.getAcademicYear() && x.defaultCalender);
+      });
+      this.manipulateModelInEditMode();
     });
+
   }
 
   getAllSchoolListWithGradeLevelsAndEnrollCodes() {
@@ -245,8 +248,9 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
     }
     this.studentEnrollmentModel.studentId = this.studentService.getStudentId();
-    this.studentEnrollmentModel.tenantId = sessionStorage.getItem("tenantId");
-    this.studentEnrollmentModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
+    this.studentEnrollmentModel.tenantId = this.defaultValueService.getTenantID();
+    this.studentEnrollmentModel.schoolId = this.defaultValueService.getSchoolID();
+    this.studentEnrollmentModel.academicYear= this.defaultValueService.getAcademicYear()?.toString();
     if (this.studentCreateMode == this.studentCreate.VIEW) {
       this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
     }
@@ -274,7 +278,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments?.length; i++) {
             this.divCount[i] = i;
           }
-          this.manipulateModelInEditMode();
+            this.getAllCalendar();
         }
       }
     })
@@ -336,7 +340,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     let details = this.studentService.getStudentDetails();
     for (let i = 0; i < this.studentEnrollmentModel.studentEnrollments?.length; i++) {
       this.studentEnrollmentModel.studentEnrollments[i].studentId = this.studentService.getStudentId();
-      this.studentEnrollmentModel.studentEnrollments[i].academicYear = +sessionStorage.getItem("academicyear");
+      this.studentEnrollmentModel.studentEnrollments[i].academicYear = +this.defaultValueService.getAcademicYear();
       this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate)
       this.studentEnrollmentModel.studentEnrollments[i].exitDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].exitDate)
       if (details != null) {
@@ -353,9 +357,9 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     }
     this.studentEnrollmentModel.estimatedGradDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.estimatedGradDate)
 
-    this.studentEnrollmentModel.academicYear = sessionStorage.getItem("academicyear");
-    this.studentEnrollmentModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.studentEnrollmentModel._userName = sessionStorage.getItem("user");
+    this.studentEnrollmentModel.academicYear = this.defaultValueService.getAcademicYear()?.toString();
+    this.studentEnrollmentModel.schoolId = +this.defaultValueService.getSchoolID();
+    this.studentEnrollmentModel._userName = this.defaultValueService.getUserName();
 
     this.studentService.updateStudentEnrollment(this.studentEnrollmentModel).subscribe((res) => {
       if (typeof (res) == 'undefined') {

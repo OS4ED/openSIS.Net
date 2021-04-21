@@ -14,6 +14,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 import { TranslateModule } from '@ngx-translate/core';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatRadioModule } from '@angular/material/radio';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 
@@ -32,7 +33,8 @@ import { MatRadioModule } from '@angular/material/radio';
     MatTooltipModule,
     TranslateModule,
     SharedModuleModule,
-    MatRadioModule
+    MatRadioModule,
+    MatProgressSpinnerModule
     
   ]
 })

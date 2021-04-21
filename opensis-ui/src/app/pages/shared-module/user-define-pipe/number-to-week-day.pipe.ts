@@ -40,7 +40,7 @@ export class WeekDayPipe implements PipeTransform {
                 value = value.split('|');
                 for (let j = 0; j < this.weeks.length; j++) {
                     for (let i = 0; i < value.length; i++) {
-                        if (value[i] == this.weeks[j].fullName.toLowerCase()) {
+                        if (value[i].toLowerCase() == this.weeks[j].fullName.toLowerCase()) {
                             finalString.push(this.weeks[j].name);
                         }
                     }

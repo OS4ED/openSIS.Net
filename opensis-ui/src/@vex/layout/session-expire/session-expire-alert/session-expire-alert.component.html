@@ -6,16 +6,13 @@
                 <!-- <div class="shine"></div> -->
                 <div class="text-white text-center pt-9">
                     <p class="text-2xl font-medium">00:{{count<10?'0'+count:count}}</p>
-                    <span class="text-xs" style="opacity: 0.5;">seconds</span>
+                    <span class="text-xs" style="opacity: 0.5;">{{'seconds' | translate}}</span>
                 </div>
             </div>
         </div>
         <div class="pt-4 pb-8">
-            <p class="text-warn text-base font-medium mb-4"><i class="icon icon-warning2 mr-1"></i>Your Session is about
-                to
-                expire</p>
-            <p class="text-base">You will be automatically logged out from your current session soon.
-            </p>
+            <p class="text-warn text-base font-medium mb-4"><i class="icon icon-warning2 mr-1"></i>{{"yourSessionIsAboutToExpire" | translate }}</p>
+            <p class="text-base">{{ "youWillBeAutomaticallyLoggedOutFromYourCurrentSessionSoon" | translate}}</p>
         </div>
     </div>
     <div class="text-right">

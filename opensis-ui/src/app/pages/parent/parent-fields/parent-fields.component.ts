@@ -14,12 +14,12 @@ import { TranslateService } from '@ngx-translate/core';
 import { EditParentFieldsComponent } from './edit-parent-fields/edit-parent-fields.component';
 import { ParentFieldsCategoryComponent } from './parent-fields-category/parent-fields-category.component';
 import { CustomFieldService } from '../../../services/custom-field.service';
-import {CustomFieldAddView, CustomFieldListViewModel} from '../../../models/customFieldModel';
+import {CustomFieldAddView, CustomFieldListViewModel} from '../../../models/custom-field.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
-import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fieldsCategoryModel';
+import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fields-category.model';
 import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum'
 
 @Component({

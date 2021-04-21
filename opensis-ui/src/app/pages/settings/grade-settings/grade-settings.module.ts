@@ -39,6 +39,11 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ReportCardCommentsComponent } from '../../grades/report-card-comments/report-card-comments.component';
 import { StandardGradesComponent } from '../../grades/standard-grades/standard-grades.component';
+import { ReportCardsComponent } from '../../grades/report-cards/report-cards.component';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { TranscriptsComponent } from '../../grades/transcripts/transcripts.component';
+import { MatDividerModule } from '@angular/material/divider';
+
 
 
 
@@ -54,7 +59,9 @@ import { StandardGradesComponent } from '../../grades/standard-grades/standard-g
     ReportCardGradesComponent,
     HonorRollSetupComponent,
     ReportCardCommentsComponent,
-    StandardGradesComponent
+    StandardGradesComponent,
+    ReportCardsComponent,
+    TranscriptsComponent
   ],
   imports: [
     CommonModule,
@@ -87,7 +94,9 @@ import { StandardGradesComponent } from '../../grades/standard-grades/standard-g
     MatSortModule,
     MatCheckboxModule,
     MatButtonToggleModule,
-    DragDropModule
+    DragDropModule,
+    MatSlideToggleModule,
+    MatDividerModule
   ]
 })
 export class GradeSettingsModule { }

@@ -8,7 +8,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SchoolPeriodService } from '../../../../services/school-period.service';
 import { ValidationService } from '../../../shared/validation.service';
-import { BlockPeriodAddViewModel } from '../../../../models/schoolPeriodModel';
+import { BlockPeriodAddViewModel } from '../../../../models/school-period.model';
 import { getTime } from 'date-fns';
 import { SharedFunction } from '../../../shared/shared-function';
 
@@ -107,8 +107,6 @@ export class EditPeriodComponent implements OnInit {
 
       }
       else {
-        this.blockPeriodAddViewModel.blockPeriod.schoolId = +sessionStorage.getItem('selectedSchoolId');
-        this.blockPeriodAddViewModel.blockPeriod.tenantId = sessionStorage.getItem('tenantId');
         this.blockPeriodAddViewModel.blockPeriod.periodId = this.form.controls.periodId.value;
         this.blockPeriodAddViewModel.blockPeriod.blockId = this.currentBlockId;
         this.blockPeriodAddViewModel.blockPeriod.periodTitle = this.form.controls.title.value;

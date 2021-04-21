@@ -8,9 +8,9 @@ import icMoreVertical from '@iconify/icons-ic/more-vert';
 import icDone from '@iconify/icons-ic/done';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import { GetAllMembersList } from '../../../../models/membershipModel';
+import { GetAllMembersList } from '../../../../models/membership.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CalendarEventAddViewModel, colors } from '../../../../models/calendarEventModel';
+import { CalendarEventAddViewModel, colors } from '../../../../models/calendar-event.model';
 import { CalendarEventService } from '../../../../services/calendar-event.service';
 import { CalendarService } from '../../../../services/calendar.service';
 import { ValidationService } from '../../../shared/validation.service';
@@ -19,8 +19,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { SharedFunction} from '../../../shared/shared-function';
 import { MatCheckbox } from '@angular/material/checkbox';
-import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
@@ -124,10 +124,10 @@ export class AddEventComponent implements OnInit {
         this.form.patchValue({ eventColor: this.data.calendarEvent.meta.calendar.eventColor });
         this.form.patchValue({ systemWideEvent: this.data.calendarEvent.meta.calendar.systemWideEvent });
         if (this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId != null && this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId !='') {
-          var membershipIds: string[] = this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId.split(',');
+          let membershipIds: string[] = this.calendarEventAddViewModel.schoolCalendarEvent.visibleToMembershipId.split(',');
           this.memberArray = membershipIds.map(Number);
          
-        var foundMembers = this.data.allMembers.getAllMemberList.filter(x => this.memberArray.indexOf(x.membershipId) !== -1);
+        let foundMembers = this.data.allMembers.getAllMemberList.filter(x => this.memberArray.indexOf(x.membershipId) !== -1);
         this.memberNames = foundMembers.map(a => a.profile).join();
         if(this.memberArray.length === this.getAllMembersList.getAllMemberList.length){
           this.checkAll=true;
@@ -244,7 +244,7 @@ export class AddEventComponent implements OnInit {
   updateCheck(event) {
     if (this.memberArray.length === this.getAllMembersList.getAllMemberList.length) {
       for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
+        let index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
@@ -255,7 +255,7 @@ export class AddEventComponent implements OnInit {
     }
     else if (this.memberArray.length === 0) {
       for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
+        let index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
@@ -279,7 +279,7 @@ export class AddEventComponent implements OnInit {
   
   selectChildren(event, id) {
     event.preventDefault();
-    var index = this.memberArray.indexOf(id);
+    let index = this.memberArray.indexOf(id);
     if (index > -1) {
       this.memberArray.splice(index, 1);
     }

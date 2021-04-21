@@ -6,14 +6,14 @@ import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
 import icLanguage from '@iconify/icons-ic/twotone-language';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
-import { UserViewModel } from '../../../models/userModel';
+import { UserViewModel } from '../../../models/user.model';
 import { LoginService } from '../../../services/login.service';
 import { Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
 import { LoaderService } from '../../../services/loader.service';
 import { ValidationService } from '../../shared/validation.service';
-import { LanguageModel } from '../../../models/languageModel';
+import { LanguageModel } from '../../../models/language.model';
 import { CookieService } from 'ngx-cookie-service';
 import { CryptoService } from '../../../services/Crypto.service';
 import { SchoolService } from '../../../services/school.service';
@@ -80,7 +80,7 @@ export class LoginComponent implements OnInit {
   ngOnInit() {
     if (this.cookieService.get('userDetails') !== null && this.cookieService.get('userDetails') !== "") {
       this.setValue = true;
-      this.UserModel.email = JSON.parse(this.cookieService.get('userDetails')).email;
+      this.form.patchValue({ email: JSON.parse(this.cookieService.get('userDetails')).email});
       this.form.patchValue({ password: JSON.parse(this.cookieService.get('userDetails')).password });
       this.form.markAsDirty();
     }
@@ -108,6 +108,7 @@ export class LoginComponent implements OnInit {
     if (this.form.dirty && this.form.valid) {
       this.UserModel._tenantName = this.tenant;
       this.UserModel.password = this.form.value.password;
+      this.UserModel.email = this.form.value.email;
       this.loginService.ValidateLogin(this.UserModel).subscribe(data => {
         if (typeof (data) == 'undefined') {
           this.snackbar.open('Login failed. ' + sessionStorage.getItem("httpError"), '', {

@@ -27,9 +27,6 @@ export class ErrorIntercept implements HttpInterceptor {
         request: HttpRequest<any>,
         next: HttpHandler
     ): Observable<HttpEvent<any>> {
-        if (!this.loginService.isAuthenticated()) {
-            this.router.navigate(['/']);
-          }
         return next.handle(request)
             .pipe(
                 retry(1),

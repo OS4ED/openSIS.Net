@@ -3,7 +3,7 @@ import { MatDialogRef } from '@angular/material/dialog';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import { MarkingPeriodAddModel,SemesterAddModel ,QuarterAddModel,ProgressPeriodAddModel} from '../../../../models/markingPeriodModel';
+import { MarkingPeriodAddModel,SemesterAddModel ,QuarterAddModel,ProgressPeriodAddModel} from '../../../../models/marking-period.model';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MarkingPeriodService } from '../../../../services/marking-period.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,7 +16,7 @@ import { DateAdapter, MAT_DATE_FORMATS, MAT_DATE_LOCALE } from '@angular/materia
 import { SharedFunction } from '../../../shared/shared-function';
 import { ValidationService } from '../../../shared/validation.service';
 import { SchoolService } from '../../../../services/school.service';
-import { MarkingPeriodListModel} from '../../../../models/markingPeriodModel';
+import { MarkingPeriodListModel} from '../../../../models/marking-period.model';
 const moment = _moment;
 @Component({
   selector: 'vex-edit-marking-period',

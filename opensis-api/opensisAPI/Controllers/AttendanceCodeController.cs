@@ -199,5 +199,22 @@ namespace opensisAPI.Controllers
             }
             return attendanceCodeCategorieslDelete;
         }
+
+
+        [HttpPost("updateAttendanceCodeSortOrder")]
+        public ActionResult<AttendanceCodeSortOrderModel> UpdateAttendanceCodeSortOrder(AttendanceCodeSortOrderModel attendanceCodeSortOrderModel)
+        {
+            AttendanceCodeSortOrderModel attendanceCodeSortOrderUpdate = new AttendanceCodeSortOrderModel();
+            try
+            {
+                attendanceCodeSortOrderUpdate = _attendanceCodeRegisterService.UpdateAttendanceCodeSortOrder(attendanceCodeSortOrderModel);
+            }
+            catch (Exception es)
+            {
+                attendanceCodeSortOrderUpdate._failure = true;
+                attendanceCodeSortOrderUpdate._message = es.Message;
+            }
+            return attendanceCodeSortOrderUpdate;
+        }
     }
 }

@@ -179,11 +179,11 @@ const routes: Routes = [
       {
         path: '',
         children: [
-          {
-            path: 'take-attendance',
-            loadChildren: () => import('./pages/attendance/teacher-function/take-attendance/take-attendance.module').then(m => m.TakeAttendanceModule),
-            // canActivate: [AuthGuard]            
-          }
+          // {
+          //   path: 'take-attendance',
+          //   loadChildren: () => import('./pages/attendance/teacher-function/take-attendance/take-attendance.module').then(m => m.TakeAttendanceModule),
+          //   // canActivate: [AuthGuard]            
+          // }
         ]
       },
       {
@@ -195,7 +195,27 @@ const routes: Routes = [
             // canActivate: [AuthGuard]            
           }
         ]
-      },      
+      }, 
+      // {
+      //   path: '',
+      //   children: [
+      //     {
+      //       path: 'teacher-functions/input-effort-grades',
+      //       loadChildren: () => import('./pages/attendance/teacher-function/input-effort-grades/input-effort-grades.module').then(m => m.InputEffortGradesModule),
+      //       // canActivate: [AuthGuard]            
+      //     }
+      //   ]
+      // },
+      {
+        path: '',
+        children: [
+          {
+            path: 'staff/teacher-functions',
+            loadChildren: () => import('./pages/attendance/teacher-function/teacher-function.module').then(m => m.TeacherFunctionModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },         
     ]
   },
 ];

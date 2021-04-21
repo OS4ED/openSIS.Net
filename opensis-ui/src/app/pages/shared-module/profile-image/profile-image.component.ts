@@ -14,12 +14,12 @@ import { StudentService } from '../../../services/student.service';
 import { ImageModel } from '../../../models/image-cropper.model';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
-import { StaffAddModel } from '../../../models/staffModel';
-import { StudentAddModel } from '../../../models/studentModel';
+import { StaffAddModel } from '../../../models/staff.model';
+import { StudentAddModel } from '../../../models/student.model';
 import { LoaderService } from '../../../services/loader.service';
-import { SchoolAddViewModel } from '../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../models/school-master.model';
 import { ParentInfoService } from '../../../services/parent-info.service';
-import { AddParentInfoModel } from '../../../models/parentInfoModel';
+import { AddParentInfoModel } from '../../../models/parent-info.model';
 
 @Component({
   selector: 'vex-profile-image',
@@ -139,10 +139,10 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
       (event.target.files[0]?.type == "image/png")) {
       this.originalFileName = event.target.files[0].name;
       this.showCropTool = false;
-      var files = event.target.files;
-      var _URL = window.URL || window.webkitURL;
-      for (var i = 0; i < files.length; i++) {
-        var img = new Image();
+      let files = event.target.files;
+      let _URL = window.URL || window.webkitURL;
+      for (let i = 0; i < files.length; i++) {
+        let img = new Image();
         img.onload = () => {
           if (this.enableCropTool) {
             this.callCropper(event);

@@ -257,6 +257,27 @@ namespace opensis.data.Repository
                                     sameSubjectNameExits.ForEach(x => x.CourseSubject = subject.SubjectName);
                                 }
 
+                                var subjectNameUsedInStaff = this.context?.StaffMaster.Where(x => x.SchoolId == subject.SchoolId && x.TenantId == subject.TenantId && x.PrimarySubjectTaught.ToLower() == SubjectUpdate.SubjectName.ToLower()).ToList();
+
+                                if (subjectNameUsedInStaff.Count() > 0)
+                                {
+                                    subjectNameUsedInStaff.ForEach(x => x.PrimarySubjectTaught = subject.SubjectName);
+                                }
+
+                                var StaffData = this.context?.StaffMaster.Where(x => x.SchoolId == subject.SchoolId && x.TenantId == subject.TenantId && x.OtherSubjectTaught.ToLower().Contains(SubjectUpdate.SubjectName.ToLower())).ToList();
+
+                                if (StaffData.Count() > 0)
+                                {
+                                    foreach (var staff in StaffData)
+                                    {
+                                        var otherSubjectTaught = staff.OtherSubjectTaught.Split(",");
+                                        otherSubjectTaught = otherSubjectTaught.Where(w => w != SubjectUpdate.SubjectName).ToArray();
+                                        var newOtherSubjectTaught = string.Join(",", otherSubjectTaught);
+                                        newOtherSubjectTaught = newOtherSubjectTaught + "," + subject.SubjectName;
+                                        staff.OtherSubjectTaught = newOtherSubjectTaught;
+                                    }
+                                }
+
                                 subject.CreatedBy = SubjectUpdate.CreatedBy;
                                 subject.CreatedOn = SubjectUpdate.CreatedOn;
                                 subject.UpdatedOn = DateTime.Now;
@@ -300,6 +321,8 @@ namespace opensis.data.Repository
                             subjectListViewModel._message = "Subject Name Already Exits";
                             return subjectListViewModel;
                         }
+
+
                     }
                 }
                 this.context?.SaveChanges();

@@ -7,7 +7,7 @@ import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation
 import { TranslateService } from '@ngx-translate/core';
 import { EditorChangeContent, EditorChangeSelection } from 'ngx-quill';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StudentCommentsAddView } from '../../../../../models/studentCommentsModel';
+import { StudentCommentsAddView } from '../../../../../models/student-comments.model';
 import {StudentService} from '../../../../../services/student.service'
 
 @Component({

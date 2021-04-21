@@ -51,7 +51,7 @@
         <div class="flex">
             <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
             <div class="ml-4">
-                <span class="text-lg inline-block align-middle text-primary font-bold">Selection Processing</span>
+                <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="selectionProcessing && !checkAvailabilityLoader && !startSchedulingLoader">Selection Processing</span>
                 <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="checkAvailabilityLoader">Checking Availability</span>
                 <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="startSchedulingLoader">Scheduling Teachers</span>
 
@@ -121,7 +121,7 @@
                                             <ng-container *ngFor="let day of courseSection.weekDays.split('').sort()">
                                                 <span
                                                 class="w-5 h-5 text-center text-xs rounded inline-block text-white mr-1 font-medium"
-                                                [ngClass]="courseSection.meetingDays.includes(day)?'bg-primary':'bg-gray-light'"
+                                                [ngClass]="courseSection.cloneMeetingDays.includes(day)?'bg-primary':'bg-gray-light'"
                                                 [matTooltip]="day|weekDay:false:true" [matTooltipPosition]="'above'">{{day|weekDay:true:false}}</span>
                                         
                                             </ng-container>

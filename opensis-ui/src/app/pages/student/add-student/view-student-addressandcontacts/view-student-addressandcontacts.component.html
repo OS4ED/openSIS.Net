@@ -104,7 +104,7 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'zipPostalCode' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mailingAddressZip}}</p>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.mailingAddressZip|EmtyValueCheckPipe}}</p>
             </li>
         </ul>
 
@@ -122,31 +122,31 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.personalEmail|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-blue cursor-pointer ading-5 sm:mt-0 sm:col-span-2 truncate" (click)="openUrl(studentViewDetails.studentMaster.personalEmail)">{{studentViewDetails.studentMaster.personalEmail|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'schoolEmail' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.schoolEmail|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-blue cursor-pointer ading-5 sm:mt-0 sm:col-span-2 truncate" (click)="openUrl(studentViewDetails.studentMaster.schoolEmail)">{{studentViewDetails.studentMaster.schoolEmail|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.twitter|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-blue cursor-pointer ading-5 sm:mt-0 sm:col-span-2 truncate" (click)="openUrl(studentViewDetails.studentMaster.twitter)">{{studentViewDetails.studentMaster.twitter|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'facebook' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.facebook|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-blue cursor-pointer ading-5 sm:mt-0 sm:col-span-2 truncate" (click)="openUrl(studentViewDetails.studentMaster.facebook)">{{studentViewDetails.studentMaster.facebook|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.instagram|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-blue cursor-pointer ading-5 sm:mt-0 sm:col-span-2 truncate" (click)="openUrl(studentViewDetails.studentMaster.instagram)">{{studentViewDetails.studentMaster.instagram|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.youtube|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-blue cursor-pointer ading-5 sm:mt-0 sm:col-span-2 truncate" (click)="openUrl(studentViewDetails.studentMaster.youtube)">{{studentViewDetails.studentMaster.youtube|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails.studentMaster.linkedin|EmtyValueCheckPipe}}</p>
+                <p class="mt-1 text-blue cursor-pointer ading-5 sm:mt-0 sm:col-span-2 truncate" (click)="openUrl(studentViewDetails.studentMaster.linkedin)">{{studentViewDetails.studentMaster.linkedin|EmtyValueCheckPipe}}</p>
             </li>
         </ul>
     </div>

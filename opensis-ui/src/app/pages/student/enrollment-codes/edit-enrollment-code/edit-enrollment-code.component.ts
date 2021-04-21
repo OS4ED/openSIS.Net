@@ -6,7 +6,7 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { EnrollmentCodesService } from '../../../../services/enrollment-codes.service';
-import {EnrollmentCodeAddView} from '../../../../models/enrollmentCodeModel';
+import {EnrollmentCodeAddView} from '../../../../models/enrollment-code.model';
 import {EnrollmentCodeEnum } from '../../../../enums/enrollment_code.enum';
 
 @Component({

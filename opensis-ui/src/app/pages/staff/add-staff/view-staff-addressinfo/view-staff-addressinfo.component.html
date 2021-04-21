@@ -104,7 +104,7 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'busNo' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails.staffMaster.busNo}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffViewDetails.staffMaster.busNo|EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'busPickup' | translate}}</label>
@@ -179,13 +179,15 @@
         <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'emergencyContactName' | translate}}</label>
-                <p *ngIf="staffViewDetails.staffMaster.emergencyFirstName!==''||staffViewDetails.staffMaster.emergencyLastName!==''"
+
+                <p *ngIf="(staffViewDetails.staffMaster.emergencyFirstName !== null || staffViewDetails.staffMaster.emergencyFirstName !== '') || (staffViewDetails.staffMaster.emergencyLastName !== null || staffViewDetails.staffMaster.emergencyLastName !== '')"
                     class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                     {{staffViewDetails.staffMaster.emergencyFirstName
-                    }} {{staffViewDetails.staffMaster.emergencyLastName }}</p>
-                <p *ngIf="(staffViewDetails.staffMaster.emergencyFirstName===''||null) && (staffViewDetails.staffMaster.emergencyLastName===''||null)"
-                    class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                    -</p>
+                    }} {{staffViewDetails.staffMaster.emergencyLastName}}
+                </p>
+                <p *ngIf="(staffViewDetails.staffMaster.emergencyFirstName === null || staffViewDetails.staffMaster.emergencyFirstName === '') && (staffViewDetails.staffMaster.emergencyLastName === null || staffViewDetails.staffMaster.emergencyLastName === '')"
+                    class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-
+                </p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'relationshipToStaff' | translate}}</label>

@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../../models/school-master.model';
 
 @Component({
   selector: 'vex-view-general-info',

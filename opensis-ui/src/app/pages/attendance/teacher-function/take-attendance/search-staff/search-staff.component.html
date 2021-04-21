@@ -1,0 +1,358 @@
+<form (ngSubmit)="submit()" #f="ngForm">
+    <div class="search-body">
+        <div class="flex justify-between px-6 py-4">
+            <h4 class="font-bold">{{'advanceSearch' | translate}}</h4>
+            <a (click)="hideAdvanceSearch()" class="cursor-pointer">
+                <mat-icon>close</mat-icon>
+            </a>
+        </div>
+        <mat-accordion class="example-headers-align" multi>
+            <mat-expansion-panel expanded>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'identificationInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>First/Given Name</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.firstGivenName" name="firstGivenName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Middle Name</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.middleName" name="middleName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Last/Family Name</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.lastFamilyName" name="lastFamilyName" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Staff ID</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.staffInternalId" name="studentInternalId" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Alternate ID</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.alternateId" name="alternateId" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'socialSecurityNumber'|translate}}</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.socialSecurityNumber"
+                                name="socialSecurityNumber" matInput>
+                        </mat-form-field>
+                    </li>
+                </ul>
+
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'searchBirthdaysBetweenDateRange' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>From Date</mat-label>
+                            <input matInput [(ngModel)]="dobStartDate" name="dobStartDate" [matDatepicker]="frompicker">
+                            <mat-datepicker-toggle matSuffix [for]="frompicker"></mat-datepicker-toggle>
+                            <mat-datepicker #frompicker></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>To Date</mat-label>
+                            <input matInput [(ngModel)]="dobEndDate" name="dobEndDate" [matDatepicker]="topicker">
+                            <mat-datepicker-toggle matSuffix [for]="topicker"></mat-datepicker-toggle>
+                            <mat-datepicker #topicker></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'demographicInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Date of Birth</mat-label>
+                            <input matInput [(ngModel)]="staffMasterSearchModel.dob" name="dob" [matDatepicker]="dob">
+                            <mat-datepicker-toggle matSuffix [for]="dob"></mat-datepicker-toggle>
+                            <mat-datepicker #dob></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'gender'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.gender" name="gender">
+                                <mat-option *ngFor="let gender of genderList" [value]="gender.lovColumnValue">{{gender.lovColumnValue}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'race'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.race" name="race">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let race of raceList" [value]="race.lovColumnValue">{{race.lovColumnValue}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'ethnicity'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.ethnicity" name="ethnicity">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let ethnicity of ethnicityList" [value]="ethnicity.lovColumnValue">{{ethnicity.lovColumnValue}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'maritalStatus'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.maritalStatus" name="maritalStatus">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let maritalStatus of maritalStatusList" [value]="maritalStatus.lovColumnValue">
+                                    {{maritalStatus.lovColumnValue}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'countryOfBirth'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.countryOfBirth"
+                                name="countryOfBirth">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let country of countryListArr" [value]='country.id'>
+                                    {{country.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'nationality'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.nationality" name="nationality">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let country of countryListArr" [value]='country.id'>
+                                    {{country.name}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'firstLanguage'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.firstLanguage"
+                                name="firstLanguageId">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let language of languageList" [value]="language.langId">
+                                    {{language.locale}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'secondLanguage'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.secondLanguage"
+                                name="secondLanguageId">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let language of languageList" [value]="language.langId">
+                                    {{language.locale}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'thirdLanguage'|translate}}</mat-label>
+                            <mat-select [(ngModel)]="staffMasterSearchModel.thirdLanguage"
+                                name="thirdLanguageId">
+                                <mat-option value=""></mat-option>
+                                <mat-option *ngFor="let language of languageList" [value]="language.langId">
+                                    {{language.locale}}
+                                </mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'schoolInfo' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'openSISProfile'|translate}}</mat-label>
+                            <mat-select name="openSISProfile" [(ngModel)]="staffMasterSearchModel.profile">
+                                <mat-option *ngFor="let profile of getAllMembersList.getAllMemberList " value={{profile.profile}}>{{profile.profile}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'jobTitle'|translate}}</mat-label>
+                            <input #jobTitle="ngModel" name="jobTitle" matInput [(ngModel)]="staffMasterSearchModel.jobTitle">
+          
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'joiningDate'|translate}}</mat-label>
+                            <input matInput name="joiningDate" [matDatepicker]="picker1" [(ngModel)]="staffMasterSearchModel.joiningDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker1"></mat-datepicker-toggle>
+                            <mat-datepicker #picker1></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'endDate'|translate}}</mat-label>
+                            <input matInput name="endDate" [matDatepicker]="picker" [(ngModel)]="staffMasterSearchModel.endDate">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'addressInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Street Address 1</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.homeAddressLineOne" name="homeAddressLineOne" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Street Address 2</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.homeAddressLineTwo" name="homeAddressLineTwo" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>{{'country'|translate}}</mat-label>
+                        <mat-select [(ngModel)]="staffMasterSearchModel.homeAddressCountry"  name="homeAddressCountry">
+                            <mat-option *ngFor="let country of countryListArr" [value]= 'country.id'>
+                                {{country.name}}
+                            </mat-option>
+                        </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>State/Province/Locality</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.homeAddressState" name="homeAddressState" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>City</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.homeAddressCity" name="homeAddressCity" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Zip/Postal Code</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.homeAddressZip" name="homeAddressZip" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Bus No</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.busNo" name="busNo" matInput>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+
+            <mat-expansion-panel>
+                <mat-expansion-panel-header>
+                    <mat-panel-title class="text-primary font-bold">
+                        {{'personalContactInformation' | translate}}
+                    </mat-panel-title>
+                </mat-expansion-panel-header>
+
+
+                <ul class="grid grid-cols-2 col-gap-8">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Home Phone</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.homePhone" name="homePhone" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Mobile Phone</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.mobilePhone" name="mobilePhone" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Personal Email</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.personalEmail" name="personalEmail" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>School Email</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.schoolEmail" name="schoolEmail" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Zip/Postal Code</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.homeAddressZip" name="homeAddressZip" matInput>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary">
+                            <mat-label>Bus No</mat-label>
+                            <input [(ngModel)]="staffMasterSearchModel.busNo" name="busNo" matInput>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </mat-expansion-panel>
+        </mat-accordion>
+        <div class="px-6 py-4">
+            <mat-slide-toggle color="primary" class="mr-5">{{'searchAllSchools' | translate}}</mat-slide-toggle>
+        </div>
+    </div>
+    <div class="search-toolbar py-3 px-6 text-right">
+        <button color="" mat-button type="button" (click)="resetData()" class="mr-3">{{'reset' | translate}}</button>
+        <button color="primary" mat-raised-button>{{searchTitle | translate}}</button>
+    </div>
+
+</form>

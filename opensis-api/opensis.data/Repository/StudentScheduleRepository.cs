@@ -84,7 +84,7 @@ namespace opensis.data.Repository
                                                             ConflictComment = "Seats Not Avalaible"
                                                         };
                                                         this.context?.StudentScheduleView.Add(conflictStudent);
-                                                        conflictMessage = "Some Student could not be scheduled due to conflicts.Please find the detailed report below.";
+                                                        conflictMessage = "Some Student could not be scheduled due to conflicts. Please find the detailed report below.";
                                                     }
                                                 }
                                             }
@@ -117,7 +117,7 @@ namespace opensis.data.Repository
                                                     ConflictComment = "Student is already scheduled in the course section"
                                                 };
                                                 this.context.StudentScheduleView.Add(conflictStudent);
-                                                conflictMessage = "Some Student could not be scheduled due to conflicts.Please find the detailed report below.";
+                                                conflictMessage = "Some Student could not be scheduled due to conflicts. Please find the detailed report below.";
                                             }
                                             else
                                             {
@@ -229,7 +229,7 @@ namespace opensis.data.Repository
                                                                 CourseSectionId = courseSection.CourseSectionId,
                                                                 CourseSectionName = courseSection.CourseSectionName,
                                                                 StudentInternalId = student.StudentInternalId,
-                                                                StudentName = student.FirstGivenName,
+                                                                StudentName = student.FirstGivenName + " " + student.MiddleName + " " + student.LastFamilyName,
                                                                 Scheduled = true,
                                                             };
                                                             this.context?.StudentScheduleView.Add(conflictStudent);
@@ -245,12 +245,12 @@ namespace opensis.data.Repository
                                                                 CourseSectionId = courseSection.CourseSectionId,
                                                                 CourseSectionName = courseSection.CourseSectionName,
                                                                 StudentInternalId = student.StudentInternalId,
-                                                                StudentName = student.FirstGivenName,
+                                                                StudentName = student.FirstGivenName + " " + student.MiddleName + " " + student.LastFamilyName,
                                                                 Scheduled = false,
                                                                 ConflictComment = "There is a period conflict"
                                                             };
                                                             this.context?.StudentScheduleView.Add(conflictStudent);
-                                                            conflictMessage = "Some Student could not be scheduled due to conflicts.Please find the detailed report below.";
+                                                            conflictMessage = "Some Student could not be scheduled due to conflicts. Please find the detailed report below.";
                                                         }
                                                     }
                                                     else
@@ -286,12 +286,12 @@ namespace opensis.data.Repository
                                             CourseSectionId = courseSection.CourseSectionId,
                                             CourseSectionName = courseSection.CourseSectionName,
                                             StudentInternalId = studentMaster.StudentInternalId,
-                                            StudentName = studentMaster.FirstGivenName,
+                                            StudentName = studentMaster.FirstGivenName + " " + studentMaster.MiddleName + " " + studentMaster.LastFamilyName,
                                             Scheduled = false,
                                             ConflictComment = "Seats Not Avalaible"
                                         };
                                         this.context?.StudentScheduleView.Add(conflictStudent);
-                                        conflictMessage = "Some Student could not be scheduled due to conflicts.Please find the detailed report below.";
+                                        conflictMessage = "Some Student could not be scheduled due to conflicts. Please find the detailed report below.";
                                     }
                                 }                               
                             }

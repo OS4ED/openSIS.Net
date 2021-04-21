@@ -11,7 +11,7 @@ import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {WashInfoEnum} from '../../../../../enums/wash-info.enum'
 import { TranslateService } from '@ngx-translate/core';
-import { StaffCertificateModel } from '../../../../../models/staffModel';
+import { StaffCertificateModel } from '../../../../../models/staff.model';
 import { SharedFunction } from '../../../../shared/shared-function';
 
 @Component({

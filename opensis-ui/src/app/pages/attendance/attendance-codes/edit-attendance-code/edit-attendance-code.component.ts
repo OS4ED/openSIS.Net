@@ -5,7 +5,7 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { AttendanceCodeService } from '../../../../services/attendance-code.service';
-import { AttendanceCodeModel } from '../../../../models/attendanceCodeModel';
+import { AttendanceCodeModel } from '../../../../models/attendance-code.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import {AttendanceCodeEnum} from '../../../../enums/attendance-code.enum';
 
@@ -34,19 +34,18 @@ export class EditAttendanceCodeComponent implements OnInit {
      private fb: FormBuilder,
      private snackbar: MatSnackBar) {
        if(data.editMode){
-         this.editMode=data.editMode;
-         this.editDetails=data.editDetails;
+         this.editMode=JSON.parse(JSON.stringify(data.editMode));
+         this.editDetails=JSON.parse(JSON.stringify(data.editDetails));
        }else{
-        this.editMode=data.editMode;
-        this.selectedAttendanceCategory=data.attendanceCategoryId;
+        this.editMode=JSON.parse(JSON.stringify(data.editMode));
+        this.selectedAttendanceCategory=JSON.parse(JSON.stringify(data.attendanceCategoryId));
        }
        this.form = this.fb.group({
         title:['',Validators.required],
         shortName:['',Validators.required],
-        sortOrder:['',[Validators.required,Validators.min(1)]],
         allowEntryBy:["null"],
         defaultCode:[false],
-        stateCode:["null"],
+        stateCode:["",[Validators.required]],
        });
       }
 
@@ -66,7 +65,6 @@ export class EditAttendanceCodeComponent implements OnInit {
     this.form.patchValue({
       title:this.editDetails.title,
       shortName:this.editDetails.shortName,
-      sortOrder:this.editDetails.sortOrder,
       allowEntryBy:this.editDetails.allowEntryBy,
       defaultCode:this.editDetails.defaultCode,
       stateCode:modifiedStateCode
@@ -86,7 +84,6 @@ export class EditAttendanceCodeComponent implements OnInit {
 
   addAttendanceCode(){
     if(this.form.valid){
-    this.attendanceCodeModel.attendanceCode.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.attendanceCodeModel.attendanceCode.attendanceCategoryId=this.selectedAttendanceCategory;
     this.attendanceCodeModel.attendanceCode.academicYear=+sessionStorage.getItem("academicyear");
     this.attendanceCodeModel.attendanceCode.title=this.form.value.title;
@@ -103,7 +100,6 @@ export class EditAttendanceCodeComponent implements OnInit {
       this.attendanceCodeModel.attendanceCode.allowEntryBy=this.form.value.allowEntryBy;
     }
     this.attendanceCodeModel.attendanceCode.defaultCode=this.form.value.defaultCode;
-    this.attendanceCodeModel.attendanceCode.sortOrder=this.form.value.sortOrder;
     this.attendanceCodeService.addAttendanceCode(this.attendanceCodeModel).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Attendance Code is Failed to Submit!. ' + sessionStorage.getItem("httpError"), '', {
@@ -127,7 +123,6 @@ export class EditAttendanceCodeComponent implements OnInit {
     if(this.form.valid){
       this.attendanceCodeModel.attendanceCode.title=this.form.value.title;
       this.attendanceCodeModel.attendanceCode.shortName=this.form.value.shortName;
-      this.attendanceCodeModel.attendanceCode.sortOrder=this.form.value.sortOrder;
         if(this.form.value.stateCode=="null"){
       this.attendanceCodeModel.attendanceCode.stateCode=null;
     }else{

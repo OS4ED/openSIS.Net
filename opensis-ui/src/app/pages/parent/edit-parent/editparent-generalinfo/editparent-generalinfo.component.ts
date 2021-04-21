@@ -1,5 +1,5 @@
-import { Component, OnInit, ChangeDetectorRef,Input, OnDestroy } from '@angular/core';
-import { FormBuilder,NgForm } from '@angular/forms';
+import { Component, OnInit, ChangeDetectorRef, Input, OnDestroy } from '@angular/core';
+import { FormBuilder, NgForm } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -8,8 +8,8 @@ import icAdd from '@iconify/icons-ic/baseline-add';
 import icClear from '@iconify/icons-ic/baseline-clear';
 import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
-import { salutation,suffix ,relationShip,userProfile} from '../../../../enums/studentAdd.enum';
-import { AddParentInfoModel,ParentInfoList,RemoveAssociateParent } from '../../../../models/parentInfoModel';
+import { salutation, suffix, relationShip, userProfile } from '../../../../enums/studentAdd.enum';
+import { AddParentInfoModel, ParentInfoList, RemoveAssociateParent } from '../../../../models/parent-info.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { StudentService } from '../../../../services/student.service';
@@ -19,18 +19,18 @@ import icRemove from '@iconify/icons-ic/remove-circle';
 import { Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { AddSiblingComponent } from '../../../student/add-student/student-familyinfo/add-sibling/add-sibling.component';
-import {ViewSiblingComponent} from '../../../student/add-student/student-familyinfo/view-sibling/view-sibling.component';
+import { ViewSiblingComponent } from '../../../student/add-student/student-familyinfo/view-sibling/view-sibling.component';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
-import {StudentSiblingAssociation} from '../../../../models/studentModel';
+import { StudentSiblingAssociation } from '../../../../models/student.model';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { LovList } from './../../../../models/lovModel';
+import { LovList } from '../../../../models/lov.model';
 import { CommonService } from '../../../../services/common.service';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
@@ -43,7 +43,7 @@ import { CryptoService } from '../../../../services/Crypto.service';
     fadeInRight400ms
   ]
 })
-export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
+export class EditparentGeneralinfoComponent implements OnInit, OnDestroy {
   schoolCreate = SchoolCreate;
   @Input() schoolCreateMode: SchoolCreate;
   @Input() parentDetailsForViewAndEdit;
@@ -52,26 +52,26 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   icAdd = icAdd;
   icClear = icClear;
   icVisibility = icVisibility;
-  icVisibilityOff = icVisibilityOff;  
+  icVisibilityOff = icVisibilityOff;
   icEdit = icEdit;
   icDelete = icDelete;
   icRemove = icRemove;
   inputType = 'password';
   visible = false;
-  salutationEnum=Object.keys(salutation);
+  salutationEnum = Object.keys(salutation);
   suffixEnum = Object.keys(suffix);
-  relationShipEnum = Object.keys(relationShip); 
+  relationShipEnum = Object.keys(relationShip);
   userProfileEnum = Object.keys(userProfile);
   f: NgForm;
-  isPortalUser=false;
+  isPortalUser = false;
   parentDetails;
-  mode="view";
-  associateStudentMode="";
-  addParentInfoModel: AddParentInfoModel = new AddParentInfoModel(); 
-  parentInfoList:ParentInfoList=new ParentInfoList();
-  lovList:LovList= new LovList();
-  studentSiblingAssociation:StudentSiblingAssociation=new StudentSiblingAssociation();
-  removeAssociateParent:RemoveAssociateParent=new RemoveAssociateParent();
+  mode = "view";
+  associateStudentMode = "";
+  addParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
+  parentInfoList: ParentInfoList = new ParentInfoList();
+  lovList: LovList = new LovList();
+  studentSiblingAssociation: StudentSiblingAssociation = new StudentSiblingAssociation();
+  removeAssociateParent: RemoveAssociateParent = new RemoveAssociateParent();
   parentInfo;
   studentInfo;
   salutationList;
@@ -87,19 +87,19 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(
-    public translateService:TranslateService, 
-    private cd: ChangeDetectorRef,  
-    private parentInfoService:ParentInfoService,
-    private snackbar: MatSnackBar,  
-    private router:Router,
+    public translateService: TranslateService,
+    private cd: ChangeDetectorRef,
+    private parentInfoService: ParentInfoService,
+    private snackbar: MatSnackBar,
+    private router: Router,
     private dialog: MatDialog,
-    private imageCropperService:ImageCropperService,
-    private commonService:CommonService,
-    private commonLOV:CommonLOV,
+    private imageCropperService: ImageCropperService,
+    private commonService: CommonService,
+    private commonLOV: CommonLOV,
     private cryptoService: CryptoService
-    ) {
+  ) {
     translateService.use('en');
-    
+
   }
 
   ngOnInit(): void {
@@ -109,165 +109,161 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
     this.editPermission = permissionCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionCategory.rolePermission[0].canDelete;
     this.addPermission = permissionCategory.rolePermission[0].canAdd;
-    
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.VIEW});
-    this.callLOVs();    
+
+    this.imageCropperService.enableUpload({ module: this.moduleIdentifier.PARENT, upload: true, mode: this.parentCreate.VIEW });
+    this.callLOVs();
     this.parentInfo = {};
-    
-    if(this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')){
-      this.addParentInfoModel = this.parentDetailsForViewAndEdit;     
+
+    if (this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')) {
+      this.addParentInfoModel = this.parentDetailsForViewAndEdit;
       this.parentInfo = this.addParentInfoModel.parentInfo;
-      this.studentInfo = this.addParentInfoModel.getStudentForView;  
-      this.setEmptyValue(this.parentInfo,this.studentInfo);     
-    }else{    
-      this.parentInfoService.getParentDetailsForGeneral.subscribe((res: AddParentInfoModel) => {       
-        this.addParentInfoModel = res;        
+      this.studentInfo = this.addParentInfoModel.getStudentForView;
+      this.setEmptyValue(this.parentInfo, this.studentInfo);
+    } else {
+      this.parentInfoService.getParentDetailsForGeneral.subscribe((res: AddParentInfoModel) => {
+        this.addParentInfoModel = res;
         this.parentInfo = this.addParentInfoModel.parentInfo;
-        this.studentInfo = this.addParentInfoModel.getStudentForView; 
-        this.setEmptyValue(this.parentInfo,this.studentInfo);   
+        this.studentInfo = this.addParentInfoModel.getStudentForView;
+        this.setEmptyValue(this.parentInfo, this.studentInfo);
       })
-    }   
+    }
+
   }
-  setEmptyValue(parentInfo,studentInfo){
-   
-    if(parentInfo.middlename === null){
-      parentInfo.middlename = " ";      
+  setEmptyValue(parentInfo, studentInfo) {
+
+    if (parentInfo.middlename === null) {
+      parentInfo.middlename = " ";
     }
-    if(parentInfo.salutation === null){
-      parentInfo.salutation = " ";      
+    if (parentInfo.salutation === null) {
+      parentInfo.salutation = " ";
     }
-    
-    if(studentInfo !== undefined){      
-      studentInfo.forEach(element => {  
-        
-        if(element.middleName === null){
-          element.middleName="";
-        } 
-      }); 
+
+    if (studentInfo !== undefined) {
+      studentInfo.forEach(element => {
+
+        if (element.middleName === null) {
+          element.middleName = "";
+        }
+      });
     }
-         
-    if(parentInfo.isPortalUser === true){
+
+    if (parentInfo.isPortalUser === true) {
       this.isPortalUser = true;
-      this.addParentInfoModel.parentInfo.isPortalUser = true; 
-    }else{
+      this.addParentInfoModel.parentInfo.isPortalUser = true;
+    } else {
       this.isPortalUser = false;
-      this.addParentInfoModel.parentInfo.isPortalUser = false; 
+      this.addParentInfoModel.parentInfo.isPortalUser = false;
     }
-    if(parentInfo){
-      this.mode = "view";     
+    if (parentInfo) {
+      this.mode = "view";
     }
   }
-  portalUserCheck(event){
-    if(event.checked === true){
+  portalUserCheck(event) {
+    if (event.checked === true) {
       this.isPortalUser = true;
-      this.addParentInfoModel.parentInfo.isPortalUser = true; 
-    }else{
+      this.addParentInfoModel.parentInfo.isPortalUser = true;
+    } else {
       this.isPortalUser = false;
-      this.addParentInfoModel.parentInfo.isPortalUser = false; 
+      this.addParentInfoModel.parentInfo.isPortalUser = false;
     }
   }
 
-  editGeneralInfo(){
-    this.mode = "add"; 
-    this.parentCreateMode=this.parentCreate.EDIT
+  editGeneralInfo() {
+    this.mode = "add";
+    this.parentCreateMode = this.parentCreate.EDIT
     this.addParentInfoModel.parentInfo = this.parentInfo;
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:true,mode:this.parentCreate.EDIT});
-    this.parentInfoService.changePageMode(this.parentCreateMode);     
+    this.imageCropperService.enableUpload({ module: this.moduleIdentifier.PARENT, upload: true, mode: this.parentCreate.EDIT });
+    this.parentInfoService.changePageMode(this.parentCreateMode);
   }
 
-  callLOVs(){
-    this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.salutationList=res;  
+  callLOVs() {
+    this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.salutationList = res;
     });
-    this.commonLOV.getLovByName('Suffix').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.suffixList=res;  
+    this.commonLOV.getLovByName('Suffix').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.suffixList = res;
     });
   }
 
-  submit()
-  {  
-    this.addParentInfoModel._token = sessionStorage.getItem("token");
-    this.addParentInfoModel._tenantName = sessionStorage.getItem("tenant");
-
+  submit() {
+    this.addParentInfoModel.parentInfo.parentId = this.parentInfoService.getParentId();
     this.parentInfoService.updateParentInfo(this.addParentInfoModel).subscribe(data => {
-      if (typeof (data) == 'undefined') 
-      {
+      if (typeof (data) == 'undefined') {
         this.snackbar.open('Parent Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-        duration: 10000
+          duration: 10000
         });
       }
-      else 
-      {
+      else {
         if (data._failure) {
-          this.snackbar.open( data._message, '', {
-          duration: 10000
+          this.snackbar.open(data._message, '', {
+            duration: 10000
           });
         }
-        else 
-        {
+        else {
           this.snackbar.open(data._message, '', {
-          duration: 10000
+            duration: 10000
           });
-          this.router.navigateByUrl('/school/parents');        
+          this.router.navigateByUrl('/school/parents');
         }
       }
-    })     
+    })
   }
 
   openViewDetails(studentDetails) {
     this.dialog.open(ViewSiblingComponent, {
-      data:{     
-        siblingDetails:this.parentInfo,
-        studentDetails:studentDetails,
-        flag:"Parent"
+      data: {
+        siblingDetails: this.parentInfo,
+        studentDetails: studentDetails,
+        flag: "Parent"
       },
-       width: '600px'
-     })
+      width: '600px'
+    })
   }
-  
-  associateStudent(){
-    this.associateStudentMode="search";
+
+  associateStudent() {
+    this.associateStudentMode = "search";
     this.dialog.open(AddSiblingComponent, {
-     data:{      
-      data:this.addParentInfoModel
-     },
+      data: {
+        data: this.addParentInfoModel
+      },
       width: '600px'
     }).afterClosed().subscribe(data => {
-      if(data){
-        this.router.navigateByUrl('/school/parents');  
+      if (data) {
+        this.router.navigateByUrl('/school/parents');
       }
-                 
+
     });
   }
 
-  confirmDelete(deleteDetails){     
+  confirmDelete(deleteDetails) {
     // call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+deleteDetails.firstGivenName+" "+deleteDetails.lastFamilyName+"."}
+        title: "Are you sure?",
+        message: "You are about to delete " + deleteDetails.firstGivenName + " " + deleteDetails.lastFamilyName + "."
+      }
     });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {
       // if user pressed yes dialogResult will be true, 
       // if user pressed no - it will be false
-      if(dialogResult){
+      if (dialogResult) {
         this.deleteParentInfo(deleteDetails.studentId);
       }
-   });
+    });
   }
-  deleteParentInfo(studentId){  
-    this.removeAssociateParent.studentId=studentId;  
-    this.removeAssociateParent.parentInfo.parentId=this.parentInfo.parentId;
+  deleteParentInfo(studentId) {
+    this.removeAssociateParent.studentId = studentId;
+    this.removeAssociateParent.parentInfo.parentId = this.parentInfo.parentId;
     this.parentInfoService.removeAssociatedParent(this.removeAssociateParent).subscribe(
-      data => { 
-        if(typeof(data)=='undefined'){
+      data => {
+        if (typeof (data) == 'undefined') {
           this.snackbar.open('Student Information failed. ' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
-        else{
+        else {
           if (data._failure) {
             this.snackbar.open(data._message, '', {
               duration: 10000
@@ -286,21 +282,21 @@ export class EditparentGeneralinfoComponent implements OnInit,OnDestroy {
   }
 
 
-  
+
   toggleVisibility() {
     if (this.visible) {
-    this.inputType = 'password';
-    this.visible = false;
-    this.cd.markForCheck();
+      this.inputType = 'password';
+      this.visible = false;
+      this.cd.markForCheck();
     } else {
-    this.inputType = 'text';
-    this.visible = true;
-    this.cd.markForCheck();
+      this.inputType = 'text';
+      this.visible = true;
+      this.cd.markForCheck();
     }
   }
 
-  ngOnDestroy(){
-    this.imageCropperService.enableUpload({module:this.moduleIdentifier.PARENT,upload:false,mode:this.parentCreate.VIEW});
+  ngOnDestroy() {
+    this.imageCropperService.enableUpload({ module: this.moduleIdentifier.PARENT, upload: false, mode: this.parentCreate.VIEW });
     this.destroySubject$.next();
     this.destroySubject$.complete();
 

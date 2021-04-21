@@ -1,4 +1,4 @@
-import { CommonField } from './commonField';
+import { CommonField } from './common-field.model';
 
 class EffortGradeScale {
     tenantId: string;
@@ -12,8 +12,6 @@ class EffortGradeScale {
     updatedBy: string;
     updatedOn: string;
     constructor() {
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-        this.tenantId = sessionStorage.getItem("tenantId");
         this.createdBy = sessionStorage.getItem("email");
         this.updatedBy = sessionStorage.getItem("email");
     }
@@ -24,9 +22,6 @@ export class EffortGradeScaleModel extends CommonField {
     constructor() {
         super();
         this.effortGradeScale=new EffortGradeScale();
-        this._tenantName = sessionStorage.getItem('tenant');
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
     }
 }
 
@@ -43,15 +38,10 @@ export class GetAllEffortGradeScaleListModel extends CommonField {
     _message: string;
     constructor() {
         super();
-        this.schoolId =+sessionStorage.getItem("selectedSchoolId");
         this.pageNumber=1;
         this.pageSize=10;
         this.sortingModel=new sorting();
         this.filterParams=null;
-        this.tenantId = sessionStorage.getItem("tenantId");
-        this._tenantName = sessionStorage.getItem('tenant');
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
     }
 }
 
@@ -85,11 +75,6 @@ export class UpdateEffortGradeScaleSortOrderModel extends CommonField{
   currentSortOrder: number;
   constructor() {
     super();
-    this.schoolId =+sessionStorage.getItem("selectedSchoolId");
-    this.tenantId = sessionStorage.getItem("tenantId");
-    this._tenantName = sessionStorage.getItem('tenant');
-    this._userName = sessionStorage.getItem("user");
-    this._token = sessionStorage.getItem("token");
 }
 }
 
@@ -128,8 +113,6 @@ export class GradeModel{
     updatedBy: string
     updatedOn: string
     constructor(){
-        this.tenantId=sessionStorage.getItem('tenantId');
-        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
         this.gradeId=0;
         this.title="";
         this.breakoff=0;
@@ -147,9 +130,6 @@ export class GradeAddViewModel extends CommonField{
     grade:GradeModel;
     constructor(){
         super()
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
         this.grade= new GradeModel();
     }
 }
@@ -159,11 +139,6 @@ export class GradeListView extends CommonField{
     tenantId: string;
     constructor(){
         super();
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
-        this.tenantId = sessionStorage.getItem('tenantId');
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
     }
 }
 export class GradeDragDropModel extends CommonField{
@@ -174,11 +149,6 @@ export class GradeDragDropModel extends CommonField{
     gradeScaleId:number;
     constructor(){
         super();
-        this.tenantId=sessionStorage.getItem('tenantId');
-        this._tenantName=sessionStorage.getItem("tenant")
-        this._userName = sessionStorage.getItem("user");
-        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
-        this._token=sessionStorage.getItem("token")
         this.previousSortOrder=0;
         this.currentSortOrder=0;
         this.gradeScaleId=0;
@@ -202,8 +172,6 @@ export class GradeScaleModel{
     updatedOn: string
     grade:[GradeModel]
     constructor(){
-        this.tenantId=sessionStorage.getItem('tenantId');
-        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
         this.gradeScaleId=0;
         this.calculateGpa=true;
         this.createdBy=sessionStorage.getItem('email');
@@ -216,9 +184,6 @@ export class GradeScaleAddViewModel extends CommonField{
     gradeScale:GradeScaleModel;
     constructor(){
         super();
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
         this.gradeScale = new GradeScaleModel();
     }
 }
@@ -228,12 +193,6 @@ export class GradeScaleListView extends CommonField{
     tenantId: string;
     constructor(){
         super();
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
-        this.tenantId = sessionStorage.getItem('tenantId');
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-  
     }
 }
 
@@ -244,9 +203,6 @@ export class SchoolSpecificStandarModel extends CommonField{
     constructor(){
         super();
         this.gradeUsStandard = new GradeUsStandard();
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
     }
 }
 
@@ -273,8 +229,6 @@ class GradeUsStandard{
         this.createdOn=null;
         this.updatedBy=sessionStorage.getItem('email');
         this.updatedOn=null;
-        this.tenantId = sessionStorage.getItem('tenantId');
-        this.schoolId =+sessionStorage.getItem("selectedSchoolId");
     }
 }
 
@@ -291,11 +245,6 @@ export class GradeStandardSubjectCourseListModel extends CommonField{
         this.gradeUsStandardList=[new StandardView()]
         this.pageNumber=0;
         this._pageSize=0;
-        this._tenantName = sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
-        this.tenantId = sessionStorage.getItem('tenantId');
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
     }
 
 }
@@ -326,15 +275,10 @@ export class GetAllSchoolSpecificListModel extends CommonField {
    
     constructor() {
         super();
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.pageNumber=1;
         this.pageSize=10;
         this.sortingModel=new sorting();
         this.filterParams=null;
-        this.tenantId = sessionStorage.getItem("tenantId");
-        this._tenantName = sessionStorage.getItem('tenant');
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
     }
 }
 
@@ -346,11 +290,6 @@ export class CheckStandardRefNoModel extends CommonField{
 
     constructor(){
         super();
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
-        this.tenantId = sessionStorage.getItem("tenantId");
-        this._tenantName = sessionStorage.getItem('tenant');
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
     }
   
 }
@@ -368,8 +307,6 @@ export class EffortGradeLibraryCategoryItemModel{
     updatedOn: string;
 
     constructor(){
-        this.tenantId=sessionStorage.getItem('tenantId');
-        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
         this.effortItemId=0;
         this.effortCategoryId=0;
         this.sortOrder=0;
@@ -392,8 +329,6 @@ export class  EffortGradeLibraryCategoryModel {
     updatedOn: string;
     effortGradeLibraryCategoryItem:EffortGradeLibraryCategoryItemModel[]
     constructor(){
-        this.tenantId=sessionStorage.getItem('tenantId');
-        this.schoolId=+sessionStorage.getItem("selectedSchoolId");
         this.effortCategoryId=0;
         this.sortOrder=0;
         this.createdBy=sessionStorage.getItem('email');
@@ -407,9 +342,6 @@ export class  EffortGradeLibraryCategoryModel {
     effortGradeLibraryCategory:EffortGradeLibraryCategoryModel;
       constructor(){
         super();
-        this._tenantName=sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
         this.effortGradeLibraryCategory= new EffortGradeLibraryCategoryModel();
       }
   }
@@ -419,20 +351,12 @@ export class  EffortGradeLibraryCategoryModel {
       schoolId:number;
       constructor(){
           super();
-          this.tenantId=sessionStorage.getItem("tenantId");
-          this.schoolId=+sessionStorage.getItem("selectedSchoolId");
-          this._tenantName=sessionStorage.getItem("tenant");
-          this._userName = sessionStorage.getItem("user");
-          this._token = sessionStorage.getItem("token");
       }
   }
 export class EffortGradeLibraryCategoryItemAddViewModel extends CommonField{
     effortGradeLibraryCategoryItem:EffortGradeLibraryCategoryItemModel
     constructor(){
         super();
-        this._tenantName=sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
         this.effortGradeLibraryCategoryItem=new EffortGradeLibraryCategoryItemModel();
     }
 }
@@ -444,11 +368,6 @@ export class EffortGradeLlibraryDragDropModel extends CommonField{
         currentSortOrder: number;
         constructor(){
             super();
-            this._tenantName=sessionStorage.getItem("tenant");
-            this._userName = sessionStorage.getItem("user");
-            this._token = sessionStorage.getItem("token");
-            this.tenantId=sessionStorage.getItem("tenantId");
-            this.schoolId=+sessionStorage.getItem("selectedSchoolId");
             this.effortCategoryId=0;
             this.previousSortOrder=0;
             this.currentSortOrder=0;
@@ -466,8 +385,6 @@ export class HonorRollModel {
       updatedBy: string
       updatedOn: string
       constructor(){
-          this.tenantId=sessionStorage.getItem("tenantId");
-          this.schoolId=+sessionStorage.getItem("selectedSchoolId");
           this.markingPeriodId=+sessionStorage.getItem("markingPeriodId");
           this.honorRollId=0;
           this.createdBy=sessionStorage.getItem('email');
@@ -481,9 +398,6 @@ export class HonorRollModel {
     constructor(){
         super();
         this.honorRolls=new HonorRollModel();
-        this._tenantName=sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
     }
   }
   export class HonorRollListModel extends CommonField {
@@ -498,15 +412,10 @@ export class HonorRollModel {
    
     constructor() {
         super();
-        this.schoolId = +sessionStorage.getItem("selectedSchoolId");
         this.pageNumber=1;
         this.pageSize=10;
         this.sortingModel=new sorting();
         this.filterParams=null;
-        this.tenantId = sessionStorage.getItem("tenantId");
-        this._tenantName = sessionStorage.getItem('tenant');
-        this._userName = sessionStorage.getItem("user");
-        this._token = sessionStorage.getItem("token");
     }
 }
 export class GetHonorRollModel extends CommonField {
@@ -517,14 +426,10 @@ export class GetHonorRollModel extends CommonField {
     filterParams:filterParams;
     constructor() {
         super()
-        this.tenantId= sessionStorage.getItem("tenantId");
         this.pageNumber=1;
         this.pageSize=10;
         this.sortingModel=new sorting();
         this.filterParams=null;
-        this._tenantName=sessionStorage.getItem("tenant");
-        this._userName = sessionStorage.getItem("user");
-        this._token=sessionStorage.getItem("token");
         this._failure=false;
         this._message="";
     }

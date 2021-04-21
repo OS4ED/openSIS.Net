@@ -11,7 +11,7 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditBlockComponent } from './edit-block/edit-block.component';
 import { LayoutService } from '../../../../@vex/services/layout.service';
 import { SchoolPeriodService } from '../../../services/school-period.service';
-import { BlockAddViewModel, BlockListViewModel, BlockPeriodAddViewModel, BlockPeriodSortOrderViewModel } from '../../../models/schoolPeriodModel';
+import { BlockAddViewModel, BlockListViewModel, BlockPeriodAddViewModel, BlockPeriodSortOrderViewModel } from '../../../models/school-period.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
@@ -21,8 +21,8 @@ import { LoaderService } from '../../../services/loader.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { ExcelService } from '../../../services/excel.service';
 import * as moment from 'moment';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../services/roll-based-access.service';
 import { CryptoService } from '../../../services/Crypto.service';
 @Component({
   selector: 'vex-periods',
@@ -120,8 +120,6 @@ export class PeriodsComponent implements OnInit {
   }
   getAllBlockList() {
     this.blockListViewModel.getBlockListForView = [];
-    this.blockListViewModel.tenantId = sessionStorage.getItem('tenantId');
-    this.blockListViewModel.schoolId = +sessionStorage.getItem('selectedSchoolId');
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(
       (res: BlockListViewModel) => {
         if (typeof (res) == 'undefined') {
@@ -176,17 +174,25 @@ export class PeriodsComponent implements OnInit {
     return periodList;
   }
 
+  translateKey(key) {
+    let trnaslateKey;
+   this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   excelPeriodList(index=0,response){
     
-    let periodList = response.getBlockListForView[index].blockPeriod?.map(function (item) {
+    let periodList = response.getBlockListForView[index].blockPeriod?.map((item)=> {
 
       return {
-        Title: item.periodTitle,
-        'Short Name': item.periodShortName,
-        'Start Time': moment(new Date("1900-01-01T" + item.periodStartTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
-        'End Time':  moment(new Date("1900-01-01T" + item.periodEndTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
-        Length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000),
-        'CalculateAttendance': item.calculateAttendance?'Yes':'No'
+        [this.translateKey('title') ]: item.periodTitle,
+        [this.translateKey('shortName')]: item.periodShortName,
+        [this.translateKey('startTime')]: moment(new Date("1900-01-01T" + item.periodStartTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
+        [this.translateKey('endTime')]:  moment(new Date("1900-01-01T" + item.periodEndTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
+        [this.translateKey('lengthInMinutes')]: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000),
+        [this.translateKey('calculateAttendance')]: item.calculateAttendance? this.translateKey('yes'): this.translateKey('no')
       };
     });
     return periodList;
@@ -259,8 +265,6 @@ export class PeriodsComponent implements OnInit {
 
   exportPeriodListToExcel(){
     this.blockListViewModel.getBlockListForView = [];
-    this.blockListViewModel.tenantId = sessionStorage.getItem('tenantId');
-    this.blockListViewModel.schoolId = +sessionStorage.getItem('selectedSchoolId');
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).subscribe(
       (res: BlockListViewModel) => {
         if (typeof (res) == 'undefined') {
@@ -395,8 +399,6 @@ export class PeriodsComponent implements OnInit {
 
   deletePeriod(element) {
     this.blockPeriodAddViewModel.blockPeriod = element;
-    this.blockPeriodAddViewModel.blockPeriod.schoolId = +sessionStorage.getItem('selectedSchoolId');
-    this.blockPeriodAddViewModel.blockPeriod.tenantId = sessionStorage.getItem('tenantId');
     this.schoolPeriodService.deleteBlockPeriod(this.blockPeriodAddViewModel).subscribe(
       (res: BlockPeriodAddViewModel) => {
         if (typeof (res) == 'undefined') {

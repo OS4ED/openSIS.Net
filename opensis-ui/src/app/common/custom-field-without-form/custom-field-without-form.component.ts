@@ -1,18 +1,18 @@
 import { Component, Input, OnInit, Output, ViewChild } from '@angular/core';
 import { NgForm, ControlContainer } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SchoolAddViewModel } from '../../../../src/app/models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../models/school-master.model';
 import { SchoolCreate } from '../../../../src/app/enums/school-create.enum';
-import { CustomFieldListViewModel, CustomFieldModel } from '../../../../src/app/models/customFieldModel';
-import { FieldsCategoryListView } from '../../../../src/app/models/fieldsCategoryModel';
+import { CustomFieldListViewModel, CustomFieldModel } from '../../models/custom-field.model';
+import { FieldsCategoryListView } from '../../models/fields-category.model';
 import { SharedFunction } from '../../../../src/app/pages/shared/shared-function';
 import { CustomFieldService } from '../../../../src/app/services/custom-field.service';
 import { SchoolService } from '../../../../src/app/services/school.service';
-import { CustomFieldsValueModel } from '../../../../src/app/models/customFieldsValueModel';
+import { CustomFieldsValueModel } from '../../models/custom-fields-value.model';
 import { stagger60ms } from '../../../../src/@vex/animations/stagger.animation';
-import { StudentAddModel } from '../../../../src/app/models/studentModel';
+import { StudentAddModel } from '../../models/student.model';
 import { StudentService } from '../../../../src/app/services/student.service';
-import { StaffAddModel } from '../../models/staffModel';
+import { StaffAddModel } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
 
 @Component({

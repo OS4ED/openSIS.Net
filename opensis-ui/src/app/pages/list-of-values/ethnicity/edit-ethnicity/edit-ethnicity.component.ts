@@ -3,7 +3,7 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import icClose from '@iconify/icons-ic/twotone-close';
-import { LovAddView } from '../../../../models/lovModel';
+import { LovAddView } from '../../../../models/lov.model';
 import { CommonService } from '../../../../services/common.service';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';

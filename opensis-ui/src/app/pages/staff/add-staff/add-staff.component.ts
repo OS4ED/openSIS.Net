@@ -15,14 +15,14 @@ import icCustomCategory from '@iconify/icons-ic/outline-article';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { TranslateService } from '@ngx-translate/core';
 import { SchoolCreate } from '../../../../../src/app/enums/school-create.enum';
-import { StaffAddModel } from '../../../models/staffModel';
+import { StaffAddModel } from '../../../models/staff.model';
 import { StaffService } from '../../../services/staff.service';
-import { FieldsCategoryListView } from '../../../models/fieldsCategoryModel';
+import { FieldsCategoryListView } from '../../../models/fields-category.model';
 import { CustomFieldService } from '../../../services/custom-field.service';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
@@ -172,7 +172,6 @@ export class AddStaffComponent implements OnInit, OnDestroy {
 
   getAllFieldsCategory() {
     this.fieldsCategoryListView.module = "Staff";
-    this.fieldsCategoryListView.schoolId = +sessionStorage.getItem('selectedSchoolId');
     this.customFieldService.getAllFieldsCategory(this.fieldsCategoryListView).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Category list failed. ' + sessionStorage.getItem("httpError"), '', {

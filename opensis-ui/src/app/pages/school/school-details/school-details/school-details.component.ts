@@ -5,7 +5,7 @@ import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
 import { HttpClient } from 'selenium-webdriver/http';
 import { SchoolService } from '../../../../services/school.service';
-import { GetAllSchoolModel,AllSchoolListModel } from '../../../../models/getAllSchoolModel';
+import { GetAllSchoolModel,AllSchoolListModel } from '../../../../models/get-all-school.model';
 
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router} from '@angular/router';
@@ -20,14 +20,14 @@ import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../../services/loader.service';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../../models/school-master.model';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../../services/excel.service';
 import { Subject } from 'rxjs';
 import { TranslateService } from '@ngx-translate/core';
-import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
-import { PermissionGroup, RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
+import { PermissionGroup, RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-school-details',

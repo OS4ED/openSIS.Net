@@ -1,9 +1,9 @@
 import { Component, Input, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedFunction } from '../../../../src/app/pages/shared/shared-function';
-import { FieldsCategoryListView, FieldsCategoryModel } from '../../../../src/app/models/fieldsCategoryModel';
+import { FieldsCategoryListView, FieldsCategoryModel } from '../../models/fields-category.model';
 import { CustomFieldService } from '../../../../src/app/services/custom-field.service';
-import { CustomFieldListViewModel, CustomFieldModel } from '../../../../src/app/models/customFieldModel';
+import { CustomFieldListViewModel, CustomFieldModel } from '../../models/custom-field.model';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import { NgForm } from '@angular/forms';
@@ -11,16 +11,16 @@ import { stagger60ms } from '../../../../src/@vex/animations/stagger.animation';
 import { fadeInUp400ms } from '../../../../src/@vex/animations/fade-in-up.animation';
 import { fadeInRight400ms } from '../../../../src/@vex/animations/fade-in-right.animation';
 import { SchoolCreate } from '../../../../src/app/enums/school-create.enum';
-import { SchoolAddViewModel } from '../../../../src/app/models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../models/school-master.model';
 import { SchoolService } from '../../../../src/app/services/school.service';
-import { CustomFieldsValueModel } from '../../../../src/app/models/customFieldsValueModel';
+import { CustomFieldsValueModel } from '../../models/custom-fields-value.model';
 import { Router } from '@angular/router';
-import { StudentAddModel } from '../../../../src/app/models/studentModel';
+import { StudentAddModel } from '../../models/student.model';
 import { StudentService } from '../../../../src/app/services/student.service';
-import { StaffAddModel } from '../../models/staffModel';
+import { StaffAddModel } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
 import { CryptoService } from '../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../models/roll-based-access.model';
 
 @Component({
   selector: 'vex-custom-field',
@@ -206,9 +206,6 @@ export class CustomFieldComponent implements OnInit {
   }
   updateStudent() {
     this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
-    this.studentAddViewModel._tenantName = sessionStorage.getItem("tenant");
-    this.studentAddViewModel._userName = sessionStorage.getItem("user");
-    this.studentAddViewModel._token = sessionStorage.getItem("token");
     for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
       if (studentCustomField.type === "Multiple SelectBox" && this.studentMultiSelectValue !== undefined) {
         studentCustomField.customFieldsValue[0].customFieldValue = this.studentMultiSelectValue.toString().replaceAll(",", "|");
@@ -276,9 +273,6 @@ export class CustomFieldComponent implements OnInit {
 
   updateStaff() {
     this.staffAddViewModel.selectedCategoryId = this.staffAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
-    this.staffAddViewModel._token = sessionStorage.getItem("token");
-    this.staffAddViewModel._tenantName = sessionStorage.getItem("tenant");
-    this.staffAddViewModel._userName = sessionStorage.getItem("user");
     for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields) {
       if (staffCustomField.type === "Multiple SelectBox" && this.staffMultiSelectValue !== undefined) {
         staffCustomField.customFieldsValue[0].customFieldValue = this.staffMultiSelectValue.toString().replaceAll(",", "|");

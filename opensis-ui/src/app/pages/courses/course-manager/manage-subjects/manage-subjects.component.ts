@@ -6,7 +6,7 @@ import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/twotone-add';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import {GetAllSubjectModel,AddSubjectModel,UpdateSubjectModel,SubjectModel,DeleteSubjectModel,MassUpdateSubjectModel} from '../../../../models/courseManagerModel';
+import {GetAllSubjectModel,AddSubjectModel,UpdateSubjectModel,SubjectModel,DeleteSubjectModel,MassUpdateSubjectModel} from '../../../../models/course-manager.model';
 import {CourseManagerService} from '../../../../services/course-manager.service';
 import {MatSnackBar} from  '@angular/material/snack-bar';
 import { FormBuilder,NgForm,FormGroup, Validators } from '@angular/forms';
@@ -14,7 +14,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CryptoService } from '../../../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 @Component({
   selector: 'vex-manage-subjects',
   templateUrl: './manage-subjects.component.html',

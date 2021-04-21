@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { StaffAddModel } from '../../../../models/staffModel';
+import { StaffAddModel } from '../../../../models/staff.model';
 import icCheckBox from '@iconify/icons-ic/check-box';
 import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';

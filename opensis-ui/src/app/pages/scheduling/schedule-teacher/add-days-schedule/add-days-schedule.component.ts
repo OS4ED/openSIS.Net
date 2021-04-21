@@ -65,8 +65,8 @@ export class AddDaysScheduleComponent implements OnInit {
    //render weekends
    getDays(days: string) {
     const calendarDays = days;
-    var allDays = [0, 1, 2, 3, 4, 5, 6];
-    var splitDays = calendarDays.split('').map(x => +x);
+    let allDays = [0, 1, 2, 3, 4, 5, 6];
+    let splitDays = calendarDays.split('').map(x => +x);
     this.filterDays = allDays.filter(f => !splitDays.includes(f));
     this.weekendDays = this.filterDays;
     this.cssClass = 'bg-aqua';

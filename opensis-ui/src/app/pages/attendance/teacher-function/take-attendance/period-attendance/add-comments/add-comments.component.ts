@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { MatDialogRef } from '@angular/material/dialog';
+import { Component, Inject, OnInit } from '@angular/core';
+import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import icClose from '@iconify/icons-ic/twotone-close';
 
@@ -9,14 +9,28 @@ import icClose from '@iconify/icons-ic/twotone-close';
   styleUrls: ['./add-comments.component.scss']
 })
 export class AddCommentsComponent implements OnInit {
-
   icClose = icClose;
-
-  constructor(private dialogRef: MatDialogRef<AddCommentsComponent>, public translateService:TranslateService) { 
+  comments:string;
+  actionButtonTitle='submit'
+  headerTitle='addCommentTo'
+  constructor(
+    private dialogRef: MatDialogRef<AddCommentsComponent>,
+     public translateService:TranslateService,
+     @Inject(MAT_DIALOG_DATA) public data
+     ) { 
     translateService.use('en');
+      this.comments=data.comments
+      if(this.comments){
+        this.actionButtonTitle='update'
+        this.headerTitle='updateCommentTo'
+      }
   }
 
   ngOnInit(): void {
+  }
+
+  addOrUpdateComments() {
+    this.dialogRef.close({comments:this.comments,submit:true});
   }
 
 }

@@ -13,13 +13,13 @@ import { MatDialog } from '@angular/material/dialog';
 import { EditCommentComponent } from './edit-comment/edit-comment.component';
 import {StudentService} from '../../../../services/student.service';
 import {ExcelService} from '../../../../services/excel.service';
-import {StudentCommentsListViewModel, StudentCommentsAddView} from '../../../../models/studentCommentsModel';
+import {StudentCommentsListViewModel, StudentCommentsAddView} from '../../../../models/student-comments.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../../pages/shared-module/confirm-dialog/confirm-dialog.component';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { SharedFunction } from '../../../../pages/shared/shared-function';
 import { DatePipe } from '@angular/common';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 
 

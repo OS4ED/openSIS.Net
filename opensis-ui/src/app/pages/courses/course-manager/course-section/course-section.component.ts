@@ -13,17 +13,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';
 import { EditCourseSectionComponent } from '../edit-course-section/edit-course-section.component';
 import { CourseSectionService } from '../../../../services/course-section.service';
-import { CourseSectionAddViewModel, CourseSectionDataTransferModel, GetAllCourseSectionModel } from '../../../../models/courseSectionModel';
+import { CourseSectionAddViewModel, CourseSectionDataTransferModel, GetAllCourseSectionModel } from '../../../../models/course-section.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { LoaderService } from '../../../../services/loader.service';
 import { takeUntil } from 'rxjs/operators';
 import { CalendarEvent, CalendarMonthViewBeforeRenderEvent, CalendarView } from 'angular-calendar';
 import { Subject } from 'rxjs';
 import { SchoolPeriodService } from '../../../../services/school-period.service';
-import { BlockListViewModel } from '../../../../models/schoolPeriodModel';
+import { BlockListViewModel } from '../../../../models/school-period.model';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { CryptoService } from '../../../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { GradeScaleModel } from '../../../../models/grades.model';
 import { stagger40ms } from '../../../../../@vex/animations/stagger.animation';
 @Component({
@@ -166,8 +166,6 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   
   getAllCourseSection(){  
     this.getAllCourseSectionModel.courseId=this.courseDetailsFromParent.courseId;
-    this.getAllCourseSectionModel.schoolId=+sessionStorage.getItem("selectedSchoolId");
-    this.getAllCourseSectionModel.tenantId=sessionStorage.getItem("tenantId");
     this.getAllCourseSectionModel.academicYear =+sessionStorage.getItem("academicyear");
     this.courseSectionService.getAllCourseSection(this.getAllCourseSectionModel).subscribe(res => {
       if (typeof (res) == 'undefined') {       
@@ -216,8 +214,8 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   //render weekends
   getDays(days: string) {
     const calendarDays = days;
-    var allDays = [0, 1, 2, 3, 4, 5, 6];
-    var splitDays = calendarDays.split('').map(x => +x);
+    let allDays = [0, 1, 2, 3, 4, 5, 6];
+    let splitDays = calendarDays.split('').map(x => +x);
     this.filterDays = allDays.filter(f => !splitDays.includes(f));
     this.weekendDays = this.filterDays;
     this.cssClass = 'bg-aqua';
@@ -334,8 +332,6 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
   }
 
   deleteCourseSection(selectedCourseSection){
-    this.courseSectionAddViewModel.courseSection.tenantId=sessionStorage.getItem("tenantId");
-    this.courseSectionAddViewModel.courseSection.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.courseSectionAddViewModel.courseSection.courseId=selectedCourseSection.courseSection.courseId;
     this.courseSectionAddViewModel.courseSection.courseSectionId=selectedCourseSection.courseSection.courseSectionId;
     this.courseSectionService.deleteCourseSection(this.courseSectionAddViewModel).subscribe(data => {

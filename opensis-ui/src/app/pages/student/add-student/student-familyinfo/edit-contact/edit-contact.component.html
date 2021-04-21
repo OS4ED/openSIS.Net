@@ -1,7 +1,7 @@
 
 <div *ngIf="mode ==='view'; else add">
     <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-        <h2 class="headline m-0" fxFlex="auto">{{viewData.salutation+' '+viewData.firstname+' '+viewData.middlename+' '+viewData.lastname}}</h2>
+        <h2 class="headline m-0" fxFlex="auto">{{(viewData.salutation?viewData.salutation+' ':'')+viewData.firstname+' '+(viewData.middlename?viewData.middlename+' ':'')+viewData.lastname+(viewData.suffix?' '+viewData.suffix:'')}}</h2>
         <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
             <mat-icon [icIcon]="icClose"></mat-icon>
         </button>
@@ -11,35 +11,35 @@
         <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-6">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'fullName' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.salutation+' '+viewData.firstname+' '+viewData.middlename+' '+viewData.lastname}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{(viewData.salutation?viewData.salutation+' ':'')+viewData.firstname+' '+(viewData.middlename?viewData.middlename+' ':'')+viewData.lastname+(viewData.suffix?' '+viewData.suffix:'')}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'contactRelationship' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.relationship}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.relationship | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'mobilePhone' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.mobile}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.mobile | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'workPhone' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.workPhone}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.workPhone | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'homePhone' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.homePhone}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.homePhone | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'personalEmail' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.personalEmail}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.personalEmail | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'workEmail' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.workEmail}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.workEmail | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.userProfile}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.userProfile | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
@@ -47,7 +47,7 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'loginUsername' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.loginEmail}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.loginEmail | EmtyValueCheckPipe}}</p>
             </li>
         </ul>
         
@@ -59,11 +59,11 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'streetAddress2' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.addressLineTwo}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.addressLineTwo | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'country' | translate}}</label>
-                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.country}}</p>
+                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{viewData.parentAddress.country | EmtyValueCheckPipe}}</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'stateProvinceLocality' | translate}}</label>

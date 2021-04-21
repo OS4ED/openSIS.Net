@@ -21,7 +21,9 @@ import { GradesService } from '../../../services/grades.service';
 import { ExcelService } from '../../../services/excel.service';
 import { LoaderService } from '../../../services/loader.service';
 import { CryptoService } from '../../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'vex-report-card-grades',
@@ -36,7 +38,7 @@ export class ReportCardGradesComponent implements OnInit {
 
   @Input()
   columns = [
-    { label: 'ID', property: 'id', type: 'number', visible: true },
+    { label: 'Order', property: 'id', type: 'number', visible: true },
     { label: 'Title', property: 'title', type: 'text', visible: true },
     { label: 'Breakoff', property: 'breakoff', type: 'text', visible: true },
     { label: 'Weighted GP Value', property: 'weightedGpValue', type: 'text', visible: true },
@@ -62,13 +64,14 @@ export class ReportCardGradesComponent implements OnInit {
   gradeDragDropModel: GradeDragDropModel = new GradeDragDropModel()
   gradeScaleListView: GradeScaleListView = new GradeScaleListView();
   gradeList: MatTableDataSource<any>;
+  destroySubject$: Subject<void> = new Subject();
   editPermission = false;
   deletePermission = false;
   addPermission = false;
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel()
   gradeScaleListForExcel = [];
-  gradeListValue;
+  gradeListValue = [];
   totalCount;
 
   constructor(
@@ -82,7 +85,7 @@ export class ReportCardGradesComponent implements OnInit {
     private cryptoService: CryptoService
   ) {
     translateService.use('en');
-    this.loaderService.isLoading.subscribe((val) => {
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
   }
@@ -96,9 +99,6 @@ export class ReportCardGradesComponent implements OnInit {
     this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
-
-
-
   }
 
   getPageEvent(event) {
@@ -107,7 +107,7 @@ export class ReportCardGradesComponent implements OnInit {
     // this.callAllSchool(this.getAllSchool);
   }
   applyFilter() {
-    this.gradeList.filter = this.searchKey.trim().toLowerCase()
+    this.gradeList.filter = this.searchKey.trim().toLowerCase();
   }
   onSearchClear() {
     this.searchKey = '';
@@ -167,6 +167,7 @@ export class ReportCardGradesComponent implements OnInit {
   selectGradeScale(element) {
     this.currentGradeScaleId = element.gradeScaleId;
     this.gradeList = new MatTableDataSource(element.grade);
+    this.totalCount = element.grade.length;
   }
   deleteGradeScale(element) {
     this.gradeScaleAddViewModel.gradeScale.gradeScaleId = element.gradeScaleId
@@ -273,35 +274,38 @@ export class ReportCardGradesComponent implements OnInit {
 
           }
           else {
-            this.gradeScaleList = res.gradeScaleList.filter(filteredGradeScaleList => !filteredGradeScaleList.useAsStandardGradeScale);
+            this.gradeScaleList = res.gradeScaleList.filter(x => x.useAsStandardGradeScale === false);
             let index = 0;
-            if (this.currentGradeScaleId == null) {
-              this.currentGradeScaleId = res.gradeScaleList[index].gradeScaleId;
-            }
-            else {
-              index = this.gradeScaleList.findIndex((x) => {
-                return x.gradeScaleId === this.currentGradeScaleId;
-              });
-            }
-            this.gradeListValue = res.gradeScaleList[index].grade.map((item) => {
-              return ({
-                gradeScaleId: item.gradeScaleId,
-                gradeId: item.gradeId,
-                title: item.title,
-                breakoff: item.breakoff,
-                weightedGpValue: item.weightedGpValue,
-                unweightedGpValue: item.unweightedGpValue,
-                comment: item.comment
+            if (this.gradeScaleList.length > 0) {
+              if (this.currentGradeScaleId === null) {
+                this.currentGradeScaleId = this.gradeScaleList[index]?.gradeScaleId;
+              }
+              else {
+                index = this.gradeScaleList.findIndex((x) => {
+                  return x.gradeScaleId === this.currentGradeScaleId;
+                });
+              }
+              this.gradeListValue = this.gradeScaleList[index]?.grade.map((item) => {
+                return ({
+                  gradeScaleId: item.gradeScaleId,
+                  gradeId: item.gradeId,
+                  title: item.title,
+                  breakoff: item.breakoff,
+                  weightedGpValue: item.weightedGpValue,
+                  unweightedGpValue: item.unweightedGpValue,
+                  comment: item.comment
+                })
               })
-            })
+            }
             this.totalCount = this.gradeListValue.length
             this.gradeList = new MatTableDataSource(this.gradeListValue);
-            this.gradeScaleListForExcel = res.gradeScaleList[index].grade;
+            this.gradeScaleListForExcel = this.gradeScaleList[index]?.grade;
           }
         }
       }
     );
   }
+
   drop(event: CdkDragDrop<string[]>) {
     this.gradeDragDropModel.gradeScaleId = this.currentGradeScaleId;
     this.gradeDragDropModel.currentSortOrder = this.gradeScaleListForExcel[event.currentIndex].sortOrder;
@@ -326,18 +330,27 @@ export class ReportCardGradesComponent implements OnInit {
       }
     );
   }
-  excelReportCardList(index = 0, response) {
-    const reportCardGradeList = response.getBlockListForView[index].blockPeriod?.map((item) => {
 
-      return {
-        Title: item.tite,
-        Breakoff: item.breakoff,
-        'Weighted Gp Value': item.weightedGpValue,
-        'Unweighted Gp Value': item.unweightedGpValue,
-        Comment: item.comment
-      };
+  // excelReportCardList(index = 0, response) {
+  //   const reportCardGradeList = response.getBlockListForView[index].blockPeriod?.map((item) => {
+
+  //     return {
+  //       Title: item.tite,
+  //       Breakoff: item.breakoff,
+  //       'Weighted Gp Value': item.weightedGpValue,
+  //       'Unweighted Gp Value': item.unweightedGpValue,
+  //       Comment: item.comment
+  //     };
+  //   });
+  //   return reportCardGradeList;
+  // }
+
+  translateKey(key) {
+    let trnaslateKey;
+    this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
     });
-    return reportCardGradeList;
+    return trnaslateKey;
   }
 
   exportToExcel() {
@@ -347,11 +360,11 @@ export class ReportCardGradesComponent implements OnInit {
         if (reportCardGradeList.length > 0) {
           const reportList = reportCardGradeList.map((x) => {
             return {
-              Title: x.title,
-              Breakoff: x.breakoff,
-              'Weighted Gp Value': x.weightedGpValue,
-              'Unweighted Gp Value': x.unweightedGpValue,
-              comment: x.comment
+              [this.translateKey('title')]: x.title,
+              [this.translateKey('breakoff')]: x.breakoff,
+              [this.translateKey('weightedGPValue')]: x.weightedGpValue? x.weightedGpValue:0.00,
+              [this.translateKey('unweightedGPValue')]: x.unweightedGpValue? x.unweightedGpValue:0.00,
+              [this.translateKey('comment')]: x.comment? x.comment:'-'
             };
           });
           this.excelService.exportAsExcelFile(reportList, 'Report_Card_Grade_List_');
@@ -362,5 +375,10 @@ export class ReportCardGradesComponent implements OnInit {
         }
       }
     });
+  }
+
+  ngOnDestroy() {
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
   }
 }

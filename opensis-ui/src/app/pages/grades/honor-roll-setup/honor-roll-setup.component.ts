@@ -24,7 +24,7 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ExcelService } from '../../../services/excel.service';
 import { LoaderService } from '../../../services/loader.service';
 import { CryptoService } from 'src/app/services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 
 @Component({
   selector: 'vex-honor-roll-setup',
@@ -293,12 +293,21 @@ export class HonorRollSetupComponent implements OnInit,AfterViewInit {
     value = value.toLowerCase();
     this.honorROllModList.filter = value;
   }
+
+  translateKey(key) {
+    let trnaslateKey;
+    this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportToExcel(){
     if (this.honorROllModList.data?.length > 0) {
       let reportList = this.honorROllModList.data?.map((x) => {
         return {
-          "Honor Roll":x.honorRoll,
-          Breakoff:x.breakoff
+          [this.translateKey('honorRoll')]: x.honorRoll,
+          [this.translateKey('breakoff')]: x.breakoff
         }
       });
       this.excelService.exportAsExcelFile(reportList,"Honor_Roll_List_")

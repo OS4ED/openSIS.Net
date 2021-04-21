@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from 'src/app/services/Crypto.service';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 

@@ -122,26 +122,26 @@
                 <ng-container matColumnDef="alternateId">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'alternateID' | translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.alternateId}}
+                        {{element.alternateId | EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="gradeLevelTitle">
                     <th mat-header-cell *matHeaderCellDef>{{'gradeLevel' | translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.studentEnrollment[0]?.gradeLevelTitle}}
+                        {{element.studentEnrollment[0]?.gradeLevelTitle | EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="schoolEmail">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'email' | translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.schoolEmail}}
+                        {{element.schoolEmail | EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
 
                 <ng-container matColumnDef="homePhone">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'telephone' | translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.homePhone}}
+                        {{element.homePhone | EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
                 <ng-container matColumnDef="action">

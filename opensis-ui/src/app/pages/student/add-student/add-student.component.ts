@@ -2,7 +2,7 @@ import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnDestroy, OnIni
 import { Subject, Subscription } from 'rxjs';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { ImageCropperService } from 'src/app/services/image-cropper.service';
-import { SchoolAddViewModel } from '../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../models/school-master.model';
 import { ActivatedRoute } from '@angular/router';
 import { SchoolService } from '../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -18,15 +18,15 @@ import icAccessibility from '@iconify/icons-ic/outline-accessibility';
 import icHowToReg from '@iconify/icons-ic/outline-how-to-reg';
 import icBilling from '@iconify/icons-ic/outline-monetization-on';
 import { StudentService } from '../../../services/student.service';
-import { StudentAddModel } from '../../../models/studentModel';
+import { StudentAddModel } from '../../../models/student.model';
 import { CustomFieldService } from '../../../services/custom-field.service';
-import { FieldsCategoryListView } from '../../../models/fieldsCategoryModel';
+import { FieldsCategoryListView } from '../../../models/fields-category.model';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import icHospital from '@iconify/icons-ic/baseline-medical-services';
 import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({

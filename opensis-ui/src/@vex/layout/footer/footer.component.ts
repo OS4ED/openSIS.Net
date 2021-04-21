@@ -7,7 +7,7 @@ import {
 } from "@angular/core";
 import icShoppingBasket from "@iconify/icons-ic/twotone-shopping-basket";
 import { CommonService } from "../../../app/services/common.service";
-import { ReleaseNumberAddViewModel } from "../../../app/models/releaseNumberModel";
+import { ReleaseNumberAddViewModel } from "../../../app/models/release-number-model";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import { SchoolService } from "../../../app/services/school.service";
 import { takeUntil } from "rxjs/operators";

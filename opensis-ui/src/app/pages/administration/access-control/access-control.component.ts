@@ -5,8 +5,8 @@ import icCollapseAll from '@iconify/icons-ic/unfold-less';
 import icExpand from '@iconify/icons-ic/expand-more';
 import icCollapse from '@iconify/icons-ic/expand-less';
 import { MatAccordion } from '@angular/material/expansion';
-import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
-import { RolePermissionListViewModel, RolePermissionViewModel, PermissionCategory, RolePermission, PermissionSubCategory, PermissionGroupListViewModel } from '../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../services/roll-based-access.service';
+import { RolePermissionListViewModel, RolePermissionViewModel, PermissionCategory, RolePermission, PermissionSubCategory, PermissionGroupListViewModel } from '../../../models/roll-based-access.model';
 import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CryptoService } from '../../../services/Crypto.service';
@@ -160,7 +160,7 @@ export class AccessControlComponent implements OnInit {
               this.rollBasedAccessService.changeAccessControl(true);
             }
             delete res.permissionList[0]
-            var permissionList = this.permissionList.filter(x => x != null)
+            const permissionList = this.permissionList.filter(x => x != null);
             this.permissionList = permissionList;
 
           }
@@ -392,8 +392,8 @@ export class AccessControlComponent implements OnInit {
     })
 
     this.permissionGroupListViewModel.permissionGroupList.map((val, i) => {
-      var falseFlagCategoryCanEdit = false;
-      var falseFlagCategoryCanView = false;
+      let falseFlagCategoryCanEdit = false;
+      let falseFlagCategoryCanView = false;
       if (this.permissionGroupListViewModel.permissionGroupList[i].permissionCategory.length > 0) {
         this.permissionGroupListViewModel.permissionGroupList[i].permissionCategory.map((val1, j) => {
           if (this.permissionGroupListViewModel.permissionGroupList[i].permissionCategory[j].rolePermission[0].canEdit) {
@@ -403,8 +403,8 @@ export class AccessControlComponent implements OnInit {
             falseFlagCategoryCanView = true;
           }
           if (this.permissionGroupListViewModel.permissionGroupList[i].permissionCategory[j].permissionSubcategory.length > 0) {
-            var falseFlagSubCategoryCanEdit = false;
-            var falseFlagSubCategoryCanView = false;
+            let falseFlagSubCategoryCanEdit = false;
+            let falseFlagSubCategoryCanView = false;
             this.permissionGroupListViewModel.permissionGroupList[i].permissionCategory[j].permissionSubcategory.map((val2, k) => {
               if (this.permissionGroupListViewModel.permissionGroupList[i].permissionCategory[j].permissionSubcategory[k].rolePermission[0].canEdit) {
                 falseFlagSubCategoryCanEdit = true

@@ -5,9 +5,10 @@ import { CommonService } from '../../../../services/common.service';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
+import { SearchFilterAddViewModel } from '../../../../models/search-filter.model';
 import { ValidationService } from '../../../../pages/shared/validation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 
 @Component({
   selector: 'vex-save-filter',
@@ -21,6 +22,7 @@ export class SaveFilterComponent implements OnInit {
   searchFilterAddViewModel: SearchFilterAddViewModel = new SearchFilterAddViewModel();
 
   constructor(private dialogRef: MatDialogRef<SaveFilterComponent>,
+    private defaultValuesService: DefaultValuesService, 
     private commonService: CommonService,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private fb: FormBuilder,
@@ -43,7 +45,7 @@ export class SaveFilterComponent implements OnInit {
       this.searchFilterAddViewModel.searchFilter.module = 'Staff';
       this.searchFilterAddViewModel.searchFilter.jsonList = JSON.stringify(this.commonService.getSearchResult());
       this.searchFilterAddViewModel.searchFilter.filterName = this.form.value.filterName;
-      this.searchFilterAddViewModel.searchFilter.createdBy = sessionStorage.getItem('email');
+      this.searchFilterAddViewModel.searchFilter.createdBy = this.defaultValuesService.getEmailId();
       this.commonService.addSearchFilter(this.searchFilterAddViewModel).subscribe((res) => {
         if (typeof (res) === 'undefined') {
           this.snackbar.open('Search filter added failed' + sessionStorage.getItem("httpError"), '', {

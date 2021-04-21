@@ -3,16 +3,18 @@ import { MatDialog } from '@angular/material/dialog';
 import { TranslateService } from '@ngx-translate/core';
 import { AddTeacherComponent } from './add-teacher/add-teacher.component';
 import { AddCourseComponent } from './add-course/add-course.component';
-import { StaffListModel } from '../../../models/staffModel';
-import { CourseModel } from '../../../models/courseManagerModel';
+import { StaffListModel } from '../../../models/staff.model';
+import { CourseModel } from '../../../models/course-manager.model';
 import { TeacherScheduleService } from '../../../services/teacher-schedule.service';
 import { AllScheduledCourseSectionForStaffModel, StaffScheduleView, StaffScheduleViewModel } from '../../../models/teacher-schedule.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GetMarkingPeriodTitleListModel } from '../../../models/markingPeriodModel';
+import { GetMarkingPeriodTitleListModel } from '../../../models/marking-period.model';
 import { MarkingPeriodService } from '../../../services/marking-period.service';
 import { CourseSectionService } from '../../../services/course-section.service';
-import { ScheduledStaffForCourseSection } from '../../../models/courseSectionModel';
-import { map } from 'rxjs/operators';
+import { ScheduledStaffForCourseSection } from '../../../models/course-section.model';
+import { map, takeUntil } from 'rxjs/operators';
+import { LoaderService } from '../../../services/loader.service';
+import { Subject } from 'rxjs';
 
 @Component({
   selector: 'vex-teacher-reassignment',
@@ -27,9 +29,15 @@ export class TeacherReassignmentComponent implements OnInit {
     private snackbar:MatSnackBar,
     private markingPeriodService:MarkingPeriodService,
     private courseSectionService:CourseSectionService,
-    private staffScheduleService:TeacherScheduleService) {
+    private staffScheduleService:TeacherScheduleService,
+    private loaderService: LoaderService) {
     translateService.use('en');
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+      this.globalLoader = val;
+    });
   }
+  destroySubject$: Subject<void> = new Subject();
+  globalLoader:boolean;
   selectedCurrentTeacher: StaffListModel;
   selectedNewTeacher: StaffListModel;
   selectedCourse: CourseModel;
@@ -61,6 +69,7 @@ export class TeacherReassignmentComponent implements OnInit {
   teacherReassigning=false;
   ngOnInit(): void {
     this.getAllMarkingPeriodList();
+    this.allScheduledTeacherBasedOnCourse.courseSectionsList=null;
   }
 
   getAllMarkingPeriodList() {
@@ -90,12 +99,16 @@ export class TeacherReassignmentComponent implements OnInit {
     if(teacherType!=1){
       this.teacherReassignmentBasedOnCourse=false;
       this.teacherReassignmentBasedOnTeacher=false;
+      this.allScheduledTeacherBasedOnCourse.courseSectionsList=null;
       this.selectedCourse=null;
     }
    
     this.dialog.open(AddTeacherComponent, {
       width: '900px'
     }).afterClosed().subscribe((res) => {
+      if(!res){
+        return;
+      }
       if (teacherType === 0) {
         this.isAllCoursesChecked=true;
         this.disableMasterCheckboxBasedOnTeacherConflict=false;
@@ -119,11 +132,14 @@ export class TeacherReassignmentComponent implements OnInit {
     this.checkAvailabilityFinished=false;
     this.selectedNewTeacher=null;
     this.teacherReassigning=false;
+    this.allScheduledCourseSectionBasedOnTeacher.courseSectionViewList=null;
     this.dialog.open(AddCourseComponent, {
       width: '900px'
     }).afterClosed().subscribe((res) => {
+      if(!res){
+        return;
+      }
       this.selectedCourse = res;
-
       this.getScheduledTeachersBasedOnCourse();
     });
   }
@@ -163,7 +179,7 @@ export class TeacherReassignmentComponent implements OnInit {
 
 
   getScheduledTeachersBasedOnCourse(){
-    this.allScheduledTeacherBasedOnCourse.courseSectionsList=[]
+    this.allScheduledTeacherBasedOnCourse.courseSectionsList=null
     this.allScheduledTeacherBasedOnCourse.courseId=this.selectedCourse.courseId;
     this.courseSectionService.getAllStaffScheduleInCourseSection(this.allScheduledTeacherBasedOnCourse).pipe(
       map((res)=>{
@@ -192,7 +208,10 @@ export class TeacherReassignmentComponent implements OnInit {
           this.allScheduledTeacherBasedOnCourse.courseSectionsList=res.courseSectionsList;
           this.moveLanguageNames();
           this.findMarkingPeriodTitle();
-          this.teacherReassignmentBasedOnCourse=true;
+          
+          this.teacherReassignmentBasedOnCourse=this.allScheduledTeacherBasedOnCourse.courseSectionsList.some((item)=>{
+            return item.staffCoursesectionSchedule.length
+          })
           this.teacherReassignmentBasedOnTeacher=false;
         }
       }
@@ -220,6 +239,14 @@ export class TeacherReassignmentComponent implements OnInit {
       this.checkAvailabilityBasedOnTeacher();
     }else if(this.teacherReassignmentBasedOnCourse){
       this.checkAvailabilityBasedOnCourses();
+    }
+  }
+
+  reassignTeacher(){
+    if(this.teacherReassignmentBasedOnTeacher){
+      this.reassignTeacherScheduleBasedOnTeacher();
+    }else if(this.teacherReassignmentBasedOnCourse){
+      this.reassignTeacherScheduleBasedOnCourse();
     }
   }
 
@@ -383,7 +410,7 @@ export class TeacherReassignmentComponent implements OnInit {
     this.teacherReassigning = true;
     this.teacherReassigningLoader=true;
 
-    this.staffScheduleService.AddStaffCourseSectionReSchedule(reassignTeacherSchedule).subscribe((res)=>{
+    this.staffScheduleService.addStaffCourseSectionReSchedule(reassignTeacherSchedule).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         reassignTeacherSchedule.staffScheduleViewList = [];
       }
@@ -407,6 +434,55 @@ export class TeacherReassignmentComponent implements OnInit {
       }
     this.teacherReassigningLoader=false;
     })
+  }
+
+  reassignTeacherScheduleBasedOnCourse(){
+    let reassignTeacherSchedule:ScheduledStaffForCourseSection = new ScheduledStaffForCourseSection();
+    reassignTeacherSchedule.courseSectionsList = JSON.parse(JSON.stringify(this.allScheduledTeacherBasedOnCourse.courseSectionsList));
+    reassignTeacherSchedule.reScheduleStaffId = this.selectedNewTeacher.staffId;
+    reassignTeacherSchedule.courseSectionsList=this.sendCheckedAndNonConflictedStaffsBasedOnCourse(reassignTeacherSchedule.courseSectionsList);
+    
+    this.teacherReassigning = true;
+    this.teacherReassigningLoader=true;
+     
+    this.staffScheduleService.addStaffCourseSectionReScheduleByCourse(reassignTeacherSchedule).subscribe((res)=>{
+      if (typeof (res) == 'undefined') {
+        reassignTeacherSchedule.courseSectionsList = [];
+      }
+      else {
+        if (res._failure) {
+            this.teacherReassigning = false;
+          if (res.courseSectionsList == null) {
+            this.snackbar.open(res._message, '', {
+              duration: 5000
+            });
+          } else {
+            this.snackbar.open(res._message, '', {
+              duration: 5000
+            });
+          }
+        } else {
+          this.resetAll();
+        }
+
+      }
+    this.teacherReassigningLoader=false;
+    })
+  }
+
+  sendCheckedAndNonConflictedStaffsBasedOnCourse(courseSectionList){
+    courseSectionList=courseSectionList.map((staffList)=>{
+      staffList.staffCoursesectionSchedule=staffList.staffCoursesectionSchedule.filter((staff)=>{
+        return (staff.checked && !staff.conflict)
+      });
+      return staffList;
+    })
+
+    courseSectionList=courseSectionList.filter((staffList)=>{
+      return staffList.staffCoursesectionSchedule.length>0;
+    })
+
+    return courseSectionList;
   }
 
 
@@ -434,7 +510,10 @@ export class TeacherReassignmentComponent implements OnInit {
       });
       return 
     }
-    console.log(this.checkAvailibilityBasedOnCourse);
+    this.isAllCourseSectionConflicted=false;
+    this.checkAvailibilityBasedOnCourse.conflictIndexNo=null;
+    this.checkAvailibilityBasedOnCourse._failure=false;
+    this.checkAvailabilityLoader=true;
     this.staffScheduleService.checkAvailabilityStaffCourseSectionReSchedule(this.checkAvailibilityBasedOnCourse).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.checkAvailibilityBasedOnCourse.courseSectionsList = [];
@@ -448,17 +527,17 @@ export class TeacherReassignmentComponent implements OnInit {
           } else {
             this.noConflictDetected=false;
             this.checkAvailibilityBasedOnCourse=res;
-          this.manipulateView();
+            this.manipulateView();
             this.checkForConflictsBasedOnCourse();
-          console.log(this.checkAvailibilityBasedOnCourse);
           }
         } else {
           this.noConflictDetected=true;
           this.checkAvailibilityBasedOnCourse=res;
           this.manipulateView();
           this.checkForConflictsBasedOnCourse();
-          console.log(this.checkAvailibilityBasedOnCourse);
         }
+        this.checkAvailabilityFinished=true
+        this.checkAvailabilityLoader=false;
       }
     })
   }
@@ -480,17 +559,46 @@ export class TeacherReassignmentComponent implements OnInit {
     if(this.checkAvailibilityBasedOnCourse.conflictIndexNo?.trim()){
       let conflictedIndex=[]
       conflictedIndex=this.checkAvailibilityBasedOnCourse.conflictIndexNo.split(',');
-      for(let [courseSectionIndex,conflictCourseSection] of conflictedIndex){
-        for(let staff of this.checkAvailibilityBasedOnCourse.courseSectionsList[+conflictCourseSection].staffCoursesectionSchedule){
-            if(staff.checked){
-              let matchedStaffIndex=this.allScheduledTeacherBasedOnCourse.courseSectionsList[courseSectionIndex].staffCoursesectionSchedule.findIndex(item=>item.staffId==+staff.staffId);
-                this.allScheduledTeacherBasedOnCourse.courseSectionsList[courseSectionIndex].staffCoursesectionSchedule[matchedStaffIndex].conflict=true;
-              staff.conflict=true;
-              break;
-            }
-        }
-        
+      for(let conflictCourseSection of conflictedIndex){
+              let matchedStaffIndex=this.allScheduledTeacherBasedOnCourse.courseSectionsList[+conflictCourseSection].staffCoursesectionSchedule.findIndex(item=>item.checked);
+                this.allScheduledTeacherBasedOnCourse.courseSectionsList[+conflictCourseSection].staffCoursesectionSchedule[matchedStaffIndex].conflict=true;
       }
+      let sentStaffCount=0;
+      this.checkAvailibilityBasedOnCourse.courseSectionsList.map((item)=>{
+        if(item.staffCoursesectionSchedule.length){
+          sentStaffCount=sentStaffCount+1;
+        }
+      });
+      if(sentStaffCount==conflictedIndex.length){
+        this.isAllCourseSectionConflicted=true;
+      }else{
+        this.isTeacherReassignPossible=true;
+      }
+
+      for(let courseSection of this.allScheduledTeacherBasedOnCourse.courseSectionsList){
+          for(let staff of courseSection.staffCoursesectionSchedule){
+            if(!staff.checked){
+              staff.conflict=false;
+            }  
+          }
+      }
+      for(let [courseSectionIndex,courseSection] of this.allScheduledTeacherBasedOnCourse.courseSectionsList.entries()){
+        if(!conflictedIndex.includes(courseSectionIndex.toString())){
+          for(let staff of courseSection.staffCoursesectionSchedule){
+            if(staff.conflict){
+              staff.conflict=false;
+            }  
+          }
+        }
+       
+    }
+    }else{
+      for(let courseSection of this.allScheduledTeacherBasedOnCourse.courseSectionsList){
+        for(let staff of courseSection.staffCoursesectionSchedule){
+            staff.conflict=false;
+        }
+    }
+    this.isTeacherReassignPossible=true;
     }
   }
 
@@ -502,6 +610,9 @@ export class TeacherReassignmentComponent implements OnInit {
   }
 
   singleSelectionBasedOnCourse(event,courseSectionIndex,checkedStaffIndex){
+    if(!this.allScheduledTeacherBasedOnCourse.courseSectionsList[courseSectionIndex].staffCoursesectionSchedule[checkedStaffIndex].checked){
+      this.isTeacherReassignPossible=false;
+    }
       this.allScheduledTeacherBasedOnCourse.courseSectionsList[courseSectionIndex].staffCoursesectionSchedule[checkedStaffIndex].checked=true;
 
       for(let [i,staff] of this.allScheduledTeacherBasedOnCourse.courseSectionsList[courseSectionIndex].staffCoursesectionSchedule.entries()){

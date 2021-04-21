@@ -39,11 +39,26 @@
                 </div>
             </div>
         </div>
-        <div class="card mt-6 p-4" *ngIf="allScheduledCourseSectionBasedOnTeacher.courseSectionViewList?.length==0">
+        <div class="card mt-6 p-4" *ngIf="globalLoader && (selectedCurrentTeacher || selectedCourse)">
+            <div class="flex">
+                <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
+                <div class="ml-4">
+                    <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="selectedCurrentTeacher && !checkAvailabilityLoader && !teacherReassigningLoader">Getting Scheduled Courses of {{selectedCurrentTeacher.firstGivenName+' '+selectedCurrentTeacher.lastFamilyName}}</span>
+                    <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="selectedCourse && !checkAvailabilityLoader && !teacherReassigningLoader">Getting Course Sections of {{selectedCourse.courseTitle}}</span>
+                    <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="checkAvailabilityLoader">Checking Availability</span>
+                    <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="teacherReassigningLoader">Reassigning {{selectedNewTeacher.firstGivenName+' '+selectedNewTeacher.lastFamilyName}}</span>
+
+    
+                    <p class="">Please do not refresh the page or click back button.</p>
+                </div>
+            </div>
+        </div>
+        <div class="card mt-6 p-4" *ngIf="allScheduledCourseSectionBasedOnTeacher.courseSectionViewList?.length==0 || allScheduledTeacherBasedOnCourse.courseSectionsList?.length==0">
             <div class="text-center">
                 <p>No Record Found</p>
             </div>
         </div>
+        
 <ng-container *ngIf="!teacherReassigning">
         <div class="teacher-reassignment-timeline" *ngIf="teacherReassignmentBasedOnTeacher">
             <div class="card p-4">
@@ -140,9 +155,7 @@
                         <table class="w-full schedule-table">
                             <thead>
                                 <tr>
-                                    <th width="1%">
-                                        <!-- <mat-checkbox color="primary" checked="checked"></mat-checkbox> -->
-                                    </th>
+                                    <th width="1%">{{ "select" | translate }}</th>
                                     <th>{{ "teacherName" | translate }}</th>
                                     <th>{{ "staffId" | translate }}</th>
                                     <th>{{ "jobTitle" | translate }}</th>
@@ -217,12 +230,21 @@
             </p>
 
             <div class="ml-auto mt-2">
-                <button *ngIf="((selectedCurrentTeacher && selectedNewTeacher) || (selectedCourse && selectedNewTeacher)) && (!isTeacherReassignPossible)" color="primary" mat-raised-button type="submit" (click)="checkAvailability()">
-                    <i class="icon icon-loop3 mr-2"></i>{{ 'checkAvailability' | translate }}
-                </button>
+           
+
+                <button [disabled]="checkAvailabilityLoader" *ngIf="((selectedCurrentTeacher && selectedNewTeacher) || (selectedCourse && selectedNewTeacher)) && (!isTeacherReassignPossible)" color="primary" mat-raised-button type="submit" (click)="checkAvailability()">
+              <mat-icon class="ml-2" *ngIf="checkAvailabilityLoader">
+                        <mat-spinner color="primary" diameter="20">
+                        </mat-spinner>
+                      </mat-icon>
+                    <i class="icon icon-loop3 mr-2" *ngIf="!checkAvailabilityLoader"></i>{{ 'checkAvailability' | translate }}                </button>
                 <!-- when success message is seen then below buttion is occured -->
-                <button *ngIf="isTeacherReassignPossible" mat-raised-button type="submit" class="bg-green text-white" (click)="reassignTeacherScheduleBasedOnTeacher()">
-                    {{ 'reassignTeacher' | translate }}
+                <button *ngIf="isTeacherReassignPossible" [disabled]="teacherReassigningLoader" mat-raised-button type="submit" class="bg-green text-white" (click)="reassignTeacher()">
+                      <mat-icon class="ml-2" *ngIf="teacherReassigningLoader">
+                        <mat-spinner color="primary" diameter="20">
+                        </mat-spinner>
+                      </mat-icon>
+                  {{ 'reassignTeacher' | translate }}
                 </button>
             </div>
         </div> <!-- end button and info text -->
@@ -230,15 +252,7 @@
         
     </ng-container>
         <!-- start Reassigning teacher with lodar icon -->
-        <div class="card mt-6 p-4" *ngIf="teacherReassigningLoader">
-            <div class="flex">
-                <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
-                <div class="ml-4">
-                    <span class="text-lg inline-block align-middle text-primary font-bold">Reassigning Teacher</span>
-                    <p class="">Please do not refresh the page or click back button.</p>
-                </div>
-            </div>
-        </div>
+        
         <div class="card mt-6 p-4" *ngIf="!teacherReassigningLoader && teacherReassigning">
             <div class="text-center">
                 <p>Teacher Reassignment Successful</p>
@@ -247,3 +261,6 @@
 
     </vex-page-layout-content>
 </vex-page-layout>
+<div class="fixed w-full h-full z-50 top-0 left-0" *ngIf="globalLoader">
+
+</div>

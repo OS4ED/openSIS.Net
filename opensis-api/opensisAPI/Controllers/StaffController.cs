@@ -282,5 +282,21 @@ namespace opensisAPI.Controllers
             }
             return staffPhotoUpdate;
         }
+
+        [HttpPost("addStaffList")]
+        public ActionResult<StaffListAddViewModel> AddStaffList(StaffListAddViewModel staffListAddViewModel)
+        {
+            StaffListAddViewModel staffListAdd = new StaffListAddViewModel();
+            try
+            {
+                staffListAdd = _staffService.AddStaffList(staffListAddViewModel);
+            }
+            catch (Exception es)
+            {
+                staffListAdd._failure = true;
+                staffListAdd._message = es.Message;
+            }
+            return staffListAdd;
+        }
     }
 }

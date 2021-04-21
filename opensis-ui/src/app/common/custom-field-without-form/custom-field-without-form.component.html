@@ -4,7 +4,7 @@
         *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
         <ul *ngIf="schoolCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
             <fieldset ngModelGroup="vex-custom-field-without-form">
-                <li *ngFor="let customField of schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields; let index = index"
+                <li *ngFor="let customField of schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields | systemCategoryCheckPipe; let index = index"
                     [ngSwitch]="customField.type">
                     <div *ngSwitchCase="'Checkbox'">
                         <mat-checkbox
@@ -89,7 +89,7 @@
 
         <ul *ngIf="schoolCreateMode==schoolCreate.VIEW" class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
             <li
-                *ngFor="let customField of schoolAddViewModel.schoolMaster?.fieldsCategory[categoryId]?.customFields; let index = index">
+                *ngFor="let customField of schoolAddViewModel.schoolMaster?.fieldsCategory[categoryId]?.customFields | systemCategoryCheckPipe; let index = index">
                 <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                     {{schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue |EmtyValueCheckPipe}}
@@ -107,7 +107,7 @@
         *ngIf="studentAddModel?.fieldsCategoryList[categoryId]?.customFields.length > 0">
         <ul *ngIf="studentCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
             <fieldset ngModelGroup="vex-custom-field-without-form">
-                <li *ngFor="let customField of studentAddModel.fieldsCategoryList[categoryId]?.customFields; let index = index"
+                <li *ngFor="let customField of studentAddModel.fieldsCategoryList[categoryId]?.customFields | systemCategoryCheckPipe; let index = index"
                     [ngSwitch]="customField.type">
                     <div *ngSwitchCase="'Checkbox'">
                         <mat-checkbox
@@ -192,7 +192,7 @@
 
         <ul *ngIf="studentCreateMode==schoolCreate.VIEW" class="grid md:grid-cols-3 col-gap-8 row-gap-10 my-3 mx-2">
             <li
-                *ngFor="let customField of studentAddModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
+                *ngFor="let customField of studentAddModel.fieldsCategoryList[categoryId]?.customFields | systemCategoryCheckPipe; let index = index">
                 <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                     {{studentAddModel?.fieldsCategoryList[categoryId]?.customFields[index]?.customFieldsValue[0].customFieldValue | EmtyValueCheckPipe}}
@@ -209,7 +209,7 @@
         *ngIf="staffAddModel?.fieldsCategoryList[categoryId]?.customFields.length > 0">
         <ul *ngIf="staffCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
             <fieldset ngModelGroup="vex-custom-field-without-form">
-                <li *ngFor="let customField of staffAddModel.fieldsCategoryList[categoryId]?.customFields; let index = index"
+                <li *ngFor="let customField of staffAddModel.fieldsCategoryList[categoryId]?.customFields | systemCategoryCheckPipe; let index = index"
                     [ngSwitch]="customField.type">
                     <div *ngSwitchCase="'Checkbox'">
                         <mat-checkbox
@@ -294,10 +294,10 @@
 
         <ul *ngIf="staffCreateMode==schoolCreate.VIEW" class="grid md:grid-cols-3 col-gap-8 row-gap-10 my-3 mx-2">
             <li
-                *ngFor="let customField of staffAddModel?.fieldsCategoryList[categoryId]?.customFields; let index = index">
+                *ngFor="let customField of staffAddModel?.fieldsCategoryList[categoryId]?.customFields | systemCategoryCheckPipe; let index = index">
                 <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                    {{staffAddModel?.fieldsCategoryList[categoryId]?.customFields[index]?.customFieldsValue[0].customFieldValue | EmtyValueCheckPipe}}
+                    {{staffAddModel?.fieldsCategoryList[categoryId]?.customFields[index]?.customFieldsValue[0]?.customFieldValue | EmtyValueCheckPipe}}
                 </p>
             </li>
         </ul>

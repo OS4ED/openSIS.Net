@@ -10,7 +10,7 @@ import icFilterList from '@iconify/icons-ic/twotone-filter-list';
 import { EditRoomComponent } from '../rooms/edit-room/edit-room.component';
 import { RoomDetailsComponent } from '../rooms/room-details/room-details.component';
 
-import { RoomAddView,RoomListViewModel } from '../../../models/roomModel'
+import { RoomAddView,RoomListViewModel } from '../../../models/room.model'
 import { RoomService } from '../../../services/room.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,7 +22,7 @@ import { LoaderService } from '../../../services/loader.service';
 import { LayoutService } from '../../../../@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
 import { CryptoService } from '../../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 @Component({
   selector: 'vex-rooms',
   templateUrl: './rooms.component.html',
@@ -205,15 +205,24 @@ export class RoomsComponent implements OnInit {
         }
      });
   }
+
+  translateKey(key) {
+    let trnaslateKey;
+   this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportToExcel(){
     if (this.roomModelList.data?.length > 0) {
       const reportList = this.roomModelList.data?.map((x) => {
         return {
-          Title: x.title,
-          Capacity: x.capacity,
-          Description: x.description,
-          'Sort Order': x.sortOrder
-
+          [this.translateKey('title')]: x.title,
+          [this.translateKey('capacity')]: x.capacity,
+          [this.translateKey('description')]: x.description,
+          [this.translateKey('sortOrder')]: x.sortOrder,
+          [this.translateKey('active')]: x.isActive? this.translateKey('yes'):this.translateKey('no')
         };
       });
       this.excelService.exportAsExcelFile(reportList, 'Rooms_List_');

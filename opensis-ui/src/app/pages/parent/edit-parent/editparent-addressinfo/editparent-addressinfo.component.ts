@@ -8,14 +8,14 @@ import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/edit';
 import icClear from '@iconify/icons-ic/baseline-clear';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { AddParentInfoModel } from '../../../../models/parentInfoModel';
-import { CountryModel } from '../../../../models/countryModel';
+import { AddParentInfoModel } from '../../../../models/parent-info.model';
+import { CountryModel } from '../../../../models/country.model';
 import { CommonService } from '../../../../services/common.service';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
@@ -101,7 +101,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
           }
 
           this.countryListArr.map((val) => {
-            var country = + this.addParentInfoModel.parentInfo.parentAddress[0].country;
+            let country = + this.addParentInfoModel.parentInfo.parentAddress[0].country;
             if (val.id === country) {
 
               this.country = val.name;
@@ -118,7 +118,7 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
 
   viewCountryName() {
     this.countryListArr.map((val) => {
-      var countryInNumber = + this.addParentInfoModel.parentInfo.parentAddress[0].country;      
+      let countryInNumber = + this.addParentInfoModel.parentInfo.parentAddress[0].country;      
       if (val.id === countryInNumber) {
         this.countryName = val.name;
 
@@ -128,9 +128,6 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
   }
 
   submit() {
-    this.addParentInfoModel._token = sessionStorage.getItem("token");
-    this.addParentInfoModel._tenantName = sessionStorage.getItem("tenant");
-    this.addParentInfoModel._userName= sessionStorage.getItem("user");
     this.parentInfoService.updateParentInfo(this.addParentInfoModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Address Updation failed. ' + sessionStorage.getItem("httpError"), '', {

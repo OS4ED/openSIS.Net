@@ -62,6 +62,7 @@ export class EditEffortGradeScaleComponent implements OnInit {
 
   submit(){
     this.form.markAllAsTouched();
+    if( this.form.invalid ){ return; }
      if(this.editMode){
        this.updateEffortGradeScale();
      }else{

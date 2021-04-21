@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../../models/school-master.model';
 
 @Component({
   selector: 'vex-view-wash-info',

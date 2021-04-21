@@ -12,7 +12,7 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { ParentInfoService } from '../../../services/parent-info.service';
-import { GetAllParentModel } from "../../../models/parentInfoModel";
+import { GetAllParentModel } from "../../../models/parent-info.model";
 import { LoaderService } from '../../../services/loader.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { StudentService } from '../../../services/student.service';

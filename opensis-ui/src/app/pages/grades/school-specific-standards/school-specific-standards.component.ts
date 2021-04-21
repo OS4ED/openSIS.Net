@@ -23,11 +23,11 @@ import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ExcelService } from '../../../services/excel.service';
-import { GetAllGradeLevelsModel } from '../../../models/gradeLevelModel';
+import { GetAllGradeLevelsModel } from '../../../models/grade-level.model';
 import { GradeLevelService } from '../../../services/grade-level.service';
 import { Subject } from 'rxjs';
 import { LoaderService } from '../../../services/loader.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from 'src/app/services/Crypto.service';
 
 @Component({
@@ -336,6 +336,14 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
     }
   }
 
+  translateKey(key) {
+    let trnaslateKey;
+    this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportSchoolSpecificStandardsListToExcel() {
     let schoolSpecificStandardsList=new GetAllSchoolSpecificListModel();
     schoolSpecificStandardsList.pageNumber = 0;
@@ -350,13 +358,13 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
         if (res.gradeUsStandardList?.length > 0) {
           let StandardsList = res.gradeUsStandardList?.map((item) => {
             return {
-                StandardRefNo:item.standardRefNo,
-                Subject:item.subject,
-                Course:item.course,
-                GradeLevel:item.gradeLevel,
-                Domain:item.domain,
-                Topic:item.topic,
-                StandardDetails:item.standardDetails
+                [this.translateKey('standardRefNo')]: item.standardRefNo,
+                [this.translateKey('subject')]: item.subject,
+                [this.translateKey('course')]: item.course,
+                [this.translateKey('gradeLevel')]: item.gradeLevel,
+                [this.translateKey('domain')]: item.domain? item.domain:'-',
+                [this.translateKey('topic')]: item.topic,
+                [this.translateKey('standardDetails')]: item.standardDetails
             }
           });
           this.excelService.exportAsExcelFile(StandardsList, 'School_Specific_Standards_List_')

@@ -15,9 +15,8 @@ import {MatCheckboxModule} from '@angular/material/checkbox';
 import { MatTableModule } from '@angular/material/table';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-
-
-
+import { FormsModule,ReactiveFormsModule } from '@angular/forms';
+import { SharedModuleModule } from '../../../../shared-module/shared-module.module'
 @NgModule({
   declarations: [PeriodAttendanceComponent],
   imports: [
@@ -36,7 +35,10 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatCheckboxModule,
     MatTableModule,
     MatTooltipModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    FormsModule,
+    ReactiveFormsModule,
+    SharedModuleModule
   ]
 })
 export class PeriodAttendanceModule { }

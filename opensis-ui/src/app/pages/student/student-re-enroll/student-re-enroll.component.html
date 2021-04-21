@@ -15,7 +15,7 @@
                         <mat-label>{{ "schoolName" | translate }}</mat-label>
                         <mat-select name="reenrollSchoolId" #reenroll_school="ngModel" (selectionChange)="changeSchool($event.value)" [(ngModel)]="reenrollSchoolId" required>
                             <mat-option *ngFor="let school of schoolListWithGradeLevelsAndEnrollCodes"
-                                value={{school.schoolId}}>
+                                [value]="school?.schoolId">
                                 {{school.schoolName}}</mat-option>
                         </mat-select>
                         <mat-error *ngIf="reenroll_school.errors?.required">
@@ -64,7 +64,7 @@
         <div [ngClass]="{'hidden': !submitReenroll}" class="card overflow-auto mt-6">
             <div class="flex justify-between px-6 py-4">
                 <h5 class="font-medium">Showing list of inactive students.Select students to re-enroll</h5>
-                <mat-slide-toggle (change)="searchAllSchools($event)">{{'searchAllSchools' | translate}}</mat-slide-toggle>
+                <mat-slide-toggle color="primary" [(ngModel)]="showAllSchools" (change)="searchAllSchools($event)">{{'searchAllSchools' | translate}}</mat-slide-toggle>
             </div>
             <mat-divider></mat-divider>
             <div class="bg-white px-6 md:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">

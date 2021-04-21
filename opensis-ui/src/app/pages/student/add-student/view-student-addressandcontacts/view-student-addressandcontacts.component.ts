@@ -2,7 +2,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 import icCheckBox from '@iconify/icons-ic/check-box';
-import { StudentAddModel } from '../../../../models/studentModel';
+import { StudentAddModel } from '../../../../models/student.model';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 
@@ -23,18 +23,18 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
   @Input() nameOfMiscValues;
   constructor(private snackbar: MatSnackBar) { }
 
-  showHomeAddressOnGoogleMap(){
+  showHomeAddressOnGoogleMap() {
     const stAdd1 = this.studentViewDetails.studentMaster.homeAddressLineOne;
     const stAdd2 = this.studentViewDetails.studentMaster.homeAddressLineTwo;
     const city = this.studentViewDetails.studentMaster.homeAddressCity;
     const country = this.nameOfMiscValues.countryName;
     const state = this.studentViewDetails.studentMaster.homeAddressState;
     const zip = this.studentViewDetails.studentMaster.homeAddressZip;
-    let homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${zip?','+zip:''}${country?','+country:''}`;
+    let homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1 ? stAdd1 : ''}${stAdd2 ? ',' + stAdd2 : ''}${city ? ',' + city : ''}${state ? ',' + state : ''}${zip ? ',' + zip : ''}${country ? ',' + country : ''}`;
     window.open(homeAddressMapUrl, '_blank');
 
   }
-  showMailingAddressOnGoogleMap(){
+  showMailingAddressOnGoogleMap() {
     const stAdd1 = this.studentViewDetails.studentMaster.mailingAddressLineOne;
     const stAdd2 = this.studentViewDetails.studentMaster.mailingAddressLineTwo;
     const city = this.studentViewDetails.studentMaster.mailingAddressCity;
@@ -42,7 +42,7 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
     const state = this.studentViewDetails.studentMaster.mailingAddressState;
     const zip = this.studentViewDetails.studentMaster.mailingAddressZip;
 
-    let mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${zip?','+zip:''}${country?','+country:''}`;
+    let mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1 ? stAdd1 : ''}${stAdd2 ? ',' + stAdd2 : ''}${city ? ',' + city : ''}${state ? ',' + state : ''}${zip ? ',' + zip : ''}${country ? ',' + country : ''}`;
     window.open(mailingAddressMapUrl, '_blank');
 
   }
@@ -50,6 +50,21 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
   ngOnInit(): void {
     this.nameOfMiscValues.countryName = this.nameOfMiscValues.countryName === '-' ? null : this.nameOfMiscValues.countryName;
     this.nameOfMiscValues.mailingAddressCountry = this.nameOfMiscValues.mailingAddressCountry === '-' ? null : this.nameOfMiscValues.mailingAddressCountry;
+  }
+
+  openUrl(href: string) {
+    debugger;
+    if (!href?.trim()) { return; }
+
+    if (href.includes('@')) {
+      href = 'mailto:'+href;
+       window.open(href);
+      return;
+    } else
+      if (!href.includes('http:') && !href.includes('https:')) {
+        href = 'http://' + href;
+      }
+    window.open(href);
   }
 
 }

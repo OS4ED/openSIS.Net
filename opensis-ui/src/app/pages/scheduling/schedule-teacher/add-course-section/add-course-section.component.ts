@@ -5,8 +5,8 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CourseManagerService } from '../../../../services/course-manager.service';
-import { AllCourseSectionView, GetAllCourseListModel, GetAllProgramModel, GetAllSubjectModel, SearchCourseSectionViewModel } from '../../../../models/courseManagerModel';
-import { GetMarkingPeriodTitleListModel } from '../../../../models/markingPeriodModel';
+import { AllCourseSectionView, GetAllCourseListModel, GetAllProgramModel, GetAllSubjectModel, SearchCourseSectionViewModel } from '../../../../models/course-manager.model';
+import { GetMarkingPeriodTitleListModel } from '../../../../models/marking-period.model';
 import { MarkingPeriodService } from '../../../../services/marking-period.service';
 import { CourseSectionService } from '../../../../services/course-section.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -146,7 +146,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
   checked(row: any) {
     this.selection.select(row);
 
-    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    let found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
     if (this.courseSectionList.data.length < 12 && this.courseSectionList.data.length == this.selection.selected.length) {
       this.masterCheckBox.checked = true;
     }
@@ -160,7 +160,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
       this.masterCheckBox.checked = false;
     }
 
-    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    let found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
     // if (found) found.checked = false;
     this.selection.deselect(found);
 
@@ -171,7 +171,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
   }
 
   isChecked(row: any) {
-    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    let found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
 
     if (found) {
       return true;

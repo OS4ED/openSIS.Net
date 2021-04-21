@@ -2,8 +2,9 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
-import { SearchCourseSectionViewModel } from '../models/courseManagerModel';
-import { CourseSectionAddViewModel, DeleteCourseSectionSchedule, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel, ScheduledStaffForCourseSection} from '../models/courseSectionModel';
+import { DefaultValuesService } from '../common/default-values.service';
+import { SearchCourseSectionViewModel } from '../models/course-manager.model';
+import { CourseSectionAddViewModel, DeleteCourseSectionSchedule, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel, ScheduledStaffForCourseSection } from '../models/course-section.model';
 import { CryptoService } from './Crypto.service';
 
 @Injectable({
@@ -11,57 +12,78 @@ import { CryptoService } from './Crypto.service';
 })
 export class CourseSectionService {
   apiUrl: string = environment.apiURL;
-  constructor(private http: HttpClient, private cryptoService: CryptoService) { }
+  constructor(private http: HttpClient, private cryptoService: CryptoService,
+    private defaultValuesService: DefaultValuesService) { }
 
-     getAllCourseSection(courseSection: GetAllCourseSectionModel) {
-        let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllCourseSection";
-        return this.http.post<GetAllCourseSectionModel>(apiurl, courseSection)
-    }
-    addCourseSection(courseSection : CourseSectionAddViewModel){
-      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/addCourseSection";
-      return this.http.post<GetAllCourseSectionModel>(apiurl, courseSection)
-    }
-    updateCourseSection(courseSection : CourseSectionAddViewModel){
-      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/updateCourseSection";
-      return this.http.put<GetAllCourseSectionModel>(apiurl, courseSection)
-    }
-    deleteCourseSection(courseSection : CourseSectionAddViewModel){
-      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/deleteCourseSection";
-      return this.http.post<CourseSectionAddViewModel>(apiurl, courseSection)
-    }
+  getAllCourseSection(courseSection: GetAllCourseSectionModel) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllCourseSection";
+    return this.http.post<GetAllCourseSectionModel>(apiurl, courseSection)
+  }
+  addCourseSection(courseSection: CourseSectionAddViewModel) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    courseSection.courseFixedSchedule.schoolId = this.defaultValuesService.getSchoolID();
+    courseSection.courseFixedSchedule.tenantId = this.defaultValuesService.getTenantID();
+    courseSection.courseSection.schoolId = this.defaultValuesService.getSchoolID();
+    courseSection.courseSection.tenantId = this.defaultValuesService.getTenantID();
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/addCourseSection";
+    return this.http.post<GetAllCourseSectionModel>(apiurl, courseSection)
+  }
+  updateCourseSection(courseSection: CourseSectionAddViewModel) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    courseSection.courseFixedSchedule.schoolId = this.defaultValuesService.getSchoolID();
+    courseSection.courseFixedSchedule.tenantId = this.defaultValuesService.getTenantID();
+    courseSection.courseSection.schoolId = this.defaultValuesService.getSchoolID();
+    courseSection.courseSection.tenantId = this.defaultValuesService.getTenantID();
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/updateCourseSection";
+    return this.http.put<GetAllCourseSectionModel>(apiurl, courseSection)
+  }
+  deleteCourseSection(courseSection: CourseSectionAddViewModel) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    courseSection.courseFixedSchedule.schoolId = this.defaultValuesService.getSchoolID();
+    courseSection.courseFixedSchedule.tenantId = this.defaultValuesService.getTenantID();
+    courseSection.courseSection.schoolId = this.defaultValuesService.getSchoolID();
+    courseSection.courseSection.tenantId = this.defaultValuesService.getTenantID();
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/deleteCourseSection";
+    return this.http.post<CourseSectionAddViewModel>(apiurl, courseSection)
+  }
 
-    private dataSource = new Subject;
-    currentUpdate = this.dataSource.asObservable();
+  private dataSource = new Subject;
+  currentUpdate = this.dataSource.asObservable();
 
-    sendCurrentData(message: boolean) {
-      this.dataSource.next(message)
-    }
+  sendCurrentData(message: boolean) {
+    this.dataSource.next(message)
+  }
 
-    getAllCourseStandardForCourseSection(courseSection : GetAllCourseStandardForCourseSectionModel){
-      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllCourseStandardForCourseSection";
-      return this.http.post<GetAllCourseStandardForCourseSectionModel>(apiurl, courseSection)
-    }
+  getAllCourseStandardForCourseSection(courseSection: GetAllCourseStandardForCourseSectionModel) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllCourseStandardForCourseSection";
+    return this.http.post<GetAllCourseStandardForCourseSectionModel>(apiurl, courseSection)
+  }
 
-    deleteSchedule(courseSection : DeleteCourseSectionSchedule){
-      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/deleteSchedule";
-      return this.http.post<DeleteCourseSectionSchedule>(apiurl, courseSection)
-    }
+  deleteSchedule(courseSection: DeleteCourseSectionSchedule) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/deleteSchedule";
+    return this.http.post<DeleteCourseSectionSchedule>(apiurl, courseSection)
+  }
 
-    
 
-    private afterDeleted = new Subject;
-    callCourseSection = this.afterDeleted.asObservable();
 
-    scheduleDeleted(message: boolean) {
-      this.afterDeleted.next(message)
-    }
+  private afterDeleted = new Subject;
+  callCourseSection = this.afterDeleted.asObservable();
 
-    searchCourseSectionForSchedule(courseSection : SearchCourseSectionViewModel){
-      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/searchCourseSectionForSchedule";
-      return this.http.post<SearchCourseSectionViewModel>(apiurl, courseSection)
-    }
-    getAllStaffScheduleInCourseSection(courseSection : ScheduledStaffForCourseSection){
-      let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllStaffScheduleInCourseSection";
-      return this.http.post<ScheduledStaffForCourseSection>(apiurl, courseSection)
-    }
+  scheduleDeleted(message: boolean) {
+    this.afterDeleted.next(message)
+  }
+
+  searchCourseSectionForSchedule(courseSection: SearchCourseSectionViewModel) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/searchCourseSectionForSchedule";
+    return this.http.post<SearchCourseSectionViewModel>(apiurl, courseSection)
+  }
+  getAllStaffScheduleInCourseSection(courseSection: ScheduledStaffForCourseSection) {
+    courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
+    let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/getAllStaffScheduleInCourseSection";
+    return this.http.post<ScheduledStaffForCourseSection>(apiurl, courseSection)
+  }
 }

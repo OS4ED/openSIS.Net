@@ -11,6 +11,7 @@ import { ConfigService } from '../services/config.service';
 import * as jwt_decode from 'jwt-decode';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionExpireAlertComponent } from './session-expire/session-expire-alert/session-expire-alert.component';
+import { DefaultValuesService } from '../../app/common/default-values.service';
 
 @UntilDestroy()
 @Component({
@@ -56,6 +57,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
               private layoutService: LayoutService,
               private configService: ConfigService,
               private router: Router,
+              private defaultValueService:DefaultValuesService,
               @Inject(DOCUMENT) private document: Document,
               private dialog: MatDialog) { }
 
@@ -141,10 +143,10 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
   clearStorage(){
     localStorage.clear();
-    let schoolId = sessionStorage.getItem('selectedSchoolId');
+    let schoolId = this.defaultValueService.getSchoolID()
     sessionStorage.clear();
     if(schoolId){
-    sessionStorage.setItem('selectedSchoolId',schoolId);
+      this.defaultValueService.setSchoolID(JSON.stringify(schoolId))
     }
   }
 
@@ -154,28 +156,31 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     let date2:any = new Date();
     let res = Math.abs(date1 - date2) / 1000;
     let minutes = Math.floor(res / 60) % 60;
-    let tokenEndTime=(minutes-1)*60*1000;
+    let tokenEndTime=(minutes-2)*60*1000;
     const tokenExpired = Date.now() > (decoded.exp * 1000-120000);
 
     if (!tokenExpired) {
       setTimeout(() => {
         if(this.router.url != '/'){
+
           this.dialog.open(SessionExpireAlertComponent, {
             maxWidth: '600px',
             disableClose:true
           }).afterClosed().subscribe(token => {
             if (token){
-              sessionStorage.setItem('token', token);
+              this.defaultValueService.setToken(token)
               this.checkToken();
               return;
             }
              this.clearStorage();
+             this.dialog.closeAll();
              this.router.navigateByUrl('/');
          });
         }
       }, tokenEndTime);
     } else {
       this.clearStorage();
+      this.dialog.closeAll();
       this.router.navigateByUrl('/');
     }
   }

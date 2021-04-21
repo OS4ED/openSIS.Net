@@ -13,7 +13,7 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditEthnicityComponent } from './edit-ethnicity/edit-ethnicity.component';
-import { LovAddView, LovList } from '../../../models/lovModel';
+import { LovAddView, LovList } from '../../../models/lov.model';
 import { LoaderService } from '../../../services/loader.service';
 import { CommonService } from '../../../services/common.service';
 import { MatTableDataSource } from '@angular/material/table';
@@ -22,7 +22,7 @@ import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { ExcelService } from '../../../services/excel.service';
 import { SharedFunction } from '../../shared/shared-function';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
@@ -126,15 +126,24 @@ export class EthnicityComponent implements OnInit {
         }
       })
   }
+
+  translateKey(key) {
+    let trnaslateKey;
+   this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportEthnicityListToExcel(){
     if(this.ethnicityForExcel.length!=0){
       let ethnicity=this.ethnicityForExcel?.map((item)=>{
         return{
-          Title: item.lovColumnValue,
-          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
-          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
-          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
-          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+          [this.translateKey('title')]: item.lovColumnValue,
+          [this.translateKey('createdBy')]: item.createdBy ? item.createdBy: '-',
+          [this.translateKey('createDate')]: this.commonfunction.transformDateWithTime(item.createdOn),
+          [this.translateKey('updatedBy')]: item.updatedBy ? item.updatedBy: '-',
+          [this.translateKey('updateDate')]:  this.commonfunction.transformDateWithTime(item.updatedOn)
         }
       });
       this.excelService.exportAsExcelFile(ethnicity,'Ethnicity_List_')

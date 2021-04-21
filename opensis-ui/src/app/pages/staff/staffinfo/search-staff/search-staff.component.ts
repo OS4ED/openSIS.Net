@@ -2,22 +2,24 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy, Input } 
 import { NgForm } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
 import { StudentService } from '../../../../services/student.service';
-import { filterParams, StudentListModel, StudentMasterSearchModel } from '../../../../models/studentModel';
-import { GetAllSectionModel } from '../../../../models/sectionModel';
+import { filterParams, StudentListModel, StudentMasterSearchModel } from '../../../../models/student.model';
+import { GetAllSectionModel } from '../../../../models/section.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { SectionService } from '../../../../services/section.service';
 import { CommonService } from '../../../../services/common.service';
 import { LoginService } from '../../../../services/login.service';
-import { CountryModel } from '../../../../models/countryModel';
-import { LanguageModel } from '../../../../models/languageModel';
+import { CountryModel } from '../../../../models/country.model';
+import { LanguageModel } from '../../../../models/language.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StaffService } from '../../../../services/staff.service';
-import { GetAllStaffModel, StaffMasterSearchModel } from '../../../../models/staffModel';
-import { GetAllMembersList } from '../../../../models/membershipModel';
+import { GetAllStaffModel, StaffMasterSearchModel } from '../../../../models/staff.model';
+import { GetAllMembersList } from '../../../../models/membership.model';
 import { MembershipService } from '../../../../services/membership.service';
-import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
+import { SearchFilterAddViewModel } from '../../../../models/search-filter.model';
+import { DefaultValuesService } from '../../../../common/default-values.service';
+import { SharedFunction } from '../../../shared/shared-function';
 
 @Component({
   selector: 'vex-search-staff',
@@ -58,6 +60,8 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
     private commonService: CommonService,
     private loginService: LoginService,
     private staffService: StaffService,
+    private defaultValuesService: DefaultValuesService, 
+    private commonFunction: SharedFunction,
     private membershipService:MembershipService
   ) { }
 
@@ -113,7 +117,6 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
   }
 
   GetAllLanguage() {
-    this.languages._tenantName = sessionStorage.getItem('tenant');
     this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) === 'undefined') {
         this.languageList = [];
@@ -156,11 +159,16 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
 
   submit() {
     this.params = [];
-    for (var key in this.staffMasterSearchModel) {
+    for (let key in this.staffMasterSearchModel) {
       if (this.staffMasterSearchModel.hasOwnProperty(key))
-        if (this.staffMasterSearchModel[key] !== null) {
+      if (this.staffMasterSearchModel[key] !== null && this.staffMasterSearchModel[key] !== '') {
+        if (key === 'joiningDate' || key === 'endDate' || key === 'dob') {
+          this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.commonFunction.formatDateSaveWithoutTime(this.staffMasterSearchModel[key]) })
+        }
+        else {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.staffMasterSearchModel[key] })
         }
+      }
     }
 
     if (this.updateFilter) {
@@ -169,7 +177,7 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
       this.searchFilterAddViewModel.searchFilter.module = 'Staff';
       this.searchFilterAddViewModel.searchFilter.jsonList = JSON.stringify(this.params);
       this.searchFilterAddViewModel.searchFilter.filterName = this.filterJsonParams.filterName;
-      this.searchFilterAddViewModel.searchFilter.modifiedBy = sessionStorage.getItem('email');
+      this.searchFilterAddViewModel.searchFilter.modifiedBy = this.defaultValuesService.getEmailId();
       this.commonService.updateSearchFilter(this.searchFilterAddViewModel).subscribe((res) => {
         if (typeof (res) === 'undefined') {
           this.snackbar.open('Search filter updated failed' + sessionStorage.getItem("httpError"), '', {
@@ -195,8 +203,8 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
     
     this.getAllStaff.filterParams = this.params;
     this.getAllStaff.sortingModel = null;
-    this.getAllStaff.dobStartDate = this.dobStartDate;
-    this.getAllStaff.dobEndDate= this.dobEndDate;
+    this.getAllStaff.dobStartDate = this.commonFunction.formatDateSaveWithoutTime(this.dobStartDate);
+    this.getAllStaff.dobEndDate= this.commonFunction.formatDateSaveWithoutTime(this.dobEndDate);
     this.commonService.setSearchResult(this.params);
     this.staffService.getAllStaffList(this.getAllStaff).subscribe(res => {
       if (res._failure) {

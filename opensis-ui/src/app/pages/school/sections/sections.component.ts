@@ -11,7 +11,7 @@ import { EditSectionComponent } from '../sections/edit-section/edit-section.comp
 import { TranslateService } from '@ngx-translate/core';
 import { SelectionModel } from '@angular/cdk/collections';
 import { MatTableDataSource } from '@angular/material/table';
-import { GetAllSectionModel,SectionAddModel} from 'src/app/models/sectionModel';
+import { GetAllSectionModel,SectionAddModel} from 'src/app/models/section.model';
 import { LoaderService } from '../../../services/loader.service';
 import { SectionService } from '../../../services/section.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -19,7 +19,8 @@ import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import {LayoutService} from 'src/@vex/services/layout.service';
 import { CryptoService } from 'src/app/services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
+import { ExcelService } from '../../../services/excel.service';
 @Component({
   selector: 'vex-sections',
   templateUrl: './sections.component.html',
@@ -63,7 +64,8 @@ export class SectionsComponent implements OnInit {
     private sectionService:SectionService,
     private snackbar: MatSnackBar,
     private layoutService:LayoutService,
-    private cryptoService: CryptoService    
+    private cryptoService: CryptoService,
+    private excelService: ExcelService
     ) 
   { 
     
@@ -205,6 +207,31 @@ export class SectionsComponent implements OnInit {
 
   applyFilter(){
     this.SectionModelList.filter = this.searchKey.trim().toLowerCase()
+  }
+
+  translateKey(key) {
+    let trnaslateKey;
+    this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
+  exportToExcel(){
+    if (this.SectionModelList.data?.length > 0) {
+      const sectionList = this.SectionModelList.data?.map((x) => {
+        return {
+          [this.translateKey('title')]: x.name,
+          [this.translateKey('sortOrder')]: x.sortOrder
+
+        };
+      });
+      this.excelService.exportAsExcelFile(sectionList, 'Section_List_');
+    } else {
+      this.snackbar.open('No records found. failed to export Section List', '', {
+        duration: 5000
+      });
+    }
   }
   
 }

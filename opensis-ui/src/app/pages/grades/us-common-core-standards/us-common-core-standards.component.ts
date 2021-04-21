@@ -15,7 +15,7 @@ import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { ViewDetailsComponent } from './view-details/view-details.component';
 import { CryptoService } from 'src/app/services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 
 @Component({
   selector: 'vex-us-common-core-standards',

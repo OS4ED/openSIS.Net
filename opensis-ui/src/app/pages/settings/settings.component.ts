@@ -10,9 +10,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { NavigationService } from 'src/@vex/services/navigation.service';
 import { CryptoService } from 'src/app/services/Crypto.service';
-import { PermissionGroup, RolePermissionListViewModel } from '../../models/rollBasedAccessModel';
+import { PermissionGroup, RolePermissionListViewModel } from '../../models/roll-based-access.model';
 import { Router } from '@angular/router';
-import { RollBasedAccessService } from '../../services/rollBasedAccess.service';
+import { RollBasedAccessService } from '../../services/roll-based-access.service';
 @Component({
   selector: 'vex-settings',
   templateUrl: './settings.component.html',

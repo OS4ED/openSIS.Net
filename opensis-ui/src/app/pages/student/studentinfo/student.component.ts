@@ -4,7 +4,7 @@ import icAdd from '@iconify/icons-ic/baseline-add';
 import icSearch from '@iconify/icons-ic/search';
 import icFilterList from '@iconify/icons-ic/filter-list';
 import { StudentService } from '../../../services/student.service';
-import { StudentListModel} from '../../../models/studentModel';
+import { StudentListModel} from '../../../models/student.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router} from '@angular/router';
 import { SelectionModel } from '@angular/cdk/collections';
@@ -27,11 +27,11 @@ import { MatDialog } from '@angular/material/dialog';
 import { SaveFilterComponent } from './save-filter/save-filter.component';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 import { SchoolCreate } from '../../../enums/school-create.enum';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
-import { RollBasedAccessService } from 'src/app/services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
+import { RollBasedAccessService } from 'src/app/services/roll-based-access.service';
 import { CryptoService } from 'src/app/services/Crypto.service';
 import { CommonService } from '../../../services/common.service';
-import { SearchFilter, SearchFilterAddViewModel, SearchFilterListViewModel } from '../../../models/searchFilterModel';
+import { SearchFilter, SearchFilterAddViewModel, SearchFilterListViewModel } from '../../../models/search-filter.model';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 
 @Component({
@@ -222,8 +222,6 @@ export class StudentComponent implements OnInit,OnDestroy {
 
   getAllSearchFilter(){
     this.searchFilterListViewModel.module='Student';
-    this.searchFilterListViewModel.schoolId = + sessionStorage.getItem('selectedSchoolId');
-    this.searchFilterListViewModel.tenantId = sessionStorage.getItem("tenantId");
     this.commonService.getAllSearchFilter(this.searchFilterListViewModel).subscribe((res) => {
       if (typeof (res) === 'undefined') {
         this.snackbar.open('Filter list failed. ' + sessionStorage.getItem("httpError"), '', {

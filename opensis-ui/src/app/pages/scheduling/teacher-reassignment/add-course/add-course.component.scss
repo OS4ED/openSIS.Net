@@ -7,5 +7,9 @@
             @apply py-3;
             text-align: left;
         }
+        td[colspan]:not([colspan="1"]) {
+            text-align: center;
+        }
     }
 }
+

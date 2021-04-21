@@ -2,7 +2,7 @@ import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatDialogRef } from '@angular/material/dialog';
 import { MatCheckbox } from '@angular/material/checkbox';
 import icClose from '@iconify/icons-ic/twotone-close';
-import { StudentDetails } from '../../../../models/studentDetailsModel';
+import { StudentDetails } from '../../../../models/student-details.model';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
@@ -12,13 +12,13 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonService } from '../../../../services/common.service';
 import { LoginService } from '../../../../services/login.service';
 import { takeUntil } from 'rxjs/operators';
-import { LanguageModel } from '../../../../models/languageModel';
+import { LanguageModel } from '../../../../models/language.model';
 import { NgForm } from '@angular/forms';
 import { Subject } from 'rxjs';
-import { StudentListModel, StudentMasterModel, StudentMasterSearchModel } from '../../../../models/studentModel';
-import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
-import { GetAllSectionModel } from '../../../../models/sectionModel';
-import { GetAllGradeLevelsModel } from '../../../../models/gradeLevelModel';
+import { StudentListModel, StudentMasterModel, StudentMasterSearchModel } from '../../../../models/student.model';
+import { SearchFilterAddViewModel } from '../../../../models/search-filter.model';
+import { GetAllSectionModel } from '../../../../models/section.model';
+import { GetAllGradeLevelsModel } from '../../../../models/grade-level.model';
 import { GradeLevelService } from '../../../../services/grade-level.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';
@@ -194,7 +194,7 @@ export class AddStudentComponent implements OnInit,OnDestroy {
 
   submit(){
     this.params = [];
-    for (var key in this.studentMasterSearchModel) {
+    for (let key in this.studentMasterSearchModel) {
       if (this.studentMasterSearchModel.hasOwnProperty(key))
         if (this.studentMasterSearchModel[key] !== null) {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.studentMasterSearchModel[key] })
@@ -232,15 +232,15 @@ export class AddStudentComponent implements OnInit,OnDestroy {
         this.pageSize = data._pageSize;
         this.studentMasterList = data.studentMaster;
 
-          for(let data of this.studentMasterList){
+          for(const data of this.studentMasterList){
             this.languageList.map((val) => {
-              var firstLanguageId = +data.firstLanguageId;
+              let firstLanguageId = +data.firstLanguageId;
               if (val.langId === firstLanguageId) {
                 data.firstLanguageName = val.locale;
               }
             });
             this.sectionList.map((val) => {
-              var sectionId = +data.sectionId;
+              let sectionId = +data.sectionId;
               if (val.sectionId === sectionId) {
                 data.sectionName = val.name;
               }

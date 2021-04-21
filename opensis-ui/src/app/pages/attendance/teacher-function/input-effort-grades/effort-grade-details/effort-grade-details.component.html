@@ -1,0 +1,177 @@
+<!-- Start Input effort Grade -->
+<div class="card -mt-16">
+    <div class="flex justify-between items-center px-4">
+        <div class="py-4">
+            <a [routerLink]="['/school/teacher-functions/input-effort-grades']" class="cursor-pointer">
+                <mat-icon class="mr-4 align-middle">west</mat-icon>
+            </a>
+            <span class="font-medium text-lg">Andrew Brown</span>
+        </div>
+        <div>
+            <mat-slide-toggle color="primary">{{ "includeInactiveStudents" | translate }}
+            </mat-slide-toggle>
+        </div>
+    </div>
+    <mat-divider class=""></mat-divider>
+    <ul class="grid grid-cols-1 md:grid-cols-4 col-gap-4 row-gap-2 mt-4 px-6">
+        <li>
+            <mat-form-field class="w-full" appearance="outline" color="primary">
+                <mat-label>{{ "markingPeriod" | translate }}</mat-label>
+                <mat-select name="markingPeriod">
+                    <mat-option value="Quarter">
+                        Quarter 1
+                    </mat-option>
+                </mat-select>
+            </mat-form-field>
+        </li>
+    </ul>
+    <mat-divider class=""></mat-divider>
+    <div class="lg:flex lg:flex-wrap">
+        <div class="lg:w-4/12 lg:pr-4">
+            <div class="content-left">
+                <h4 class="font-medium text-sm py-2 px-6">Student Details</h4>
+                <mat-divider class=""></mat-divider>
+                <ul class="border-right">
+                    <li class="flex py-2 px-6 bg-skyblue-light cursor-pointer">
+                        <div class="flex-shrink-0 h-12 w-12">
+                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                        </div>
+                        <div class="ml-3 flex flex-col justify-center">
+                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
+                            <div>
+                                <span class="">#44568</span>
+                                <span class="dot-separator"></span>
+                                <span>Grade 9</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex py-2 px-6 cursor-pointer">
+                        <div class="flex-shrink-0 h-12 w-12">
+                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                        </div>
+                        <div class="ml-3 flex flex-col justify-center">
+                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
+                            <div>
+                                <span class="">#44568</span>
+                                <span class="dot-separator"></span>
+                                <span>Grade 9</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex py-2 px-6 cursor-pointer">
+                        <div class="flex-shrink-0 h-12 w-12">
+                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                        </div>
+                        <div class="ml-3 flex flex-col justify-center">
+                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
+                            <div>
+                                <span class="">#44568</span>
+                                <span class="dot-separator"></span>
+                                <span>Grade 9</span>
+                            </div>
+                        </div>
+                    </li>
+                    <li class="flex py-2 px-6 cursor-pointer">
+                        <div class="flex-shrink-0 h-12 w-12">
+                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                        </div>
+                        <div class="ml-3 flex flex-col justify-center">
+                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
+                            <div>
+                                <span class="">#44568</span>
+                                <span class="dot-separator"></span>
+                                <span>Grade 9</span>
+                            </div>
+                        </div>
+                    </li>
+                </ul>
+            </div>
+        </div>
+        <div class="lg:w-8/12 md:pr-6 lg:pr-4 content-right">
+            <h4 class="text-base font-medium text-green py-2">{{ "effortGrades" | translate }}</h4>
+            <div class="overflow-x-auto overflow-y-hidden rounded border mb-2">
+                <table class="w-full schedule-table">
+                    <thead>
+                        <tr>
+                            <th width="40%">{{ "effortCategory" | translate }}</th>
+                            <th width="40%">{{ "effortTitle" | translate }}</th>
+                            <th width="20%">{{ "value" | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Schoolwide Learning Objective</td>
+                            <td>Communication</td>
+                            <td>
+                                <div class="select-dropdown">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Schoolwide Learning Objective</td>
+                            <td>Collaboration</td>
+                            <td>
+                                <div class="select-dropdown">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Schoolwide Learning Objective</td>
+                            <td>Critical Thinking</td>
+                            <td>
+                                <div class="select-dropdown">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Schoolwide Learning Objective</td>
+                            <td>Creativity</td>
+                            <td>
+                                <div class="select-dropdown">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Virtues</td>
+                            <td>Integrity</td>
+                            <td>
+                                <div class="select-dropdown">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <h4 class="text-base font-medium text-green py-2">{{ "generalComments" | translate }}</h4>
+            <div class="w-full border rounded mb-2">
+                <textarea placeholder="Comments" class="w-full p-2" rows="8"></textarea>
+            </div>
+        </div>
+    </div>
+    <!-- Error msg for grade scale -->
+    <!-- <div class="text-center py-32 px-6 text-warn">
+                <i class="icon icon-warning2 text-4xl"></i>
+                <p class="text-lg mt-4">Effort Grade Scale and Effort Grades are not set for this School.</p>
+                <p class="text-lg"><a href="javascript:void(0);" class="underline font-semibold">Click here</a> to set it up.</p>
+            </div> -->
+</div>
+<!-- End Input effort Grade -->
+
+<div class="text-right mt-4 mb-10">
+    <button mat-raised-button color="primary">{{ "submit" | translate }}</button>
+</div>

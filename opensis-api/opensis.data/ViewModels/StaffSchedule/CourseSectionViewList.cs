@@ -28,7 +28,7 @@ namespace opensis.data.ViewModels.StaffSchedule
         public string WeekDays { get; set; }
         public bool? TakeAttendanceForFixedSchedule { get; set; }
         public bool? ConflictCourseSection { get; set; }
-
+        public int? AttendanceCategoryId { get; set; }
         public CourseFixedSchedule courseFixedSchedule { get; set; }
         public List<CourseVariableSchedule> courseVariableSchedule { get; set; }
         public List<CourseCalendarSchedule> courseCalendarSchedule { get; set; }

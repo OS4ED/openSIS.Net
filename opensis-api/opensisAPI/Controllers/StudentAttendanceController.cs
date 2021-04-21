@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using opensis.core.StudentAttendances.Interfaces;
+using opensis.data.ViewModels.StaffSchedule;
 using opensis.data.ViewModels.StudentAttendances;
 
 namespace opensisAPI.Controllers
@@ -37,6 +38,40 @@ namespace opensisAPI.Controllers
             }
 
             return studentAttendanceAdd;
+        }
+
+        [HttpPost("getAllStudentAttendanceList")]
+        public ActionResult<StudentAttendanceAddViewModel> GetAllStudentAttendanceList(StudentAttendanceAddViewModel studentAttendanceAddViewModel)
+        {
+            StudentAttendanceAddViewModel studentAttendanceView = new StudentAttendanceAddViewModel();
+            try
+            {
+                studentAttendanceView = _studentAttendanceService.GetAllStudentAttendanceList(studentAttendanceAddViewModel);
+            }
+            catch (Exception ex)
+            {
+
+                studentAttendanceView._message = ex.Message;
+                studentAttendanceView._failure = true;
+            }
+            return studentAttendanceView;
+        }
+
+        [HttpPost("searchCourseSectionForStudentAttendance")]
+        public ActionResult<ScheduledCourseSectionViewModel> SearchCourseSectionForStudentAttendance(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel scheduledCourseSectionView = new ScheduledCourseSectionViewModel();
+            try
+            {
+                scheduledCourseSectionView = _studentAttendanceService.SearchCourseSectionForStudentAttendance(scheduledCourseSectionViewModel);
+            }
+            catch (Exception ex)
+            {
+
+                scheduledCourseSectionView._message = ex.Message;
+                scheduledCourseSectionView._failure = true;
+            }
+            return scheduledCourseSectionView;
         }
     }
 }

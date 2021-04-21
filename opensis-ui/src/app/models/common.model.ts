@@ -1,4 +1,4 @@
-import { CommonField } from "./commonField";
+import { CommonField } from "./common-field.model";
 
 export class AgeRangeList extends CommonField{
     gradeAgeRangeList:[GradeRange]

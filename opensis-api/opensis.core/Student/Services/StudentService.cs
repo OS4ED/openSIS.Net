@@ -402,11 +402,8 @@ namespace opensis.core.Student.Services
                 if (TokenManager.CheckToken(studentListModel._tenantName + studentListModel._userName, studentListModel._token))
                 {
                     studentList = this.studentRepository.ViewAllSibling(studentListModel);
-                    studentList._message = SUCCESS;
-                    studentList._failure = false;
                     logger.Info("Method ViewSibling end with success.");
                 }
-
                 else
                 {
                     studentList._failure = true;
@@ -635,6 +632,26 @@ namespace opensis.core.Student.Services
                 studentReenrollment._message = TOKENINVALID;
             }
             return studentReenrollment;
+        }
+
+        /// <summary>
+        /// Add Student List
+        /// </summary>
+        /// <param name="studentListAddViewModel"></param>
+        /// <returns></returns>
+        public StudentListAddViewModel AddStudentList(StudentListAddViewModel studentListAddViewModel)
+        {
+            StudentListAddViewModel studentListAdd = new StudentListAddViewModel();
+            if (TokenManager.CheckToken(studentListAddViewModel._tenantName + studentListAddViewModel._userName, studentListAddViewModel._token))
+            {
+                studentListAdd = this.studentRepository.AddStudentList(studentListAddViewModel);
+            }
+            else
+            {
+                studentListAdd._failure = true;
+                studentListAdd._message = TOKENINVALID;
+            }
+            return studentListAdd;
         }
     }
 }

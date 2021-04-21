@@ -1,12 +1,12 @@
 import { Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
 import icClose from '@iconify/icons-ic/twotone-close';
-import { BlockListViewModel } from '../../../../../models/schoolPeriodModel';
+import { BlockListViewModel } from '../../../../../models/school-period.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SchoolPeriodService } from '../../../../../services/school-period.service';
 import { RoomService } from '../../../../../services/room.service';
-import { RoomListViewModel } from '../../../../../models/roomModel';
+import { RoomListViewModel } from '../../../../../models/room.model';
 import icPlusCircle from '@iconify/icons-ic/add-circle-outline';
-import { BlockedSchedulingCourseSectionAddModel, OutputEmitDataFormat, CourseBlockSchedule, DeleteCourseSectionSchedule } from '../../../../../models/courseSectionModel';
+import { BlockedSchedulingCourseSectionAddModel, OutputEmitDataFormat, CourseBlockSchedule, DeleteCourseSectionSchedule } from '../../../../../models/course-section.model';
 import { map } from 'rxjs/operators';
 import { CourseSectionService } from '../../../../../services/course-section.service';
 import { NgForm } from '@angular/forms';
@@ -81,8 +81,6 @@ export class RotatingSchedulingComponent implements OnInit {
 
   getAllBlockList() {
     this.blockListViewModel.getBlockListForView = [];
-    this.blockListViewModel.tenantId = sessionStorage.getItem('tenantId');
-    this.blockListViewModel.schoolId = +sessionStorage.getItem('selectedSchoolId');
     this.schoolPeriodService.getAllBlockList(this.blockListViewModel).pipe(
       map((res) => {
         res.getBlockListForView = res.getBlockListForView.filter((item) => {
@@ -148,7 +146,6 @@ export class RotatingSchedulingComponent implements OnInit {
     
   }
   getAllRooms() {
-    this.roomListViewModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.roomService.getAllRoom(this.roomListViewModel).subscribe(
       (res: RoomListViewModel) => {
         if (typeof (res) == 'undefined') {

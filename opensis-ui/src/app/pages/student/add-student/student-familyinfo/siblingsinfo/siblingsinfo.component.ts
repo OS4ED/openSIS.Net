@@ -12,9 +12,9 @@ import { AddSiblingComponent } from '../add-sibling/add-sibling.component';
 import { ViewSiblingComponent } from '../view-sibling/view-sibling.component';
 import { StudentService } from '../../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { StudentSiblingAssociation, StudentViewSibling } from '../../../../../models/studentModel';
+import { StudentSiblingAssociation, StudentViewSibling } from '../../../../../models/student.model';
 import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog/confirm-dialog.component';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../../services/Crypto.service';
 
 @Component({
@@ -91,13 +91,13 @@ export class SiblingsinfoComponent implements OnInit {
       else {
         if (res._failure) {
             if(res.studentMaster==null){
-              this.studentViewSibling.studentMaster=null;
               this.snackbar.open( res._message, '', {
                 duration: 10000
               });
+              this.studentViewSibling.studentMaster=[];
             }
             else{
-              this.studentViewSibling.studentMaster=null;
+              this.studentViewSibling.studentMaster=[];
             }
         } else {  
           this.studentViewSibling.studentMaster=res.studentMaster;

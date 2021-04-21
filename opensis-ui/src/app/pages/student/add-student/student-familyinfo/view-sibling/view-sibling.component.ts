@@ -4,13 +4,13 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation';
 import { ParentInfoService } from '../../../../../services/parent-info.service';
-import { AddParentInfoModel } from '../../../../../models/parentInfoModel';
+import { AddParentInfoModel } from '../../../../../models/parent-info.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { CountryModel } from '../../../../../models/countryModel';
+import { CountryModel } from '../../../../../models/country.model';
 import { CommonService } from '../../../../../services/common.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { SchoolAddViewModel } from '../../../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../../../models/school-master.model';
 @Component({
   selector: 'vex-view-sibling',
   templateUrl: './view-sibling.component.html',

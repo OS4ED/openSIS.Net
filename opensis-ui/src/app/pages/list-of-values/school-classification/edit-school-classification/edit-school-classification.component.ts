@@ -4,7 +4,7 @@ import { FormBuilder,FormGroup, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import {LovAddView} from '../../../../models/lovModel';
+import {LovAddView} from '../../../../models/lov.model';
 import {CommonService} from '../../../../services/common.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';

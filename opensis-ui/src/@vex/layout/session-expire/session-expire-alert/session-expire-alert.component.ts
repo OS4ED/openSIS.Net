@@ -1,8 +1,8 @@
 import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
-import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
+import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
-import { UserViewModel } from '../../../../app/models/userModel';
+import { UserViewModel } from '../../../../app/models/user.model';
 import { SessionService } from '../../../services/session.service';
 
 @Component({
@@ -19,7 +19,8 @@ export class SessionExpireAlertComponent implements OnInit,OnDestroy {
     public dialogRef: MatDialogRef<SessionExpireAlertComponent>,
       @Inject(MAT_DIALOG_DATA) public data,
       private sessionService:SessionService,
-      public translateService: TranslateService) {
+      public translateService: TranslateService,
+      private dialog: MatDialog) {
         translateService.use('en');
      }
 
@@ -36,7 +37,10 @@ export class SessionExpireAlertComponent implements OnInit,OnDestroy {
   }
 
   logout() {
-    this.dialogRef.close(null)
+    sessionStorage.clear();
+    localStorage.clear();
+    this.dialog.closeAll();
+    this.router.navigateByUrl('/');
   }
 
   continue() {

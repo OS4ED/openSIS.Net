@@ -37,10 +37,10 @@ export class SharedFunction {
   }
 
   autoGeneratePassword() {
-    var chars = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+<>ABCDEFGHIJKLMNOP1234567890";
-    var pass = "";
-    for (var x = 0; x < 8; x++) {
-      var i = Math.random() * chars.length;
+    let chars = "abcdefghijklmnopqrstuvwxyz!@#$%^&*()-+<>ABCDEFGHIJKLMNOP1234567890";
+    let pass = "";
+    for (let x = 0; x < 8; x++) {
+      let i = Math.random() * chars.length;
       pass += chars.charAt(i);
     }
 
@@ -49,8 +49,8 @@ export class SharedFunction {
 
   formatDate(date) {
     if (date !== "" && date !== null && date !== undefined && date != "-") {
-      var formattedDate = date.split('T');
-      var formattedDateAfterConversion = moment(formattedDate[0]).format('MMM D, YYYY');
+      let formattedDate = date.split('T');
+      let formattedDateAfterConversion = moment(formattedDate[0]).format('MMM D, YYYY');
       return formattedDateAfterConversion;
     } else {
       return "-";
@@ -59,7 +59,7 @@ export class SharedFunction {
   }
   formatDateInEditMode(date) {
     if (date !== "" && date !== null && date != "-") {
-      var formattedDate = new Date(date);
+      let formattedDate = new Date(date);
       return moment(formattedDate).format('YYYY-MM-DD');
     } else {
       return null;
@@ -101,33 +101,33 @@ export class SharedFunction {
   getAge(birthDate) {
     if (birthDate !== null && birthDate != undefined) {
       //extract and collect only date from date-time string  
-      var mdate = birthDate.toString();
-      var dobYear = parseInt(mdate.substring(0, 4), 10);
-      var dobMonth = parseInt(mdate.substring(5, 7), 10);
-      var dobDate = parseInt(mdate.substring(8, 10), 10);
+      let mdate = birthDate.toString();
+      let dobYear = parseInt(mdate.substring(0, 4), 10);
+      let dobMonth = parseInt(mdate.substring(5, 7), 10);
+      let dobDate = parseInt(mdate.substring(8, 10), 10);
 
       //get the current date from system  
-      var today = new Date();
+      let today = new Date();
       //date string after broking  
-      var birthday = new Date(dobYear, dobMonth - 1, dobDate);
+      let birthday = new Date(dobYear, dobMonth - 1, dobDate);
 
       //calculate the difference of dates  
-      var diffInMillisecond = today.valueOf() - birthday.valueOf();
+      let diffInMillisecond = today.valueOf() - birthday.valueOf();
 
-      //convert the difference in milliseconds and store in day and year variable          
-      var yearAge = Math.floor(diffInMillisecond / 31536000000);
-      var dayAge = Math.floor((diffInMillisecond % 31536000000) / 86400000);
-
-
-
-      var monthAge = Math.floor(dayAge / 30);
-      var dayAgedayAge = dayAge % 30;
-
-      var tMnt = (monthAge + (yearAge * 12));
-      var tDays = (tMnt * 30) + dayAge;
+      //convert the difference in milliseconds and store in day and year letiable          
+      let yearAge = Math.floor(diffInMillisecond / 31536000000);
+      let dayAge = Math.floor((diffInMillisecond % 31536000000) / 86400000);
 
 
-      var age = yearAge + " years " + monthAge + " months ";
+
+      let monthAge = Math.floor(dayAge / 30);
+      let dayAgedayAge = dayAge % 30;
+
+      let tMnt = (monthAge + (yearAge * 12));
+      let tDays = (tMnt * 30) + dayAge;
+
+
+      let age = yearAge + " years " + monthAge + " months ";
 
       return age;
 

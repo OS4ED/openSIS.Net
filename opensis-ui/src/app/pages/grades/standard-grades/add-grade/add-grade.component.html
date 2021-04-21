@@ -1,6 +1,6 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
     <h2 class="headline m-0" fxFlex="auto">
-        {{ "addGrade" | translate }}
+        {{ gradeTitle | translate }}
     </h2>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
@@ -8,24 +8,28 @@
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-content>
+<mat-dialog-content [formGroup]="form">
     <ul class="mt-4">
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "title" | translate }} <span>*</span></mat-label>
-                <input name="title" matInput />
+                <mat-label>{{ "title" | translate }}</mat-label>
+                <input cdkFocusInitial type="text" formControlName="title" required matInput />
+                <mat-error *ngIf="form.get('title').hasError('whitespace')">{{'titleIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "description" | translate }} <span>*</span></mat-label>
-                <input name="description" matInput />
+                <mat-label>{{ "description" | translate }}</mat-label>
+                <input type="text" formControlName="description" required matInput />
+                <mat-error *ngIf="form.get('description').hasError('required')">{{'descriptionIsRequired'|translate}}
+                </mat-error>
             </mat-form-field>
         </li>
     </ul>
 </mat-dialog-content>
 
 <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-4">
-    <button mat-flat-button class="uppercase">Cancel</button>
-    <button color="primary" mat-raised-button type="submit" class="uppercase">Submit</button>
+    <button mat-flat-button mat-dialog-close class="uppercase" type="button">Cancel</button>
+    <button color="primary" (click)="submit()" mat-raised-button type="submit" class="uppercase">{{buttonType |
+        translate}}</button>
 </mat-dialog-actions>

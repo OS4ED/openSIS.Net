@@ -365,5 +365,33 @@ namespace opensis.core.Staff.Services
             }
             return staffPhotoUpdate;
         }
+
+        /// <summary>
+        /// Add Staff List
+        /// </summary>
+        /// <param name="staffListAddViewModel"></param>
+        /// <returns></returns>
+        public StaffListAddViewModel AddStaffList(StaffListAddViewModel staffListAddViewModel)
+        {
+            StaffListAddViewModel staffListAdd = new StaffListAddViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(staffListAddViewModel._tenantName + staffListAddViewModel._userName, staffListAddViewModel._token))
+                {
+                    staffListAdd = this.staffRepository.AddStaffList(staffListAddViewModel);
+                }
+                else
+                {
+                    staffListAdd._failure = true;
+                    staffListAdd._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                staffListAdd._failure = true;
+                staffListAdd._message = es.Message;
+            }
+            return staffListAdd;
+        }
     }
 }

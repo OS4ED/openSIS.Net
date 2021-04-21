@@ -28,8 +28,8 @@ import { Style, StyleService } from '../@vex/services/style.service';
 import { ConfigName } from '../@vex/interfaces/config-name.model';
 import { SchoolService } from './services/school.service';
 import { Subject } from 'rxjs';
-import { PermissionGroupListViewModel, RolePermissionListViewModel } from './models/rollBasedAccessModel';
-import { RollBasedAccessService } from './services/rollBasedAccess.service';
+import { PermissionGroupListViewModel, RolePermissionListViewModel } from './models/roll-based-access.model';
+import { RollBasedAccessService } from './services/roll-based-access.service';
 import { MenuModel } from './models/menu.model';
 import { CryptoService } from './services/Crypto.service';
 

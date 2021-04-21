@@ -15,13 +15,13 @@ import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icPreview from '@iconify/icons-ic/round-preview';
 import icPeople from '@iconify/icons-ic/twotone-people';
 import { LayoutService } from 'src/@vex/services/layout.service';
-import { DashboardViewModel } from '../../../models/dashboardModel';
+import { DashboardViewModel } from '../../../models/dashboard.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { DasboardService } from '../../../services/dasboard.service';
 import { CalendarDateFormatter, CalendarEvent, CalendarEventAction, CalendarEventTimesChangedEvent, CalendarMonthViewBeforeRenderEvent, CalendarMonthViewDay, CalendarView, DAYS_OF_WEEK } from 'angular-calendar';
-import { CalendarEventModel } from '../../../models/calendarEventModel';
+import { CalendarEventModel } from '../../../models/calendar-event.model';
 import { Observable, Subject } from 'rxjs';
-import { CalendarModel } from '../../../models/calendarModel';
+import { CalendarModel } from '../../../models/calendar.model';
 import { map, takeUntil, tap, shareReplay } from 'rxjs/operators';
 import { CustomDateFormatter } from '../../shared-module/user-defined-directives/custom-date-formatter.provider';
 import { CommonService } from '../../../services/common.service';
@@ -197,8 +197,6 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     });
   }
   getDashboardView() {
-    this.dashboardViewModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.dashboardViewModel.academicYear = +sessionStorage.getItem("academicyear");
     this.events$ = this.dasboardService.getDashboardView(this.dashboardViewModel).pipe(shareReplay(),tap((res)=> {
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Dashboard View failed. ' + sessionStorage.getItem("httpError"), '', {
@@ -212,7 +210,6 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
           this.studentCount = res.totalStudent !== null ? res.totalStudent : 0;
           this.staffCount = res.totalStaff !== null ? res.totalStaff : 0;
           this.parentCount = res.totalParent !== null ? res.totalParent : 0;
-          var checkCalendarEvent= res.calendarEventList;
           if(res.noticeTitle !==null){
             this.noticeTitle = res.noticeTitle;
             this.noticeHide = true;
@@ -271,8 +268,8 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
 
   getDays(days: string) {
     const calendarDays = days;
-    var allDays = [0, 1, 2, 3, 4, 5, 6];
-    var splitDays = calendarDays.split('').map(x => +x);
+    let allDays = [0, 1, 2, 3, 4, 5, 6];
+    let splitDays = calendarDays.split('').map(x => +x);
     this.filterDays = allDays.filter(f => !splitDays.includes(f));
     this.weekendDays = this.filterDays;
     this.cssClass = 'bg-aqua';

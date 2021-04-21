@@ -304,5 +304,35 @@ namespace opensis.core.AttendanceCode.Services
 
             return attendanceCodeCategoriesDeleteModel;
         }
+
+        /// <summary>
+        /// Update Attendance Code Sort Order
+        /// </summary>
+        /// <param name="attendanceCodeSortOrderModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeSortOrderModel UpdateAttendanceCodeSortOrder(AttendanceCodeSortOrderModel attendanceCodeSortOrderModel)
+        {
+            AttendanceCodeSortOrderModel AttendanceCodeSortOrderUpdate = new AttendanceCodeSortOrderModel();
+            try
+            {
+                if (TokenManager.CheckToken(attendanceCodeSortOrderModel._tenantName + attendanceCodeSortOrderModel._userName, attendanceCodeSortOrderModel._token))
+                {
+                    AttendanceCodeSortOrderUpdate = this.attendanceCodeRepository.UpdateAttendanceCodeSortOrder(attendanceCodeSortOrderModel);
+                }
+                else
+                {
+                    AttendanceCodeSortOrderUpdate._failure = true;
+                    AttendanceCodeSortOrderUpdate._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                AttendanceCodeSortOrderUpdate._failure = true;
+                AttendanceCodeSortOrderUpdate._message = es.Message;
+            }
+
+            return AttendanceCodeSortOrderUpdate;
+        }
+
     }
 }

@@ -10,27 +10,27 @@ import icEdit from '@iconify/icons-ic/edit';
 import icVisibility from '@iconify/icons-ic/twotone-visibility';
 import icVisibilityOff from '@iconify/icons-ic/twotone-visibility-off';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { CheckStaffInternalIdViewModel, StaffAddModel } from '../../../../models/staffModel';
-import { LanguageModel } from '../../../../models/languageModel';
+import { CheckStaffInternalIdViewModel, StaffAddModel } from '../../../../models/staff.model';
+import { LanguageModel } from '../../../../models/language.model';
 import { ethnicity, gender, maritalStatus, race, salutation, suffix } from '../../../../enums/studentAdd.enum';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonService } from '../../../../services/common.service';
 import { LoginService } from '../../../../services/login.service';
 import { SharedFunction } from '../../../../pages/shared/shared-function';
-import { CountryModel } from '../../../../models/countryModel';
+import { CountryModel } from '../../../../models/country.model';
 import { StaffService } from '../../../../services/staff.service';
-import { CheckUserEmailAddressViewModel } from '../../../../models/userModel';
+import { CheckUserEmailAddressViewModel } from '../../../../models/user.model';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { WashInfoEnum } from '../../../../enums/wash-info.enum';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
-import { LovList } from '../../../../models/lovModel';
+import { LovList } from '../../../../models/lov.model';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { MiscModel } from '../../../../models/misc-data-student.model';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
 import { CryptoService } from '../../../../services/Crypto.service';
 import { Router } from '@angular/router';
 @Component({
@@ -291,7 +291,7 @@ export class StaffGeneralinfoComponent implements OnInit {
   }
 
   GetAllLanguage() {
-    this.languages._tenantName = sessionStorage.getItem("tenant");
+    
     this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.languageList = [];
@@ -471,8 +471,6 @@ export class StaffGeneralinfoComponent implements OnInit {
     if (this.staffAddModel.fieldsCategoryList !== null) {
       this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
     }
-    this.staffAddModel._token = sessionStorage.getItem("token");
-    this.staffAddModel._tenantName = sessionStorage.getItem("tenant");
     this.staffAddModel.staffMaster.dob = this.commonFunction.formatDateSaveWithoutTime(this.staffAddModel.staffMaster.dob);
     this.staffService.updateStaff(this.staffAddModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
       if (typeof (data) == 'undefined') {

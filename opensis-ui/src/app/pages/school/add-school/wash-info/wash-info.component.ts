@@ -4,7 +4,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { Router } from '@angular/router';
 import { FormGroup, FormBuilder, Validators, NgForm } from '@angular/forms';
 import { WashInfoEnum } from '../../../../enums/wash-info.enum';
-import { SchoolAddViewModel } from '../../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../../models/school-master.model';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { SchoolService } from '../../../../../app/services/school.service'
@@ -14,15 +14,15 @@ import { SharedFunction } from '../../../shared/shared-function';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import icEdit from '@iconify/icons-ic/twotone-edit';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { LovList } from './../../../../models/lovModel';
+import { LovList } from '../../../../models/lov.model';
 import { CommonService } from '../../../../services/common.service';
 import * as cloneDeep from 'lodash/cloneDeep';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel, RolePermissionViewModel } from './../../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
 @Component({
   selector: 'vex-wash-info',
   templateUrl: './wash-info.component.html',

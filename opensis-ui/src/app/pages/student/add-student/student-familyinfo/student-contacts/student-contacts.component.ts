@@ -10,11 +10,11 @@ import icAdd from '@iconify/icons-ic/baseline-add';
 import icRemove from '@iconify/icons-ic/remove-circle';
 import { MatDialog } from '@angular/material/dialog';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
-import { GetAllParentInfoModel,AddParentInfoModel ,RemoveAssociateParent } from '../../../../../models/parentInfoModel';
+import { GetAllParentInfoModel,AddParentInfoModel ,RemoveAssociateParent } from '../../../../../models/parent-info.model';
 import { ParentInfoService } from '../../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog/confirm-dialog.component';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../../services/Crypto.service';
 @Component({
   selector: 'vex-student-contacts',
@@ -168,8 +168,8 @@ export class StudentContactsComponent implements OnInit {
           else { 
             this.parentListArray= data.parentInfoListForView;
             
-            var var1 = 0;
-            var var2 = 0;
+            let var1 = 0;
+            let var2 = 0;
             this.parentListArray.forEach(val=>{             
               if(val.contactType === "Primary"){
                 var1++;

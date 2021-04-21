@@ -1,4 +1,4 @@
-import { LovAddView } from './../../../../models/lovModel';
+import { LovAddView } from '../../../../models/lov.model';
 import { CommonService } from './../../../../services/common.service';
 import { FormGroup, FormBuilder, Validators } from '@angular/forms';
 import { Component, Inject, OnInit } from '@angular/core';

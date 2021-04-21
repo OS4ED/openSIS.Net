@@ -1,7 +1,7 @@
 {
   
     "apiURLOpensis":"https://opensis.net:8088",
-    "apiURL":"http://103.230.103.93:8081/",
+    "apiURL":"http://14.99.214.220:8081/",
 
     "encryptionKey" :"oPen$!$.b14Ca5898a4e4133b!",
     "dataEncryptionKey" :"oPen$!$.b14Ca58!"

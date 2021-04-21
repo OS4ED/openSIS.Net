@@ -14,7 +14,7 @@ import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditFemaleToiletAccessibilityComponent } from './edit-female-toilet-accessibility/edit-female-toilet-accessibility.component';
 import { CommonService } from '../../../services/common.service';
-import { LovAddView, LovList } from '../../../models/lovModel';
+import { LovAddView, LovList } from '../../../models/lov.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,7 +22,7 @@ import { ExcelService } from '../../../services/excel.service';
 import { SharedFunction } from '../../shared/shared-function';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
@@ -211,15 +211,23 @@ export class FemaleToiletAccessibilityComponent implements OnInit {
     );
   }
 
+  translateKey(key) {
+    let trnaslateKey;
+   this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportToExcel(){
     if (this.femaleToiletAccessibilityList.data?.length > 0) {
-      let reportList = this.femaleToiletAccessibilityList.data?.map((x) => {
+      let reportList = this.femaleToiletAccessibilityList.data?.map((item) => {
         return {
-          Title: x.lovColumnValue,
-          "Created By": x.createdBy!==null ? x.createdBy: '-',
-          "Create Date": this.commonfunction.transformDateWithTime(x.createdOn),
-          "Updated By": x.updatedBy!==null ? x.updatedBy: '-',
-          "Update Date":  this.commonfunction.transformDateWithTime(x.updatedOn)
+          [this.translateKey('accessibilityName')]: item.lovColumnValue,
+          [this.translateKey('createdBy')]: item.createdBy ? item.createdBy: '-',
+          [this.translateKey('createDate')]: this.commonfunction.transformDateWithTime(item.createdOn),
+          [this.translateKey('updatedBy')]: item.updatedBy ? item.updatedBy: '-',
+          [this.translateKey('updateDate')]:  this.commonfunction.transformDateWithTime(item.updatedOn)
         }
       });
       this.excelService.exportAsExcelFile(reportList,"Female_Toilet_Accessibility_List_")

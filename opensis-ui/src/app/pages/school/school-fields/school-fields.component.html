@@ -102,10 +102,10 @@
                 <ng-container matColumnDef="action">
                     <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
                     <mat-cell *matCellDef="let element">
-                        <a *ngIf="editPermission" class="mr-3 cursor-pointer" (click)="openEditdata(element)">
+                        <a *ngIf="editPermission && !element.systemField" class="mr-3 cursor-pointer" (click)="openEditdata(element)">
                             <mat-icon [icIcon]="icEdit"></mat-icon>
                         </a>
-                        <a *ngIf="deletePermission" class="cursor-pointer"(click)="confirmDelete(element)">
+                        <a *ngIf="deletePermission && !element.systemField" class="cursor-pointer"(click)="confirmDelete(element)">
                             <mat-icon [icIcon]="icDelete"></mat-icon>
                         </a>
                     </mat-cell>

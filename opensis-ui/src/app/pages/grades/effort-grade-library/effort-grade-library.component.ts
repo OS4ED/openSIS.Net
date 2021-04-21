@@ -28,7 +28,7 @@ import { takeUntil } from 'rxjs/operators';
 import { LoaderService } from '../../../services/loader.service';
 import { Subject } from 'rxjs';
 import { CryptoService } from '../../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 
 @Component({
   selector: 'vex-effort-grade-library',
@@ -392,11 +392,20 @@ export class EffortGradeLibraryComponent implements OnInit {
 
 
   }
+
+  translateKey(key) {
+    let trnaslateKey;
+    this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportToExcel(){
     if (this.effortItemList.data?.length > 0) {
       let reportList = this.effortItemList.data?.map((x) => {
         return {
-          Title:x.effortItemTitle
+          [this.translateKey('title')]: x.effortItemTitle
         }
       });
       this.excelService.exportAsExcelFile(reportList,"Effort_Item_List_")

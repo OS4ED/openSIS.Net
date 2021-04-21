@@ -2,19 +2,20 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy, Input } 
 import { NgForm } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
 import { StudentService } from '../../../../services/student.service';
-import { filterParams, StudentListModel, StudentMasterSearchModel } from '../../../../models/studentModel';
-import { GetAllSectionModel } from '../../../../models/sectionModel';
+import { filterParams, StudentListModel, StudentMasterSearchModel } from '../../../../models/student.model';
+import { GetAllSectionModel } from '../../../../models/section.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { SectionService } from '../../../../services/section.service';
 import { CommonService } from '../../../../services/common.service';
 import { LoginService } from '../../../../services/login.service';
-import { CountryModel } from '../../../../models/countryModel';
-import { LanguageModel } from '../../../../models/languageModel';
+import { CountryModel } from '../../../../models/country.model';
+import { LanguageModel } from '../../../../models/language.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
+import { SearchFilterAddViewModel } from '../../../../models/search-filter.model';
 
+import { SharedFunction } from '../../../shared/shared-function';
 @Component({
   selector: 'vex-search-student',
   templateUrl: './search-student.component.html',
@@ -55,6 +56,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
     private sectionService: SectionService,
     private commonService: CommonService,
     private loginService: LoginService,
+    private commonFunction: SharedFunction,
   ) { }
 
   ngOnInit(): void {
@@ -142,11 +144,16 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
 
   submit() {
     this.params = [];
-    for (var key in this.studentMasterSearchModel) {
+    for (let key in this.studentMasterSearchModel) {
       if (this.studentMasterSearchModel.hasOwnProperty(key))
-        if (this.studentMasterSearchModel[key] !== null && this.studentMasterSearchModel[key] !=='' ) {
+      if (this.studentMasterSearchModel[key] !== null && this.studentMasterSearchModel[key] !== '') {
+        if (key === 'dob') {
+          this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.commonFunction.formatDateSaveWithoutTime(this.studentMasterSearchModel[key]) })
+        }
+        else {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.studentMasterSearchModel[key] })
         }
+      }
     }
 
 
@@ -182,8 +189,8 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
     }
     this.getAllStudent.filterParams = this.params;
     this.getAllStudent.sortingModel = null;
-    this.getAllStudent.dobStartDate = this.dobStartDate;
-    this.getAllStudent.dobEndDate = this.dobEndDate;
+    this.getAllStudent.dobStartDate = this.commonFunction.formatDateSaveWithoutTime(this.dobStartDate);
+    this.getAllStudent.dobEndDate = this.commonFunction.formatDateSaveWithoutTime(this.dobEndDate);
     this.commonService.setSearchResult(this.params);
     this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if (data._failure) {

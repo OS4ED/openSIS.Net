@@ -16,15 +16,15 @@ import { CommonService } from "../../../../services/common.service";
 import { LoginService } from "../../../../services/login.service";
 import { MatSnackBar } from "@angular/material/snack-bar";
 import icClose from "@iconify/icons-ic/twotone-close";
-import { CountryModel } from "src/app/models/countryModel";
-import { LanguageModel } from "src/app/models/languageModel";
+import { CountryModel } from "src/app/models/country.model";
+import { LanguageModel } from "src/app/models/language.model";
 import { Subject } from "rxjs";
-import { StudentListModel, StudentMasterSearchModel } from "src/app/models/studentModel";
-import { SearchFilterAddViewModel } from "src/app/models/searchFilterModel";
+import { StudentListModel, StudentMasterSearchModel } from "src/app/models/student.model";
+import { SearchFilterAddViewModel } from "src/app/models/search-filter.model";
 import { takeUntil } from "rxjs/operators";
 import { SharedFunction } from "src/app/pages/shared/shared-function";
 import { EnrollmentCodesService } from "src/app/services/enrollment-codes.service";
-import { EnrollmentCodeListView } from "src/app/models/enrollmentCodeModel";
+import { EnrollmentCodeListView } from "src/app/models/enrollment-code.model";
 import { MatSlideToggle } from "@angular/material/slide-toggle";
 
 @Component({
@@ -49,6 +49,7 @@ export class SearchStudentComponent implements OnInit {
   enrollmentCodeListView: EnrollmentCodeListView= new EnrollmentCodeListView();
   dobEndDate: string;
   dobStartDate: string;
+  showAllSchools: boolean = false;
   showSaveFilter = true;
   params = [];
   searchTitle: string = 'search';
@@ -138,7 +139,7 @@ export class SearchStudentComponent implements OnInit {
   submit() {
     this.getAllStudent= new StudentListModel();
     this.params = [];
-    for (var key in this.studentMasterSearchModel) {
+    for (let key in this.studentMasterSearchModel) {
       if (this.studentMasterSearchModel.hasOwnProperty(key))
         if (this.studentMasterSearchModel[key] !== null && this.studentMasterSearchModel[key] !== '') {
           if (key === 'exitDate' || key === 'enrollmentDate' || key === 'dob') {
@@ -153,15 +154,15 @@ export class SearchStudentComponent implements OnInit {
     this.getAllStudent.filterParams = this.params;
     this.getAllStudent.sortingModel = null;
     this.getAllStudent.schoolId = this.searchSchoolId;
-    this.studentService.searchStudentListForReenroll(this.getAllStudent).subscribe(data => {
+    this.studentService.searchStudentListForReenroll(this.getAllStudent,this.searchSchoolId).subscribe(data => {
       if (data._failure) {
-        this.searchList.emit(data);
+        this.searchList.emit({data:data, allSchool:this.showAllSchools});
         this.snackbar.open('' + data._message, '', {
           duration: 10000
         });
 
       } else {
-        this.searchList.emit(data);
+        this.searchList.emit({data:data, allSchool:this.showAllSchools});
         this.showHideAdvanceSearch.emit({ hide: false });
       }
     });

@@ -1,4 +1,4 @@
-<ul class="grid sm:grid-cols-2 sm:col-gap-6 row-gap-6 sm:row-gap-8 my-6 px-6" *ngIf="scheduledTeacher?.courseSectionsList.length>0;else noTeachers">
+<ul class="grid sm:grid-cols-2 sm:col-gap-6 row-gap-6 sm:row-gap-8 my-6 px-6" *ngIf="scheduledTeacher?.courseSectionsList[0]?.staffCoursesectionSchedule.length>0;else noTeachers">
     <li *ngFor="let staff of scheduledTeacher.courseSectionsList[0]?.staffCoursesectionSchedule">
         <div class="bg-white rounded border px-4 py-3">
             <div fxLayout="row" fxLayoutAlign="start center" fxLayoutGap="16px" class="items-center">

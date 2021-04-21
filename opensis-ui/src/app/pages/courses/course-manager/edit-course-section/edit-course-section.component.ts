@@ -20,16 +20,16 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { Router } from '@angular/router';
 import { CalendarService } from '../../../../services/calendar.service';
-import { CalendarListModel, CalendarModel } from '../../../../models/calendarModel';
+import { CalendarListModel, CalendarModel } from '../../../../models/calendar.model';
 import { GradesService } from '../../../../services/grades.service';
 import { GradeScaleListView, GetAllSchoolSpecificListModel } from '../../../../models/grades.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { BlockedSchedulingCourseSectionAddModel, CourseCalendarSchedule, CourseSection, OutputEmitDataFormat, CourseVariableSchedule, CourseSectionAddViewModel, FixedSchedulingCourseSectionAddModel, VariableSchedulingCourseSectionAddModel, CourseVariableScheduleListModel, GetAllCourseStandardForCourseSectionModel } from '../../../../models/courseSectionModel';
+import { BlockedSchedulingCourseSectionAddModel, CourseCalendarSchedule, CourseSection, OutputEmitDataFormat, CourseVariableSchedule, CourseSectionAddViewModel, FixedSchedulingCourseSectionAddModel, VariableSchedulingCourseSectionAddModel, CourseVariableScheduleListModel, GetAllCourseStandardForCourseSectionModel } from '../../../../models/course-section.model';
 
 import { FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms';
 import { AttendanceCodeService } from '../../../../services/attendance-code.service';
-import { GetAllAttendanceCategoriesListModel } from '../../../../models/attendanceCodeModel';
-import { GetAllMarkingPeriodTitle, GetMarkingPeriodTitleListModel } from '../../../../models/markingPeriodModel';
+import { GetAllAttendanceCategoriesListModel } from '../../../../models/attendance-code.model';
+import { GetAllMarkingPeriodTitle, GetMarkingPeriodTitleListModel } from '../../../../models/marking-period.model';
 import { MarkingPeriodService } from '../../../../services/marking-period.service';
 import { CourseSectionService } from '../../../../services/course-section.service';
 import { SharedFunction } from '../../../shared/shared-function';
@@ -254,11 +254,11 @@ export class EditCourseSectionComponent implements OnInit {
     this.selectedCalendar = this.calendarList[index];
 
     if (this.selectedCalendar !== undefined) {
-      var startDateArr = this.selectedCalendar?.startDate?.split("T");
+      let startDateArr = this.selectedCalendar?.startDate?.split("T");
       this.startDate = startDateArr[0];
     }
     if (this.selectedCalendar !== undefined) {
-      var endDateArr = this.selectedCalendar?.endDate?.split("T");
+      let endDateArr = this.selectedCalendar?.endDate?.split("T");
       this.endDate = endDateArr[0];
     }
     this.showCalendarDates = false;
@@ -306,7 +306,6 @@ export class EditCourseSectionComponent implements OnInit {
 
 
   getAllAttendanceCategoryList() {
-    this.getAllAttendanceCategoriesListModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.attendanceCodeService.getAllAttendanceCodeCategories(this.getAllAttendanceCategoriesListModel).subscribe(data => {
       if (data._failure) {
 
@@ -325,7 +324,6 @@ export class EditCourseSectionComponent implements OnInit {
 
 
   getAllMarkingPeriodList() {
-    this.getMarkingPeriodTitleListModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.getMarkingPeriodTitleListModel.academicYear = +sessionStorage.getItem("academicyear");
     this.markingPeriodService.getAllMarkingPeriodList(this.getMarkingPeriodTitleListModel).subscribe(data => {
       if (data._failure) {

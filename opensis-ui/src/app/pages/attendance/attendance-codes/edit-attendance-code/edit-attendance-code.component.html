@@ -23,14 +23,6 @@
     </mat-form-field>
     
     <mat-form-field class="w-full" appearance="outline" color="primary">
-        <mat-label>{{'sortOrder' | translate}}</mat-label>
-        <input type="number" formControlName="sortOrder" min=1 oninput="validity.valid||(value='');" matInput required>
-        <mat-error *ngIf="form.get('sortOrder').hasError('required')">{{'sortOrderIsRequired'|translate}}
-        </mat-error>
-        <mat-error *ngIf="form.get('sortOrder').hasError('min')">{{'sortOrderCannotBeLessThenOne'|translate}}</mat-error>
-    </mat-form-field>
-    
-    <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'allowEntryBy' | translate}}</mat-label>
         <mat-select name="allowEntryBy" formControlName="allowEntryBy">
             <mat-option value="null">N/A</mat-option>
@@ -41,14 +33,14 @@
 
     <mat-checkbox formControlName="defaultCode" class="mb-4" color="primary">{{'defaultForTeacherAndOffice' | translate}}</mat-checkbox>
     
-    <mat-form-field class="w-full" appearance="outline" color="primary">
+    <mat-form-field class="w-full" appearance="outline" color="primary" >
         <mat-label>{{'stateCode' | translate}}</mat-label>
-        <mat-select name="stateCode" formControlName="stateCode">
-            <mat-option value="null">N/A</mat-option>
+        <mat-select name="stateCode" formControlName="stateCode" required>
             <mat-option value="Present">Present</mat-option>
             <mat-option value="Absent">Absent</mat-option>
             <mat-option value="Half Day">Half Day</mat-option>
         </mat-select>
+        <mat-error *ngIf="form.get('stateCode').hasError('required')">{{'stateCodeIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
 </mat-dialog-content>

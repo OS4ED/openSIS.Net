@@ -23,11 +23,20 @@ import {MatSortModule} from '@angular/material/sort';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatFormFieldModule } from '@angular/material/form-field';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { SearchStaffComponent } from './search-staff/search-staff.component';
+import { IconModule } from '@visurel/iconify-angular';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatExpansionModule } from '@angular/material/expansion';
+import { MatNativeDateModule, MatRippleModule } from '@angular/material/core';
+import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { SharedModuleModule } from 'src/app/pages/shared-module/shared-module.module';
 
 
 
 @NgModule({
-  declarations: [TakeAttendanceComponent],
+  declarations: [TakeAttendanceComponent, SearchStaffComponent],
   imports: [
     CommonModule,
     TakeAttendanceRoutingModule,
@@ -51,7 +60,17 @@ import { MatFormFieldModule } from '@angular/material/form-field';
     MatSortModule,
     MatTooltipModule,
     MatDatepickerModule,
-    MatFormFieldModule
+    MatFormFieldModule,
+    FormsModule,
+    ReactiveFormsModule,
+    IconModule,
+    MatSnackBarModule,
+    SharedModuleModule,
+    MatProgressSpinnerModule,
+    MatExpansionModule,
+    MatNativeDateModule,
+    MatSlideToggleModule,
+    MatRippleModule
   ]
 })
 export class TakeAttendanceModule { }

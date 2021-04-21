@@ -7,7 +7,7 @@ import icSearch from '@iconify/icons-ic/search';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.animation';
 import { stagger40ms } from '../../../../../../@vex/animations/stagger.animation';
-import { ScheduleStudentForView, ScheduleStudentListViewModel } from '../../../../../models/studentCourseSectionScheduleAddViewModel';
+import { ScheduleStudentForView, ScheduleStudentListViewModel } from '../../../../../models/student-schedule.model';
 import { LoaderService } from '../../../../../services/loader.service';
 import { StudentScheduleService } from '../../../../../services/student-schedule.service';
 

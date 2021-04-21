@@ -7,14 +7,15 @@ import { AddDaysScheduleComponent } from './add-days-schedule/add-days-schedule.
 import { TeacherScheduleService } from '../../../services/teacher-schedule.service';
 import { CourseSectionList, StaffScheduleView, StaffScheduleViewModel } from '../../../models/teacher-schedule.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GetMarkingPeriodTitleListModel } from '../../../models/markingPeriodModel';
+import { GetMarkingPeriodTitleListModel } from '../../../models/marking-period.model';
 import { MarkingPeriodService } from '../../../services/marking-period.service';
 import { LoaderService } from '../../../services/loader.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
-
+import {weeks} from '../../../common/static-data'
+import { DefaultValuesService } from '../../../common/default-values.service';
 @Component({
   selector: 'vex-schedule-teacher',
   templateUrl: './schedule-teacher.component.html',
@@ -31,15 +32,7 @@ export class ScheduleTeacherComponent implements OnInit,OnDestroy {
   staffScheduleListForView:StaffScheduleViewModel= new StaffScheduleViewModel();
   getMarkingPeriodTitleListModel: GetMarkingPeriodTitleListModel = new GetMarkingPeriodTitleListModel();
   isStartSchedulingPossible=false;
-  weeks = [
-    { name: 'Sun',id: 0 },
-    { name: 'Mon',id: 1 },
-    { name: 'Tue', id: 2 },
-    { name: 'Wed',id: 3 },
-    { name: 'Thu',id: 4 },
-    { name: 'Fri', id: 5 },
-    { name: 'Sat',id: 6 }
-];
+  weeks = weeks;
 cloneStaffScheduleList:StaffScheduleViewModel;
 cloneStaffScheduleListForCheckAvailibility:StaffScheduleViewModel;
 staffSchedulingFinished=false;
@@ -49,12 +42,14 @@ globalLoader:boolean;
 destroySubject$: Subject<void> = new Subject();
 noConflictDetected:boolean=false;
 checkAvailabilityFinished:boolean=false;
+selectionProcessing:boolean = false;
   constructor(private dialog: MatDialog, 
     private translateService:TranslateService,
     private staffScheduleService:TeacherScheduleService,
     private snackBar:MatSnackBar,
     private markingPeriodService: MarkingPeriodService,
-    private loaderService: LoaderService) { 
+    private loaderService: LoaderService,
+    private defaultValuesService: DefaultValuesService) { 
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.globalLoader = val;
@@ -92,7 +87,9 @@ checkAvailabilityFinished:boolean=false;
       this.isStartSchedulingPossible=false;
       this.checkAvailabilityFinished=false;
       this.checkAvailabilityLoader=false;
-     this.collectValuesFromTeacherAndCourseSection() 
+     this.collectValuesFromTeacherAndCourseSection();
+     this.selectionProcessing=true;
+
     this.staffScheduleService.staffScheduleViewForCourseSection(this.staffScheduleView).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.staffScheduleListForView.staffScheduleViewList = [];
@@ -123,6 +120,7 @@ checkAvailabilityFinished:boolean=false;
           })
           this.cloneStaffScheduleListForCheckAvailibility=JSON.parse(JSON.stringify(this.staffScheduleListForView));
         }
+        this.selectionProcessing=false;
       }
     })
     }
@@ -178,12 +176,13 @@ checkAvailabilityFinished:boolean=false;
         item.markingPeriodTitle='Custom'
       }
       item.checked=true;
-      if(item.scheduleType=='Variable Schedule'){
-        let days=item.meetingDays.split('|')
+      if(item.scheduleType=='Variable Schedule' || item.scheduleType=='Fixed Schedule'){
+        item.cloneMeetingDays=JSON.parse(JSON.stringify(item.meetingDays))
+        let days=item.cloneMeetingDays.split('|')
         days.map((day)=>{
           for(let [i,weekDay] of this.weeks.entries()){
-            if(weekDay.name==day.trim()){
-              item.meetingDays=item.meetingDays+weekDay.id;
+            if(weekDay.name.toLocaleLowerCase()==day.trim().toLocaleLowerCase()){
+              item.cloneMeetingDays=item.cloneMeetingDays+weekDay.id;
               break;
             }
           }
@@ -195,7 +194,6 @@ checkAvailabilityFinished:boolean=false;
   }
 
   getAllMarkingPeriodList() {
-    this.getMarkingPeriodTitleListModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.getMarkingPeriodTitleListModel.academicYear = +sessionStorage.getItem("academicyear");
     this.markingPeriodService.getAllMarkingPeriodList(this.getMarkingPeriodTitleListModel).subscribe(data => {
       if (data._failure) {
@@ -235,7 +233,8 @@ checkAvailabilityFinished:boolean=false;
     this.checkAvailabilityLoader=true;
     this.cloneStaffScheduleList=JSON.parse(JSON.stringify(this.cloneStaffScheduleListForCheckAvailibility));
     this.onlySendCheckedCourseSections();
-    this.cloneStaffScheduleList._userName=sessionStorage.getItem('user');
+    this.cloneStaffScheduleList._userName= this.defaultValuesService.getUserName();
+    this.cloneStaffScheduleList._failure=false;
     this.staffScheduleService.checkAvailabilityStaffCourseSectionSchedule(this.cloneStaffScheduleList).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.cloneStaffScheduleList.staffScheduleViewList = [];

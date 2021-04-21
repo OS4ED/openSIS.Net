@@ -5,7 +5,7 @@ import { CommonService } from '../../../../services/common.service';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { SearchFilterAddViewModel } from '../../../../models/searchFilterModel';
+import { SearchFilterAddViewModel } from '../../../../models/search-filter.model';
 import { ValidationService } from '../../../../pages/shared/validation.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 

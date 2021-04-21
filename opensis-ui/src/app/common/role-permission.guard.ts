@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
 import { Observable } from 'rxjs';
-import { RolePermissionListViewModel } from '../models/rollBasedAccessModel';
+import { RolePermissionListViewModel } from '../models/roll-based-access.model';
 import { CryptoService } from '../services/Crypto.service';
 
 @Injectable({

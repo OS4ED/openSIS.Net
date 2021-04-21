@@ -147,13 +147,14 @@
                     </div>
                 </li>
             </ul>-->
-            <div *ngIf="viewReport" class="text-center mb-4">
+            <hr class="my-4 -mx-4">
+            <div *ngIf="viewReport" class="text-center">
                 <button (click)="viewScheduledReport()"
                     class="p-2 text-primary border-2 border-primary rounded font-medium mr-4" type="submit">
-                    <i class="icon icon-eye mr-2"></i>View Report
+                    <i class="icon icon-eye mr-2"></i>{{"viewReport" | translate}}
                 </button>
                 <button (click)="viewExcelReport()" class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit">
-                    <i class="icon icon-file-excel mr-2"></i>Download this report to Excel
+                    <i class="icon icon-file-excel mr-2"></i>{{"downloadThisReportAsExcel" | translate}}
                 </button>
             </div>
         </div>
@@ -163,10 +164,10 @@
                 <table mat-table [dataSource]="scheduleReport" class="mat-elevation-z8 shadow-none">
                     <ng-container *ngFor="let column of displayedColumns; let colIndex = index"
                         matColumnDef="{{column}}">
-                        <th mat-header-cell *matHeaderCellDef>{{column |translate}}</th>
+                        <th mat-header-cell *matHeaderCellDef>{{column |translate | titlecase}}</th>
                         <td mat-cell mat *matCellDef="let element">
                             <ng-container *ngIf="column!=='studentId' && column!=='studentName' && column!=='studentInternalId';else commonData">
-                              <button *ngIf="element[column].split('|')[0].includes('False');else trueBlock" [matTooltip]="element[column].split('|')[1].trim()"
+                              <button *ngIf="element[column]?.split('|')[0].includes('False');else trueBlock" [matTooltip]="element[column]?.split('|')[1].trim()"
                                      [matTooltipPosition]="'above'">
                                       <i class="text-lg text-warn icon icon-notification2"></i>
                                   </button>

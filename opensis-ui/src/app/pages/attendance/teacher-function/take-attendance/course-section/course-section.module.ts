@@ -15,6 +15,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
 import { RouterModule } from '@angular/router';
 import {MatCheckboxModule} from '@angular/material/checkbox';
 import { TruncatePipe } from '../../../../../pipe/truncate.pipe';
+import { SharedModuleModule } from '../../../../shared-module/shared-module.module';
 
 
 
@@ -39,7 +40,8 @@ import { TruncatePipe } from '../../../../../pipe/truncate.pipe';
     MatDividerModule,
     MatInputModule,
     RouterModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    SharedModuleModule
   ]
 })
 export class CourseSectionModule { }

@@ -22,6 +22,7 @@ namespace opensis.core.Staff.Interfaces
         public StaffCertificateInfoListModel GetAllStaffCertificateInfo(StaffCertificateInfoListModel staffCertificateInfoListModel);
         public StaffCertificateInfoAddViewModel UpdateStaffCertificateInfo(StaffCertificateInfoAddViewModel staffCertificateInfoAddViewModel);
         public StaffCertificateInfoAddViewModel DeleteStaffCertificateInfo(StaffCertificateInfoAddViewModel staffCertificateInfoAddViewModel);
-        public StaffAddViewModel AddUpdateStaffPhoto(StaffAddViewModel staffAddViewModel); 
+        public StaffAddViewModel AddUpdateStaffPhoto(StaffAddViewModel staffAddViewModel);
+        public StaffListAddViewModel AddStaffList(StaffListAddViewModel staffListAddViewModel);
     }
 }

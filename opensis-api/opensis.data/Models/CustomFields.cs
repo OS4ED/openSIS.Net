@@ -17,6 +17,7 @@ namespace opensis.data.Models
         public string Module { get; set; }
         public string Type { get; set; }
         public bool? Search { get; set; }
+        public string FieldName { get; set; }
         public string Title { get; set; }
         public int? SortOrder { get; set; }
         public string SelectOptions { get; set; }

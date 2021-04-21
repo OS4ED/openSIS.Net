@@ -340,11 +340,16 @@ namespace opensis.data.Repository
                             this.context?.SaveChanges();
                         }
                     }
-                    var associationshipData = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentAssociationship.TenantId && x.ParentId == parentInfoAddViewModel.parentAssociationship.ParentId && x.StudentId == parentInfoAddViewModel.parentAssociationship.StudentId);
-                    if (associationshipData != null)
+
+                    if (parentInfoAddViewModel.parentAssociationship != null)
                     {
-                        associationshipData.IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian;
+                        var associationshipData = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfoAddViewModel.parentAssociationship.TenantId && x.ParentId == parentInfoAddViewModel.parentAssociationship.ParentId && x.StudentId == parentInfoAddViewModel.parentAssociationship.StudentId);
+                        if (associationshipData != null)
+                        {
+                            associationshipData.IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian;
+                        }
                     }
+                    
                     this.context?.SaveChanges();
                     parentInfoAddViewModel._message = "Parent Updated Successfully";
                     parentInfoAddViewModel._failure = false;

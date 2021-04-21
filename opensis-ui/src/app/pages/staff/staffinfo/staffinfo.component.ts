@@ -18,7 +18,7 @@ import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { FormControl } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
-import { GetAllStaffModel,StaffListModel, StaffMasterModel } from '../../../models/staffModel';
+import { GetAllStaffModel,StaffListModel, StaffMasterModel } from '../../../models/staff.model';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
@@ -26,11 +26,11 @@ import { Subject } from 'rxjs';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../services/roll-based-access.service';
 import { SaveFilterComponent } from './save-filter/save-filter.component';
 import { MatDialog } from '@angular/material/dialog';
-import { SearchFilter, SearchFilterAddViewModel, SearchFilterListViewModel } from '../../../models/searchFilterModel';
+import { SearchFilter, SearchFilterAddViewModel, SearchFilterListViewModel } from '../../../models/search-filter.model';
 import { CommonService } from '../../../services/common.service';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { CryptoService } from '../../../services/Crypto.service';
@@ -339,8 +339,6 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
 
   getAllSearchFilter(){
     this.searchFilterListViewModel.module='Staff';
-    this.searchFilterListViewModel.schoolId = + sessionStorage.getItem('selectedSchoolId');
-    this.searchFilterListViewModel.tenantId = sessionStorage.getItem("tenantId");
     this.commonService.getAllSearchFilter(this.searchFilterListViewModel).subscribe((res) => {
       if (typeof (res) === 'undefined') {
         this.snackbar.open('Filter list failed. ' + sessionStorage.getItem("httpError"), '', {

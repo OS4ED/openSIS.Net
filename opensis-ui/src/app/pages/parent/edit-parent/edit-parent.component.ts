@@ -11,9 +11,9 @@ import icAccessInfo from '@iconify/icons-ic/outline-lock-open';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import { ParentInfoService } from '../../../services/parent-info.service';
-import { AddParentInfoModel } from '../../../models/parentInfoModel';
+import { AddParentInfoModel } from '../../../models/parent-info.model';
 import { takeUntil } from 'rxjs/operators';
-import { RolePermissionListViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
@@ -63,7 +63,6 @@ export class EditParentComponent implements OnInit {
 
   ngOnInit(): void {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
-    console.log(this.permissionListViewModel);
     
     if(this.permissionListViewModel.permissionList[3].permissionGroup.permissionCategory[0].rolePermission[0].canView){
       this.showGeneralInfo= true;

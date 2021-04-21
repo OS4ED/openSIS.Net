@@ -7,8 +7,8 @@ import { StudentService } from '../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { CommonService } from '../../../../services/common.service';
-import { StudentAddModel} from '../../../../models/studentModel';
-import { CountryModel } from '../../../../models/countryModel';
+import { StudentAddModel} from '../../../../models/student.model';
+import { CountryModel } from '../../../../models/country.model';
 import * as _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
@@ -18,7 +18,7 @@ import icEdit from '@iconify/icons-ic/edit';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { MiscModel } from '../../../../models/misc-data-student.model';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-student-addressandcontacts',

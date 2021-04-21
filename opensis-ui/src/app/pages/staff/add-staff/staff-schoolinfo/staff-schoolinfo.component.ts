@@ -8,11 +8,11 @@ import icAdd from '@iconify/icons-ic/baseline-add';
 import icClear from '@iconify/icons-ic/baseline-clear';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
 import { StaffService } from '../../../../services/staff.service';
-import { StaffSchoolInfoListModel, StaffSchoolInfoModel } from '../../../../models/staffModel';
+import { StaffSchoolInfoListModel, StaffSchoolInfoModel } from '../../../../models/staff.model';
 import { Subject } from '../../../../enums/temp-subjects-list.enum';
-import { GetAllGradeLevelsModel } from '../../../../models/gradeLevelModel';
+import { GetAllGradeLevelsModel } from '../../../../models/grade-level.model';
 import { GradeLevelService } from '../../../../services/grade-level.service';
-import { OnlySchoolListModel } from '../../../../models/getAllSchoolModel';
+import { OnlySchoolListModel } from '../../../../models/get-all-school.model';
 import { SchoolService } from '../../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import icEdit from '@iconify/icons-ic/edit';
@@ -20,12 +20,13 @@ import moment from 'moment';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 import { SharedFunction } from '../../../shared/shared-function';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
-import { GetAllMembersList } from '../../../../models/membershipModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
+import { GetAllMembersList } from '../../../../models/membership.model';
 import { MembershipService } from '../../../../services/membership.service';
 import { CourseManagerService } from '../../../../services/course-manager.service';
-import { GetAllSubjectModel } from '../../../../models/courseManagerModel';
+import { GetAllSubjectModel } from '../../../../models/course-manager.model';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 
 @Component({
   selector: 'vex-staff-schoolinfo',
@@ -73,6 +74,7 @@ export class StaffSchoolinfoComponent implements OnInit {
     private imageCropperService: ImageCropperService,
     private commonFunction: SharedFunction,
     private membershipService: MembershipService,
+    private defaultValuesService: DefaultValuesService, 
     private courseManagerService:CourseManagerService) {
     translateService.use('en');
   }
@@ -109,18 +111,12 @@ export class StaffSchoolinfoComponent implements OnInit {
   }
 
   getAllGradeLevel() {
-    this.getAllGradeLevels.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.getAllGradeLevels._tenantName = sessionStorage.getItem("tenant");
-    this.getAllGradeLevels._token = sessionStorage.getItem("token");
     this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevels).subscribe((res) => {
       this.getAllGradeLevels.tableGradelevelList = res.tableGradelevelList;
     })
   }
 
   callAllSchool() {
-    this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
-    this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
-    this.getSchoolList._token = sessionStorage.getItem("token");
     this.schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
       this.getSchoolList.schoolMaster = data.schoolMaster;
     });
@@ -195,7 +191,7 @@ export class StaffSchoolinfoComponent implements OnInit {
 
   findProfileForCurrentSchool(schoolInfo){
     let currentProfileIndex=schoolInfo.findIndex((item)=>{
-      return item.schoolId==+sessionStorage.getItem("selectedSchoolId");
+      return item.schoolId==this.defaultValuesService.schoolID
     })
     this.checkUpdatedProfileName.emit(schoolInfo[currentProfileIndex].profile)
   }
@@ -257,8 +253,6 @@ export class StaffSchoolinfoComponent implements OnInit {
       item.startDate = this.commonFunction.formatDateSaveWithoutTime(item.startDate);
       item.endDate = this.commonFunction.formatDateSaveWithoutTime(item.endDate)
     });
-    this.staffSchoolInfoModel._token = sessionStorage.getItem("token");
-    this.staffSchoolInfoModel._tenantName = sessionStorage.getItem("tenant");
     this.staffService.updateStaffSchoolInfo(this.staffSchoolInfoModel).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Staff School Info Update failed. ' + sessionStorage.getItem("httpError"), '', {

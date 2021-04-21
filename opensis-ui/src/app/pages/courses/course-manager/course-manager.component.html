@@ -195,10 +195,11 @@
                         </li>
                         <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'standards' | translate}}</label>
+                            <div *ngIf="standard.length > 0">
                             <div class="standards-list mt-1" *ngFor="let std of standard">
                                 <hr/>
                                 <div class="flex justify-between items-center">
-                                    <div >{{std.gradeUsStandard.standardDetails}}
+                                    <div>{{std.gradeUsStandard.standardDetails}}
                                     </div>
                                     <div>
                                         <span class="inline-block opacity-75 p-2 text-gray">
@@ -208,6 +209,8 @@
                                 </div>
                                
                             </div>
+                            </div>
+                            <div *ngIf="standard.length === 0">-</div>
                         </li>
                         <li class="col-span-2">
                             <label class="text-sm leading-5 text-gray">{{'description' | translate}}</label>

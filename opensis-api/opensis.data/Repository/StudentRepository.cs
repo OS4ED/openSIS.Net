@@ -263,7 +263,10 @@ namespace opensis.data.Repository
                                 {
                                     var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == studentUpdate.StudentPortalId);
 
-                                    loginInfo.IsActive = student.PortalAccess;
+                                    if (loginInfo != null)
+                                    {
+                                        loginInfo.IsActive = student.PortalAccess;
+                                    }
 
                                     this.context?.SaveChanges();
                                 }
@@ -597,11 +600,11 @@ namespace opensis.data.Repository
                 {
                     MasterDocumentId = Utility.GetMaxPK(this.context, new Func<StudentDocuments, int>(x => x.DocumentId));
 
-                    foreach (var data in studentDocumentAddViewModel.studentDocuments.ToList())
+                    foreach (var studentDocument in studentDocumentAddViewModel.studentDocuments.ToList())
                     {
-                        data.DocumentId = (int)MasterDocumentId;
-                        data.UploadedOn = DateTime.UtcNow;
-                        this.context?.StudentDocuments.Add(data);
+                        studentDocument.DocumentId = (int)MasterDocumentId;
+                        studentDocument.UploadedOn = DateTime.UtcNow;
+                        this.context?.StudentDocuments.Add(studentDocument);
                         MasterDocumentId++;
                     }
 
@@ -1651,6 +1654,7 @@ namespace opensis.data.Repository
             }
             catch (Exception es)
             {
+                studentList.studentMaster = null;
                 studentList._message = es.Message;
                 studentList._failure = true;
                 studentList._tenantName = studentListModel._tenantName;
@@ -2007,6 +2011,7 @@ namespace opensis.data.Repository
                                     }
                                 }
                             }
+                            
                             pageResult.FilterParams.RemoveAll(x => x.ColumnName.ToLower() == "enrollmentdate" || x.ColumnName.ToLower() == "exitdate" || x.ColumnName.ToLower() == "exitcode");
 
                             if (pageResult.FilterParams.Count > 0)
@@ -2018,8 +2023,6 @@ namespace opensis.data.Repository
                                 transactionIQ = enrollmentData;
                             }
                         }
-
-
 
                         //    if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "enrollmentdate"))
                         //    {
@@ -2417,6 +2420,197 @@ namespace opensis.data.Repository
                 }
                 return studentListModel;
             }
+        }
+
+        /// <summary>
+        /// Add Student List
+        /// </summary>
+        /// <param name="studentListAddViewModel"></param>
+        /// <returns></returns>
+        public StudentListAddViewModel AddStudentList(StudentListAddViewModel studentListAddViewModel)
+        {
+            StudentListAddViewModel studentListAdd = new StudentListAddViewModel();
+
+            studentListAdd._tenantName = studentListAddViewModel._tenantName;
+            studentListAdd._token = studentListAddViewModel._token;
+            studentListAdd._userName = studentListAddViewModel._userName;
+
+            if (studentListAddViewModel.studentAddViewModelList.Count > 0)
+            {
+                studentListAdd._failure = false;
+                studentListAdd._message = "Student Added Successfully";
+                int? MasterStudentId = 1;
+
+                var studentData = this.context?.StudentMaster.Where(x => x.SchoolId == studentListAddViewModel.studentAddViewModelList.FirstOrDefault().studentMaster.SchoolId && x.TenantId == studentListAddViewModel.studentAddViewModelList.FirstOrDefault().studentMaster.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
+
+                if (studentData != null)
+                {
+                    MasterStudentId = studentData.StudentId + 1;
+                }
+
+                foreach (var student in studentListAddViewModel.studentAddViewModelList)
+                {
+                    UserMaster userMaster = new UserMaster();
+                    var StudentEnrollmentData = new StudentEnrollment();
+                    using (var transaction = this.context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            student.studentMaster.TenantId = studentListAddViewModel.TenantId;
+                            student.studentMaster.SchoolId = studentListAddViewModel.SchoolId;
+                            student.studentMaster.StudentId = (int)MasterStudentId;
+                            Guid GuidId = Guid.NewGuid();
+                            var GuidIdExist = this.context?.StudentMaster.FirstOrDefault(x => x.StudentGuid == GuidId);
+
+                            if (GuidIdExist != null)
+                            {
+                                studentListAdd.studentAddViewModelList.Add(student);
+                                studentListAdd._failure = true;
+                                studentListAdd._message = "Student Rejected Due to Data Error";
+                                continue;
+                            }
+
+                            student.studentMaster.StudentGuid = GuidId;
+                            student.studentMaster.IsActive = true;
+                            student.studentMaster.EnrollmentType = "Internal";
+
+                            if (!string.IsNullOrEmpty(student.studentMaster.StudentInternalId))
+                            {
+                                bool checkInternalID = CheckInternalID(student.studentMaster.TenantId, student.studentMaster.StudentInternalId, student.studentMaster.SchoolId);
+                                if (checkInternalID == false)
+                                {
+                                    studentListAdd.studentAddViewModelList.Add(student);
+                                    studentListAdd._failure = true;
+                                    studentListAdd._message = "Student Rejected Due to Data Error";
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                student.studentMaster.StudentInternalId = MasterStudentId.ToString();
+                            }
+
+                            var schoolName = this.context?.SchoolMaster.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId).Select(s => s.SchoolName).FirstOrDefault();
+
+                            //Insert data into Enrollment table
+                            int? calenderId = null;
+                            string enrollmentCode = null;
+
+                            var defaultCalender = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.AcademicYear.ToString() == student.AcademicYear && x.DefaultCalender == true);
+
+                            if (defaultCalender != null)
+                            {
+                                calenderId = defaultCalender.CalenderId;
+                            }
+
+                            var enrollmentType = this.context?.StudentEnrollmentCode.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Type.ToLower() == "Add".ToLower());
+
+                            if (enrollmentType != null)
+                            {
+                                enrollmentCode = enrollmentType.Title;
+                            }
+
+                            var gradeLevel = this.context?.Gradelevels.Where(x => x.SchoolId == student.studentMaster.SchoolId).OrderBy(x => x.GradeId).FirstOrDefault();
+
+                            int? gradeId = null;
+                            if (gradeLevel != null)
+                            {
+                                gradeId = gradeLevel.GradeId;
+                            }
+
+                             StudentEnrollmentData = new StudentEnrollment() { TenantId = student.studentMaster.TenantId, SchoolId = student.studentMaster.SchoolId, StudentId = student.studentMaster.StudentId, EnrollmentId = 1, SchoolName = schoolName, RollingOption = "Next grade at current school", EnrollmentCode = enrollmentCode, CalenderId = calenderId, GradeLevelTitle = (gradeLevel != null) ? gradeLevel.Title : null, EnrollmentDate = DateTime.UtcNow, StudentGuid = GuidId, IsActive = true, GradeId = gradeId };
+
+                            //Add student portal access
+                            if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
+                            {
+                                //UserMaster userMaster = new UserMaster();
+
+                                var decrypted = Utility.Decrypt(student.PasswordHash);
+                                string passwordHash = Utility.GetHashedPassword(decrypted);
+
+                                var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.EmailAddress == student.LoginEmail);
+
+                                if (loginInfo == null)
+                                {
+                                    var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId && x.Profile == "Student");
+
+                                    userMaster.SchoolId = student.studentMaster.SchoolId;
+                                    userMaster.TenantId = student.studentMaster.TenantId;
+                                    userMaster.UserId = student.studentMaster.StudentId;
+                                    userMaster.LangId = 1;
+                                    userMaster.MembershipId = membership.MembershipId;
+                                    userMaster.EmailAddress = student.LoginEmail;
+                                    userMaster.PasswordHash = passwordHash;
+                                    userMaster.Name = student.studentMaster.FirstGivenName;
+                                    userMaster.LastUpdated = DateTime.UtcNow;
+                                    userMaster.IsActive = student.PortalAccess;
+                                    student.studentMaster.StudentPortalId = student.LoginEmail;
+                                    this.context?.UserMaster.Add(userMaster);
+                                    this.context?.SaveChanges();
+                                }
+                                else
+                                {
+                                    studentListAdd.studentAddViewModelList.Add(student);
+                                    studentListAdd._failure = true;
+                                    studentListAdd._message = "Student Rejected Due to Data Error";
+                                    continue;
+                                }
+                            }
+
+                            this.context?.StudentMaster.Add(student.studentMaster);
+                            this.context?.StudentEnrollment.Add(StudentEnrollmentData);
+                            this.context?.SaveChanges();
+
+                            if (student.fieldsCategoryList != null && student.fieldsCategoryList.ToList().Count > 0)
+                            {
+                                //var fieldsCategory = student.fieldsCategoryList.FirstOrDefault(x => x.CategoryId == student.SelectedCategoryId);
+                                //if (fieldsCategory != null)
+                                //{
+                                foreach (var fieldsCategory in student.fieldsCategoryList.ToList())
+                                {
+                                    foreach (var customFields in fieldsCategory.CustomFields.ToList())
+                                    {
+                                        if (customFields.CustomFieldsValue != null && customFields.CustomFieldsValue.ToList().Count > 0)
+                                        {
+                                            customFields.CustomFieldsValue.FirstOrDefault().Module = "Student";
+                                            customFields.CustomFieldsValue.FirstOrDefault().CategoryId = customFields.CategoryId;
+                                            customFields.CustomFieldsValue.FirstOrDefault().FieldId = customFields.FieldId;
+                                            customFields.CustomFieldsValue.FirstOrDefault().CustomFieldTitle = customFields.Title;
+                                            customFields.CustomFieldsValue.FirstOrDefault().CustomFieldType = customFields.Type;
+                                            customFields.CustomFieldsValue.FirstOrDefault().SchoolId = student.studentMaster.SchoolId;
+                                            customFields.CustomFieldsValue.FirstOrDefault().TargetId = student.studentMaster.StudentId;
+                                            this.context?.CustomFieldsValue.AddRange(customFields.CustomFieldsValue);
+                                            this.context?.SaveChanges();
+                                        }
+
+                                    }
+                                }
+                                //}
+                            }
+                            transaction.Commit();
+                            MasterStudentId++;
+                        }
+
+                        catch (Exception es)
+                        {
+                            transaction.Rollback();
+                            studentListAdd.studentAddViewModelList.Add(student);
+                            this.context?.StudentMaster.Remove(student.studentMaster);
+                            this.context?.StudentEnrollment.Remove(StudentEnrollmentData);
+                            this.context?.UserMaster.Remove(userMaster);
+                            studentListAdd._failure = true;
+                            studentListAdd._message = "Student Rejected Due to Data Error";
+                            continue;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                studentListAdd._failure = true;
+                studentListAdd._message = "Please Import Student";
+            }
+            return studentListAdd;
         }
     }
 }

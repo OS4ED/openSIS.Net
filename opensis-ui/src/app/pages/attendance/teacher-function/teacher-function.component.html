@@ -1,0 +1,35 @@
+<div class="flex container-sidenav-secondary">
+    <div class="sidenav-secondary">
+        <vex-scrollbar class="flex-auto">
+            <div class="px-gutter sm:px-0">
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple
+                     routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/input-final-grade']">
+                    <img src="assets/img/icons/top-grades.svg" width="24" class="mr-3"> {{ "inputFinalGrade" | translate }}
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/input-effort-grade']"
+                >
+                    <mat-icon class="mr-3">grading</mat-icon> {{ "inputEffortGrade" | translate }}
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRippl>
+                    <img src="assets/img/icons/exam.svg" width="24" class="mr-3"> {{ "gradebookGrades" | translate }}
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon class="mr-3">insights</mat-icon> {{ "progressReports" | translate }}
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/take-attendance']">
+                    <mat-icon class="mr-3">alarm_on</mat-icon> {{ "takeAttendance" | translate }}
+                </a>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                    <mat-icon class="mr-3">alarm_off</mat-icon> {{ "missingAttendance" | translate }}
+                </a>
+            </div>
+        </vex-scrollbar>
+    </div>
+    <div class="right-content">
+        <!-- <ng-container *ngComponentOutlet="gradeComponent"></ng-container> -->
+        <!-- <vex-input-final-grade *ngIf="currentCategory==1"></vex-input-final-grade>
+            <vex-input-effort-grades *ngIf="currentCategory==2"></vex-input-effort-grades>
+            <vex-gradebook-grades *ngIf="currentCategory==3"></vex-gradebook-grades> -->
+            <router-outlet></router-outlet>
+    </div>
+</div>

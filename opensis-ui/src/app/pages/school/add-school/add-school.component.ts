@@ -2,22 +2,22 @@ import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRe
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 
-import { SchoolAddViewModel } from '../../../models/schoolMasterModel';
+import { SchoolAddViewModel } from '../../../models/school-master.model';
 import { ActivatedRoute } from '@angular/router';
 import { SchoolService } from '../../../services/school.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedFunction } from '../../../pages/shared/shared-function';
 import { CommonService } from '../../../services/common.service';
 import { LayoutService } from '../../../../../src/@vex/services/layout.service';
-import { CustomFieldAddView, CustomFieldListViewModel, CustomFieldModel } from '../../../../../src/app/models/customFieldModel';
+import { CustomFieldAddView, CustomFieldListViewModel, CustomFieldModel } from '../../../models/custom-field.model';
 import { CustomFieldService } from '../../../services/custom-field.service';
-import { FieldsCategoryAddView, FieldsCategoryListView, FieldsCategoryModel } from '../../../models/fieldsCategoryModel';
+import { FieldsCategoryAddView, FieldsCategoryListView, FieldsCategoryModel } from '../../../models/fields-category.model';
 import { LoaderService } from '../../../services/loader.service';
 import { SchoolCreate } from '../../../enums/school-create.enum';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from 'src/app/services/Crypto.service';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -25,7 +25,7 @@ import { LoaderService } from '../../../services/loader.service';
 import { ExcelService } from '../../../services/excel.service';
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
 import { Subject } from 'rxjs';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
@@ -277,6 +277,14 @@ export class EffortGradeScaleComponent implements OnInit,OnDestroy {
     });
   }
 
+  translateKey(key) {
+    let trnaslateKey;
+    this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportEffortGradeScaleListToExcel() {
     let getEffortGradeScaleList: GetAllEffortGradeScaleListModel = new GetAllEffortGradeScaleListModel();
     getEffortGradeScaleList.pageNumber = 0;
@@ -292,8 +300,8 @@ export class EffortGradeScaleComponent implements OnInit,OnDestroy {
         if (res.effortGradeScaleList?.length > 0) {
           let gradeScale = res.effortGradeScaleList?.map((x) => {
             return {
-              Value: x.gradeScaleValue,
-              Comment: x.gradeScaleComment,
+              [this.translateKey('value')]: x.gradeScaleValue,
+              [this.translateKey('comment')]: x.gradeScaleComment
             }
           });
           this.excelService.exportAsExcelFile(gradeScale, 'Effort_Grade_Scale_List_')

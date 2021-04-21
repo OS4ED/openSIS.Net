@@ -9,6 +9,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { IconModule } from '@visurel/iconify-angular';
 import {MatButtonModule} from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
+import { FormsModule } from '@angular/forms';
 
 
 
@@ -23,7 +24,8 @@ import { MatInputModule } from '@angular/material/input';
     MatDividerModule,
     IconModule,
     MatButtonModule,
-    MatInputModule
+    MatInputModule,
+    FormsModule
   ]
 })
 export class AddCommentsModule { }

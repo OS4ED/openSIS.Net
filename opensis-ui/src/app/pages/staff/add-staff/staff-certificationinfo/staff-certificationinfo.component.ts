@@ -1,4 +1,4 @@
-import {StaffCertificateListModel,StaffCertificateModel } from './../../../../models/staffModel';
+import {StaffCertificateListModel,StaffCertificateModel } from '../../../../models/staff.model';
 import { StaffService } from '../../../../services/staff.service';
 import { Component, OnInit, Input, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
@@ -20,8 +20,8 @@ import { MatTableDataSource } from '@angular/material/table';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
-import { RollBasedAccessService } from 'src/app/services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
+import { RollBasedAccessService } from 'src/app/services/roll-based-access.service';
 
 @Component({
   selector: 'vex-staff-certificationinfo',

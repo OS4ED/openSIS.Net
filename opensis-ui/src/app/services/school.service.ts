@@ -1,10 +1,11 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CheckSchoolInternalIdViewModel, SchoolAddViewModel } from '../models/schoolMasterModel';
-import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/getAllSchoolModel';
+import { CheckSchoolInternalIdViewModel, SchoolAddViewModel } from '../models/school-master.model';
+import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/get-all-school.model';
 import { BehaviorSubject, Subject } from 'rxjs';
-import { DataAvailablity } from '../models/userModel';
+import { DataAvailablity } from '../models/user.model';
+import { DefaultValuesService } from '../common/default-values.service';
 
 @Injectable({
   providedIn: 'root'
@@ -15,42 +16,43 @@ export class SchoolService {
   private messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
   apiUrl: string = environment.apiURL;
-  userName = sessionStorage.getItem('user');
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,
+    private defaultValuesService: DefaultValuesService) {
   }
 
   GetAllSchoolList(obj: GetAllSchoolModel) {
-    obj._userName = this.userName;
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     let apiurl = this.apiUrl + obj._tenantName + "/School/getAllSchoolList";
     return this.http.post<AllSchoolListModel>(apiurl, obj)
   }
 
   GetAllSchools(obj: OnlySchoolListModel) {
-    obj._userName = this.userName;
+   obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     let apiurl = this.apiUrl + obj._tenantName + "/School/getAllSchools";
     return this.http.post<AllSchoolListModel>(apiurl, obj);
   }
 
   ViewSchool(obj: SchoolAddViewModel) {
-    obj._userName = this.userName;
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.schoolMaster.tenantId= obj.tenantId;
     let apiurl = this.apiUrl + obj._tenantName + "/School/viewSchool";
     return this.http.post<SchoolAddViewModel>(apiurl, obj)
   }
 
   AddSchool(obj: SchoolAddViewModel) {
-    obj._userName = this.userName;
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/addSchool";
     return this.http.post<SchoolAddViewModel>(apiurl, obj)
   }
   UpdateSchool(obj: SchoolAddViewModel) {
-    obj._userName = this.userName;
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/updateSchool";
     return this.http.put<SchoolAddViewModel>(apiurl, obj)
   }
   checkSchoolInternalId(obj: CheckSchoolInternalIdViewModel) {
-    obj._userName = this.userName;
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     let apiurl = this.apiUrl + obj._tenantName + "/School/checkSchoolInternalId";
     return this.http.post<CheckSchoolInternalIdViewModel>(apiurl, obj)
   }
@@ -119,7 +121,7 @@ export class SchoolService {
   }
 
   addUpdateSchoolLogo(obj: SchoolAddViewModel){
-    obj._userName = this.userName;
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     obj.schoolMaster.schoolId = this.getSchoolId();
     obj.schoolMaster.schoolDetail[0].id = this.getSchoolId();
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;

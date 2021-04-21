@@ -123,6 +123,35 @@ namespace opensis.data.Repository
                             {
                                 gradeTitleUsedInCourse.ForEach(x => x.CourseGradeLevel = gradelevel.tblGradelevel.Title);
                             }
+
+                            var gradeTitleUsedInStudentEnrollment = this.context?.StudentEnrollment.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.GradeLevelTitle.ToLower() == GradeLevel.Title.ToLower()).ToList();
+
+                            if (gradeTitleUsedInStudentEnrollment.Count() > 0)
+                            {
+                                gradeTitleUsedInStudentEnrollment.ForEach(x => x.GradeLevelTitle = gradelevel.tblGradelevel.Title);
+                            }
+
+                            var gradeTitleUsedInStaff = this.context?.StaffMaster.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.PrimaryGradeLevelTaught.ToLower() == GradeLevel.Title.ToLower()).ToList();
+
+                            if (gradeTitleUsedInStaff.Count() > 0)
+                            {
+                                gradeTitleUsedInStaff.ForEach(x => x.PrimaryGradeLevelTaught = gradelevel.tblGradelevel.Title) ;
+                            }
+
+                            var StaffData = this.context?.StaffMaster.Where(x => x.SchoolId == gradelevel.tblGradelevel.SchoolId && x.TenantId == gradelevel.tblGradelevel.TenantId && x.OtherGradeLevelTaught.ToLower().Contains(GradeLevel.Title.ToLower())).ToList();
+
+                            if (StaffData.Count() > 0)
+                            {
+                                foreach (var staff in StaffData)
+                                {
+                                    var otherGradeLevelTaught = staff.OtherGradeLevelTaught.Split(",");
+                                    otherGradeLevelTaught = otherGradeLevelTaught.Where(w => w != GradeLevel.Title).ToArray();
+                                    var newOtherGradeLevelTaught = string.Join(",", otherGradeLevelTaught);
+                                    newOtherGradeLevelTaught = newOtherGradeLevelTaught + "," + gradelevel.tblGradelevel.Title;
+                                    staff.OtherSubjectTaught = newOtherGradeLevelTaught;
+                                }
+                            }
+
                         }
 
                         gradelevel.tblGradelevel.LastUpdated = DateTime.Now;

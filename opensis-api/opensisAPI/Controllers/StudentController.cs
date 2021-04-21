@@ -579,5 +579,31 @@ namespace opensisAPI.Controllers
             }
             return studentReenrollment;
         }
+
+        [HttpPost("addStudentList")]
+        public ActionResult<StudentListAddViewModel> AddStudentList(StudentListAddViewModel studentListAddViewModel)
+        {
+            StudentListAddViewModel studentListAdd = new StudentListAddViewModel();
+            try
+            {
+                if (studentListAddViewModel.studentAddViewModelList.FirstOrDefault().studentMaster.SchoolId > 0)
+                {
+                    studentListAdd = _studentService.AddStudentList(studentListAddViewModel);
+                }
+                else
+                {
+                    studentListAdd._token = studentListAddViewModel._token;
+                    studentListAdd._tenantName = studentListAddViewModel._tenantName;
+                    studentListAdd._failure = true;
+                    studentListAdd._message = "Please enter valid school id";
+                }
+            }
+            catch (Exception es)
+            {
+                studentListAdd._failure = true;
+                studentListAdd._message = es.Message;
+            }
+            return studentListAdd;
+        }
     }
 }

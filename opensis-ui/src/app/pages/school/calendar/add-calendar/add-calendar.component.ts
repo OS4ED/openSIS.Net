@@ -4,8 +4,8 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import { GetAllMembersList } from 'src/app/models/membershipModel';
-import { CalendarAddViewModel, Weeks } from 'src/app/models/calendarModel';
+import { GetAllMembersList } from 'src/app/models/membership.model';
+import { CalendarAddViewModel, Weeks } from 'src/app/models/calendar.model';
 import { MembershipService } from '../../../../services/membership.service';
 import { CalendarService } from '../../../../services/calendar.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -82,7 +82,7 @@ export class AddCalendarComponent implements OnInit {
         this.form.patchValue({ isDefaultCalendar: this.calendarAddViewModel.schoolCalendar.defaultCalender });
         this.weekArray = this.calendarAddViewModel.schoolCalendar.days.split('').map(x => +x);
         if (this.calendarAddViewModel.schoolCalendar.visibleToMembershipId != null && this.calendarAddViewModel.schoolCalendar.visibleToMembershipId !='') {
-          var membershipIds: string[] = this.calendarAddViewModel.schoolCalendar.visibleToMembershipId.split(',');
+          let membershipIds: string[] = this.calendarAddViewModel.schoolCalendar.visibleToMembershipId.split(',');
           this.memberArray = membershipIds.map(Number);
         }
         if(this.memberArray.length === this.getAllMembersList.getAllMemberList.length){
@@ -170,7 +170,7 @@ export class AddCalendarComponent implements OnInit {
   }
   selectDays(event, id) {
     event.preventDefault();
-    var index = this.weekArray.indexOf(id);
+    let index = this.weekArray.indexOf(id);
     if (index > -1) {
       this.weekArray.splice(index, 1);
     }
@@ -183,7 +183,7 @@ export class AddCalendarComponent implements OnInit {
   updateCheck(event) {
     if (this.memberArray.length === this.getAllMembersList.getAllMemberList.length) {
       for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
+        let index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
@@ -194,7 +194,7 @@ export class AddCalendarComponent implements OnInit {
     }
     else if (this.memberArray.length === 0) {
       for (let i = 0; i < this.getAllMembersList.getAllMemberList.length; i++) {
-        var index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
+        let index = this.memberArray.indexOf(this.getAllMembersList.getAllMemberList[i].membershipId);
         if (index > -1) {
           this.memberArray.splice(index, 1);
         }
@@ -217,7 +217,7 @@ export class AddCalendarComponent implements OnInit {
   }
   selectChildren(event, id) {
     event.preventDefault();
-    var index = this.memberArray.indexOf(id);
+    let index = this.memberArray.indexOf(id);
     if (index > -1) {
       this.memberArray.splice(index, 1);
     }

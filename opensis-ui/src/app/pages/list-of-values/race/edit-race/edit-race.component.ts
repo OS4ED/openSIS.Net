@@ -7,7 +7,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CommonService } from '../../../../services/common.service';
-import { LovAddView } from '../../../../models/lovModel';
+import { LovAddView } from '../../../../models/lov.model';
 
 @Component({
   selector: 'vex-edit-race',

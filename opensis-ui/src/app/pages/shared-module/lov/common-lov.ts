@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { map } from 'rxjs/operators';
-import { LovList } from '../../../models/lovModel';
+import { DefaultValuesService } from '../../../common/default-values.service';
+import { LovList } from '../../../models/lov.model';
 import { CommonService } from '../../../services/common.service';
 import { SchoolService } from '../../../services/school.service';
 
@@ -11,16 +12,16 @@ export class CommonLOV {
     lovList: LovList = new LovList();
 
     constructor(private commonService: CommonService,
-        private schoolService:SchoolService) { }
+        private schoolService:SchoolService, private defaultValuesService:DefaultValuesService) { }
 
       getLovByName(LovName) {
-        let schoolId=this.schoolService.getSchoolId()
+        let schoolId=this.defaultValuesService.getSchoolID();
         if(schoolId!=null){
             this.lovList.schoolId=+schoolId;
-            this.lovList._token = sessionStorage.getItem('token');
+            this.lovList._token = this.defaultValuesService.getToken();
         }else{
-            this.lovList.schoolId = +sessionStorage.getItem("selectedSchoolId");
-            this.lovList._token = sessionStorage.getItem('token');
+            this.lovList.schoolId = this.defaultValuesService.getSchoolID();
+            this.lovList._token = this.defaultValuesService.getToken();
         }
         this.lovList.lovName = LovName;
         return this.commonService.getAllDropdownValues(this.lovList)

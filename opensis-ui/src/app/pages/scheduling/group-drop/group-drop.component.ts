@@ -6,7 +6,7 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { StudentScheduleService } from '../../../services/student-schedule.service';
-import { ScheduledStudentDropModel, ScheduleStudentForView, ScheduleStudentListViewModel } from '../../../models/studentCourseSectionScheduleAddViewModel';
+import { ScheduledStudentDropModel, ScheduleStudentForView, ScheduleStudentListViewModel } from '../../../models/student-schedule.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatPaginator } from '@angular/material/paginator';

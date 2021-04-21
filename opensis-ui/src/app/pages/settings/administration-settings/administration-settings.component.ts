@@ -11,13 +11,13 @@ import icStudent from '@iconify/icons-ic/baseline-face';
 import icMoreVert from '@iconify/icons-ic/more-vert';
 import { TranslateService } from '@ngx-translate/core';
 import { EditCustomProfileComponent } from '../../administration/access-control/edit-custom-profile/edit-custom-profile.component';
-import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
-import { RolePermissionListViewModel, PermissionGroupListViewModel } from '../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../services/roll-based-access.service';
+import { RolePermissionListViewModel, PermissionGroupListViewModel } from '../../../models/roll-based-access.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { MembershipService } from '../../../services/membership.service';
-import { GetAllMembersList, Membership } from '../../../models/membershipModel';
+import { GetAllMembersList, Membership } from '../../../models/membership.model';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
-import { AddMembershipModel } from '../../../models/membershipModel';
+import { AddMembershipModel } from '../../../models/membership.model';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { LoaderService } from '../../../services/loader.service';
@@ -194,7 +194,7 @@ export class AdministrationSettingsComponent implements OnInit, AfterContentChec
         else {
           this.memberList = [];
           res.getAllMemberList.map(val => {
-            var obj = {};
+            let obj = {};
             obj['profile'] = val.profile
             obj['membershipId'] = val.membershipId
             obj['description'] = val.description
@@ -203,7 +203,7 @@ export class AdministrationSettingsComponent implements OnInit, AfterContentChec
             if (val.membershipId === +sessionStorage.getItem("userMembershipID")) {
               this.selectedDescription = val.description;
             }
-            var icon = this.getIcon(val.profile);
+            let icon = this.getIcon(val.profile);
             if (icon !== undefined) {
               if (val.profile == "Teacher" || val.profile == "Homeroom Teacher") {
                 obj["className"] = icon;
@@ -318,7 +318,7 @@ export class AdministrationSettingsComponent implements OnInit, AfterContentChec
             this.permissionList = res.permissionList;
             delete this.permissionList[0]
 
-            var permissionList = this.permissionList.filter(x => x != null)
+            let permissionList = this.permissionList.filter(x => x != null)
             this.rollBasedAccessService.send(permissionList);
 
 

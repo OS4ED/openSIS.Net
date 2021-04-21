@@ -4,10 +4,10 @@ import { FormBuilder,FormGroup, Validators } from '@angular/forms';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import { SectionAddModel } from '../../../../models/sectionModel';
+import { SectionAddModel } from '../../../../models/section.model';
 import { SectionService } from '../../../../services/section.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { GetAllSectionModel } from '../../../../models/sectionModel';
+import { GetAllSectionModel } from '../../../../models/section.model';
 import { Router } from '@angular/router';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 @Component({

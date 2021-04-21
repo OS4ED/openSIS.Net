@@ -34,7 +34,7 @@
         </li>
     </ul>
 </mat-dialog-content>
-<div class="-mx-4 border-t overflow-x-auto overflow-y-hidden" *ngIf="searchedCourseDetails?.length>0">
+<div class="-mx-4 border-t overflow-x-auto overflow-y-hidden" *ngIf="isSearchRecordAvailable">
     <table class="w-full schedule-table">
         <thead>
             <tr>
@@ -54,6 +54,12 @@
                 <td>{{course.courseGradeLevel|EmtyValueCheckPipe}}</td>
                 <td>{{course.courseCategory|EmtyValueCheckPipe}}</td>
                 <td>{{course.creditHours?(course.creditHours | number:'0.2'):course.creditHours==0?'0.00':'-'}}</td>
+            </tr>
+            <tr *ngIf="loading">
+                <td colspan="6" class="text-center">{{'fetchingData' | translate}}</td>
+            </tr>
+            <tr *ngIf="!loading && searchedCourseDetails?.length==0">
+                <td colspan="6" class="text-center">{{'noData' | translate}}</td>
             </tr>
         </tbody>
     </table>

@@ -929,5 +929,162 @@ namespace opensis.data.Repository
             }
             return staffAddViewModel;
         }
+
+        /// <summary>
+        /// Add Staff List
+        /// </summary>
+        /// <param name="staffListAddViewModel"></param>
+        /// <returns></returns>
+        public StaffListAddViewModel AddStaffList(StaffListAddViewModel staffListAddViewModel)
+        {
+            StaffListAddViewModel staffListAdd = new StaffListAddViewModel();
+            staffListAdd._tenantName = staffListAddViewModel._tenantName;
+            staffListAdd._token = staffListAddViewModel._token;
+            staffListAdd._userName = staffListAddViewModel._userName;
+
+            if (staffListAddViewModel.StaffAddViewModelList.Count > 0)
+            {
+                staffListAdd._failure = false;
+                staffListAdd._message = "Staff Added Successfully";
+
+                int? staffId = Utility.GetMaxPK(this.context, new Func<StaffMaster, int>(x => x.StaffId));
+
+                foreach (var staff in staffListAddViewModel.StaffAddViewModelList)
+                {
+                    UserMaster userMaster = new UserMaster();
+                    var StaffSchoolInfoData = new StaffSchoolInfo();
+                    using (var transaction = this.context.Database.BeginTransaction())
+                    {
+                        try
+                        {
+                            staff.staffMaster.TenantId = staffListAddViewModel.TenantId;
+                            staff.staffMaster.SchoolId = staffListAddViewModel.SchoolId;
+                            staff.staffMaster.StaffId = (int)staffId;
+                            Guid GuidId = Guid.NewGuid();
+                            var GuidIdExist = this.context?.StaffMaster.FirstOrDefault(x => x.StaffGuid == GuidId);
+
+                            if (GuidIdExist != null)
+                            {
+                                staffListAdd.StaffAddViewModelList.Add(staff);
+                                staffListAdd._failure = true;
+                                staffListAdd._message = "Staff Rejected Due to Data Error";
+                                continue;
+                            }
+
+                            staff.staffMaster.StaffGuid = GuidId;
+                            staff.staffMaster.LastUpdated = DateTime.UtcNow;
+
+                            if (!string.IsNullOrEmpty(staff.staffMaster.StaffInternalId))
+                            {
+                                bool checkInternalID = CheckInternalID(staff.staffMaster.TenantId, staff.staffMaster.StaffInternalId);
+                                if (checkInternalID == false)
+                                {
+                                    staffListAdd.StaffAddViewModelList.Add(staff);
+                                    staffListAdd._failure = true;
+                                    staffListAdd._message = "Staff Rejected Due to Data Error";
+                                    continue;
+                                }
+                            }
+                            else
+                            {
+                                staff.staffMaster.StaffInternalId = staff.staffMaster.StaffId.ToString();
+                            }
+
+                            //Add Staff Portal Access
+                            if (!string.IsNullOrWhiteSpace(staff.PasswordHash) && !string.IsNullOrWhiteSpace(staff.staffMaster.LoginEmailAddress))
+                            {
+                                //UserMaster userMaster = new UserMaster();
+
+                                var decrypted = Utility.Decrypt(staff.PasswordHash);
+                                string passwordHash = Utility.GetHashedPassword(decrypted);
+
+                                var loginInfo = this.context?.UserMaster.FirstOrDefault(x => x.TenantId == staff.staffMaster.TenantId && x.EmailAddress == staff.staffMaster.LoginEmailAddress);
+
+                                if (loginInfo == null)
+                                {
+                                    var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == staff.staffMaster.TenantId && x.SchoolId == staff.staffMaster.SchoolId && x.Profile == "Teacher");
+
+                                    userMaster.SchoolId = staff.staffMaster.SchoolId;
+                                    userMaster.TenantId = staff.staffMaster.TenantId;
+                                    userMaster.UserId = staff.staffMaster.StaffId;
+                                    userMaster.LangId = 1;
+                                    userMaster.MembershipId = membership.MembershipId;
+                                    userMaster.EmailAddress = staff.staffMaster.LoginEmailAddress;
+                                    userMaster.PasswordHash = passwordHash;
+                                    userMaster.Name = staff.staffMaster.FirstGivenName;
+                                    userMaster.IsActive = staff.staffMaster.PortalAccess;
+
+                                    this.context?.UserMaster.Add(userMaster);
+                                    this.context?.SaveChanges();
+                                }
+                                else
+                                {
+                                    staffListAdd.StaffAddViewModelList.Add(staff);
+                                    staffListAdd._failure = true;
+                                    staffListAdd._message = "Staff Rejected Due to Data Error";
+                                    continue;
+                                }
+                            }
+
+                            this.context?.StaffMaster.Add(staff.staffMaster);
+                            this.context?.SaveChanges();
+
+                            //Insert data into StaffSchoolInfo table            
+                            int? Id = Utility.GetMaxPK(this.context, new Func<StaffSchoolInfo, int>(x => (int)x.Id));
+                            var schoolName = this.context?.SchoolMaster.Where(x => x.TenantId == staff.staffMaster.TenantId && x.SchoolId == staff.staffMaster.SchoolId).Select(s => s.SchoolName).FirstOrDefault();
+                             StaffSchoolInfoData = new StaffSchoolInfo() { TenantId = staff.staffMaster.TenantId, SchoolId = staff.staffMaster.SchoolId, StaffId = staff.staffMaster.StaffId, SchoolAttachedId = staff.staffMaster.SchoolId, Id = (int)Id, SchoolAttachedName = schoolName, StartDate = DateTime.UtcNow, UpdatedAt = DateTime.UtcNow, UpdatedBy = staff.staffMaster.LastUpdatedBy, Profile = "Teacher" };
+                            this.context?.StaffSchoolInfo.Add(StaffSchoolInfoData);
+                            this.context?.SaveChanges();
+
+                            if (staff.fieldsCategoryList != null && staff.fieldsCategoryList.ToList().Count > 0)
+                            {
+                                //var fieldsCategory = staff.fieldsCategoryList.FirstOrDefault(x => x.CategoryId == staff.SelectedCategoryId);
+                                //if (fieldsCategory != null)
+                                //{
+                                foreach (var fieldsCategory in staff.fieldsCategoryList.ToList())
+                                {
+                                    foreach (var customFields in fieldsCategory.CustomFields.ToList())
+                                    {
+                                        if (customFields.CustomFieldsValue != null && customFields.CustomFieldsValue.ToList().Count > 0)
+                                        {
+                                            customFields.CustomFieldsValue.FirstOrDefault().Module = "Staff";
+                                            customFields.CustomFieldsValue.FirstOrDefault().CategoryId = customFields.CategoryId;
+                                            customFields.CustomFieldsValue.FirstOrDefault().FieldId = customFields.FieldId;
+                                            customFields.CustomFieldsValue.FirstOrDefault().CustomFieldTitle = customFields.Title;
+                                            customFields.CustomFieldsValue.FirstOrDefault().CustomFieldType = customFields.Type;
+                                            customFields.CustomFieldsValue.FirstOrDefault().SchoolId = staff.staffMaster.SchoolId;
+                                            customFields.CustomFieldsValue.FirstOrDefault().TargetId = staff.staffMaster.StaffId;
+                                            this.context?.CustomFieldsValue.AddRange(customFields.CustomFieldsValue);
+                                            this.context?.SaveChanges();
+                                        }
+                                    }
+                                }
+                                //}
+                            }
+                            transaction.Commit();
+                            staffId++;
+                        }
+                        catch (Exception es)
+                        {
+                            transaction.Rollback();
+                            staffListAdd.StaffAddViewModelList.Add(staff);
+                            this.context?.StaffMaster.Remove(staff.staffMaster);
+                            this.context?.StaffSchoolInfo.Remove(StaffSchoolInfoData);
+                            this.context?.UserMaster.Remove(userMaster);
+                            staffListAdd._failure = true;
+                            staffListAdd._message = "Staff Rejected Due to Data Error";
+                            //staffId--;
+                            continue;
+                        }
+                    }
+                }
+            }
+            else
+            {
+                staffListAdd._failure = true;
+                staffListAdd._message = "Please Import Staff";
+            }
+            return staffListAdd;
+        }
     }
 }

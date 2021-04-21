@@ -1,3 +1,5 @@
+<vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+
 <vex-page-layout>
     <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
         <vex-secondary-toolbar current="Take Attendance" class="w-full">
@@ -8,36 +10,36 @@
         <div class="card -mt-16">
             <div class="flex justify-between items-center px-4">
                 <div class="py-4">
-                    <a [routerLink]="['/school/take-attendance/course-section']" class="cursor-pointer">
+                    <a [routerLink]="['/school', 'staff', 'teacher-functions', 'take-attendance', 'course-section']" class="cursor-pointer">
                         <mat-icon color="primary" class="ml-2 mr-4 align-middle">west</mat-icon>
                     </a>
-                    <span class="font-medium text-lg">Ella Brown / GEOM001 - Period 5</span>
+                    <span class="font-medium text-lg">{{staffDetails?.staffFullName}} / {{staffDetails?.courseSectionName}} - {{staffDetails?.periodTitle}}</span>
                 </div>
                 <div>
-                    <h4>15 Students Found</h4>
+                    <h4>{{scheduleStudentListViewModel?.scheduleStudentForView?.length}} Student(s) Found</h4>
                 </div>
             </div>
             <mat-divider class="text-border"></mat-divider>
             <div class="text-center py-4">
-                <h4 class="text-primary font-medium">Taking attendance for : March 13, 2021</h4>
-                <p class="text-warn"><i class="icon icon-info2 mr-2 align-baseline"></i>Selected date is not today</p>
+                <h4 class="text-primary font-medium">Taking attendance for : {{staffDetails?.attendanceDate | date : 'longDate'}}</h4>
+                <p class="text-warn" *ngIf="!isAttendanceDateToday"><i class="icon icon-info2 mr-2 align-baseline"></i>Selected date is not today</p>
             </div>
             <mat-divider class="text-border"></mat-divider>
             <div class="table-sticky mat-elevation-z8 shadow-none">
-                <table mat-table [dataSource]="attendanceDetails">
+                <table mat-table [dataSource]="scheduleStudentListViewModel.scheduleStudentForView">
                     <ng-container matColumnDef="students" sticky>
                         <th mat-header-cell *matHeaderCellDef>{{ "students" | translate }}</th>
                         <td mat-cell *matCellDef="let element" class="bg-white">
                             <div class="flex mb-2">
                                 <div class="flex-shrink-0 h-12 w-12">
-                                    <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                                    <img src="{{element.studentPhoto?'data:image/png;base64,'+ element.studentPhoto:'assets/img/default-person.jpg'}}" alt="" class="h-12 w-12 rounded-full" />
                                 </div>
                                 <div class="ml-3 flex flex-col justify-center">
-                                    <h6 class="text-sm font-semibold">{{ element.students }}</h6>
+                                    <h6 class="text-sm font-semibold">{{ element.firstGivenName+' '+element.lastFamilyName }}</h6>
                                     <div>
-                                        <span class="">#44568</span>
+                                        <span class="">#{{element.studentInternalId}}</span>
                                         <span class="dot-separator"></span>
-                                        <span>Grade 9</span>
+                                        <span>{{element.gradeLevel}}</span>
                                     </div>
                                 </div>
                             </div>
@@ -46,41 +48,16 @@
                     <ng-container matColumnDef="attendanceCodes">
                         <th mat-header-cell *matHeaderCellDef>
                             {{ "attendanceCodes" | translate }}
-                            <mat-slide-toggle color="primary" class="ml-3 text-gray font-medium">
+                            <mat-slide-toggle color="primary" [(ngModel)]="showShortName" [checked]="showShortName" class="ml-3 text-gray font-medium">
                                 {{'showShortName' | translate}}
                             </mat-slide-toggle>
                         </th>
-                        <td mat-cell *matCellDef="let element">
-                            <div class="custom-radios">
-                                
-                                <label for="present{{element.id}}">
-                                    <input type="radio" id="present{{element.id}}" name="attendance_{{element.id}}" value="present">
-                                    <div class="inline-block checkmark-container present">
-                                        <span class="checkmark"></span>Present
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="custom-radios">
-                                <label for="absent{{element.id}}">
-                                    <input type="radio" id="absent{{element.id}}" name="attendance_{{element.id}}" value="absent">
-                                    <div class="inline-block checkmark-container absent">
-                                        <span class="checkmark"></span>Absent
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="custom-radios">
-                                <label for="tardy{{element.id}}">
-                                    <input type="radio" id="tardy{{element.id}}" name="attendance_{{element.id}}" value="tardy">
-                                    <div class="inline-block checkmark-container tardy">
-                                        <span class="checkmark"></span>Tardy
-                                    </div>
-                                </label>
-                            </div>
-                            <div class="custom-radios">
-                                <label for="late{{element.id}}">
-                                    <input type="radio" id="late{{element.id}}" name="attendance_{{element.id}}" value="late">
-                                    <div class="inline-block checkmark-container present">
-                                        <span class="checkmark"></span>Late
+                        <td mat-cell *matCellDef="let element;let i = index">
+                            <div class="custom-radios" *ngFor="let attendance of getAllAttendanceCodeModel.attendanceCodeList">
+                                <label for="{{attendance.title+''+i}}">
+                                    <input type="radio" id="{{attendance.title+''+i}}" name="{{i}}" [(ngModel)]="addUpdateStudentAttendanceModel.studentAttendance[i].attendanceCode" value="{{attendance.attendanceCode1}}">
+                                    <div class="inline-block checkmark-container" [ngClass]="attendance.stateCode=='Present'?'present':attendance.stateCode=='Absent'?'absent':attendance.stateCode=='Half Day'?'tardy':'present'">
+                                        <span class="checkmark"></span>{{showShortName?attendance.shortName:attendance.title}}
                                     </div>
                                 </label>
                             </div>
@@ -88,19 +65,31 @@
                     </ng-container>
                     <ng-container matColumnDef="comments" stickyEnd>
                         <th mat-header-cell *matHeaderCellDef>{{ "comments" | translate }}</th>
-                        <td mat-cell *matCellDef="let element" class="bg-white">
+                        <td mat-cell *matCellDef="let element; let i = index" class="bg-white">
                             <button
-                                matTooltip="Lorem Ipsum is simply dummy text of the printing and typesetting industry"
+                                matTooltip="{{addUpdateStudentAttendanceModel.studentAttendance[i]?.comments}}"
                                 aria-label="Button that displays a tooltip when focused or hovered over"
-                                [matTooltipPosition]="'left'" (click)="addComments()">
-                                <i class="icon icon-bubble text-lg"></i>
+                                [matTooltipPosition]="'left'" (click)="addComments(i)">
+                                <i class="icon icon-bubble text-lg" [ngClass]="addUpdateStudentAttendanceModel.studentAttendance[i]?.comments?'text-green':''"></i>
                             </button>
                         </td>
                     </ng-container>
+                    <ng-container matColumnDef="noData">
+                        <td mat-footer-cell *matFooterCellDef colspan="3">
+                          No Data
+                        </td>
+                      </ng-container>
 
                     <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                     <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hidden]="scheduleStudentListViewModel.scheduleStudentForView?.length>0"></tr>       
+
                 </table>
+            </div>
+            <div class="text-right p-4" *ngIf="scheduleStudentListViewModel?.scheduleStudentForView?.length>0">
+                <button color="primary" mat-raised-button type="submit" (click)="addUpdateStudentAttendance()">
+                    {{ actionButtonTitle | translate }}
+                </button>
             </div>
         </div>
     </vex-page-layout-content>

@@ -3,14 +3,15 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import icPlusCircle from '@iconify/icons-ic/add-circle-outline';
 import { weekDay } from '../../../../../enums/day.enum';
 import { SchoolPeriodService } from '../../../../../services/school-period.service';
-import { BlockListViewModel } from '../../../../../models/schoolPeriodModel';
+import { BlockListViewModel } from '../../../../../models/school-period.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { RoomService } from '../../../../../services/room.service';
-import { RoomListViewModel } from '../../../../../models/roomModel';
-import { CourseVariableSchedule, OutputEmitDataFormat, CourseSectionAddViewModel, DeleteCourseSectionSchedule } from '../../../../../models/courseSectionModel';
+import { RoomListViewModel } from '../../../../../models/room.model';
+import { CourseVariableSchedule, OutputEmitDataFormat, CourseSectionAddViewModel, DeleteCourseSectionSchedule } from '../../../../../models/course-section.model';
 import { CourseSectionService } from '../../../../../services/course-section.service';
 import { map } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
+import { weeks } from '../../../../../common/static-data';
 @Component({
   selector: 'vex-variable-scheduling',
   templateUrl: './variable-scheduling.component.html',
@@ -30,7 +31,7 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
   selectedBlocks = [];
   selectedPeriod = []
   divCount = [];
-  weekDaysList = [];
+  weekDaysList = weeks;
   filterDays;
   periodList = [];
   selectedRooms = [];
@@ -54,17 +55,13 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
   ngOnInit(): void {
     this.getAllBlockList();
     this.getAllRooms();
-    this.weekDaysList = Object.keys(weekDay).filter(k => typeof weekDay[k] === 'number')
-      .map(label => ({ label, value: weekDay[label] }))
-
-
 
     if (this.detailsFromParentModal.editMode) {
       for (let i = 0; i < this.detailsFromParentModal.courseSectionDetails.courseVariableSchedule.length; i++) {
         this.courseSectionAddViewModel.courseVariableScheduleList[i] = this.detailsFromParentModal.courseSectionDetails.courseVariableSchedule[i];
         this.weekDaysList.map(val => {
-          if (this.courseSectionAddViewModel.courseVariableScheduleList[i].day === val.label) {
-            this.courseSectionAddViewModel.courseVariableScheduleList[i].day = val.label;
+          if (this.courseSectionAddViewModel.courseVariableScheduleList[i].day === val.name) {
+            this.courseSectionAddViewModel.courseVariableScheduleList[i].day = val.name;
           }
         })
         this.divCount[i] = i;
@@ -77,7 +74,7 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
         if(i!=0){
           this.courseSectionAddViewModel.courseVariableScheduleList.push(new CourseVariableSchedule());
         }
-        this.courseSectionAddViewModel.courseVariableScheduleList[i].day=item.label
+        this.courseSectionAddViewModel.courseVariableScheduleList[i].day=item.name
       this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
       this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
 
@@ -90,18 +87,17 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
     if (this.selectedCalendar.days !== undefined) {
       this.getDays(this.selectedCalendar.days)
     }
-
   }
 
 
   getDays(days: string) {
     const calendarDays = days;
-    var allDays = [0, 1, 2, 3, 4, 5, 6];
-    var splitDays = calendarDays?.split('').map(x => +x);
+    let allDays = [0, 1, 2, 3, 4, 5, 6];
+    let splitDays = calendarDays?.split('').map(x => +x);
     this.filterDays = allDays.filter(f => !splitDays.includes(f));
     this.weekDaysList.map((val, i) => {
       this.filterDays.map(data => {
-        if (data == val.value) {
+        if (data == val.id) {
           this.weekDaysList.splice(i, 1);
         }
       })
@@ -158,7 +154,6 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
   }
 
   getAllRooms() {
-    this.roomListViewModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
     this.roomService.getAllRoom(this.roomListViewModel).subscribe(
       (res: RoomListViewModel) => {
         if (typeof (res) == 'undefined') {
@@ -231,7 +226,7 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
         return false;
       }
     })
-    for (var i = 0; i < this.courseSectionAddViewModel.courseVariableScheduleList.length; i++) {
+    for (let i = 0; i < this.courseSectionAddViewModel.courseVariableScheduleList.length; i++) {
       let blockId = this.periodList[0].blockId;
       this.courseSectionAddViewModel.courseVariableScheduleList[i].blockId = blockId
     }

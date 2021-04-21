@@ -10,12 +10,12 @@ import { ParentInfoService } from '../../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { Router } from '@angular/router';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
-import { AddParentInfoModel,ParentInfoList,AssociateStudent } from '../../../../../models/parentInfoModel';
+import { AddParentInfoModel,ParentInfoList,AssociateStudent } from '../../../../../models/parent-info.model';
 import { salutation,suffix ,relationShip,userProfile,Custody} from '../../../../../enums/studentAdd.enum';
-import { CountryModel } from '../../../../../models/countryModel';
+import { CountryModel } from '../../../../../models/country.model';
 import { CommonService } from '../../../../../services/common.service';
 import { SharedFunction } from '../../../../shared/shared-function';
-import { LovList } from '../../../../../models/lovModel';
+import { LovList } from '../../../../../models/lov.model';
 import { CommonLOV } from '../../../../shared-module/lov/common-lov';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
@@ -93,13 +93,6 @@ export class EditContactComponent implements OnInit,OnDestroy {
       if(this.data.mode === "view"){       
        this.mode = "view";
        this.viewData = this.data.parentInfo;  
-       
-       if(this.viewData.middlename === null){
-        this.viewData.middlename = "";
-       }
-       if(this.viewData.salutation === null){
-        this.viewData.salutation = "";
-       }
        
       }else{
         if(this.data.mode === "add"){
@@ -215,8 +208,8 @@ export class EditContactComponent implements OnInit,OnDestroy {
   }
 
   associateMultipleStudentsToParent(){
-   var isCustodian=this.associateStudent.isCustodian;
-   var contactRelationship=this.associateStudent.contactRelationship;  
+   let isCustodian=this.associateStudent.isCustodian;
+   let contactRelationship=this.associateStudent.contactRelationship;  
    if(contactRelationship === undefined){
     contactRelationship = "";
    }   
@@ -288,7 +281,7 @@ export class EditContactComponent implements OnInit,OnDestroy {
           
           if(this.mode === "view"){
             this.countryListArr.map((val) => {
-              var countryInNumber = +this.viewData.parentAddress.country;            
+              let countryInNumber = +this.viewData.parentAddress.country;            
                 if(val.id === countryInNumber){
                   this.viewData.parentAddress.country= val.name;
                 }               

@@ -22,7 +22,7 @@ export class ReportCardCommentsComponent implements OnInit {
     public translateService:TranslateService) {
       translateService.use('en'); 
     }
-
+    
   ngOnInit(): void {
   }
 

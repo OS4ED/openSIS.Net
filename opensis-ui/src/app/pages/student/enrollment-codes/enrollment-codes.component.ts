@@ -15,12 +15,12 @@ import { LoaderService } from '../../../services/loader.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { EditEnrollmentCodeComponent } from '../enrollment-codes/edit-enrollment-code/edit-enrollment-code.component';
 import { EnrollmentCodesService } from '../../../services/enrollment-codes.service';
-import { EnrollmentCodeAddView, EnrollmentCodeListView } from '../../../models/enrollmentCodeModel';
+import { EnrollmentCodeAddView, EnrollmentCodeListView } from '../../../models/enrollment-code.model';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ExcelService } from '../../../services/excel.service';
 import { CryptoService } from '../../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 
 @Component({
   selector: 'vex-enrollment-codes',
@@ -117,14 +117,22 @@ export class EnrollmentCodesComponent implements OnInit {
     )
   }
 
+  translateKey(key) {
+    let trnaslateKey;
+    this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportEnrollmentCodesToExcel(){
     if(this.enrollmentListForExcel.studentEnrollmentCodeList.length>0){
       let enrollmentList=this.enrollmentListForExcel.studentEnrollmentCodeList?.map((item)=>{
         return{
-                   Title: item.title,
-                   ShortName: item.shortName,
-                   SortOrder: item.sortOrder,
-                   Type: item.type,
+                  [(this.translateKey('title')).toUpperCase()]: item.title,
+                  [(this.translateKey('shortName')).toUpperCase()]: item.shortName,
+                  [(this.translateKey('sortOrder')).toUpperCase()]: item.sortOrder,
+                  [(this.translateKey('type')).toUpperCase()]: item.type
         }
       });
       this.excelService.exportAsExcelFile(enrollmentList,'Enrollment_List_')

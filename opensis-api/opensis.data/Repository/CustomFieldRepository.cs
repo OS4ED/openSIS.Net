@@ -7,6 +7,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using Microsoft.EntityFrameworkCore;
+using System.Text.RegularExpressions;
 
 namespace opensis.data.Repository
 {
@@ -49,9 +50,11 @@ namespace opensis.data.Repository
                         SortOrder = SortOrderData.SortOrder + 1;
                     }
 
+                    string fieldName = Regex.Replace(customFieldAddViewModel.customFields.Title, @"\s+", "");
                     customFieldAddViewModel.customFields.FieldId = (int)MasterFieldId;
                     customFieldAddViewModel.customFields.SortOrder = (int)SortOrder;
                     customFieldAddViewModel.customFields.LastUpdate = DateTime.UtcNow;
+                    customFieldAddViewModel.customFields.FieldName = fieldName;
                     this.context?.CustomFields.Add(customFieldAddViewModel.customFields);
                     this.context?.SaveChanges();
                     customFieldAddViewModel._failure = false;

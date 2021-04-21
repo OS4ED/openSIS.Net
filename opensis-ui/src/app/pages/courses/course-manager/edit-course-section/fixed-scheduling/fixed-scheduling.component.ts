@@ -1,12 +1,13 @@
 import { Component, EventEmitter, Input, OnChanges, OnInit, Output, SimpleChanges, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { RoomListViewModel } from '../../../../../models/roomModel';
-import { BlockListViewModel } from '../../../../../models/schoolPeriodModel';
+import { RoomListViewModel } from '../../../../../models/room.model';
+import { BlockListViewModel } from '../../../../../models/school-period.model';
 import { RoomService } from '../../../../../services/room.service';
 import { SchoolPeriodService } from '../../../../../services/school-period.service';
-import { FixedSchedulingCourseSectionAddModel, OutputEmitDataFormat } from '../../../../../models/courseSectionModel';
+import { FixedSchedulingCourseSectionAddModel, OutputEmitDataFormat } from '../../../../../models/course-section.model';
 import { CourseSectionService } from '../../../../../services/course-section.service';
+import { weeks } from '../../../../../common/static-data';
 
 @Component({
   selector: 'vex-fixed-scheduling',
@@ -24,15 +25,7 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
   periodList=[];
   weekArray: number[] = [];
   activeDaysError=false;
-  weeks = [
-    { name: 'sunday', id: 0 },
-    { name: 'monday', id: 1 },
-    { name: 'tuesday', id: 2 },
-    { name: 'wednesday', id: 3 },
-    { name: 'thursday', id: 4 },
-    { name: 'friday', id: 5 },
-    { name: 'saturday', id: 6 }
-  ];
+  weeks = weeks;
   constructor(
     private roomService:RoomService,
     private schoolPeriodService:SchoolPeriodService,
@@ -139,7 +132,7 @@ export class FixedSchedulingComponent implements OnInit,OnChanges {
 
     event.preventDefault();
     if(this.weekArray.includes(name)){
-      var index = this.activeDays.indexOf(name);
+      let index = this.activeDays.indexOf(name);
       if(index>-1){
         this.activeDays.splice(index,1);
       }

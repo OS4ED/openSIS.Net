@@ -27,6 +27,7 @@ namespace opensis.data.Repository
             //int? AttendanceCodeId = Utility.GetMaxPK(this.context, new Func<AttendanceCode, int>(x => x.AttendanceCode1));
 
             int? AttendanceCodeId = 1;
+            int? SortOrder = 1;
 
             var AttendanceCodeData = this.context?.AttendanceCode.Where(x => x.TenantId == attendanceCodeAddViewModel.attendanceCode.TenantId && x.SchoolId == attendanceCodeAddViewModel.attendanceCode.SchoolId).OrderByDescending(x => x.AttendanceCode1).FirstOrDefault();
 
@@ -35,9 +36,18 @@ namespace opensis.data.Repository
                 AttendanceCodeId = AttendanceCodeData.AttendanceCode1 + 1;
             }
 
+            var attendanceCodeSortOrder = this.context?.AttendanceCode.Where(x => x.SchoolId == attendanceCodeAddViewModel.attendanceCode.SchoolId && x.TenantId == attendanceCodeAddViewModel.attendanceCode.TenantId && x.AttendanceCategoryId == attendanceCodeAddViewModel.attendanceCode.AttendanceCategoryId).OrderByDescending(x => x.SortOrder).FirstOrDefault();
+
+            if (attendanceCodeSortOrder != null)
+            {
+                SortOrder = attendanceCodeSortOrder.SortOrder + 1;
+            }
+
             attendanceCodeAddViewModel.attendanceCode.AttendanceCode1 = (int)AttendanceCodeId;
-            attendanceCodeAddViewModel.attendanceCode.LastUpdated = DateTime.UtcNow;            
+            attendanceCodeAddViewModel.attendanceCode.LastUpdated = DateTime.UtcNow;
+            attendanceCodeAddViewModel.attendanceCode.SortOrder = (int)SortOrder;
             this.context?.AttendanceCode.Add(attendanceCodeAddViewModel.attendanceCode);
+            
             this.context?.SaveChanges();
             attendanceCodeAddViewModel._failure = false;
             attendanceCodeAddViewModel._message = "Attendance Code Added Successfully";
@@ -146,10 +156,29 @@ namespace opensis.data.Repository
             try
             {
                 var attendanceCodeDelete = this.context?.AttendanceCode.FirstOrDefault(x => x.TenantId == attendanceCodeAddViewModel.attendanceCode.TenantId && x.SchoolId == attendanceCodeAddViewModel.attendanceCode.SchoolId && x.AttendanceCode1 == attendanceCodeAddViewModel.attendanceCode.AttendanceCode1);
-                this.context?.AttendanceCode.Remove(attendanceCodeDelete);
-                this.context?.SaveChanges();
-                attendanceCodeAddViewModel._failure = false;
-                attendanceCodeAddViewModel._message = "Attendance Code Deleted Successfully";
+
+                if (attendanceCodeDelete != null)
+                {
+                    var studentAttendanceData = this.context?.StudentAttendance.FirstOrDefault(x => x.TenantId == attendanceCodeAddViewModel.attendanceCode.TenantId && x.SchoolId == attendanceCodeAddViewModel.attendanceCode.SchoolId && x.AttendanceCode == attendanceCodeAddViewModel.attendanceCode.AttendanceCode1);
+
+                    if (studentAttendanceData != null)
+                    {
+                        attendanceCodeAddViewModel._failure = true;
+                        attendanceCodeAddViewModel._message = "Cannot Delete Because It Has Association.";
+                    }
+                    else
+                    {
+                        this.context?.AttendanceCode.Remove(attendanceCodeDelete);
+                        this.context?.SaveChanges();
+                        attendanceCodeAddViewModel._failure = false;
+                        attendanceCodeAddViewModel._message = "Attendance Code Deleted Successfully";
+                    }
+                }
+                else
+                {
+                    attendanceCodeAddViewModel._failure = true;
+                    attendanceCodeAddViewModel._message = NORECORDFOUND;
+                }
             }
             catch (Exception es)
             {
@@ -306,6 +335,56 @@ namespace opensis.data.Repository
                 attendanceCodeCategoriesAddViewModel._message = es.Message;
             }
             return attendanceCodeCategoriesAddViewModel;
+        }
+
+        /// <summary>
+        /// Update Attendance Code Sort Order
+        /// </summary>
+        /// <param name="attendanceCodeSortOrderModel"></param>
+        /// <returns></returns>
+        public AttendanceCodeSortOrderModel UpdateAttendanceCodeSortOrder(AttendanceCodeSortOrderModel attendanceCodeSortOrderModel)
+        {
+            try
+            {
+                if (attendanceCodeSortOrderModel.AttendanceCategoryId > 0)
+                {
+                    var AttendanceCodesSortOrderItem = new List<AttendanceCode>();
+
+                    var targetAttendanceCodeSortOrderItem = this.context?.AttendanceCode.FirstOrDefault(x => x.SortOrder == attendanceCodeSortOrderModel.PreviousSortOrder && x.SchoolId == attendanceCodeSortOrderModel.SchoolId && x.TenantId == attendanceCodeSortOrderModel.TenantId && x.AttendanceCategoryId == attendanceCodeSortOrderModel.AttendanceCategoryId);
+
+                    if (targetAttendanceCodeSortOrderItem != null)
+                    {
+                        targetAttendanceCodeSortOrderItem.SortOrder = attendanceCodeSortOrderModel.CurrentSortOrder;
+
+                        if (attendanceCodeSortOrderModel.PreviousSortOrder > attendanceCodeSortOrderModel.CurrentSortOrder)
+                        {
+                            AttendanceCodesSortOrderItem = this.context?.AttendanceCode.Where(x => x.SortOrder >= attendanceCodeSortOrderModel.CurrentSortOrder && x.SortOrder < attendanceCodeSortOrderModel.PreviousSortOrder && x.SchoolId == attendanceCodeSortOrderModel.SchoolId && x.TenantId == attendanceCodeSortOrderModel.TenantId && x.AttendanceCategoryId == attendanceCodeSortOrderModel.AttendanceCategoryId).ToList();
+
+                            if (AttendanceCodesSortOrderItem.Count > 0)
+                            {
+                                AttendanceCodesSortOrderItem.ForEach(x => x.SortOrder = x.SortOrder + 1);
+                            }
+                        }
+                        if (attendanceCodeSortOrderModel.CurrentSortOrder > attendanceCodeSortOrderModel.PreviousSortOrder)
+                        {
+                            AttendanceCodesSortOrderItem = this.context?.AttendanceCode.Where(x => x.SortOrder <= attendanceCodeSortOrderModel.CurrentSortOrder && x.SortOrder > attendanceCodeSortOrderModel.PreviousSortOrder && x.SchoolId == attendanceCodeSortOrderModel.SchoolId && x.TenantId == attendanceCodeSortOrderModel.TenantId && x.AttendanceCategoryId == attendanceCodeSortOrderModel.AttendanceCategoryId).ToList();
+                            if (AttendanceCodesSortOrderItem.Count > 0)
+                            {
+                                AttendanceCodesSortOrderItem.ForEach(x => x.SortOrder = x.SortOrder - 1);
+                            }
+                        }
+                    }
+                }
+            
+                this.context?.SaveChanges();
+                attendanceCodeSortOrderModel._failure = false;
+            }
+            catch (Exception es)
+            {
+                attendanceCodeSortOrderModel._message = es.Message;
+                attendanceCodeSortOrderModel._failure = true;
+            }
+            return attendanceCodeSortOrderModel;
         }
     }
 }

@@ -2,19 +2,19 @@ import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy } from '@
 import { NgForm } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
 import { StudentService } from '../../../../services/student.service';
-import { filterParams, StudentListModel, StudentMasterSearchModel } from '../../../../models/studentModel';
-import { GetAllSectionModel } from '../../../../models/sectionModel';
+import { filterParams, StudentListModel, StudentMasterSearchModel } from '../../../../models/student.model';
+import { GetAllSectionModel } from '../../../../models/section.model';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { SectionService } from '../../../../services/section.service';
 import { CommonService } from '../../../../services/common.service';
 import { LoginService } from '../../../../services/login.service';
-import { CountryModel } from '../../../../models/countryModel';
-import { LanguageModel } from '../../../../models/languageModel';
+import { CountryModel } from '../../../../models/country.model';
+import { LanguageModel } from '../../../../models/language.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { userProfile} from '../../../../enums/studentAdd.enum';
-import { ParentAdvanceSearchModel, ParentInfoModel } from 'src/app/models/parentInfoModel';
+import { ParentAdvanceSearchModel, ParentInfoModel } from 'src/app/models/parent-info.model';
 
 @Component({
   selector: 'vex-search-parent',
@@ -76,7 +76,6 @@ export class SearchParentComponent implements OnInit,OnDestroy {
   }
 
   onProfileChange(event){
-    console.log(this.parentSearchModel.userProfile);
     this.parentSearchModel.userProfile=event.toString();
   }
 

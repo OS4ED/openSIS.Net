@@ -15,11 +15,11 @@ import icChevronLeft from '@iconify/icons-ic/twotone-chevron-left';
 import icChevronRight from '@iconify/icons-ic/twotone-chevron-right';
 import { FormControl } from '@angular/forms';
 import { CalendarService } from '../../../services/calendar.service';
-import { CalendarAddViewModel, CalendarListModel, CalendarModel } from '../../../models/calendarModel';
-import { GetAllMembersList } from '../../../models/membershipModel';
+import { CalendarAddViewModel, CalendarListModel, CalendarModel } from '../../../models/calendar.model';
+import { GetAllMembersList } from '../../../models/membership.model';
 import { MembershipService } from '../../../services/membership.service';
 import { CalendarEventService } from '../../../services/calendar-event.service';
-import { CalendarEventAddViewModel, CalendarEventListViewModel, CalendarEventModel } from '../../../models/calendarEventModel';
+import { CalendarEventAddViewModel, CalendarEventListViewModel, CalendarEventModel } from '../../../models/calendar-event.model';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { map } from 'rxjs/operators';
 import { TranslateService } from '@ngx-translate/core';
@@ -27,8 +27,8 @@ import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confi
 import * as moment from 'moment';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { LoaderService } from '../../../services/loader.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../services/roll-based-access.service';
 import { CryptoService } from '../../../services/Crypto.service';
 const colors: any = {
   blue: {
@@ -208,8 +208,8 @@ export class CalendarComponent implements OnInit {
 
   getDays(days: string) {
     const calendarDays = days;
-    var allDays = [0, 1, 2, 3, 4, 5, 6];
-    var splitDays = calendarDays.split('').map(x => +x);
+    let allDays = [0, 1, 2, 3, 4, 5, 6];
+    let splitDays = calendarDays.split('').map(x => +x);
     this.filterDays = allDays.filter(f => !splitDays.includes(f));
     this.weekendDays = this.filterDays;
     this.cssClass = 'bg-aqua';

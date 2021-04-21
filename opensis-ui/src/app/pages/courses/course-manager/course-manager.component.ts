@@ -21,15 +21,15 @@ import { ManageSubjectsComponent } from './manage-subjects/manage-subjects.compo
 import { ManageProgramsComponent } from './manage-programs/manage-programs.component';
 import { EditCourseComponent } from './edit-course/edit-course.component';
 import { EditCourseSectionComponent } from './edit-course-section/edit-course-section.component';
-import {GetAllCourseListModel,AddCourseModel,GetAllProgramModel,GetAllSubjectModel, CourseListFilterModel} from '../../../models/courseManagerModel';
+import {GetAllCourseListModel,AddCourseModel,GetAllProgramModel,GetAllSubjectModel, CourseListFilterModel} from '../../../models/course-manager.model';
 import {CourseManagerService} from '../../../services/course-manager.service';
 import {MatSnackBar} from  '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import {GradeLevelService} from '../../../services/grade-level.service';
-import {GetAllGradeLevelsModel } from '../../../models/gradeLevelModel';
+import {GetAllGradeLevelsModel } from '../../../models/grade-level.model';
 import { FormBuilder, FormControl, FormGroup, Validators } from '@angular/forms';
 import { LayoutService } from 'src/@vex/services/layout.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 import { LoaderService } from '../../../services/loader.service';
 
@@ -189,7 +189,7 @@ export class CourseManagerComponent implements OnInit {
         this.courseList=data.courseViewModelList;
         this.courseListClone = data.courseViewModelList;           
         this.totalCourse = this.courseList.length;  
-        var fl= false;
+        let fl= false;
         if(this.totalCourse > 0){
           for(let i=0;i<this.totalCourse;i++){
             if(this.deletedCourse === this.selectedCourses){
@@ -223,10 +223,6 @@ export class CourseManagerComponent implements OnInit {
     });
   }
   getAllGradeLevelList(){   
-    this.getAllGradeLevelsModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.getAllGradeLevelsModel._tenantName = sessionStorage.getItem("tenant");
-    this.getAllGradeLevelsModel._userName = sessionStorage.getItem("user");
-    this.getAllGradeLevelsModel._token = sessionStorage.getItem("token");
     this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevelsModel).subscribe(data => {          
       this.gradeLevelList=data.tableGradelevelList;      
     });

@@ -196,7 +196,7 @@
     "PermissionGroupId": "5",
     "PermissionCategoryName": "Teacher Functions",
     "ShortCode": "tf",
-    "Path": "disabled",
+    "Path": "/school/staff/teacher-functions/input-final-grade",
     "Title": "Teacher Functions",
     "Type": "link",
     "EnableView": true,

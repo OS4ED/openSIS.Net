@@ -1,7 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import { StaffAddModel } from '../../../../models/staffModel';
+import { StaffAddModel } from '../../../../models/staff.model';
 import { SharedFunction } from '../../../shared/shared-function';
 
 @Component({

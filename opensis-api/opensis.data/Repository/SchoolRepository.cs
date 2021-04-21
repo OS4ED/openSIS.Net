@@ -555,7 +555,8 @@ namespace opensis.data.Repository
                         releaseNumber.ReleaseNumber1 = "v1.0.0";
                         releaseNumber.ReleaseDate = DateTime.UtcNow;
                 }
-                
+
+                    
 
                     //insert into permission group
                     var dataGroup = System.IO.File.ReadAllText(@"Group.json");
@@ -570,6 +571,20 @@ namespace opensis.data.Repository
                         permisionGrp.IsActive = true;
                         permisionGrp.PermissionCategory = null;
                         this.context?.PermissionGroup.Add(permisionGrp);
+                        //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                    }
+
+                    //insert into system default custom fields
+                    var dataCustomFields = System.IO.File.ReadAllText(@"CustomFields.json");
+                    JsonSerializerSettings settingCusFld = new JsonSerializerSettings();
+                    List<CustomFields> objCusFld = JsonConvert.DeserializeObject<List<CustomFields>>(dataCustomFields, settingCusFld);
+                    foreach (CustomFields customFields in objCusFld)
+                    {
+                        customFields.TenantId = school.schoolMaster.TenantId;
+                        customFields.SchoolId = school.schoolMaster.SchoolId;
+                        customFields.UpdatedBy = school.schoolMaster.CreatedBy;
+                        customFields.LastUpdate = DateTime.UtcNow;
+                        this.context?.CustomFields.Add(customFields);
                         //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
                     }
 

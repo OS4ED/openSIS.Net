@@ -6,18 +6,18 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
 import { EditNoticeComponent } from '../notices/edit-notice/edit-notice.component';
 import { NoticeService } from '../../../services/notice.service';
-import { NoticeListViewModel } from '../../../models/noticeModel';
+import { NoticeListViewModel } from '../../../models/notice.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { TranslateService } from '@ngx-translate/core';
 import { MembershipService } from '../../../services/membership.service';
-import { GetAllMembersList } from '../../../models/membershipModel';
+import { GetAllMembersList } from '../../../models/membership.model';
 import moment from 'moment';
 import { LoaderService } from '../../../services/loader.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { LayoutService } from 'src/@vex/services/layout.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../services/roll-based-access.service';
 import { CryptoService } from '../../../services/Crypto.service';
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -120,7 +120,7 @@ export class NoticesComponent implements OnInit, OnDestroy {
       this.noticeList = res.noticeList;
       if (event != 'All') {
         this.recordFor = event.target.innerHTML;
-        var today = new Date();
+        let today = new Date();
         if (this.recordFor.toLowerCase() == "today") {
           this.noticeList =res.noticeList?.filter(
             m=>{

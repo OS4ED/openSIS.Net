@@ -14,16 +14,16 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger60ms } from '../../../../@vex/animations/stagger.animation';
 import { EditMarkingPeriodComponent } from '../marking-periods/edit-marking-period/edit-marking-period.component';
 import { MarkingPeriodService } from '../../../services/marking-period.service';
-import { MarkingPeriodListModel } from '../../../models/markingPeriodModel';
+import { MarkingPeriodListModel } from '../../../models/marking-period.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { MarkingPeriodAddModel, SemesterAddModel, QuarterAddModel, ProgressPeriodAddModel } from '../../../models/markingPeriodModel';
+import { MarkingPeriodAddModel, SemesterAddModel, QuarterAddModel, ProgressPeriodAddModel } from '../../../models/marking-period.model';
 import { SharedFunction } from '../../shared/shared-function';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
-import { RollBasedAccessService } from '../../../services/rollBasedAccess.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/rollBasedAccessModel';
+import { RollBasedAccessService } from '../../../services/roll-based-access.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 @Component({
   selector: 'vex-marking-periods',

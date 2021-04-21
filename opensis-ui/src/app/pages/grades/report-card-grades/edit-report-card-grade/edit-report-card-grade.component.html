@@ -10,7 +10,7 @@
 <mat-dialog-content fxLayout="column" [formGroup]="form">
     <mat-form-field class="mt-6" appearance="outline" color="primary">
         <mat-label>{{'title' | translate}}</mat-label>
-        <input cdkFocusInitial matInput formControlName="title" required >
+        <input cdkFocusInitial matInput formControlName="title" required>
         <mat-error *ngIf="form.get('title').hasError('whitespace')">{{'titleIsRequired'|translate}}</mat-error>
     </mat-form-field>
 
@@ -19,20 +19,22 @@
         <input type="number" matInput formControlName="breakoff" required>
         <mat-error *ngIf="form.get('breakoff').hasError('required')">{{'breakoffIsRequired'|translate}}</mat-error>
         <mat-error *ngIf="form.get('breakoff').hasError('min')">{{'BreakoffCannotBeNegative'|translate}}</mat-error>
-        
+
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'weightedGPValue' | translate}}</mat-label>
         <input type="number" formControlName="weightedGpValue" matInput>
-        <mat-error *ngIf="form.get('weightedGpValue').hasError('min')">{{'weightedGPValueCannotBeNegative'|translate}}</mat-error>
-        
+        <mat-error *ngIf="form.get('weightedGpValue').hasError('min')">{{'weightedGPValueCannotBeNegative'|translate}}
+        </mat-error>
+
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">
         <mat-label>{{'unweightedGPValue' | translate}}</mat-label>
         <input type="number" formControlName="unweightedGpValue" matInput>
-        <mat-error *ngIf="form.get('unweightedGpValue').hasError('min')">{{'unweightedGpValueCannotBeNegative'|translate}}</mat-error>
+        <mat-error *ngIf="form.get('unweightedGpValue').hasError('min')">
+            {{'unweightedGpValueCannotBeNegative'|translate}}</mat-error>
     </mat-form-field>
 
     <mat-form-field class="w-full" appearance="outline" color="primary">

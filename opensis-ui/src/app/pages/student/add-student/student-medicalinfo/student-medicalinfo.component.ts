@@ -9,14 +9,14 @@ import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icComment from '@iconify/icons-ic/twotone-comment';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { StudentAddModel } from '../../../../models/studentModel';
+import { StudentAddModel } from '../../../../models/student.model';
 import { StudentService } from '../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { ViewParentInfoModel } from '../../../../models/parentInfoModel';
+import { ViewParentInfoModel } from '../../../../models/parent-info.model';
 import { ParentInfoService } from '../../../../services/parent-info.service';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-student-medicalinfo',
@@ -125,8 +125,6 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
           }
         }
       }
-      this.studentAddModel._tenantName = sessionStorage.getItem("tenant");
-      this.studentAddModel._token = sessionStorage.getItem("token");
       this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
         if (typeof (data) == 'undefined') {
           this.snackbar.open('Medical Information Updation failed. ' + sessionStorage.getItem("httpError"), '', {

@@ -1,11 +1,11 @@
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
-import { SearchStudentCourseSection } from '../../../../models/searchStudentCourseSectionModel';
+import { SearchStudentCourseSection } from '../../../../models/search-student-course-section.model';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { TranslateService } from '@ngx-translate/core';
 import { CourseManagerService } from '../../../../services/course-manager.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AllCourseSectionView, GetAllCourseListModel, GetAllProgramModel, GetAllSubjectModel, SearchCourseSectionViewModel } from '../../../../models/courseManagerModel';
-import { GetMarkingPeriodTitleListModel, MarkingPeriodTitleList } from '../../../../models/markingPeriodModel';
+import { AllCourseSectionView, GetAllCourseListModel, GetAllProgramModel, GetAllSubjectModel, SearchCourseSectionViewModel } from '../../../../models/course-manager.model';
+import { GetMarkingPeriodTitleListModel, MarkingPeriodTitleList } from '../../../../models/marking-period.model';
 import { MarkingPeriodService } from '../../../../services/marking-period.service';
 import { LoaderService } from '../../../../services/loader.service';
 import { takeUntil } from 'rxjs/operators';
@@ -194,7 +194,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
 
   checked(row: any) {
     this.selection.select(row)
-    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    let found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
     if (this.courseDetails.data.length < 12 && this.courseDetails.data.length == this.selection.selected.length) {
       this.masterCheckBox.checked = true;
     }
@@ -208,7 +208,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
       this.masterCheckBox.checked = false;
     }
 
-    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    let found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
     // if (found) found.checked = false;
     this.selection.deselect(found);
 
@@ -218,7 +218,7 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
   }
 
   isChecked(row: any) {
-    var found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
+    let found = this.selection.selected.find(x => x.courseSectionId == row.courseSectionId);
 
     if (found) {
       return true;

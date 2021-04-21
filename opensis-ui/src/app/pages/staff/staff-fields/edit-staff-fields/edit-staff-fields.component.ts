@@ -6,7 +6,7 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CustomFieldService } from '../../../../services/custom-field.service';
-import {CustomFieldAddView} from '../../../../models/customFieldModel';
+import {CustomFieldAddView} from '../../../../models/custom-field.model';
 import { CustomFieldOptionsEnum } from '../../../../enums/custom-field-options.enum';
 import { FieldCategoryModuleEnum } from '../../../../enums/field-category-module.enum'
 import { ValidationService } from '../../../shared/validation.service';

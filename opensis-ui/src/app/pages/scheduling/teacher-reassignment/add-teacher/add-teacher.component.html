@@ -137,5 +137,7 @@
         <tr mat-footer-row *matFooterRowDef="['loading']" [class.hidden]="!loading" ></tr>
         <tr mat-footer-row *matFooterRowDef="['noData']" [class.hidden]="totalCount!=0"></tr>
     </table>
+    <mat-paginator  [ngClass]="staffList?.data.length>10?'':'hidden'" [length]="totalCount" [class.hidden]="totalCount==0" [pageSize]="pageSize"
+        [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
 </div>
 </mat-dialog-content>

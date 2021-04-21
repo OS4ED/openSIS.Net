@@ -546,6 +546,42 @@ namespace opensisAPI.Controllers
             return Ok();
         }
 
+        [HttpPost("insertCustomFieldsForSchool")]
+        public IActionResult InsertCustomFieldsForSchool()
+        {
+            try
+            {
+                var allSchoolData = this.context?.SchoolMaster.ToList();
+
+                if (allSchoolData.Count > 0)
+                {
+                    foreach (var school in allSchoolData)
+                    {
+                        //insert into system default custom fields
+                        var dataCustomFields = System.IO.File.ReadAllText(@"CustomFields.json");
+                        JsonSerializerSettings settingCusFld = new JsonSerializerSettings();
+                        List<CustomFields> objCusFld = JsonConvert.DeserializeObject<List<CustomFields>>(dataCustomFields, settingCusFld);
+                        foreach (CustomFields customFields in objCusFld)
+                        {
+                            customFields.TenantId = school.TenantId;
+                            customFields.SchoolId = school.SchoolId;
+                            customFields.UpdatedBy = school.CreatedBy;
+                            customFields.LastUpdate = DateTime.UtcNow;
+                            this.context?.CustomFields.Add(customFields);
+                            //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
+                        }
+
+                        this.context?.SaveChanges();
+                    }
+                }
+            }
+            catch (Exception)
+            {
+                throw;
+            }
+            return Ok();
+        }
+
         [HttpPost("pivot")]
         public IActionResult Pivot()
         {

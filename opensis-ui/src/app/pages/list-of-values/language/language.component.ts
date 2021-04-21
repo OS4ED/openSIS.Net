@@ -13,17 +13,17 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditLanguageComponent } from './edit-language/edit-language.component';
-import {LanguageModel} from '../../../models/languageModel';
+import {LanguageModel} from '../../../models/language.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { LoaderService } from '../../../services/loader.service';
 import { CommonService } from '../../../services/common.service';
 import { MatPaginator } from '@angular/material/paginator';
-import {LanguageAddModel} from '../../../models/languageModel';
+import {LanguageAddModel} from '../../../models/language.model';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { ExcelService } from '../../../services/excel.service';
 import { SharedFunction } from '../../shared/shared-function';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
@@ -171,17 +171,24 @@ export class LanguageComponent implements OnInit {
       }
     });
   }
+  translateKey(key) {
+    let trnaslateKey;
+   this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
 
   exportLanguageListToExcel(){
     if(this.languageListForExcel.length!=0){
       let languageList=this.languageListForExcel?.map((item)=>{
         return{
-          Title: item.locale,
-          ShortName: item.languageCode,
-          CreatedBy: item.createdBy!==null ? item.createdBy: '-',
-          CreateDate: this.commonfunction.transformDateWithTime(item.createdOn),
-          UpdatedBy: item.updatedBy!==null ? item.updatedBy: '-',
-          UpdateDate:  this.commonfunction.transformDateWithTime(item.updatedOn)
+          [this.translateKey('title')]: item.locale,
+          [this.translateKey('shortCode')]: item.languageCode,
+          [this.translateKey('createdBy')]: item.createdBy ? item.createdBy: '-',
+          [this.translateKey('createDate')]: this.commonfunction.transformDateWithTime(item.createdOn),
+          [this.translateKey('updatedBy')]: item.updatedBy ? item.updatedBy: '-',
+          [this.translateKey('updateDate')]:  this.commonfunction.transformDateWithTime(item.updatedOn)
         }
       });
       this.excelService.exportAsExcelFile(languageList,'Language_List_')

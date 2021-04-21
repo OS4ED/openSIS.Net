@@ -4,7 +4,7 @@ import { FormBuilder, FormControl, FormGroup, ValidatorFn, Validators } from '@a
 import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
-import {AddGradeLevelModel, GelAllGradeEquivalencyModel} from '../../../../models/gradeLevelModel';
+import {AddGradeLevelModel, GelAllGradeEquivalencyModel} from '../../../../models/grade-level.model';
 import { GradeLevelService } from '../../../../services/grade-level.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { AgeRangeList, EducationalStage } from '../../../../models/common.model';

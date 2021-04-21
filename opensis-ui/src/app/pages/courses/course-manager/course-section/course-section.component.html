@@ -129,7 +129,7 @@
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
                         <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                            {{selectedSectionDetails.courseSection.creditHours | number:'0.2'}}</p>
+                            {{selectedSectionDetails.courseSection.creditHours | number:'0.2' | EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'seats' | translate}}</label>
@@ -142,7 +142,7 @@
                         <label class="text-sm leading-5 text-gray">{{'attendanceCategory' |
                             translate}}</label>
                         <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                            {{selectedSectionDetails.courseSection?.attendanceCodeCategories?.title}}</p>
+                            {{selectedSectionDetails.courseSection?.attendanceCodeCategories?.title | EmtyValueCheckPipe}}</p>
                     </li>
                     <li class="col-span-2">
                         <div class="flex flex-wrap -mb-4">

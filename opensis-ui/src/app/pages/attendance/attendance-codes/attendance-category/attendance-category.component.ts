@@ -6,7 +6,7 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { AttendanceCodeService } from '../../../../services/attendance-code.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AttendanceCodeCategoryModel } from '../../../../models/attendanceCodeModel';
+import { AttendanceCodeCategoryModel } from '../../../../models/attendance-code.model';
 
 @Component({
   selector: 'vex-attendance-category',
@@ -64,7 +64,6 @@ export class AttendanceCategoryComponent implements OnInit {
   addAttendanceCategory() {
     if(this.form.valid && this.form.value.title!=''){
     this.attendanceCategoryModel.attendanceCodeCategories.title=this.form.value.title;
-    this.attendanceCategoryModel.attendanceCodeCategories.schoolId=+sessionStorage.getItem("selectedSchoolId");
     this.attendanceCategoryModel.attendanceCodeCategories.academicYear=+sessionStorage.getItem("academicyear");
     this.attendanceCodeService.addAttendanceCodeCategories(this.attendanceCategoryModel).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
@@ -88,7 +87,6 @@ export class AttendanceCategoryComponent implements OnInit {
     // Update Attendance Category
     updateAttendanceCategory() {
     if(this.form.valid && this.form.value.title!=''){
-      this.attendanceCategoryModel.attendanceCodeCategories.schoolId= +sessionStorage.getItem("selectedSchoolId");
       this.attendanceCategoryModel.attendanceCodeCategories.attendanceCategoryId=this.editDetails.attendanceCategoryId;
       this.attendanceCategoryModel.attendanceCodeCategories.academicYear=this.editDetails.academicYear;
       this.attendanceCategoryModel.attendanceCodeCategories.title=this.form.value.title;

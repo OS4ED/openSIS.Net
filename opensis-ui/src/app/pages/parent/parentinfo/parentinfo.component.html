@@ -60,7 +60,7 @@
                 <ng-container matColumnDef="workEmail">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'emailAddress'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.workEmail}}
+                        {{element.workEmail | EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
 
@@ -69,7 +69,7 @@
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'mobilePhone'|translate}}
                     </th>
                     <td mat-cell *matCellDef="let element">
-                        {{element.mobile}}
+                        {{element.mobile | EmtyValueCheckPipe}}
                     </td>
                 </ng-container>
 

@@ -15,8 +15,8 @@ import { MatSort } from '@angular/material/sort';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icComment from '@iconify/icons-ic/comment';
 import icUpload from '@iconify/icons-ic/baseline-cloud-upload';
-import {GetAllStudentDocumentsList} from '../../../../models/studentModel';
-import {StudentDocumentAddModel} from '../../../../models/studentModel';
+import {GetAllStudentDocumentsList} from '../../../../models/student.model';
+import {StudentDocumentAddModel} from '../../../../models/student.model';
 import {StudentService} from '../../../../services/student.service';
 import {ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
@@ -24,7 +24,7 @@ import * as _moment from 'moment';
 import { default as _rollupMoment } from 'moment';
 const moment =  _rollupMoment || _moment;
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
 
 @Component({
@@ -62,6 +62,7 @@ export class StudentDocumentsComponent implements OnInit {
   isShowDiv = true;
   loading:Boolean;
   files: File[] = [];  
+  cloneFiles: File[] = [];  
   base64;
   base64Arr=[];
   filesName=[];
@@ -78,7 +79,6 @@ export class StudentDocumentsComponent implements OnInit {
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   @ViewChild(MatSort) sort: MatSort;
-  
   constructor(   
     public translateService:TranslateService, 
     private loaderService:LoaderService,
@@ -107,21 +107,22 @@ export class StudentDocumentsComponent implements OnInit {
   //Split base 64 data from its datatype then push to base64 array
   HandleReaderLoaded(e) {   
     let str = e.substr(e.indexOf(",") + 1);
-    this.base64Arr.push(str);  
+    this.base64Arr.push(str);
   }
-  onSelect(event) {  
+  onSelect(event) {
     this.files.push(...event.addedFiles);
-    let count = this.files.length;
-    let prevCount = count-1;   
-    for(let i=0; i<this.files.length;i++){
-      this.filesName.push(this.files[i].name)
-      this.filesType.push(this.files[i].type)
+
+    this.cloneFiles.push(...event.addedFiles)
+    for(let i=0; i<this.cloneFiles.length;i++){
+      this.filesName.push(this.cloneFiles[i].name)
+      this.filesType.push(this.cloneFiles[i].type)
       const reader = new FileReader();
-      reader.readAsDataURL(this.files[i]);
+      reader.readAsDataURL(this.cloneFiles[i]);
       reader.onload=()=>{
         this.HandleReaderLoaded(reader.result)
       }
-    }  
+    }
+    this.cloneFiles=[];
   }
 
   
@@ -150,7 +151,7 @@ export class StudentDocumentsComponent implements OnInit {
   }
   deleteFile(deleteDetails){
     let studentDocument = [];
-    var obj = {};   
+    let obj = {};   
     obj = {     
       tenantId: deleteDetails.tenantId,
       schoolId: deleteDetails.schoolId,
@@ -187,9 +188,8 @@ export class StudentDocumentsComponent implements OnInit {
   }
 
   uploadFile(){
-    
     this.base64Arr.forEach((value, index) => {
-        var obj = {};
+        let obj = {};
           obj = {     
             tenantId: sessionStorage.getItem("tenantId"),
             schoolId: +sessionStorage.getItem("selectedSchoolId") ,
@@ -246,7 +246,7 @@ export class StudentDocumentsComponent implements OnInit {
 
   downloadFile(name,type,content){
     let fileType = "data:"+type+";base64," + content;   
-    var element = document.createElement('a');
+    let element = document.createElement('a');
     element.setAttribute('href', fileType);
     element.setAttribute('download', name);
     element.style.display = 'none';

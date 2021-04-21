@@ -7,16 +7,16 @@ import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.anim
 import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation';
 import { MatDialog } from '@angular/material/dialog';
 import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
-import { StudentSiblingAssociation, StudentSiblingSearch } from '../../../../../models/studentModel';
+import { StudentSiblingAssociation, StudentSiblingSearch } from '../../../../../models/student.model';
 import { StudentService } from '../../../../../services/student.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { AssociateStudent,AddParentInfoModel } from '../../../../../models/parentInfoModel';
+import { AssociateStudent,AddParentInfoModel } from '../../../../../models/parent-info.model';
 import { relationShip} from '../../../../../enums/studentAdd.enum';
 import {MAT_DIALOG_DATA} from '@angular/material/dialog';
 import { ParentInfoService } from '../../../../../services/parent-info.service';
-import { GetAllGradeLevelsModel } from '../../../../../models/gradeLevelModel';
+import { GetAllGradeLevelsModel } from '../../../../../models/grade-level.model';
 import { GradeLevelService } from '../../../../../services/grade-level.service';
-import { LovList } from '../../../../../models/lovModel';
+import { LovList } from '../../../../../models/lov.model';
 import { CommonService } from '../../../../../services/common.service';
 @Component({
   selector: 'vex-add-sibling',
@@ -146,8 +146,8 @@ export class AddSiblingComponent implements OnInit {
   }
   
   associateMultipleStudentsToParent(){
-    var isCustodian=this.associatStudent.isCustodian;
-    var contactRelationship=this.associatStudent.contactRelationship;  
+    let isCustodian=this.associatStudent.isCustodian;
+    let contactRelationship=this.associatStudent.contactRelationship;  
     if(contactRelationship === undefined){
      contactRelationship = "";
     }   

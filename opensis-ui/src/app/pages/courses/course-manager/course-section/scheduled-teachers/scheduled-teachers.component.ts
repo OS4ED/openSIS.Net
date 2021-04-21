@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, SimpleChanges } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import icEmail from '@iconify/icons-ic/twotone-email';
-import { ScheduledStaffForCourseSection } from '../../../../../models/courseSectionModel';
+import { ScheduledStaffForCourseSection } from '../../../../../models/course-section.model';
 import { CourseSectionService } from '../../../../../services/course-section.service';
 
 @Component({

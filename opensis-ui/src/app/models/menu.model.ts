@@ -1,4 +1,4 @@
-import { RolePermissionListViewModel } from "./rollBasedAccessModel";
+import { RolePermissionListViewModel } from "./roll-based-access.model";
 
 export interface MenuModel {
     type?: string;

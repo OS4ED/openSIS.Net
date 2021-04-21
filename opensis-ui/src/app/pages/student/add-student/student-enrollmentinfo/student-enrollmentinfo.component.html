@@ -372,100 +372,103 @@
             </div>
 
             <ul class="enrollment-timeline mt-4">
-                <li *ngFor="let enrollment of filteredEnrollmentInfoInViewMode; let index=index">
-                    <span>{{enrollment.academicYear}}</span>
-                    <div class="-mt-2">
-                        <mat-accordion class="w-full">
-                            <mat-expansion-panel>
-                                <mat-expansion-panel-header class="pl-0">
-                                    <mat-panel-title class="font-semibold h-full">
-                                        <div class="flex w-full justify-between items-center h-full">
-                                            <div class="h-full">
-                                                <ng-container *ngIf="enrollment.type=='External' else internal">
+                <ng-container *ngFor="let enrollment of filteredEnrollmentInfoInViewMode; let index=index">
+                    <li >
+                        <span>{{enrollment.academicYear}}</span>
+                        <div class="-mt-2">
+                            <mat-accordion class="w-full">
+                                <mat-expansion-panel>
+                                    <mat-expansion-panel-header class="pl-0">
+                                        <mat-panel-title class="font-semibold h-full">
+                                            <div class="flex w-full justify-between items-center h-full">
+                                                <div class="h-full">
+                                                    <ng-container *ngIf="enrollment.type=='External' else internal">
+                                                        <span
+                                                        class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
+                                                        *ngIf="enrollment.enrollmentType=='Add'">
+                                                        <mat-icon [icIcon]="icExternal" class="text-white" matTooltip="Enrolled as External">
+                                                        </mat-icon>
+                                                    </span>
+                                                    </ng-container>
+                                                    <ng-template #internal>
+                                                        <span
+                                                        class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
+                                                        *ngIf="enrollment.enrollmentType=='Add'">
+                                                        <mat-icon [icIcon]="icAdd" class="text-white" matTooltip="New">
+                                                        </mat-icon>
+                                                    </span>
                                                     <span
-                                                    class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
-                                                    *ngIf="enrollment.enrollmentType=='Add'">
-                                                    <mat-icon [icIcon]="icExternal" class="text-white" matTooltip="Enrolled as External">
-                                                    </mat-icon>
-                                                </span>
-                                                </ng-container>
-                                                <ng-template #internal>
+                                                        class="bg-warn inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
+                                                        *ngIf="enrollment.enrollmentType=='Drop'">
+                                                        <mat-icon [icIcon]="icDrop" class="text-white" matTooltip="Drop">
+                                                        </mat-icon>
+                                                    </span>
                                                     <span
-                                                    class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
-                                                    *ngIf="enrollment.enrollmentType=='Add'">
-                                                    <mat-icon [icIcon]="icAdd" class="text-white" matTooltip="New">
-                                                    </mat-icon>
-                                                </span>
-                                                <span
-                                                    class="bg-warn inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
-                                                    *ngIf="enrollment.enrollmentType=='Drop'">
-                                                    <mat-icon [icIcon]="icDrop" class="text-white" matTooltip="Drop">
-                                                    </mat-icon>
-                                                </span>
-                                                <span
-                                                    class="bg-green inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
-                                                    *ngIf="enrollment.enrollmentType=='Rolled Over'">
-                                                    <mat-icon [icIcon]="icPromoted" class="text-white"
-                                                        matTooltip="Rolled Over">
-                                                    </mat-icon>
-                                                </span>
-                                                <span
-                                                    class="bg-deep-orange inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
-                                                    *ngIf="enrollment.enrollmentType=='Drop (Transfer)'">
-                                                    <mat-icon [icIcon]="icTrasnferOut" class="text-white"
-                                                        matTooltip="Drop (Transfer)">
-                                                    </mat-icon>
-                                                </span>
-                                                <span
-                                                    class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
-                                                    *ngIf="enrollment.enrollmentType=='Enroll (Transfer)'">
-                                                    <mat-icon [icIcon]="icTrasnferIn" class="text-white"
-                                                        matTooltip="Enroll (Transfer)">
-                                                    </mat-icon>
-                                                </span>
-                                                </ng-template>
-                                                
-                                                <h5 class="inline-block font-medium">{{enrollment.schoolName}}<mat-icon
-                                                        *ngIf="index==0" [icIcon]="icHomeSchool"
-                                                        class="text-deep-purple align-middle ml-2 text-sm mt-2"
-                                                        matTooltip="Home School"></mat-icon>
-                                                </h5>
+                                                        class="bg-green inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
+                                                        *ngIf="enrollment.enrollmentType=='Rolled Over'">
+                                                        <mat-icon [icIcon]="icPromoted" class="text-white"
+                                                            matTooltip="Rolled Over">
+                                                        </mat-icon>
+                                                    </span>
+                                                    <span
+                                                        class="bg-deep-orange inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
+                                                        *ngIf="enrollment.enrollmentType=='Drop (Transfer)'">
+                                                        <mat-icon [icIcon]="icTrasnferOut" class="text-white"
+                                                            matTooltip="Drop (Transfer)">
+                                                        </mat-icon>
+                                                    </span>
+                                                    <span
+                                                        class="bg-blue inline-block align-middle h-full px-2 pt-3 pb-2 mr-2"
+                                                        *ngIf="enrollment.enrollmentType=='Enroll (Transfer)'">
+                                                        <mat-icon [icIcon]="icTrasnferIn" class="text-white"
+                                                            matTooltip="Enroll (Transfer)">
+                                                        </mat-icon>
+                                                    </span>
+                                                    </ng-template>
+                                                    
+                                                    <h5 class="inline-block font-medium">{{enrollment.schoolName}}<mat-icon
+                                                            *ngIf="index==0" [icIcon]="icHomeSchool"
+                                                            class="text-deep-purple align-middle ml-2 text-sm mt-2"
+                                                            matTooltip="Home School"></mat-icon>
+                                                    </h5>
+                                                </div>
+                                                <div class="inline-block justify-self-stretch text-right font-normal pt-1">
+                                                    {{enrollment.type=='External'?'Enrolled as ': enrollment.enrollmentCode=='Rolled Over'?'Promoted':enrollment.enrollmentCode}}<span class="font-medium" *ngIf="enrollment.type=='External'">External Student</span> {{enrollment.type=='External'?'at':'to'}} <span
+                                                        class="font-medium">{{enrollment.gradeLevelTitle}}</span> on
+                                                    {{enrollment.enrollmentDate | date}}
+                                                </div>
                                             </div>
-                                            <div class="inline-block justify-self-stretch text-right font-normal pt-1">
-                                                {{enrollment.type=='External'?'Enrolled as ': enrollment.enrollmentCode=='Rolled Over'?'Promoted':enrollment.enrollmentCode}}<span class="font-medium" *ngIf="enrollment.type=='External'">External Student</span> {{enrollment.type=='External'?'at':'to'}} <span
-                                                    class="font-medium">{{enrollment.gradeLevelTitle}}</span> on
-                                                {{enrollment.enrollmentDate | date}}
-                                            </div>
-                                        </div>
-                                    </mat-panel-title>
-                                </mat-expansion-panel-header>
-                                <div class="border-t -mx-6 px-2 pt-3">
-                                    <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
-                                        <li>
-                                            <label class="text-sm leading-5 text-gray">{{'gradeLevel' |
-                                                translate}}</label>
-                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                                {{enrollment.gradeLevelTitle}}</p>
-                                        </li>
-                                        <li>
-                                            <label class="text-sm leading-5 text-gray">{{'enrollmentDate' |
-                                                translate}}</label>
-                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                                {{enrollment.enrollmentDate | date}}</p>
-                                        </li>
-                                        <li>
-                                            <label class="text-sm leading-5 text-gray">{{'enrollmentCode' |
-                                                translate}}</label>
-                                            <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                                {{enrollment.enrollmentCode}}</p>
-                                        </li>
-                                    </ul>
-                                </div>
-                            </mat-expansion-panel>
-                        </mat-accordion>
-                    </div>
-
-                </li>
+                                        </mat-panel-title>
+                                    </mat-expansion-panel-header>
+                                    <div class="border-t -mx-6 px-2 pt-3">
+                                        <ul class="grid grid-cols-4 col-gap-8 row-gap-10 mt-2 mx-4">
+                                            <li>
+                                                <label class="text-sm leading-5 text-gray">{{'gradeLevel' |
+                                                    translate}}</label>
+                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                                    {{enrollment.gradeLevelTitle}}</p>
+                                            </li>
+                                            <li>
+                                                <label class="text-sm leading-5 text-gray">{{'enrollmentDate' |
+                                                    translate}}</label>
+                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                                    {{enrollment.enrollmentDate | date}}</p>
+                                            </li>
+                                            <li>
+                                                <label class="text-sm leading-5 text-gray">{{'enrollmentCode' |
+                                                    translate}}</label>
+                                                <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                                    {{enrollment.enrollmentCode}}</p>
+                                            </li>
+                                        </ul>
+                                    </div>
+                                </mat-expansion-panel>
+                            </mat-accordion>
+                        </div>
+    
+                    </li>
+                </ng-container>
+               
             </ul>
 
             <div class="text-center mb-4"><a routerLink="" class="text-primary cursor-pointer"

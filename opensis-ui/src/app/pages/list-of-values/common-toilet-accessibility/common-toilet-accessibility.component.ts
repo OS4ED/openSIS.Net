@@ -13,7 +13,7 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { EditCommonToiletAccessibilityComponent } from './edit-common-toilet-accessibility/edit-common-toilet-accessibility.component';
-import { LovAddView, LovList } from '../../../models/lovModel';
+import { LovAddView, LovList } from '../../../models/lov.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { MatPaginator } from '@angular/material/paginator';
@@ -22,7 +22,7 @@ import { CommonService } from '../../../services/common.service';
 import { LoaderService } from '../../../services/loader.service';
 import { SharedFunction } from '../../shared/shared-function';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
-import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/rollBasedAccessModel';
+import { RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 
 @Component({
@@ -211,15 +211,24 @@ export class CommonToiletAccessibilityComponent implements OnInit {
       }
     );
   }
+
+  translateKey(key) {
+    let trnaslateKey;
+   this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
   exportToExcel(){
     if (this.commonToiletAccessibilityList.data?.length > 0) {
       let reportList = this.commonToiletAccessibilityList.data?.map((x) => {
         return {
-          Title: x.lovColumnValue,
-          "Created By": x.createdBy!==null ? x.createdBy: '-',
-          "Create Date": this.commonfunction.transformDateWithTime(x.createdOn),
-          "Updated By": x.updatedBy!==null ? x.updatedBy: '-',
-          "Update Date":  this.commonfunction.transformDateWithTime(x.updatedOn)
+          [this.translateKey('accessibilityName')]: x.lovColumnValue,
+          [this.translateKey('createdBy')]: x.createdBy ? x.createdBy: '-',
+          [this.translateKey('createDate')]: this.commonfunction.transformDateWithTime(x.createdOn),
+          [this.translateKey('updatedBy')]: x.updatedBy ? x.updatedBy: '-',
+          [this.translateKey('updateDate')]:  this.commonfunction.transformDateWithTime(x.updatedOn)
         }
       });
       this.excelService.exportAsExcelFile(reportList,"Common_Toilet_Accessibility_List_")

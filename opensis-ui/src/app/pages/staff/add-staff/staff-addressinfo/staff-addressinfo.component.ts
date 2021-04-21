@@ -4,9 +4,9 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
-import { CountryModel } from '../../../../models/countryModel';
-import { StaffAddModel } from '../../../../models/staffModel';
-import { LanguageModel } from '../../../../models/languageModel';
+import { CountryModel } from '../../../../models/country.model';
+import { StaffAddModel } from '../../../../models/staff.model';
+import { LanguageModel } from '../../../../models/language.model';
 import icEdit from '@iconify/icons-ic/edit';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -16,14 +16,14 @@ import { LoginService } from '../../../../services/login.service';
 import { SharedFunction } from '../../../../pages/shared/shared-function';
 import { StaffRelation } from '../../../../enums/staff-relation.enum';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
-import { LovList } from '../../../../models/lovModel';
+import { LovList } from '../../../../models/lov.model';
 import { MiscModel } from '../../../../models/misc-data-student.model';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
 @Component({
   selector: 'vex-staff-addressinfo',
   templateUrl: './staff-addressinfo.component.html',
@@ -175,8 +175,8 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
 
   findCountryNameById(){
     this.countryListArr.map((val) => {
-      var countryInNumber = +this.data.homeAddressCountry;
-      var mailingAddressCountry = +this.data.mailingAddressCountry;
+      let countryInNumber = +this.data.homeAddressCountry;
+      let mailingAddressCountry = +this.data.mailingAddressCountry;
       if (val.id === countryInNumber) {
         this.nameOfMiscValuesForView.countryName = val.name;
       }
@@ -196,8 +196,6 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
         }
       }
     }
-    this.staffAddModel._token = sessionStorage.getItem("token");
-    this.staffAddModel._tenantName = sessionStorage.getItem("tenant");
     this.staffService.updateStaff(this.staffAddModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.snackbar.open('Staff Updation failed. ' + sessionStorage.getItem("httpError"), '', {

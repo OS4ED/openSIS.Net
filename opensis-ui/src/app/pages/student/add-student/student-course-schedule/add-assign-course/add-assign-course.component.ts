@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { SearchStudentCourseSection } from '../../../../../models/searchStudentCourseSectionModel';
+import { SearchStudentCourseSection } from '../../../../../models/search-student-course-section.model';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { TranslateService } from '@ngx-translate/core';
 import { MatDialog } from '@angular/material/dialog';

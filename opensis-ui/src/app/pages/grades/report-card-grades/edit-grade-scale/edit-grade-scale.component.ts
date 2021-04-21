@@ -31,7 +31,8 @@ export class EditGradeScaleComponent implements OnInit {
     private fb: FormBuilder, 
     @Inject(MAT_DIALOG_DATA) public data:any,
     private snackbar:MatSnackBar,
-    private gradesService:GradesService
+    private gradesService:GradesService,
+    public translateService: TranslateService
      ) {
        this.form=fb.group(
          {

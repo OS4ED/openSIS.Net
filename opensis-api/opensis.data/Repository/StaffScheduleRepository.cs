@@ -78,7 +78,7 @@ namespace opensis.data.Repository
                                         CourseSections.ScheduleType = "Variable Schedule";
                                         foreach (var variableSchedule in variableScheduleData)
                                         {
-                                            concatDay = concatDay != null ? concatDay + "|" + variableSchedule.VarDay.Substring(0, 3) : variableSchedule.VarDay.Substring(0, 3);
+                                            concatDay = concatDay != null ? concatDay + "|" + variableSchedule.VarDay : variableSchedule.VarDay;
 
                                             var variableList = this.context.CourseVariableSchedule.Include(x => x.BlockPeriod).Include(x => x.Rooms).Where(x => x.TenantId == variableSchedule.TenantId && x.SchoolId == variableSchedule.SchoolId && x.CourseSectionId == variableSchedule.CourseSectionId).Select(s => new CourseVariableSchedule { TenantId = s.TenantId, SchoolId = s.SchoolId, CourseId = s.CourseId, CourseSectionId = s.CourseSectionId, GradeScaleId = s.GradeScaleId, Serial = s.Serial, Day = s.Day, RoomId = s.RoomId, TakeAttendance = s.TakeAttendance, PeriodId = s.PeriodId, BlockId = s.BlockId, CreatedBy = s.CreatedBy, CreatedOn = s.CreatedOn, UpdatedBy = s.UpdatedBy, UpdatedOn = s.UpdatedOn, Rooms = new Rooms { Title = s.Rooms.Title }, BlockPeriod = new BlockPeriod { PeriodTitle = s.BlockPeriod.PeriodTitle } }).ToList();
 
@@ -273,19 +273,14 @@ namespace opensis.data.Repository
                                 }
                                 else
                                 {
-                                    var checkAllowStaffConflict = this.context.CourseSection.FirstOrDefault(x => x.TenantId == staffScheduleViewModel.TenantId && x.SchoolId == staffScheduleViewModel.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.AllowTeacherConflict == true);
+                                    var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && c.CourseSectionId == courseSection.CourseSectionId).ToList();
 
-                                   
-                                    if(checkAllowStaffConflict== null)
+                                    if (courseSectionAllData.FirstOrDefault().AllowTeacherConflict != true)
                                     {
-                                        var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && c.CourseSectionId == courseSection.CourseSectionId).ToList();
-
                                         if (courseSectionAllData.Count > 0)
                                         {
                                             foreach (var courseSectionData in courseSectionAllData)
                                             {
-                                                //var checkForConflict = this.context.AllCourseSectionView.Join(this.context.StaffCoursesectionSchedule, acsv => acsv.CourseSectionId, scss => scss.CourseSectionId, (acsv, scss) => new { acsv, scss }).Where(x => x.acsv.TenantId == staffScheduleViewModel.TenantId && x.acsv.SchoolId == staffScheduleViewModel.SchoolId && x.scss.StaffId == staff.StaffId && (x.acsv.FixedPeriodId != null && x.acsv.FixedPeriodId == courseSectionData.FixedPeriodId || x.acsv.FixedPeriodId == courseSectionData.VarPeriodId || x.acsv.FixedPeriodId==courseSectionData.CalPeriodId) && (x.acsv.VarPeriodId != null && x.acsv.VarPeriodId == courseSectionData.FixedPeriodId || x.acsv.VarPeriodId == courseSectionData.VarPeriodId || x.acsv.VarPeriodId == courseSectionData.CalPeriodId) && (x.acsv.CalPeriodId != null && x.acsv.CalPeriodId == courseSectionData.FixedPeriodId || x.acsv.CalPeriodId == courseSectionData.VarPeriodId || x.acsv.CalPeriodId == courseSectionData.CalPeriodId)).ToList();
-
                                                 var checkForConflict = this.context.AllCourseSectionView.Join(this.context.StaffCoursesectionSchedule, acsv => acsv.CourseSectionId, scss => scss.CourseSectionId, (acsv, scss) => new { acsv, scss }).AsEnumerable().Where(c => c.acsv.TenantId == staffScheduleViewModel.TenantId && c.acsv.SchoolId == staffScheduleViewModel.SchoolId && c.scss.StaffId == staff.StaffId &&
 
                                 ((c.acsv.FixedPeriodId != null && ((c.acsv.FixedPeriodId == courseSectionData.FixedPeriodId && (Regex.IsMatch(courseSectionData.FixedDays.ToLower(), c.acsv.FixedDays.ToLower(), RegexOptions.IgnoreCase))) || (c.acsv.FixedPeriodId == courseSectionData.VarPeriodId && c.acsv.FixedDays.ToLower().Contains(courseSectionData.VarDay.ToLower())) || (c.acsv.FixedPeriodId == courseSectionData.CalPeriodId && c.acsv.FixedDays.ToLower().Contains(courseSectionData.CalDay.ToLower())))) ||
@@ -374,47 +369,19 @@ namespace opensis.data.Repository
 
                         if (scheduledCourseSection.CourseSection.ScheduleType == "Fixed Schedule (1)")
                         {
-                            CourseSections.ScheduleType = "Fixed Schedule";
-
-                            var courseFixedScheduleData = this.context?.CourseFixedSchedule.Include(c => c.BlockPeriod).FirstOrDefault(x => x.TenantId == scheduledCourseSection.TenantId && x.SchoolId == scheduledCourseSection.SchoolId && x.CourseSectionId == scheduledCourseSection.CourseSectionId);
-                            
-                            if (courseFixedScheduleData != null)
-                            {
-                                CourseSections.courseFixedSchedule = courseFixedScheduleData;
-                            }                            
+                            CourseSections.ScheduleType = "Fixed Schedule";                            
                         }
                         if (scheduledCourseSection.CourseSection.ScheduleType == "Variable Schedule (2)")
                         {
-                            CourseSections.ScheduleType = "Variable Schedule";
-
-                            var courseVariableScheduleData = this.context?.CourseVariableSchedule.Include(c => c.BlockPeriod).Where(x => x.TenantId == scheduledCourseSection.TenantId && x.SchoolId == scheduledCourseSection.SchoolId && x.CourseSectionId == scheduledCourseSection.CourseSectionId).ToList();
-
-                            if (courseVariableScheduleData.Count>0)
-                            {
-                                CourseSections.courseVariableSchedule = courseVariableScheduleData;
-                            }                            
+                            CourseSections.ScheduleType = "Variable Schedule";                            
                         }
                         if (scheduledCourseSection.CourseSection.ScheduleType == "Calendar Schedule (3)")
                         {
-                            CourseSections.ScheduleType = "Calendar Schedule";
-
-                            var courseCalenderScheduleData = this.context?.CourseCalendarSchedule.Include(c => c.BlockPeriod).Where(x => x.TenantId == scheduledCourseSection.TenantId && x.SchoolId == scheduledCourseSection.SchoolId && x.CourseSectionId == scheduledCourseSection.CourseSectionId).ToList();
-
-                            if (courseCalenderScheduleData.Count>0)
-                            {
-                                CourseSections.courseCalendarSchedule = courseCalenderScheduleData;
-                            }                            
+                            CourseSections.ScheduleType = "Calendar Schedule";                           
                         }
                         if (scheduledCourseSection.CourseSection.ScheduleType == "Block Schedule (4)")
                         {
-                            CourseSections.ScheduleType = "Block Schedule";
-
-                            var courseBlockScheduleData = this.context?.CourseBlockSchedule.Include(c => c.BlockPeriod).Where(x => x.TenantId == scheduledCourseSection.TenantId && x.SchoolId == scheduledCourseSection.SchoolId && x.CourseSectionId == scheduledCourseSection.CourseSectionId).ToList();
-
-                            if (courseBlockScheduleData.Count>0)
-                            {
-                                CourseSections.courseBlockSchedule = courseBlockScheduleData;
-                            }                            
+                            CourseSections.ScheduleType = "Block Schedule";                           
                         }
                        
                         CourseSections.CourseId = scheduledCourseSection.CourseId;

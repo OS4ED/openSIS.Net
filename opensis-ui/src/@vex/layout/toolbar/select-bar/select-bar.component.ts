@@ -3,11 +3,12 @@ import { FormControl } from '@angular/forms';
 import { ReplaySubject, Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 import { SchoolService } from '../../../../app/services/school.service';
-import { AllSchoolListModel, OnlySchoolListModel } from '../../../../app/models/getAllSchoolModel';
+import { AllSchoolListModel, OnlySchoolListModel } from '../../../../app/models/get-all-school.model';
 import { Router } from '@angular/router';
 import { MarkingPeriodService } from '../../../../app/services/marking-period.service';
-import { GetAcademicYearListModel, GetMarkingPeriodTitleListModel } from '../../../../app/models/markingPeriodModel';
+import { GetAcademicYearListModel, GetMarkingPeriodTitleListModel } from '../../../../app/models/marking-period.model';
 import { DasboardService } from '../../../../app/services/dasboard.service';
+import { DefaultValuesService } from '../../../../app/common/default-values.service';
 
 @Component({
   selector: 'vex-select-bar',
@@ -40,7 +41,8 @@ export class SelectBarComponent implements OnInit {
   constructor(private schoolService: SchoolService,
     private router: Router,
     private markingPeriodService: MarkingPeriodService,
-    private dasboardService:DasboardService
+    private dasboardService:DasboardService,
+    private defaultValuesService: DefaultValuesService
   ) {
     this.schoolService.currentMessage.pipe(takeUntil(this.onDestroy)).subscribe((res) => {
       if (res) {
@@ -60,11 +62,6 @@ export class SelectBarComponent implements OnInit {
     })
   }
   callAllSchool() {
-    this.getSchoolList.tenantId = sessionStorage.getItem("tenantId");
-    this.getSchoolList._tenantName = sessionStorage.getItem("tenant");
-    this.getSchoolList._userName = sessionStorage.getItem("user");
-    this.getSchoolList._token = sessionStorage.getItem("token");
-
     this.schoolService.GetAllSchools(this.getSchoolList).subscribe((data) => {
       this.schools = data.schoolMaster;
     
@@ -92,7 +89,7 @@ export class SelectBarComponent implements OnInit {
   }
 
   selectSchoolOnLoad() {
-    if (!sessionStorage.getItem("selectedSchoolId")) {
+    if (!this.defaultValuesService.getSchoolID()) {
       sessionStorage.setItem("selectedSchoolId", this.schools[0].schoolId);
       sessionStorage.setItem("schoolOpened", this.schools[0].schoolDetail[0].dateSchoolOpened);
       this.callAcademicYearsOnSchoolSelect();
@@ -106,7 +103,7 @@ export class SelectBarComponent implements OnInit {
   }
 
   setSchool() {
-    let id = +sessionStorage.getItem("selectedSchoolId");
+    let id = this.defaultValuesService.getSchoolID();
     let index = this.schools.findIndex((x) => {
       return x.schoolId === id
     });
@@ -134,7 +131,7 @@ export class SelectBarComponent implements OnInit {
   }
 
   callAcademicYearsOnSchoolSelect() {
-    this.getAcademicYears.schoolId = +sessionStorage.getItem("selectedSchoolId");
+    this.getAcademicYears.schoolId = this.defaultValuesService.getSchoolID();
     this.markingPeriodService.getAcademicYearList(this.getAcademicYears).subscribe((res) => {
       this.academicYears = res.academicYears;
       // set initial selection
@@ -181,8 +178,8 @@ export class SelectBarComponent implements OnInit {
 
   callMarkingPeriodTitleList() {
     if (sessionStorage.getItem("academicyear") !== "null") {
-      this.markingPeriodTitleLists.schoolId = +sessionStorage.getItem("selectedSchoolId");
-      this.markingPeriodTitleLists.academicYear = +sessionStorage.getItem("academicyear");
+      this.markingPeriodTitleLists.schoolId = this.defaultValuesService.getSchoolID();
+      this.markingPeriodTitleLists.academicYear = this.defaultValuesService.getAcademicYear();
       this.markingPeriodService.getMarkingPeriodTitleList(this.markingPeriodTitleLists).subscribe((res) => {
         this.periods = res.period;
         if (this.periods?.length > 0) {

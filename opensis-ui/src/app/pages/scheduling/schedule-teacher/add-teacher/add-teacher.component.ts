@@ -4,22 +4,23 @@ import icClose from '@iconify/icons-ic/twotone-close';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
-import { GetAllGradeLevelsModel } from '../../../../models/gradeLevelModel';
+import { GetAllGradeLevelsModel } from '../../../../models/grade-level.model';
 import { GradeLevelService } from '../../../../services/grade-level.service';
 import { CourseManagerService } from '../../../../services/course-manager.service';
-import { GetAllSubjectModel } from '../../../../models/courseManagerModel';
-import { GetAllStaffModel, StaffListModel, StaffMasterModel, StaffMasterSearchModel } from '../../../../models/staffModel';
+import { GetAllSubjectModel } from '../../../../models/course-manager.model';
+import { GetAllStaffModel, StaffListModel, StaffMasterModel, StaffMasterSearchModel } from '../../../../models/staff.model';
 import { MembershipService } from '../../../../services/membership.service';
-import { GetAllMembersList } from '../../../../models/membershipModel';
+import { GetAllMembersList } from '../../../../models/membership.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { StaffService } from '../../../../services/staff.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../../services/loader.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
-import { LanguageModel } from '../../../../models/languageModel';
+import { LanguageModel } from '../../../../models/language.model';
 import { LoginService } from '../../../../services/login.service';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { MatPaginator } from '@angular/material/paginator';
 
 @Component({
   selector: 'vex-add-teacher',
@@ -31,6 +32,8 @@ import { MatCheckbox } from '@angular/material/checkbox';
   ]
 })
 export class AddTeacherComponent implements OnInit {
+  @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
+
   icClose = icClose;
   displayedColumns: string[] = ['staffSelected', 'staffName', 'staffId', 'primaryGrade', 'primarySubject'];
   getAllGradeLevelsModel:GetAllGradeLevelsModel= new GetAllGradeLevelsModel();
@@ -143,7 +146,7 @@ export class AddTeacherComponent implements OnInit {
 
   submit(){
     this.filterParams=[]
-    for (var key in this.staffMasterSearchModel) {
+    for (let key in this.staffMasterSearchModel) {
 
       if (this.staffMasterSearchModel.hasOwnProperty(key))
         if (this.staffMasterSearchModel[key]) {
@@ -154,7 +157,6 @@ export class AddTeacherComponent implements OnInit {
   }
 
   getAllLanguage() {
-    this.languages._tenantName = sessionStorage.getItem("tenant");
     this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.languages.tableLanguage = [];
@@ -263,9 +265,6 @@ export class AddTeacherComponent implements OnInit {
   }
 
   getAllGradeLevelList(){   
-    this.getAllGradeLevelsModel.schoolId = +sessionStorage.getItem("selectedSchoolId");
-    this.getAllGradeLevelsModel._tenantName = sessionStorage.getItem("tenant");
-    this.getAllGradeLevelsModel._token = sessionStorage.getItem("token");
     this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevelsModel).subscribe(data => {          
       this.getAllGradeLevelsModel.tableGradelevelList=data.tableGradelevelList;      
     });

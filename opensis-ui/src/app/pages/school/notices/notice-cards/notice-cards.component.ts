@@ -2,17 +2,17 @@ import { Component, Input, OnInit } from '@angular/core';
 import icPreview from '@iconify/icons-ic/round-preview';
 import icPeople from '@iconify/icons-ic/twotone-people';
 import icMoreVert from '@iconify/icons-ic/more-vert';
-import { NoticeDeleteModel } from '../../../../models/noticeDeleteModel';
+import { NoticeDeleteModel } from '../../../../models/notice-delete.model';
 import { NoticeService } from '../../../../services/notice.service';
 import { ActivatedRoute } from '@angular/router';
 import { MatSnackBar } from '@angular/material/snack-bar';
-import { NoticeAddViewModel, NoticeListViewModel } from '../../../../models/noticeModel';
+import { NoticeAddViewModel, NoticeListViewModel } from '../../../../models/notice.model';
 import { MatDialog } from '@angular/material/dialog';
 import { EditNoticeComponent } from '../edit-notice/edit-notice.component';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../../../app/pages/shared-module/confirm-dialog/confirm-dialog.component';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/rollBasedAccessModel';
-import { RollBasedAccessService } from '../../../../services/rollBasedAccess.service';
+import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
+import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
 import { CryptoService } from '../../../../services/Crypto.service';
 @Component({
   selector: 'vex-notice-cards',

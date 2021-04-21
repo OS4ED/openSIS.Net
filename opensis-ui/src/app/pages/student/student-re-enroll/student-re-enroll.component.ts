@@ -1,18 +1,18 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
-import { StudentReenrollList } from '../../../models/studentReenrollListModel';
+import { StudentReenrollList } from '../../../models/student-re-enroll-list.model';
 import { Router } from '@angular/router';
 import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
-import { StudentEnrollmentModel, StudentEnrollmentSchoolListModel, StudentListModel, StudentMasterModel } from '../../../models/studentModel';
+import { StudentEnrollmentModel, StudentEnrollmentSchoolListModel, StudentListModel, StudentMasterModel } from '../../../models/student.model';
 import { StudentService } from '../../../services/student.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { FormControl, NgForm } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { MatPaginator } from '@angular/material/paginator';
-import { EnrollmentCodeListView } from '../../../models/enrollmentCodeModel';
+import { EnrollmentCodeListView } from '../../../models/enrollment-code.model';
 import { MatCheckbox } from '@angular/material/checkbox';
 import { LoaderService } from '../../../services/loader.service';
 import { Subject } from 'rxjs';
@@ -40,6 +40,7 @@ export class StudentReEnrollComponent implements OnInit {
   showSuccessMessage: boolean = false;
   selectedSchoollName: string;
   studentName: string = '';
+  showAllSchools: boolean = false;
   studentsNameList: string;
   startDate = new Date();
   endDate: string;
@@ -72,9 +73,9 @@ export class StudentReEnrollComponent implements OnInit {
     { label: 'Student Check', property: 'studentCheck', type: 'text', visible: true },
     { label: 'Name', property: 'studentName', type: 'text', visible: true },
     { label: 'Student ID', property: 'studentId', type: 'text', visible: true },
-    { label: 'LastGrade Level', property: 'lastGradeLevel', type: 'text', visible: true }, 
-    { label: 'Mobile Phone', property: 'mobilePhone', type: 'text', visible: true },    
-    { label: 'Personal Email', property: 'personalEmail', type: 'text', visible: true },    
+    { label: 'LastGrade Level', property: 'lastGradeLevel', type: 'text', visible: true },
+    { label: 'Mobile Phone', property: 'mobilePhone', type: 'text', visible: true },
+    { label: 'Personal Email', property: 'personalEmail', type: 'text', visible: true },
     { label: 'Enrollment Date', property: 'enrollmentDate', type: 'text', visible: true },
     { label: 'Exit Date', property: 'exitDate', type: 'text', visible: true },
     { label: 'Exit Code', property: 'exitCode', type: 'text', visible: true }
@@ -94,6 +95,7 @@ export class StudentReEnrollComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.reenrollSchoolId = +sessionStorage.getItem('selectedSchoolId');
     this.searchCtrl = new FormControl();
     this.searchForReEnrollStudent();
     this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
@@ -110,7 +112,12 @@ export class StudentReEnrollComponent implements OnInit {
             filterOption: 3
           }
         ]
-
+        if (this.showAllSchools) {
+          this.getAllStudent.schoolId = 0;
+        }
+        else {
+          this.getAllStudent.schoolId = +sessionStorage.getItem('selectedSchoolId');
+        }
         Object.assign(this.getAllStudent, { filterParams: filterParams });
         this.getAllStudent.pageNumber = 1;
         this.paginator.pageIndex = 0;
@@ -118,6 +125,12 @@ export class StudentReEnrollComponent implements OnInit {
         this.searchForReEnrollStudent();
       }
       else {
+        if (this.showAllSchools) {
+          this.getAllStudent.schoolId = 0;
+        }
+        else {
+          this.getAllStudent.schoolId = +sessionStorage.getItem('selectedSchoolId');
+        }
         Object.assign(this.getAllStudent, { filterParams: null });
         this.getAllStudent.pageNumber = this.paginator.pageIndex + 1;
         this.getAllStudent.pageSize = this.pageSize;
@@ -246,7 +259,7 @@ export class StudentReEnrollComponent implements OnInit {
       if (this.getAllStudent.sortingModel?.sortColumn == "") {
         this.getAllStudent.sortingModel = null
       }
-      this.studentService.searchStudentListForReenroll(this.getAllStudent).subscribe(data => {
+      this.studentService.searchStudentListForReenroll(this.getAllStudent, this.getAllStudent.schoolId).subscribe(data => {
         if (data._failure) {
           if (data.studentMaster === null) {
             this.studentReenrollList = new MatTableDataSource([]);
@@ -293,6 +306,7 @@ export class StudentReEnrollComponent implements OnInit {
   getAllSchoolListWithGradeLevelsAndEnrollCodes() {
     this.studentService.studentEnrollmentSchoolList(this.schoolListWithGrades).subscribe(res => {
       this.schoolListWithGradeLevelsAndEnrollCodes = res.schoolMaster;
+      this.changeSchool(this.reenrollSchoolId);
     });
 
   }
@@ -356,19 +370,19 @@ export class StudentReEnrollComponent implements OnInit {
   exportToExcelReenroll() {
 
     if (this.studentReenrollList.data.length > 0) {
-      let studentReenrollList = this.studentReenrollList?.data?.map((x)=>{
-             const middleName = x.middleName == null?' ':' '+x.middleName+' ';
-             return {
-              'Student Name': x.firstGivenName + middleName + x.lastFamilyName,
-                'Student ID': x.studentInternalId,
-                'Last Grade Level':x.studentEnrollment[0]?.gradeLevelTitle,
-                'Mobile Phone': x.mobilePhone,
-                'Personal Email':x.personalEmail,
-                'Enrollment Date':this.datePipe.transform(x.studentEnrollment[0]?.enrollmentDate ,'MMM d, y'),
-                'Exit Date':this.datePipe.transform(x.studentEnrollment[0]?.exitDate ,'MMM d, y'),
-                'Exit Code': x.studentEnrollment[0]?.exitCode
-              };
-            });
+      let studentReenrollList = this.studentReenrollList?.data?.map((x) => {
+        const middleName = x.middleName == null ? ' ' : ' ' + x.middleName + ' ';
+        return {
+          'Student Name': x.firstGivenName + middleName + x.lastFamilyName,
+          'Student ID': x.studentInternalId,
+          'Last Grade Level': x.studentEnrollment[0]?.gradeLevelTitle,
+          'Mobile Phone': x.mobilePhone,
+          'Personal Email': x.personalEmail,
+          'Enrollment Date': this.datePipe.transform(x.studentEnrollment[0]?.enrollmentDate, 'MMM d, y'),
+          'Exit Date': this.datePipe.transform(x.studentEnrollment[0]?.exitDate, 'MMM d, y'),
+          'Exit Code': x.studentEnrollment[0]?.exitCode
+        };
+      });
       this.excelService.exportAsExcelFile(studentReenrollList, 'Students_Reenroll_List_')
     }
     else {
@@ -379,14 +393,16 @@ export class StudentReEnrollComponent implements OnInit {
   }
 
   getSearchResult(res) {
-    if (res.studentMaster.length > 0) {
-      this.totalCount = res.totalCount;
-      this.pageNumber = res.pageNumber;
-      this.pageSize = res.pageSize;
-      this.studentReenrollList = new MatTableDataSource(res.studentMaster);
+    if (res?.data.studentMaster.length > 0) {
+      this.totalCount = res?.data.totalCount;
+      this.pageNumber = res.data.pageNumber;
+      this.pageSize = res?.data.pageSize;
+      this.showAllSchools= res.allSchool;
+      this.studentReenrollList = new MatTableDataSource(res?.data.studentMaster);
       this.getAllStudent = new StudentListModel();
     }
     else {
+      this.showAllSchools= res.allSchool;
       this.totalCount = 0;
       this.studentReenrollList = new MatTableDataSource([]);
       this.getAllStudent = new StudentListModel();

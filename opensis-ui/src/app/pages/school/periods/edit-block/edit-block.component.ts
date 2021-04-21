@@ -7,7 +7,7 @@ import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SchoolPeriodService } from '../../../../services/school-period.service';
-import { BlockAddViewModel } from 'src/app/models/schoolPeriodModel';
+import { BlockAddViewModel } from 'src/app/models/school-period.model';
 
 @Component({
   selector: 'vex-edit-block',

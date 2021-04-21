@@ -4,26 +4,27 @@ import { AddStudentComponent } from './add-student/add-student.component';
 import { AddCourseSectionComponent } from './add-course-section/add-course-section.component';
 import { TranslateService } from '@ngx-translate/core';
 import { StudentScheduleService } from '../../../services/student-schedule.service';
-import { StudentCourseSectionScheduleAddViewModel, StudentScheduleReportViewModel } from 'src/app/models/studentCourseSectionScheduleAddViewModel';
+import { StudentCourseSectionScheduleAddViewModel, StudentScheduleReportViewModel } from '../../../models/student-schedule.model';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { LoaderService } from '../../../services/loader.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { ExcelService } from '../../../services/excel.service';
-import { SharedFunction } from '../../shared/shared-function';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { TitleCasePipe } from '@angular/common';
 
 @Component({
   selector: 'vex-schedule-student',
   templateUrl: './schedule-student.component.html',
-  styleUrls: ['./schedule-student.component.scss']
+  styleUrls: ['./schedule-student.component.scss'],
+  providers: [TitleCasePipe]
 })
 export class ScheduleStudentComponent implements OnInit, OnDestroy {
   studentList = [];
-  studentText:string;
-  sectionText:string;
+  studentText: string;
+  sectionText: string;
   viewReport: boolean = false;
-  failedScheduling:boolean=false
+  failedScheduling: boolean = false
   showReportTable: boolean = false;
   courseSectionList = [];
   showStudentCount: boolean = false;
@@ -39,7 +40,9 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
     private studentScheduleService: StudentScheduleService,
     private loaderService: LoaderService,
     private excelService: ExcelService,
-    private snackbar: MatSnackBar) {
+    private snackbar: MatSnackBar,
+    private titlecasePipe: TitleCasePipe
+  ) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
@@ -72,21 +75,20 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
     }).afterClosed().subscribe((data) => {
       this.studentList = data;
       if (this.studentList?.length > 0) {
-        if(this.studentList?.length > 1){
-            this.studentText='s';
+        if (this.studentList?.length > 1) {
+          this.studentText = 's';
         }
-        else{
-          this.studentText='';
+        else {
+          this.studentText = '';
         }
         this.showStudentCount = true;
-        this.viewReport = false;
-        this.showCard = false;
       }
       else {
         this.showStudentCount = false;
-        this.showCard = false;
-        this.viewReport = false;
       }
+      this.showCard = false;
+      this.viewReport = false;
+      this.showReportTable = false;
     });
   }
 
@@ -96,22 +98,29 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
     }).afterClosed().subscribe((data) => {
       this.courseSectionList = data;
       if (this.courseSectionList?.length > 0) {
-        if(this.studentList?.length > 1){
-          this.sectionText='s' ;
-      }
-      else{
-        this.sectionText='';
-      }
+        if (this.studentList?.length > 1) {
+          this.sectionText = 's';
+        }
+        else {
+          this.sectionText = '';
+        }
         this.showCourseSectionCount = true;
-        this.viewReport = false;
-        this.showCard = false;
       }
       else {
         this.showCourseSectionCount = false;
-        this.showCard = false;
-        this.viewReport = false;
       }
+      this.showCard = false;
+      this.viewReport = false;
+      this.showReportTable = false;
     });
+  }
+
+  translateKey(key) {
+    let convertedKey;
+    this.translateService.get(key).subscribe((res: string) => {
+      convertedKey = res;
+    });
+    return this.titlecasePipe.transform(convertedKey);
   }
 
   scheduleStudent() {
@@ -133,13 +142,13 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
   }
 
   refreshAll() {
-    this.studentList=[];
-    this.courseSectionList=[];
+    this.studentList = [];
+    this.courseSectionList = [];
     this.showStudentCount = false;
     this.showCourseSectionCount = false;
     this.showCard = false;
     this.viewReport = false;
-    this.showReportTable= false;
+    this.showReportTable = false;
   }
 
   viewExcelReport() {
@@ -149,20 +158,28 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
 
       }
       else {
-        let reportData = data.scheduleReport;
-        for (let report of reportData) {
-          for (var key in report) {
+        let modifiedReportData = [];
+        data.scheduleReport.map((item) => {
+          let obj = {};
+          for (const key in item) {
+            Object.assign(obj, { [this.translateKey(key)]: item[key] })
+          }
+          modifiedReportData.push(obj);
+        })
+        for (let report of modifiedReportData) {
+          for (let key in report) {
             if (report.hasOwnProperty(key)) {
-              if (report[key].split('|')[0].includes('False')) {
-                report[key] = report[key].split('|')[1].trim()
-              } else if (report[key].split('|')[0].includes('True')) {
+              if (report[key]?.split('|')[0].includes('False')) {
+                report[key] = report[key]?.split('|')[1].trim()
+              } else if (report[key]?.split('|')[0].includes('True')) {
                 report[key] = ''
               }
             }
           }
         }
-        if (reportData.length > 0) {
-          this.excelService.exportAsExcelFile(reportData, 'Schedule_Report_List_')
+
+        if (modifiedReportData.length > 0) {
+          this.excelService.exportAsExcelFile(modifiedReportData, 'Schedule_Report_List_')
         }
         else {
           this.snackbar.open('No Records Found. Failed to Export Schedule Report', '', {

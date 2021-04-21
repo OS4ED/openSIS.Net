@@ -23,12 +23,12 @@ import {
   isSameDay, isSameMonth, addHours
 } from 'date-fns';
 import { FormBuilder, FormGroup, NgForm, Validators } from '@angular/forms';
-import { BlockedSchedulingCourseSectionAddModel, CalendarSchedulingCourseSectionAddModel, CourseCalendarSchedule, CourseSectionAddViewModel, DeleteCourseSectionSchedule, OutputEmitDataFormat } from '../../../../../models/courseSectionModel';
+import { BlockedSchedulingCourseSectionAddModel, CalendarSchedulingCourseSectionAddModel, CourseCalendarSchedule, CourseSectionAddViewModel, DeleteCourseSectionSchedule, OutputEmitDataFormat } from '../../../../../models/course-section.model';
 import { SchoolPeriodService } from '../../../../../services/school-period.service';
-import { BlockListViewModel } from '../../../../../models/schoolPeriodModel';
-import { RoomListViewModel } from '../../../../../models/roomModel';
+import { BlockListViewModel } from '../../../../../models/school-period.model';
+import { RoomListViewModel } from '../../../../../models/room.model';
 import { RoomService } from '../../../../../services/room.service';
-import { CalendarAddViewModel, CalendarModel } from '../../../../../models/calendarModel';
+import { CalendarAddViewModel, CalendarModel } from '../../../../../models/calendar.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CourseSectionService } from '../../../../../services/course-section.service';
 import { SharedFunction } from '../../../../shared/shared-function';
@@ -360,8 +360,8 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
 
   getDays(days: string) {
     const calendarDays = days;
-    var allDays = [0, 1, 2, 3, 4, 5, 6];
-    var splitDays = calendarDays.split('').map(x => +x);
+    let allDays = [0, 1, 2, 3, 4, 5, 6];
+    let splitDays = calendarDays.split('').map(x => +x);
     this.filterDays = allDays.filter(f => !splitDays.includes(f));
     this.weekendDays = this.filterDays;
     this.cssClass = 'bg-aqua';
@@ -402,8 +402,6 @@ export class CalendarDaysComponent implements OnInit, OnChanges {
   }
 
   getAllRooms() {
-    this.roomListViewModel.tenantId = sessionStorage.getItem('tenantId');
-    this.roomListViewModel.schoolId = + sessionStorage.getItem('selectedSchoolId');
     this.roomService.getAllRoom(this.roomListViewModel).subscribe(
       (res: RoomListViewModel) => {
         if (typeof (res) == 'undefined') {
