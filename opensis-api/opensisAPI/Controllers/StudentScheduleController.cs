@@ -103,5 +103,38 @@ namespace opensisAPI.Controllers
             }
             return StudentCourseSectionScheduleDelete;
         }
+
+        [HttpPost("scheduleCoursesForStudent360")]
+        public ActionResult<Student360ScheduleCourseSectionListViewModel> ScheduleCoursesForStudent360(Student360ScheduleCourseSectionListViewModel student360ScheduleCourseSectionListViewModel)
+        {
+            Student360ScheduleCourseSectionListViewModel courseListView = new Student360ScheduleCourseSectionListViewModel();
+            try
+            {
+                courseListView = _studentScheduleService.ScheduleCoursesForStudent360(student360ScheduleCourseSectionListViewModel);
+
+            }
+            catch (Exception es)
+            {
+                courseListView._failure = true;
+                courseListView._message = es.Message;
+            }
+            return courseListView;
+        }
+
+        [HttpPut("dropScheduledCourseSectionForStudent360")]
+        public ActionResult<ScheduledStudentDropModel> DropScheduledCourseSectionForStudent360(ScheduledStudentDropModel scheduledStudentDropModel)
+        {
+            ScheduledStudentDropModel ScheduledStudentDrop = new ScheduledStudentDropModel();
+            try
+            {
+                ScheduledStudentDrop = _studentScheduleService.DropScheduledCourseSectionForStudent360(scheduledStudentDropModel);
+            }
+            catch (Exception es)
+            {
+                ScheduledStudentDrop._failure = true;
+                ScheduledStudentDrop._message = es.Message;
+            }
+            return ScheduledStudentDrop;
+        }
     }
 }

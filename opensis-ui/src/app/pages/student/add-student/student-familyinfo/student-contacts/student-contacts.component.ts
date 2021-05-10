@@ -1,4 +1,4 @@
-import { Component, OnInit,Input } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../../@vex/animations/stagger.animation';
@@ -10,12 +10,13 @@ import icAdd from '@iconify/icons-ic/baseline-add';
 import icRemove from '@iconify/icons-ic/remove-circle';
 import { MatDialog } from '@angular/material/dialog';
 import { EditContactComponent } from '../edit-contact/edit-contact.component';
-import { GetAllParentInfoModel,AddParentInfoModel ,RemoveAssociateParent } from '../../../../../models/parent-info.model';
+import { GetAllParentInfoModel, AddParentInfoModel , RemoveAssociateParent } from '../../../../../models/parent-info.model';
 import { ParentInfoService } from '../../../../../services/parent-info.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../../../common/default-values.service';
 @Component({
   selector: 'vex-student-contacts',
   templateUrl: './student-contacts.component.html',
@@ -32,12 +33,12 @@ export class StudentContactsComponent implements OnInit {
   icDelete = icDelete;
   icAdd = icAdd;
   icRemove = icRemove;
-  parentListArray=[];
-  contactType = "Primary";
-  getAllParentInfoModel : GetAllParentInfoModel = new GetAllParentInfoModel();
-  addParentInfoModel : AddParentInfoModel = new AddParentInfoModel();
-  removeAssociateParent : RemoveAssociateParent = new RemoveAssociateParent();
-  
+  parentListArray = [];
+  contactType = 'Primary';
+  getAllParentInfoModel: GetAllParentInfoModel = new GetAllParentInfoModel();
+  addParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
+  removeAssociateParent: RemoveAssociateParent = new RemoveAssociateParent();
+
   editPermission = false;
   deletePermission = false;
   addPermission = false;
@@ -46,9 +47,10 @@ export class StudentContactsComponent implements OnInit {
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(
     private fb: FormBuilder, private dialog: MatDialog,
-    public translateService:TranslateService,
-    public parentInfoService:ParentInfoService,
-    private cryptoService:CryptoService,
+    public translateService: TranslateService,
+    public parentInfoService: ParentInfoService,
+    private cryptoService: CryptoService,
+    private defaultValuesService: DefaultValuesService,
     private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
@@ -60,62 +62,62 @@ export class StudentContactsComponent implements OnInit {
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.viewPermission = permissionSubCategory.rolePermission[0].canView;
-    this.parentListArray = this.getAllParentInfoModel.parentInfoListForView;    
+    this.parentListArray = this.getAllParentInfoModel.parentInfoListForView;
     this.viewParentListForStudent();
   }
 
-  openAddNew(ctype) {   
+  openAddNew(ctype) {
     this.dialog.open(EditContactComponent, {
       data: {
-        contactType:ctype,
-        studentDetailsForViewAndEditData:this.studentDetailsForViewAndEditData,
-        mode:'add' },
+        contactType: ctype,
+        studentDetailsForViewAndEditData: this.studentDetailsForViewAndEditData,
+        mode: 'add' },
       width: '600px'
     }).afterClosed().subscribe(data => {
-      if(data){
+      if (data){
         this.viewParentListForStudent();
-      }      
+      }
     });
   }
-  
+
   openViewDetails(parentInfo) {
-    
+
     this.dialog.open(EditContactComponent, {
       data: {
-        contactType:this.contactType,
-        studentDetailsForViewAndEditData:this.studentDetailsForViewAndEditData,
-        parentInfo:parentInfo,
-        mode:'view'},
+        contactType: this.contactType,
+        studentDetailsForViewAndEditData: this.studentDetailsForViewAndEditData,
+        parentInfo: parentInfo,
+        mode: 'view'},
       width: '600px'
     });
   }
 
-  editParentInfo(parentInfo){  
+  editParentInfo(parentInfo){
     this.dialog.open(EditContactComponent, {
       data: {
-        parentInfo:parentInfo,
-        studentDetailsForViewAndEditData:this.studentDetailsForViewAndEditData,
-        mode:'edit'},
+        parentInfo: parentInfo,
+        studentDetailsForViewAndEditData: this.studentDetailsForViewAndEditData,
+        mode: 'edit'},
       width: '600px'
     }).afterClosed().subscribe(data => {
-      if(data){
+      if (data){
         this.viewParentListForStudent();
-      }      
+      }
     });
   }
-  confirmDelete(deleteDetails){    
+  confirmDelete(deleteDetails){
     // call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+deleteDetails.firstname+" "+deleteDetails.lastname+"."}
+          title: 'Are you sure?',
+          message: 'You are about to delete ' + deleteDetails.firstname + ' ' + deleteDetails.lastname + '.'}
         });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {
-      // if user pressed yes dialogResult will be true, 
+      // if user pressed yes dialogResult will be true,
       // if user pressed no - it will be false
-      if(dialogResult){
+      if (dialogResult){
         this.deleteParentInfo(deleteDetails.parentId);
       }
    });
@@ -124,69 +126,65 @@ export class StudentContactsComponent implements OnInit {
     this.removeAssociateParent.parentInfo.parentId = parentId;
     this.removeAssociateParent.studentId = this.studentDetailsForViewAndEditData.studentMaster.studentId;
     this.parentInfoService.removeAssociatedParent(this.removeAssociateParent).subscribe(
-      data => { 
-        if(typeof(data)=='undefined'){
-          this.snackbar.open('Parent Information failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
-          if (data._failure) {  
-            
+      data => {
+        if (data){
+          if (data._failure) {
             this.snackbar.open(data._message, '', {
               duration: 10000
             });
-          } 
-          else {       
+          }
+          else {
             this.snackbar.open(data._message, '', {
               duration: 10000
-            }).afterOpened().subscribe(data => {
+            }).afterOpened().subscribe(() => {
               this.viewParentListForStudent();
             });
-            
           }
         }
-      })
-  }
-  viewParentListForStudent(){
-    this.getAllParentInfoModel.studentId=this.studentDetailsForViewAndEditData.studentMaster.studentId;
-    this.parentInfoService.viewParentListForStudent(this.getAllParentInfoModel).subscribe(
-      data => { 
-        if(typeof(data)=='undefined'){
-          this.snackbar.open('Parent Information failed. ' + sessionStorage.getItem("httpError"), '', {
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('parentInformationFailed') + sessionStorage.getItem('httpError'), '', {
             duration: 10000
           });
         }
-        else{
-          this.parentListArray=[];
-          this.contactType="Primary";  
-          if (data._failure) {     
+      });
+  }
+  viewParentListForStudent(){
+    this.getAllParentInfoModel.studentId = this.studentDetailsForViewAndEditData.studentMaster.studentId;
+    this.parentInfoService.viewParentListForStudent(this.getAllParentInfoModel).subscribe(
+      data => {
+        if (data){
+          this.parentListArray = [];
+          this.contactType = 'Primary';
+          if (data._failure) {
             this.snackbar.open( data._message, '', {
               duration: 10000
             });
-          } 
-          else { 
-            this.parentListArray= data.parentInfoListForView;
-            
+          }
+          else {
+            this.parentListArray = data.parentInfoListForView;
             let var1 = 0;
             let var2 = 0;
-            this.parentListArray.forEach(val=>{             
-              if(val.contactType === "Primary"){
+            this.parentListArray.forEach(val => {
+              if (val.contactType === 'Primary'){
                 var1++;
-                
-              }else if(val.contactType === "Secondary"){
-                var2++;               
-              }             
-           })         
-            if(var1 > 0 && var2 > 0 ) {
-              this.contactType = "Other";
-            }else if(var1 > 0){
-              this.contactType = "Secondary";
+              }else if (val.contactType === 'Secondary'){
+                var2++;
+              }
+           });
+            if (var1 > 0 && var2 > 0 ) {
+              this.contactType = 'Other';
+            }else if (var1 > 0){
+              this.contactType = 'Secondary';
             }else{
-              this.contactType = "Primary";
-            }          
+              this.contactType = 'Primary';
+            }
           }
         }
-      })
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('parentInformationFailed') + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
+      });
   }
 }

@@ -1,0 +1,78 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title class="mb-4">
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "scheduleDetails" | translate }}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<mat-dialog-content fxLayout="column">
+    <ul class="grid grid-cols-1 md:grid-cols-2 col-gap-4 mt-6">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'course' | translate}}</label>
+            <p class="mt-1 mb-6 text-sm leading-5 sm:mt-0 sm:col-span-2">{{courseSectionDetails.courseTitle}}</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'courseSection' | translate}}</label>
+            <p class="mt-1 mb-6 text-sm leading-5 sm:mt-0 sm:col-span-2">{{courseSectionDetails.courseSectionName}}</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'room' | translate}}</label>
+            <p class="mt-1 mb-6 text-sm leading-5 sm:mt-0 sm:col-span-2">Hall 1            </p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'term' | translate}}</label>
+            <p class="mt-1 mb-6 text-sm leading-5 sm:mt-0 sm:col-span-2">{{courseSectionDetails.markingPeriodTitle}}</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'enrolledDate' | translate}}</label>
+            <p class="mt-1 mb-6 text-sm leading-5 sm:mt-0 sm:col-span-2">{{courseSectionDetails.enrolledDate|date:'mediumDate'}}</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'endDropDate' | translate}}</label>
+            <p class="mt-1 mb-6 text-sm leading-5 sm:mt-0 sm:col-span-2">{{courseSectionDetails.effectiveDropDate|date:'mediumDate'}}</p>
+        </li>
+    </ul>
+    <ul class="grid grid-cols-1 col-gap-4">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'daysOfWeek' | translate}}</label>
+            <p class="mt-1 mb-6 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                <span
+                    class="w-8 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">{{'sun'
+                    | translate }}</span>
+                <span
+                    class="w-8 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">{{'mon'
+                    | translate }}</span>
+                <span
+                    class="w-8 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">{{'tue'
+                    | translate }}</span>
+                <span
+                    class="w-8 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">{{'wed'
+                    | translate }}</span>
+                    <span
+                    class="w-8 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">{{'thu'
+                    | translate }}</span>
+                <span
+                    class="w-8 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">{{'fri'
+                    | translate }}</span>
+                <span
+                    class="w-8 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">{{'sat'
+                    | translate }}</span>
+            </p>
+        </li>
+    </ul>
+    <mat-divider></mat-divider>
+    <ul class="grid grid-cols-1 md:grid-cols-2 col-gap-4 mt-6">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'modifiedBy' | translate}}</label>
+            <p class="mt-1 mb-4 text-sm leading-5 sm:mt-0 sm:col-span-2"><span class="text-primary">{{courseSectionDetails.updatedBy?courseSectionDetails.updatedBy:courseSectionDetails.createdBy}}</span>
+                <br/><span class="text-xs">(SuperAdministrator)</span>
+            </p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'modifiedDate' | translate}}</label>
+            <p class="mt-1 mb-4 text-sm leading-5 sm:mt-0 sm:col-span-2">{{(courseSectionDetails.updatedOn?courseSectionDetails.updatedOn:courseSectionDetails.createdOn | date:'mediumDate')}}</p>
+        </li>
+    </ul>
+</mat-dialog-content>

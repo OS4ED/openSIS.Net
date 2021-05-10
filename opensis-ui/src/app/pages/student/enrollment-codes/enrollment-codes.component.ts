@@ -21,6 +21,7 @@ import { TranslateService } from '@ngx-translate/core';
 import { ExcelService } from '../../../services/excel.service';
 import { CryptoService } from '../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { DefaultValuesService } from '../../../common/default-values.service';
 
 @Component({
   selector: 'vex-enrollment-codes',
@@ -46,11 +47,11 @@ export class EnrollmentCodesComponent implements OnInit {
   icDelete = icDelete;
   icSearch = icSearch;
   icFilterList = icFilterList;
-  loading:boolean;
-  searchKey:string;
-  enrollmentCodelistView:EnrollmentCodeListView=new EnrollmentCodeListView();
-  enrollmentAddView:EnrollmentCodeAddView=new EnrollmentCodeAddView()
-  enrollmentListForExcel:EnrollmentCodeListView;
+  loading: boolean;
+  searchKey: string;
+  enrollmentCodelistView: EnrollmentCodeListView = new EnrollmentCodeListView();
+  enrollmentAddView: EnrollmentCodeAddView = new EnrollmentCodeAddView();
+  enrollmentListForExcel: EnrollmentCodeListView;
   editPermission = false;
   deletePermission = false;
   addPermission = false;
@@ -58,21 +59,22 @@ export class EnrollmentCodesComponent implements OnInit {
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(private router: Router,
-    private dialog: MatDialog,
-    private snackbar: MatSnackBar,
-    private enrollmentCodeService:EnrollmentCodesService,
-    private loaderService:LoaderService,
-    private translateService : TranslateService,
-    private excelService:ExcelService,
-    private cryptoService: CryptoService
+              private dialog: MatDialog,
+              private snackbar: MatSnackBar,
+              private enrollmentCodeService: EnrollmentCodesService,
+              private loaderService: LoaderService,
+              private translateService: TranslateService,
+              private excelService: ExcelService,
+              private defaultValuesService: DefaultValuesService,
+              private cryptoService: CryptoService
     ) {
-      translateService.use('en')
+      translateService.use('en');
       this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
       });
 
   }
-  enrollmentList:MatTableDataSource<any>
+  enrollmentList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
 
   ngOnInit(): void {
@@ -87,75 +89,67 @@ export class EnrollmentCodesComponent implements OnInit {
   }
   getAllStudentEnrollmentCode(){
     this.enrollmentCodeService.getAllStudentEnrollmentCode(this.enrollmentCodelistView).subscribe(
-      (res:EnrollmentCodeListView)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Enrollment code list failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
-          if (res._failure) {     
+      (res: EnrollmentCodeListView) => {
+        if (res){
+          if (res._failure) {
             if (res.studentEnrollmentCodeList == null) {
-              this.enrollmentList=new MatTableDataSource([]) ;
-              this.enrollmentList.sort=this.sort; 
+              this.enrollmentList = new MatTableDataSource([]) ;
+              this.enrollmentList.sort = this.sort;
               this.snackbar.open( res._message, '', {
                 duration: 10000
               });
             }
             else {
-              this.enrollmentList=new MatTableDataSource([]) ;
-              this.enrollmentList.sort=this.sort;  
+              this.enrollmentList = new MatTableDataSource([]) ;
+              this.enrollmentList.sort = this.sort;
             }
-          } 
-          else { 
-            this.enrollmentList=new MatTableDataSource(res.studentEnrollmentCodeList) ;
-            this.enrollmentListForExcel=res;
-            this.enrollmentList.sort=this.sort;   
+          }
+          else {
+            this.enrollmentList = new MatTableDataSource(res.studentEnrollmentCodeList) ;
+            this.enrollmentListForExcel = res;
+            this.enrollmentList.sort = this.sort;
           }
         }
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('enrollmentCodeListFailed') + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
       }
-    )
-  }
-
-  translateKey(key) {
-    let trnaslateKey;
-    this.translateService.get(key).subscribe((res: string) => {
-       trnaslateKey = res;
-    });
-    return trnaslateKey;
+    );
   }
 
   exportEnrollmentCodesToExcel(){
-    if(this.enrollmentListForExcel.studentEnrollmentCodeList.length>0){
-      let enrollmentList=this.enrollmentListForExcel.studentEnrollmentCodeList?.map((item)=>{
+    if (this.enrollmentListForExcel.studentEnrollmentCodeList.length > 0){
+      const enrollmentList = this.enrollmentListForExcel.studentEnrollmentCodeList?.map((item) => {
         return{
-                  [(this.translateKey('title')).toUpperCase()]: item.title,
-                  [(this.translateKey('shortName')).toUpperCase()]: item.shortName,
-                  [(this.translateKey('sortOrder')).toUpperCase()]: item.sortOrder,
-                  [(this.translateKey('type')).toUpperCase()]: item.type
-        }
+                  [(this.defaultValuesService.translateKey('title')).toUpperCase()]: item.title,
+                  [(this.defaultValuesService.translateKey('shortName')).toUpperCase()]: item.shortName,
+                  [(this.defaultValuesService.translateKey('sortOrder')).toUpperCase()]: item.sortOrder,
+                  [(this.defaultValuesService.translateKey('type')).toUpperCase()]: item.type ? item.type : '-'
+        };
       });
-      this.excelService.exportAsExcelFile(enrollmentList,'Enrollment_List_')
+      this.excelService.exportAsExcelFile(enrollmentList, 'Enrollment_List_');
      }else{
-       this.snackbar.open('No Records Found. Failed to Export Enrollment List','', {
+       this.snackbar.open(this.defaultValuesService.translateKey('noRecordsFoundFailedtoExportEnrollmentList'), '', {
          duration: 5000
        });
      }
   }
 
-  goToAdd(){   
+  goToAdd(){
     this.dialog.open(EditEnrollmentCodeComponent, {
       width: '600px'
     }).afterClosed().subscribe(
-      result=>{
-        if(result==="submited"){
-          this.getAllStudentEnrollmentCode()
+      result => {
+        if (result === 'submited'){
+          this.getAllStudentEnrollmentCode();
         }
       }
-    )
+    );
   }
 
-  getPageEvent(event){    
+  getPageEvent(event){
   }
 
   toggleColumnVisibility(column, event) {
@@ -172,58 +166,59 @@ export class EnrollmentCodesComponent implements OnInit {
       data: element,
         width: '600px'
     }).afterClosed().subscribe(
-      result=>{
-        if(result==="submited"){
-          this.getAllStudentEnrollmentCode()
+      result => {
+        if (result === 'submited'){
+          this.getAllStudentEnrollmentCode();
         }
       }
-    )
+    );
   }
   deleteEnrollmentCode(element){
-    this.enrollmentAddView.studentEnrollmentCode=element
+    this.enrollmentAddView.studentEnrollmentCode = element;
     this.enrollmentCodeService.deleteStudentEnrollmentCode(this.enrollmentAddView).subscribe(
-      (res:EnrollmentCodeAddView)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Enrollment code Delete failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
+      (res: EnrollmentCodeAddView) => {
+        if (res){
           if (res._failure) {
             this.snackbar.open(res._message, '', {
               duration: 10000
             });
-          } 
-          else { 
+          }
+          else {
             this.snackbar.open(res._message, '', {
               duration: 10000
             });
-            this.getAllStudentEnrollmentCode()
+            this.getAllStudentEnrollmentCode();
           }
         }
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('enrollmentCodeDeleteFailed')
+          + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
       }
-    )
+    );
   }
   confirmDelete(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+element.title+"."}
+          title: this.defaultValuesService.translateKey('areYouSure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDelete') + element.title + '.'}
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
-      if(dialogResult){
+      if (dialogResult){
         this.deleteEnrollmentCode(element);
       }
    });
 }
 
 onSearchClear(){
-  this.searchKey="";
+  this.searchKey = '';
   this.applyFilter();
 }
 applyFilter(){
-  this.enrollmentList.filter = this.searchKey.trim().toLowerCase()
+  this.enrollmentList.filter = this.searchKey.trim().toLowerCase();
 }
 
 }

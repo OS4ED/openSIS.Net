@@ -6,7 +6,7 @@
     </vex-page-layout-header>
 
     <vex-page-layout-content class="-mt-6">
-        <div class="card overflow-auto -mt-16" *ngIf="pageInit === 1">
+        <div class="card overflow-auto -mt-16">
             <div>
                 <h4 class="font-medium px-6 py-4">{{ "selectATeacher" | translate }}</h4>
             </div>
@@ -15,9 +15,11 @@
                 <div class="md:flex w-full">
                     <div class="py-3" fxLayout="row" fxLayoutAlign="start center">
                         <div class="flex items-center">
-                            <input class="border-0 outline-none w-full bg-transparent" placeholder="Search..."
-                                type="search">
-                            <button class="ml-4" mat-icon-button type="button">
+                            <input [formControl]="searchCtrl"
+                                class="py-3 border-0 outline-none w-full bg-transparent table-search"
+                                placeholder="Search..." type="search">
+                            <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
+                            <button *ngIf="!loading" class="ml-4" mat-icon-button type="button">
                                 <mat-icon>search</mat-icon>
                             </button>
                         </div>
@@ -25,42 +27,48 @@
                 </div>
             </div>
 
-            <table mat-table [dataSource]="takeAttendanceList" class="mat-elevation-z8 shadow-none">
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef>{{ "name" | translate }}</th>
+            <table mat-table matSort [dataSource]="staffList" class="mat-elevation-z8 shadow-none">
+                <ng-container matColumnDef="lastFamilyName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "name" | translate }}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a (click)="viewEffortGradeDetails()" class="text-blue cursor-pointer">{{ element.name }}</a>
+                        <a (click)="inputFinalGradePermissions.canEdit ? viewEffortGradeDetails(element) : ''" class="text-blue cursor-pointer">{{element.firstGivenName+" "+ element.lastFamilyName}}</a>
                     </td>
                 </ng-container>
-                <ng-container matColumnDef="staffID">
-                    <th mat-header-cell *matHeaderCellDef>{{ "staffId" | translate }}</th>
+                <ng-container matColumnDef="staffInternalId">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "staffId" | translate }}</th>
                     <td mat-cell *matCellDef="let element">
-                        {{ element.staffID }}
+                        {{ element.staffInternalId }}
                     </td>
                 </ng-container>
-                <ng-container matColumnDef="openSisProfile">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'openSISProfile' | translate }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.openSisProfile }}</td>
+                <ng-container matColumnDef="profile">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'openSISProfile' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">{{ element.profile }}</td>
                 </ng-container>
                 <ng-container matColumnDef="jobTitle">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'jobTitle' | translate }}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'jobTitle' | translate }}</th>
                     <td mat-cell *matCellDef="let element">{{ element.jobTitle }}</td>
                 </ng-container>
                 <ng-container matColumnDef="schoolEmail">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'schoolEmail' | translate }}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'schoolEmail' | translate }}</th>
                     <td mat-cell *matCellDef="let element">{{ element.schoolEmail }}</td>
                 </ng-container>
                 <ng-container matColumnDef="mobilePhone">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'mobilePhone' | translate }}</th>
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'mobilePhone' | translate }}</th>
                     <td mat-cell *matCellDef="let element">{{ element.mobilePhone }}</td>
+                </ng-container>
+                <ng-container matColumnDef="noData">
+                    <td mat-footer-cell *matFooterCellDef colspan="7">
+                        {{loading?('fetchingData' | translate):('noData' | translate) }}
+                    </td>
                 </ng-container>
 
                 <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
                 <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hidden]="totalCount>0"></tr>
             </table>
             <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]"
-                showFirstLastButtons></mat-paginator>
+                showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
         </div>
-        <vex-grade-details *ngIf="pageInit === 2"></vex-grade-details>
+        <!-- <vex-grade-details *ngIf="pageInit === 2"></vex-grade-details> -->
     </vex-page-layout-content>
 </vex-page-layout>

@@ -1,0 +1,107 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="{{ 'missingAttendance' | translate }}" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Attendance']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+    <vex-page-layout-content class="-mt-6">
+        <div class="card -mt-16">
+            <div class="flex justify-between items-center px-4">
+                <div class="flex items-center py-4">
+                    <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'missing-attendance-details']" class="cursor-pointer">
+                        <mat-icon class="ml-2 mr-4 align-middle text-blue">west</mat-icon>
+                    </a>
+                    <span class="font-medium text-lg">Ella Brown / GEOM001 - Period 5</span>
+                </div>
+                <div>
+                    <h4 class="">15 {{ 'studentsFound' | translate }}</h4>
+                </div>
+            </div>
+            <mat-divider class="text-border"></mat-divider>
+            <div class="text-center py-4">
+                <h4 class="text-primary font-medium">{{ 'takingAttendanceFor' | translate }} : March 13, 2021</h4>
+                <p class="text-warn"><i class="icon icon-info2 mr-2 align-baseline"></i>{{ 'selectedDateIsNotToday' | translate }}</p>
+            </div>
+            <mat-divider class="text-border"></mat-divider>
+            <div class="table-sticky mat-elevation-z8 shadow-none">
+                <table mat-table [dataSource]="attendanceDetails">
+                    <ng-container matColumnDef="students" sticky>
+                        <th mat-header-cell *matHeaderCellDef>{{ "students" | translate }}</th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="flex mb-2">
+                                <div class="flex-shrink-0 h-12 w-12">
+                                    <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                                </div>
+                                <div class="ml-3 flex flex-col justify-center">
+                                    <h6 class="text-sm font-semibold">{{ element.students }}</h6>
+                                    <div>
+                                        <span class="">#44568</span>
+                                        <span class="dot-separator"></span>
+                                        <span>Grade 9</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="attendanceCodes">
+                        <th mat-header-cell *matHeaderCellDef>
+                            {{ "attendanceCodes" | translate }}
+                            <mat-slide-toggle color="primary" class="align-middle ml-3 text-gray font-medium">
+                                {{'showShortName' | translate}}
+                            </mat-slide-toggle>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <div class="custom-radios">
+                                
+                                <label for="present{{element.id}}">
+                                    <input type="radio" id="present{{element.id}}" name="attendance_{{element.id}}" value="present">
+                                    <div class="inline-block checkmark-container present">
+                                        <span class="checkmark"></span>Present
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="custom-radios">
+                                <label for="absent{{element.id}}">
+                                    <input type="radio" id="absent{{element.id}}" name="attendance_{{element.id}}" value="absent">
+                                    <div class="inline-block checkmark-container absent">
+                                        <span class="checkmark"></span>Absent
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="custom-radios">
+                                <label for="tardy{{element.id}}">
+                                    <input type="radio" id="tardy{{element.id}}" name="attendance_{{element.id}}" value="tardy">
+                                    <div class="inline-block checkmark-container tardy">
+                                        <span class="checkmark"></span>Tardy
+                                    </div>
+                                </label>
+                            </div>
+                            <div class="custom-radios">
+                                <label for="late{{element.id}}">
+                                    <input type="radio" id="late{{element.id}}" name="attendance_{{element.id}}" value="late">
+                                    <div class="inline-block checkmark-container present">
+                                        <span class="checkmark"></span>Late
+                                    </div>
+                                </label>
+                            </div>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="comments" stickyEnd>
+                        <th mat-header-cell *matHeaderCellDef>{{ "comments" | translate }}</th>
+                        <td mat-cell *matCellDef="let element">
+                            <button (click)="addComments()">
+                                <i class="icon icon-bubble text-lg"></i>
+                            </button>
+                        </td>
+                    </ng-container>
+
+                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                </table>
+            </div>
+            <div class="text-right p-4">
+                <button color="primary" mat-flat-button type="submit">{{ 'submit' |translate }}</button>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

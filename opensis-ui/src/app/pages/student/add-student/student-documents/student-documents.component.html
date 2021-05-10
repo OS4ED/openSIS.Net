@@ -1,7 +1,7 @@
 <mat-card class="w-full p-0" fxFlex="auto">
     <div class="flex items-center mx-6 py-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'documents' | translate}}</h3>
-        <button *ngIf="addPermission" mat-raised-button color="primary" (click)="toggleDisplayDiv()"><mat-icon [icIcon]="icUpload"></mat-icon> {{'uploadDocument' |translate}}</button>
+        <button *ngIf="addPermission" mat-raised-button color="primary" (click)="toggleDisplayDiv()"><mat-icon [icIcon]="icUpload" class="mr-1"></mat-icon> {{'uploadDocument' |translate}}</button>
     </div>
 
     
@@ -17,7 +17,7 @@
             </ngx-dropzone-preview>
         </ngx-dropzone>
         <div class="text-center mt-4" *ngIf="uploadSuccessfull === false">
-            <button mat-raised-button color="primary" (click)="uploadFile()"><mat-icon [icIcon]="icUpload"></mat-icon> {{'uploadSelectedFiles' |translate}}</button>
+            <button mat-raised-button color="primary" (click)="uploadFile()"><mat-icon [icIcon]="icUpload" class="mr-1"></mat-icon> {{'uploadSelectedFiles' |translate}}</button>
         </div>
     </div>
 

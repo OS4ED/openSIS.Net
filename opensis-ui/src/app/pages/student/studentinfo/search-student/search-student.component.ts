@@ -16,6 +16,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { SearchFilterAddViewModel } from '../../../../models/search-filter.model';
 
 import { SharedFunction } from '../../../shared/shared-function';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 @Component({
   selector: 'vex-search-student',
   templateUrl: './search-student.component.html',
@@ -26,14 +27,18 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Output() showHideAdvanceSearch = new EventEmitter<any>();
   @Output() searchList = new EventEmitter<any>();
+  @Output() searchValue = new EventEmitter<any>();
+  @Output() toggelValues = new EventEmitter<any>();
   @Input() filterJsonParams;
+  @Input() incomingSearchValue;
+  @Input() incomingToggleValues;
   countryModel: CountryModel = new CountryModel();
   languages: LanguageModel = new LanguageModel();
   @ViewChild('f') currentForm: NgForm;
   destroySubject$: Subject<void> = new Subject();
   studentMasterSearchModel: StudentMasterSearchModel = new StudentMasterSearchModel();
   getAllStudent: StudentListModel = new StudentListModel();
-  searchFilterAddViewModel : SearchFilterAddViewModel= new SearchFilterAddViewModel();
+  searchFilterAddViewModel: SearchFilterAddViewModel= new SearchFilterAddViewModel();
   dobEndDate: string;
   dobStartDate: string;
   showSaveFilter= true;
@@ -49,17 +54,25 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   salutationList = [];
   sectionList = [];
   languageList;
+  searchSchoolId: number = this.defaultValuesService.getSchoolID();
+  inactiveStudents = false;
   constructor(
     private studentService: StudentService,
     private commonLOV: CommonLOV,
     private snackbar: MatSnackBar,
     private sectionService: SectionService,
     private commonService: CommonService,
+    private defaultValuesService: DefaultValuesService,
     private loginService: LoginService,
     private commonFunction: SharedFunction,
   ) { }
 
   ngOnInit(): void {
+    if (this.incomingSearchValue){
+      this.inactiveStudents = this.incomingToggleValues.inactiveStudents;
+      this.searchSchoolId = this.incomingToggleValues.searchSchoolId;
+      this.studentMasterSearchModel = this.incomingSearchValue;
+    }
     if (this.filterJsonParams !== null && this.filterJsonParams !== undefined) {
       this.updateFilter = true;
       this.searchTitle='searchAndUpdateFilter';
@@ -117,7 +130,6 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
   }
 
   GetAllLanguage() {
-    this.languages._tenantName = sessionStorage.getItem("tenant");
     this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.languageList = [];
@@ -126,7 +138,23 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
         this.languageList = res.tableLanguage?.sort((a, b) => { return a.locale < b.locale ? -1 : 1; })
 
       }
-    })
+    });
+  }
+  searchAllSchools(event){
+    if (event.checked){
+      this.searchSchoolId = 0;
+    }
+    else{
+      this.searchSchoolId = this.defaultValuesService.getSchoolID();
+    }
+  }
+  includeInactiveStudents(event){
+    if (event.checked){
+      this.inactiveStudents = true;
+    }
+    else{
+      this.inactiveStudents = false;
+    }
   }
 
   getAllSection() {
@@ -146,7 +174,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
     this.params = [];
     for (let key in this.studentMasterSearchModel) {
       if (this.studentMasterSearchModel.hasOwnProperty(key))
-      if (this.studentMasterSearchModel[key] !== null && this.studentMasterSearchModel[key] !== '') {
+      if (this.studentMasterSearchModel[key] !== null && this.studentMasterSearchModel[key] !== '' && this.studentMasterSearchModel[key] !== undefined) {
         if (key === 'dob') {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.commonFunction.formatDateSaveWithoutTime(this.studentMasterSearchModel[key]) })
         }
@@ -164,7 +192,7 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
       this.searchFilterAddViewModel.searchFilter.module = 'Student';
       this.searchFilterAddViewModel.searchFilter.jsonList = JSON.stringify(this.params);
       this.searchFilterAddViewModel.searchFilter.filterName = this.filterJsonParams.filterName;
-      this.searchFilterAddViewModel.searchFilter.modifiedBy = sessionStorage.getItem('email');
+      this.searchFilterAddViewModel.searchFilter.modifiedBy = this.defaultValuesService.getEmailId();
       this.commonService.updateSearchFilter(this.searchFilterAddViewModel).subscribe((res) => {
         if (typeof (res) === 'undefined') {
           this.snackbar.open('Search filter updated failed' + sessionStorage.getItem("httpError"), '', {
@@ -187,6 +215,8 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
       }
       );
     }
+    this.getAllStudent.schoolId = this.searchSchoolId;
+    this.getAllStudent.includeInactive = this.inactiveStudents;
     this.getAllStudent.filterParams = this.params;
     this.getAllStudent.sortingModel = null;
     this.getAllStudent.dobStartDate = this.commonFunction.formatDateSaveWithoutTime(this.dobStartDate);
@@ -195,21 +225,26 @@ export class SearchStudentComponent implements OnInit, OnDestroy {
     this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
       if (data._failure) {
         this.searchList.emit([]);
+        this.toggelValues.emit({inactiveStudents: this.inactiveStudents, searchSchoolId: this.searchSchoolId});
+        this.searchValue.emit(this.currentForm.value);
         this.snackbar.open('' + data._message, '', {
           duration: 10000
         });
 
       } else {
         this.searchList.emit(data);
-        this.showHideAdvanceSearch.emit({ showSaveFilter:this.showSaveFilter , hide: false});
+        this.toggelValues.emit({inactiveStudents: this.inactiveStudents, searchSchoolId: this.searchSchoolId});
+        this.searchValue.emit(this.currentForm.value);
+        this.showHideAdvanceSearch.emit({ showSaveFilter: this.showSaveFilter , hide: false});
       }
     });
-    
-   
   }
 
   resetData() {
     this.currentForm.reset();
+    this.inactiveStudents = false;
+    this.searchSchoolId = this.defaultValuesService.getSchoolID();
+    this.submit();
   }
 
   hideAdvanceSearch() {

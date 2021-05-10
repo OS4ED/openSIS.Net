@@ -28,7 +28,7 @@ const routes: Routes = [
           {
             path: 'schoolinfo',
             loadChildren: () => import('./pages/school/school-details/school-details/school-details.module').then(m => m.SchoolDetailsModule),
-            canActivate: [AuthGuard,RolePermissionGuard]
+            canActivate: [AuthGuard]
           }
         ]
       },
@@ -68,7 +68,7 @@ const routes: Routes = [
           {
             path: 'students',
             loadChildren: () => import('./pages/student/studentinfo/student.module').then(m => m.StudentModule),
-            canActivate: [AuthGuard,RolePermissionGuard]
+            canActivate: [AuthGuard]
             
           }
         ]
@@ -100,7 +100,7 @@ const routes: Routes = [
           {
             path: 'staff',
             loadChildren: () => import('./pages/staff/staffinfo/staffinfo.module').then(m => m.StaffinfoModule),
-            canActivate: [AuthGuard,RolePermissionGuard]          
+            canActivate: [AuthGuard]          
           }
         ]
       },
@@ -195,17 +195,7 @@ const routes: Routes = [
             // canActivate: [AuthGuard]            
           }
         ]
-      }, 
-      // {
-      //   path: '',
-      //   children: [
-      //     {
-      //       path: 'teacher-functions/input-effort-grades',
-      //       loadChildren: () => import('./pages/attendance/teacher-function/input-effort-grades/input-effort-grades.module').then(m => m.InputEffortGradesModule),
-      //       // canActivate: [AuthGuard]            
-      //     }
-      //   ]
-      // },
+      },
       {
         path: '',
         children: [
@@ -215,7 +205,57 @@ const routes: Routes = [
             // canActivate: [AuthGuard]            
           }
         ]
-      },         
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'attendance/administration',
+            loadChildren: () => import('./pages/attendance/administration/administration.module').then(m => m.AdministrationModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'attendance/add-absences',
+            loadChildren: () => import('./pages/attendance/add-absences/add-absences.module').then(m => m.AddAbsencesModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },  
+      {
+        path: '',
+        children: [
+          {
+            path: 'attendance/recalculate-daily-attendance',
+            loadChildren: () => import('./pages/attendance/recalculate-daily-attendance/recalculate-daily-attendance.module').then(m => m.RecalculateDailyAttendanceModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },
+      {
+        path: '',
+        children: [
+          {
+            path: 'attendance/missing-attendance',
+            loadChildren: () => import('./pages/attendance/missing-attendance/missing-attendance.module').then(m => m.MissingAttendanceModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      }, 
+      {
+        path: '',
+        children: [
+          {
+            path: 'teacher-dashboard',
+            loadChildren: () => import('./pages/dashboards/teacher-dashboard/teacher-dashboard.module').then(m => m.TeacherDashboardModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },             
     ]
   },
 ];

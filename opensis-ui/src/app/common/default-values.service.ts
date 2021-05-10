@@ -4,6 +4,7 @@ import { Injectable, OnInit } from '@angular/core';
 import { CompileShallowModuleMetadata } from '@angular/compiler';
 import { CommonField } from '../models/common-field.model';
 import { UserViewModel } from '../models/user.model';
+import { TranslateService } from '@ngx-translate/core';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class DefaultValuesService {
   TenantId: string = '';
   schoolID: number ;
   academicYear: number;
-  constructor(private http: HttpClient) {
+  constructor(private http: HttpClient,public translateService: TranslateService) {
   }
 
   setDefaultTenant() {
@@ -179,4 +180,13 @@ export class DefaultValuesService {
    
    
   }
+
+  translateKey(key) {
+    let trnaslateKey;
+   this.translateService.get(key).subscribe((res: string) => {
+       trnaslateKey = res;
+    });
+    return trnaslateKey;
+  }
+
 }

@@ -1,0 +1,157 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title class="m-0">
+    <h2 class="headline mb-4 float-left" fxFlex="auto">
+        {{ "copySchool" | translate }}
+    </h2>
+    <button class="text-secondary float-right mb-4" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border clear-both my-4"></mat-divider>
+<mat-dialog-content fxLayout="column">
+    <h4 class="mb-2">{{ 'areYouSureYouWantToCopyTheDataFrom' | translate }} <b>The Galloway School</b> {{ 'toAnewSchool' | translate }}</h4>
+    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+        <mat-label>{{'newSchoolName'|translate}}</mat-label>
+        <input matInput required>
+    </mat-form-field>
+    <h4 class="text-primary font-semibold">{{ 'school' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'periods'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'markingPeriod'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'calendar'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'sections'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'rooms'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'gradeLevels'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'hierarchy'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'preference'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'schoolFields'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <h4 class="text-primary font-semibold">{{ 'student' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'studentFields'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'enrollmentCodes'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <h4 class="text-primary font-semibold">{{ 'staff' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'staffFields'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <h4 class="text-primary font-semibold">{{ 'course' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'subjects'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'course'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'calendar'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <h4 class="text-primary font-semibold">{{ 'attendance' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'attendanceCodes'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <h4 class="text-primary font-semibold">{{ 'grades' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'reportCardGrades'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'reportCardComments'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'standardGrades'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'effortGrades'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'honorRollSetup'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <h4 class="text-primary font-semibold">{{ 'administration' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'profilesPermissions'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <h4 class="text-primary font-semibold">{{ 'listOfValues' | translate }}</h4>
+    <ul class="grid grid-cols-1 md:grid-cols-3 col-gap-4 mt-2">
+        <li class="mb-2">
+            <mat-slide-toggle>{{'schoolLevel'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'schoolClassification'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'countries'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'femaleToiletType'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'femaleToiletAccessibility'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'maleToiletType'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'maleToiletAccessibility'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'commonToiletType'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'commonToiletAccessibility'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'race'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'ethnicity'|translate}}</mat-slide-toggle>
+        </li>
+        <li class="mb-2">
+            <mat-slide-toggle color="primary">{{'language'|translate}}</mat-slide-toggle>
+        </li>
+    </ul>
+</mat-dialog-content>
+<mat-dialog-actions align="end" class="pt-4 pb-0 mb-0">
+        <button mat-flat-button mat-dialog-close>
+            {{ 'cancel' | translate }}
+        </button>
+        <button color="primary" mat-flat-button type="submit">
+            {{ 'proceed' | translate }}
+        </button>
+</mat-dialog-actions>

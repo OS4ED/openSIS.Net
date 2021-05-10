@@ -1,0 +1,221 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Administration" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Attendance']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+        <div class="card overflow-auto -mt-16">
+            <div class="p-4 pb-2">
+                <ul class="grid md:grid-cols-5 col-gap-4 row-gap-2">
+                    <li>
+                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                            <mat-label>{{ "attendanceDate" | translate }}</mat-label>
+                            <input matInput [matDatepicker]="date">
+                            <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                            <mat-datepicker #date></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                            <mat-label>{{ "attendanceCode" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="default">Default</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="bg-white px-3 py-2 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="flex w-full justify-between">
+                    <div class="flex">
+                        <input matInput class="px-4 py-3 border-0 outline-none w-full bg-transparent"
+                            appearance="outline" color="primary" placeholder="Search..." type="search">
+                        <button class="ml-4" mat-icon-button type="button">
+                            <mat-icon [icIcon]="icSearch"></mat-icon>
+                        </button>
+                        <a class="w-full text-primary cursor-pointer ml-3 pt-2">
+                            <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
+                            | translate}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t overflow-x-auto overflow-y-hidden">
+                <table class="w-full schedule-table">
+                    <thead>
+                        <tr>
+                            <th>{{ "studentName" | translate }}</th>
+                            <th>{{ "studentId" | translate }}</th>
+                            <th>{{ "grade" | translate }}</th>
+                            <th>{{ "section" | translate }}</th>
+                            <th>{{ "present" | translate }}</th>
+                            <th>{{ "attendance" | translate }}</th>
+                            <th>{{ "comment" | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Arthur Boucher</td>
+                            <td>15</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Sophia Brown</td>
+                            <td>378</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer text-green" (click)="addComments()"><i
+                                    class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Wang Fang</td>
+                            <td>62</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Clare Garcia</td>
+                            <td>94</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Amelia Jones</td>
+                            <td>37</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Audre keita</td>
+                            <td>122</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Arthur Boucher</td>
+                            <td>15</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Amelia Jones</td>
+                            <td>37</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Audre keita</td>
+                            <td>122</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer text-green" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                        <tr>
+                            <td class="text-primary cursor-pointer" (click)="openStudentAttendanceComment()">Arthur Boucher</td>
+                            <td>15</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>Full-Day</td>
+                            <td>
+                                <div class="select-dropdown inline-block w-full">
+                                    <select>
+                                        <option value="na" selected>NA</option>
+                                    </select>
+                                </div>
+                            </td>
+                            <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right p-4">
+                <button color="primary" mat-flat-button type="submit">{{ 'update' | translate }}
+                </button>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>
+

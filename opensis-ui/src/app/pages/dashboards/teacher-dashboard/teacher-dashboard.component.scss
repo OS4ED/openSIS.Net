@@ -1,0 +1,64 @@
+.ic-warning {
+    left: 13px;
+    bottom: 3px;
+}
+.mat-expansion-panel:not(.mat-expanded) .mat-expansion-panel-header:hover:not([aria-disabled=true]){
+    background-color: #fff;
+}
+.mat-expansion-panel:not([class*=mat-elevation-z]){
+    box-shadow: none;
+}
+
+@import '../../../../../node_modules/angular-calendar/css/angular-calendar.css';
+@import "../../../../@vex/styles/partials/plugins/_angular-calendar.scss";
+
+
+:host::ng-deep .cal-month-view .cal-day-cell {
+     min-height: 0px; 
+}
+
+:host::ng-deep .cal-month-view .cal-cell-top{
+    min-height: 50px; 
+    text-align: center;
+}
+
+:host::ng-deep .cal-month-view .cal-day-number {
+   
+     float: none; 
+     margin-right: 0;
+}
+
+
+.widget-events-calendar {
+    tr {
+        th {
+            padding: 8px 5px;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+        }
+
+        td {
+            padding: 5px;
+            border-right: 1px solid rgba(0,0,0,0.1);
+            border-bottom: 1px solid rgba(0,0,0,0.1);
+            height: 65px;
+            vertical-align: top;
+            font-size: 15px;
+
+            &.cal-today {
+                @apply bg-skyblue-light;
+                @apply text-blue;
+                @apply text-lg;
+                font-weight: bold;
+            }
+
+            .event-bullet {
+                width: 8px;
+                height: 8px;
+                display: inline-block;
+                margin-right: 4px;
+                @apply rounded-full;
+            }
+        }
+    }
+}

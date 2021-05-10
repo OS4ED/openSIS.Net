@@ -1,0 +1,399 @@
+<mat-card class="w-full mb-6 bg-green text-white">
+    <div class="flex justify-between items-center">
+        <div>
+            <h4 class="font-medium text-lg">{{ 'cumulativeGpa' | translate }} : 3.38</h4>
+        </div>
+        <div>
+            <h4 class="font-medium text-lg">{{ 'totalCreditAttempt' | translate }} : 6.00</h4>
+        </div>
+        <div class="flex justify-between items-center">
+            <h4 class="font-medium text-lg mr-2">{{ 'totalCreditEarned' | translate }} : 6.00</h4>
+            <button mat-flat-button color="primary" (click)="openDownloadTranscript()" *ngIf="openTranscript">
+                <mat-icon>download</mat-icon>{{ 'downloadTranscript' | translate }}
+            </button>
+        </div>
+    </div>
+</mat-card>
+<mat-card class="w-full mb-6" *ngIf="downloadTranscript">
+    <div class="flex justify-between items-center mb-4">
+        <h4 class="font-semibold text-green">{{ 'downloadTranscript' | translate }}</h4>
+        <mat-icon class="text-gray cursor-pointer" (click)="closeTranscript()">close</mat-icon>
+    </div>
+    <p class="font-semibold mb-2">{{ 'includeOnTranscript' | translate }}</p>
+    <div class="mb-4">
+        <mat-slide-toggle color="primary" class="mr-8">{{ 'schoolLogo' | translate }}</mat-slide-toggle>
+        <mat-slide-toggle color="primary" class="mr-8">{{ 'studentPhoto' | translate }}</mat-slide-toggle>
+        <mat-slide-toggle color="primary" class="mr-8">{{ 'gradeLegend' | translate }}</mat-slide-toggle>
+        <mat-slide-toggle color="primary" class="mr-8">{{ 'signatureLine' | translate }}</mat-slide-toggle>
+    </div>
+    <p class="font-semibold">{{ "gradeLevels" | translate }}</p>
+    <div class="flex justify-between items-center mb-2">
+        <div>
+            <mat-checkbox class="mr-6">Grade 9</mat-checkbox>
+            <mat-checkbox class="mr-6">Grade 10</mat-checkbox>
+            <mat-checkbox checked="checked" class="mr-6" color="primary">Grade 11</mat-checkbox>
+            <mat-checkbox checked="checked" class="mr-6" color="primary">Grade 12</mat-checkbox>
+        </div>
+        <button mat-flat-button color="primary">
+            <i class="icon icon-file-pdf mr-2"></i>{{ 'downloadAsPdf' | translate }}
+        </button>
+    </div>
+</mat-card>
+<mat-card class="w-full mb-6 py-4">
+    <div class="flex justify-between items-center -ml-4">
+        <div class="flex items-center py-1 border-l-4 border-green">
+            <h4 class="pl-4 text-xl font-medium text-green">9th Grade</h4><span class="ml-4 text-base">(Satyabhama High
+                school)</span>
+        </div>
+        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2016-2017</h5>
+    </div>
+    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
+        <table class="w-full schedule-table mb-10">
+            <thead>
+                <tr>
+                    <th>{{ "courseCode" | translate }}</th>
+                    <th>{{ "course" | translate }}</th>
+                    <th>{{ "creditHours" | translate }}</th>
+                    <th>{{ "creditEarned" | translate }}</th>
+                    <th class="bg-red-light">{{ "grade" | translate }}</th>
+                    <th>{{ "gpValue" | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ELA101</td>
+                    <td>English 10</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>PRE-CAL2</td>
+                    <td>Calculus</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>SS-AH201</td>
+                    <td>American History</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td>SC-CHEM1</td>
+                    <td>Chemistry w/lab</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>ART-DRW</td>
+                    <td>Drawing</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">D</td>
+                    <td>6.00</td>
+                </tr>
+                <tr>
+                    <td>MUSIC</td>
+                    <td>Piano</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <p class="text-primary font-semibold">{{ 'creditAttempted' | translate}} : 18.00 / {{
+                            'creditEarned' | translate}} : 18.00 / {{ 'gpa' | translate}} : 3.17 /</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="flex justify-between items-center -ml-4">
+        <div class="flex items-center py-1 border-l-4 border-green">
+            <h4 class="pl-4 text-xl font-medium text-green">10th Grade</h4><span class="ml-4 text-base">(Pathbhaban High
+                school)</span>
+        </div>
+        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2017-2018</h5>
+    </div>
+    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
+        <table class="w-full schedule-table mb-10">
+            <thead>
+                <tr>
+                    <th>{{ "courseCode" | translate }}</th>
+                    <th>{{ "course" | translate }}</th>
+                    <th>{{ "creditHours" | translate }}</th>
+                    <th>{{ "creditEarned" | translate }}</th>
+                    <th class="bg-red-light">{{ "grade" | translate }}</th>
+                    <th>{{ "gpValue" | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ELA101</td>
+                    <td>English 10</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>PRE-CAL2</td>
+                    <td>Calculus</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>SS-AH201</td>
+                    <td>American History</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td>SC-CHEM1</td>
+                    <td>Chemistry w/lab</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>ART-DRW</td>
+                    <td>Drawing</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">D</td>
+                    <td>6.00</td>
+                </tr>
+                <tr>
+                    <td>MUSIC</td>
+                    <td>Piano</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <p class="text-primary font-semibold">{{ 'creditAttempted' | translate}} : 18.00 / {{
+                            'creditEarned' | translate}} : 18.00 / {{ 'gpa' | translate}} : 3.17 /</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="flex justify-between items-center -ml-4">
+        <div class="flex items-center py-1 border-l-4 border-green">
+            <h4 class="pl-4 text-xl font-medium text-green">11th Grade</h4><span class="ml-4 text-base">(Southpoint High
+                school)</span>
+        </div>
+        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2018-2019</h5>
+    </div>
+    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
+        <table class="w-full schedule-table mb-10">
+            <thead>
+                <tr>
+                    <th>{{ "courseCode" | translate }}</th>
+                    <th>{{ "course" | translate }}</th>
+                    <th>{{ "creditHours" | translate }}</th>
+                    <th>{{ "creditEarned" | translate }}</th>
+                    <th class="bg-red-light">{{ "grade" | translate }}</th>
+                    <th>{{ "gpValue" | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ELA101</td>
+                    <td>English 10</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>PRE-CAL2</td>
+                    <td>Calculus</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>SS-AH201</td>
+                    <td>American History</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td>SC-CHEM1</td>
+                    <td>Chemistry w/lab</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>ART-DRW</td>
+                    <td>Drawing</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">D</td>
+                    <td>6.00</td>
+                </tr>
+                <tr>
+                    <td>MUSIC</td>
+                    <td>Piano</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <p class="text-primary font-semibold">{{ 'creditAttempted' | translate}} : 18.00 / {{
+                            'creditEarned' | translate}} : 18.00 / {{ 'gpa' | translate}} : 3.17 /</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <div class="flex justify-between items-center -ml-4">
+        <div class="flex items-center py-1 border-l-4 border-green">
+            <h4 class="pl-4 text-xl font-medium text-green">12th Grade</h4><span class="ml-4 text-base">(Southpoint High
+                school)</span>
+        </div>
+        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2019-2020</h5>
+    </div>
+    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
+        <table class="w-full schedule-table">
+            <thead>
+                <tr>
+                    <th>{{ "courseCode" | translate }}</th>
+                    <th>{{ "course" | translate }}</th>
+                    <th>{{ "creditHours" | translate }}</th>
+                    <th>{{ "creditEarned" | translate }}</th>
+                    <th class="bg-red-light">{{ "grade" | translate }}</th>
+                    <th>{{ "gpValue" | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>ELA101</td>
+                    <td>English 10</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>PRE-CAL2</td>
+                    <td>Calculus</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>SS-AH201</td>
+                    <td>American History</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td>SC-CHEM1</td>
+                    <td>Chemistry w/lab</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">B</td>
+                    <td>9.00</td>
+                </tr>
+                <tr>
+                    <td>ART-DRW</td>
+                    <td>Drawing</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">D</td>
+                    <td>6.00</td>
+                </tr>
+                <tr>
+                    <td>MUSIC</td>
+                    <td>Piano</td>
+                    <td>3.00</td>
+                    <td>3.00</td>
+                    <td class="bg-red-light"
+                        matTooltip="{{'weightedGradePoint' | translate}} : 0.00 &#13; {{'unweightedGradePoint' | translate}} : 4.00 &#13; {{'comments' | translate}} : Good"
+                        [matTooltipPosition]="'above'" matTooltipClass="my-tooltip">A</td>
+                    <td>12.00</td>
+                </tr>
+                <tr>
+                    <td colspan="6">
+                        <p class="text-primary font-semibold">{{ 'creditAttempted' | translate}} : 18.00 / {{
+                            'creditEarned' | translate}} : 18.00 / {{ 'gpa' | translate}} : 3.17 /</p>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</mat-card>

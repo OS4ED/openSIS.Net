@@ -1,0 +1,19 @@
+<!-- Sucess Modal content -->
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title class="m-0 text-right">
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-dialog-content fxLayout="column">
+    <div class="text-center">
+        <i class="icon icon-checkmark-circle text-green text-5xl"></i>
+        <!-- <mat-icon class="text-green text-4xl">check_circle</mat-icon> -->
+        <h5 class="text-green text-3xl mt-2">{{ 'sucess' | translate}}</h5>
+        <p class="text-lg my-4">{{ 'aNewSchoolNamed' | translate}} <b>Satyabhama High school</b> {{ 'createdSuccessfully' | translate }}. {{ 'allDataSuccessfullyCopiedToNewSchool' | translate }}</p>
+    </div>
+    <div class="text-center mt-8">
+        <button color="primary" mat-flat-button type="submit">
+            {{ 'goToNewSchool' | translate }}
+        </button>
+    </div>
+</mat-dialog-content>

@@ -17,6 +17,7 @@ import { LanguageModel } from '../../../models/language.model';
 import { CookieService } from 'ngx-cookie-service';
 import { CryptoService } from '../../../services/Crypto.service';
 import { SchoolService } from '../../../services/school.service';
+import { DefaultValuesService } from 'src/app/common/default-values.service';
 @Component({
   selector: 'vex-login',
   templateUrl: './login.component.html',
@@ -59,9 +60,11 @@ export class LoginComponent implements OnInit {
     private cookieService: CookieService,
     private loaderService: LoaderService,
     private cryptoService:CryptoService,
-    private schoolService:SchoolService
+    private schoolService:SchoolService,
+    private defaultValuesService: DefaultValuesService,
   ) {
-    this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
+    // this.Activeroute.params.subscribe(params => { this.tenant = params.id || 'opensisv2'; });
+    this.tenant = this.defaultValuesService.getDefaultTenant();
     this.translate.addLangs(['en', 'fr']);
     this.translate.setDefaultLang('en');
     sessionStorage.setItem("tenant", this.tenant);

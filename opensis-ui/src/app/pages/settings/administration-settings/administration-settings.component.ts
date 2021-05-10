@@ -128,6 +128,12 @@ export class AdministrationSettingsComponent implements OnInit, AfterContentChec
     }).afterClosed().subscribe((data) => {
       if (data) {
         this.getAllMembership();
+        const obj = {
+          memberId: this.selectedMemeber,
+          memberTitle: data.profile,
+          memberDescription: data.description
+        };
+        this.rollBasedAccessService.sendSelectedMember(obj);
       }
     });
   }

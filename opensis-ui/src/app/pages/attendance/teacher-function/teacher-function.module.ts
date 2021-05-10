@@ -21,6 +21,8 @@ import { InputFinalGradeComponent } from './input-final-grade/input-final-grade.
 import { InputEffortGradesComponent } from './input-effort-grades/input-effort-grades.component';
 import { EffortGradeDetailsModule } from './input-effort-grades/effort-grade-details/effort-grade-details.module';
 import { GradeDetailsModule } from './input-final-grade/grade-details/grade-details.module';
+import { MatSortModule } from '@angular/material/sort';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -43,7 +45,10 @@ import { GradeDetailsModule } from './input-final-grade/grade-details/grade-deta
     MatPaginatorModule,
     MatDividerModule,
     GradeDetailsModule,
-    EffortGradeDetailsModule
+    EffortGradeDetailsModule,
+    MatSortModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
 })
 export class TeacherFunctionModule { }

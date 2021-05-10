@@ -21,6 +21,7 @@ import { MatSort } from '@angular/material/sort';
 import { LayoutService } from 'src/@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
 import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
+import { BehaviorSubject } from 'rxjs';
 
 @Component({
   selector: 'vex-parentinfo',
@@ -47,6 +48,8 @@ export class ParentinfoComponent implements OnInit {
   searchKey: string;
 
   icMoreVert = icMoreVert;
+  totalCount: BehaviorSubject<number> = new BehaviorSubject<number>(null);
+  totalCountValue = this.totalCount.asObservable();
   icAdd = icAdd;
   icEdit = icEdit;
   icDelete = icDelete;
@@ -54,6 +57,8 @@ export class ParentinfoComponent implements OnInit {
   icFilterList = icFilterList;
   icImpersonate = icImpersonate;
   loading: boolean;
+  searchValue: any = null;
+  searchCount: number = null;
   getAllParentModel: GetAllParentModel = new GetAllParentModel();
   parentFieldsModelList: MatTableDataSource<any>;
   allParentList = [];
@@ -90,6 +95,15 @@ export class ParentinfoComponent implements OnInit {
   ngOnInit(): void {
 
   }
+  getTotalCount(){
+    let count;
+    this.totalCountValue.subscribe(
+      res => {
+        count = res;
+      }
+    );
+    return count;
+  }
 
   goToStudentInformation(studentId) {
     this.studentService.setStudentId(studentId)
@@ -119,8 +133,12 @@ export class ParentinfoComponent implements OnInit {
 
   applyFilter() {
     this.parentFieldsModelList.filter = JSON.stringify(this.searchKey.trim());
-
-
+    if (this.parentFieldsModelList.filteredData.length === 0){
+      this.totalCount.next(null);
+    }
+    else{
+      this.totalCount.next(this.parentFieldsModelList.filteredData.length);
+    }
   }
 
   getAllparentList() {
@@ -133,10 +151,12 @@ export class ParentinfoComponent implements OnInit {
         }
         else {
           if (res._failure) {
-              if(res.parentInfoForView === null){
+              this.totalCount.next(null);
+              if (res.parentInfoForView === null){
                 this.parentFieldsModelList = new MatTableDataSource([]);
                 this.parentFieldsModelList.sort = this.sort;
                 this.parentFieldsModelList.paginator = this.paginator;
+                
                 this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
@@ -146,7 +166,6 @@ export class ParentinfoComponent implements OnInit {
                 this.parentFieldsModelList.sort = this.sort;
                 this.parentFieldsModelList.paginator = this.paginator;
               }
-              
           }
           else {
           
@@ -194,10 +213,11 @@ export class ParentinfoComponent implements OnInit {
             this.parentFieldsModelList.sort = this.sort;
             this.parentFieldsModelList.paginator = this.paginator;
             this.parentFieldsModelList.filterPredicate = this.createFilter();
+            this.totalCount.next(this.parentFieldsModelList.filteredData.length);
           }
         }
       }
-    )
+    );
   }
 
   exportParentListToExcel() {
@@ -224,12 +244,22 @@ export class ParentinfoComponent implements OnInit {
 
   getSearchResult(res) {
     this.parentFieldsModelList.filter = JSON.stringify(res);
-   
-    if(this.parentFieldsModelList.filteredData.length>0){
-      this.showAdvanceSearchPanel=false;
+    this.searchCount = this.parentFieldsModelList.filteredData.length;
+    this.totalCount.next(this.parentFieldsModelList.filteredData.length);
+
+    if (this.parentFieldsModelList.filteredData.length > 0){
+      this.showAdvanceSearchPanel = false;
     }
   }
 
+  getSearchInput(event){
+    this.searchValue = event;
+  }
+  resetParentList(){
+    this.searchCount = null;
+    this.searchValue = null;
+    this.getAllparentList();
+  }
   createFilter(): (data: any, filter: string) => boolean {
 
     let filterFunction = function(data, filter): boolean {

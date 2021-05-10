@@ -52,7 +52,7 @@
                 <mat-select [(ngModel)]="staffMasterSearchModel.primaryGradeLevelTaught" name="primaryGradeLevelId">
                     <mat-option value="">All Grade Level</mat-option>
                     <mat-option *ngFor="let grade of getAllGradeLevelsModel.tableGradelevelList"
-                        [value]="grade.gradeId">
+                        [value]="grade.title">
                         {{grade.title}}
                     </mat-option>
                 </mat-select>
@@ -64,7 +64,7 @@
                 <mat-select [(ngModel)]="staffMasterSearchModel.otherGradeLevelTaught" name="otherGradeLevelId">
                     <mat-option value="">All Grade Level</mat-option>
                     <mat-option *ngFor="let grade of getAllGradeLevelsModel.tableGradelevelList"
-                        [value]="grade.gradeId">
+                        [value]="grade.title">
                         {{grade.title}}
                     </mat-option>
                 </mat-select>

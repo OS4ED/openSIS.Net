@@ -14,5 +14,6 @@ namespace opensis.data.ViewModels.StudentSchedule
         public string CreatedBy { get; set; }
         public string UpdatedBy { get; set; }
         public string ConflictMessage { get; set; }
+        public bool _conflictFailure { get; set; }
     }
 }

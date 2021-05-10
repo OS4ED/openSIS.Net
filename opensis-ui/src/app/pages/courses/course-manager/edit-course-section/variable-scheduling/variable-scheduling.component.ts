@@ -69,14 +69,16 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
 
 
     } else {
-      this.weekDaysList.map((item,i)=>{
+      this.weekDaysList.map((item, i) => {
         this.divCount.push(i);
-        if(i!=0){
+        if (i !== 0) {
           this.courseSectionAddViewModel.courseVariableScheduleList.push(new CourseVariableSchedule());
         }
-        this.courseSectionAddViewModel.courseVariableScheduleList[i].day=item.name
-      this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
-      this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
+        this.courseSectionAddViewModel.courseVariableScheduleList[i].day = item.name;
+        this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
+        this.courseSectionAddViewModel.courseVariableScheduleList[i].courseId = this.detailsFromParentModal.courseDetails.courseId;
+        this.courseSectionAddViewModel.courseVariableScheduleList[i].takeAttendance = false;
+
 
       });
 
@@ -195,10 +197,10 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
         return false;
       }
     });
-    let formValid=true;
-    for(let variable of this.courseSectionAddViewModel.courseVariableScheduleList){
-      if(variable.day==null || variable.periodId==null || variable.roomId==null){
-        formValid=false;
+    let formValid = true;
+    for (let variable of this.courseSectionAddViewModel.courseVariableScheduleList) {
+      if (variable.day == null || variable.periodId == null || variable.roomId == null) {
+        formValid = false;
         break;
       }
     }
@@ -209,7 +211,6 @@ export class VariableSchedulingComponent implements OnInit, OnChanges {
     }
   }
   checkDuplicateRow() {
-    debugger;
     let Ids = [];
     for (let [i, val] of this.courseSectionAddViewModel.courseVariableScheduleList.entries()) {
       Ids[i] = this.courseSectionAddViewModel.courseVariableScheduleList[i].day

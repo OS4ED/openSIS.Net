@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { DefaultValuesService } from '../common/default-values.service';
-import { GetAllSubjectModel, AddSubjectModel, MassUpdateSubjectModel, MassUpdateProgramModel, AddProgramModel, DeleteSubjectModel, DeleteProgramModel, GetAllProgramModel, SearchCourseForScheduleModel } from '../models/course-manager.model';
+import { GetAllSubjectModel, AddSubjectModel, MassUpdateSubjectModel, MassUpdateProgramModel, AddProgramModel, DeleteSubjectModel, DeleteProgramModel, GetAllProgramModel, SearchCourseForScheduleModel, CourseStandardForCourseViewModel } from '../models/course-manager.model';
 import { GetAllCourseListModel, AddCourseModel } from '../models/course-manager.model';
 import { CryptoService } from './Crypto.service';
 
@@ -86,5 +86,11 @@ export class CourseManagerService {
         searchParams = this.defaultValuesService.getAllMandatoryVariable(searchParams);
         let apiurl = this.apiUrl + searchParams._tenantName + "/CourseManager/searchCourseForSchedule";
         return this.http.post<SearchCourseForScheduleModel>(apiurl, searchParams)
+    }
+
+    getAllCourseStandardForCourse(obj: CourseStandardForCourseViewModel) {
+        obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+        let apiurl = this.apiUrl + obj._tenantName + "/CourseManager/getAllCourseStandardForCourse";
+        return this.http.post<CourseStandardForCourseViewModel>(apiurl, obj)
     }
 }

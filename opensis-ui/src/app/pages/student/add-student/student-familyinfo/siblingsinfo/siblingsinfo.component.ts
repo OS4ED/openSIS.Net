@@ -16,6 +16,7 @@ import { StudentSiblingAssociation, StudentViewSibling } from '../../../../../mo
 import { ConfirmDialogComponent } from '../../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../../../common/default-values.service';
 
 @Component({
   selector: 'vex-siblingsinfo',
@@ -32,8 +33,8 @@ export class SiblingsinfoComponent implements OnInit {
   icRemove = icRemove;
   icAdd = icAdd;
 
-  removeStudentSibling:StudentSiblingAssociation = new StudentSiblingAssociation();
-  studentViewSibling:StudentViewSibling=new StudentViewSibling();
+  removeStudentSibling: StudentSiblingAssociation = new StudentSiblingAssociation();
+  studentViewSibling: StudentViewSibling = new StudentViewSibling();
   editPermission = false;
   deletePermission = false;
   addPermission = false;
@@ -41,11 +42,12 @@ export class SiblingsinfoComponent implements OnInit {
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(private fb: FormBuilder,
-    private dialog: MatDialog,
-    public translateService:TranslateService,
-    private cryptoService:CryptoService,
-    private studentService:StudentService,
-    private snackbar: MatSnackBar) { }
+              private dialog: MatDialog,
+              private defaultValuesService: DefaultValuesService,
+              public translateService: TranslateService,
+              private cryptoService: CryptoService,
+              private studentService: StudentService,
+              private snackbar: MatSnackBar) { }
 
   ngOnInit(): void {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
@@ -57,93 +59,93 @@ export class SiblingsinfoComponent implements OnInit {
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.viewPermission = permissionSubCategory.rolePermission[0].canView;
 
-    this.getAllSiblings()
+    this.getAllSiblings();
   }
 
   openAddNew() {
     this.dialog.open(AddSiblingComponent, {
       width: '800px',
       disableClose: true
-    }).afterClosed().subscribe((res)=>{
-      if(res){
+    }).afterClosed().subscribe((res) => {
+      if (res){
         this.getAllSiblings();
       }
     });
   }
 
   openViewDetails(siblingDetails) {
-    this.dialog.open(ViewSiblingComponent,{
-      data:{
-        siblingDetails:siblingDetails,
-      }, 
+    this.dialog.open(ViewSiblingComponent, {
+      data: {
+        siblingDetails: siblingDetails,
+      },
       width: '800px'
     });
   }
 
   getAllSiblings(){
-    this.studentViewSibling.studentId=this.studentService.getStudentId();
-    this.studentService.viewSibling(this.studentViewSibling).subscribe((res)=>{
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Siblings failed to fetch. ' + sessionStorage.getItem("httpError"), '', {
+    this.studentViewSibling.studentId = this.studentService.getStudentId();
+    this.studentService.viewSibling(this.studentViewSibling).subscribe((res) => {
+      if (res){
+        if (res._failure) {
+          if (res.studentMaster == null){
+            this.snackbar.open( res._message, '', {
+              duration: 10000
+            });
+            this.studentViewSibling.studentMaster = [];
+          }
+          else{
+            this.studentViewSibling.studentMaster = [];
+          }
+        }
+        else {
+          this.studentViewSibling.studentMaster = res.studentMaster;
+        }
+      }else{
+        this.snackbar.open(this.defaultValuesService.translateKey('siblingsFailedToFetch') + sessionStorage.getItem('httpError'), '', {
           duration: 10000
         });
-      }
-      else {
-        if (res._failure) {
-            if(res.studentMaster==null){
-              this.snackbar.open( res._message, '', {
-                duration: 10000
-              });
-              this.studentViewSibling.studentMaster=[];
-            }
-            else{
-              this.studentViewSibling.studentMaster=[];
-            }
-        } else {  
-          this.studentViewSibling.studentMaster=res.studentMaster;
-        }
       }
     });
   }
   confirmDelete(siblingDetails)
-  { 
+  {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete your association, "+siblingDetails.firstGivenName+"."}
+          title: this.defaultValuesService.translateKey('areYouSure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDeleteYourAssociation') + siblingDetails.firstGivenName + '.'}
     });
-    
-    dialogRef.afterClosed().subscribe(dialogResult => {      
-      if(dialogResult){
+
+    dialogRef.afterClosed().subscribe(dialogResult => {
+      if (dialogResult){
         this.removeSibling(siblingDetails);
       }
     });
   }
 
   removeSibling(siblingDetails){
-    this.removeStudentSibling.studentMaster.studentId=siblingDetails.studentId;
-    this.removeStudentSibling.studentMaster.schoolId=siblingDetails.schoolId;
-    this.removeStudentSibling.studentId=this.studentService.getStudentId();
-    this.studentService.removeSibling(this.removeStudentSibling).subscribe((res)=>{
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Sibling is failed to remove.' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+    this.removeStudentSibling.studentMaster.studentId = siblingDetails.studentId;
+    this.removeStudentSibling.studentMaster.schoolId = siblingDetails.schoolId;
+    this.removeStudentSibling.studentId = this.studentService.getStudentId();
+    this.studentService.removeSibling(this.removeStudentSibling).subscribe((res) => {
+      if (res){
         if (res._failure) {
           this.snackbar.open( res._message, '', {
             duration: 10000
           });
-        } else {  
+        } else {
           this.getAllSiblings();
-          this.snackbar.open(res._message,'', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
         }
       }
-    })
+      else{
+        this.snackbar.open(this.defaultValuesService.translateKey('siblingIsFailedToRemove') + sessionStorage.getItem('httpError'), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
 }

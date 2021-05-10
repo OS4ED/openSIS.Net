@@ -1,0 +1,91 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="{{ 'missingAttendance' | translate }}" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Attendance']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+        <div class="card overflow-auto -mt-16">
+            <h4 class="p-4 text-lg text-blue">
+            <a [routerLink]="['/school', 'attendance', 'missing-attendance']" class="cursor-pointer">
+                <mat-icon class="ml-2 mr-4 align-middle">west</mat-icon>
+            </a>
+            <span class="font-medium text-base">Ella Brown</span></h4>
+            <mat-divider></mat-divider>
+            <div class="bg-white px-6 md:h-14 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="md:flex w-full justify-between">
+                    <div class="py-2" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="flex items-center">
+                            <input matInput class="py-3 border-0 outline-none w-full bg-transparent"
+                                appearance="outline" color="primary" placeholder="Search..." type="search">
+                            <button class="ml-4" mat-icon-button type="button">
+                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t overflow-x-auto overflow-y-hidden">
+                <table class="w-full schedule-table">
+                    <thead>
+                        <tr>
+                            <th>{{ "date" | translate }}</th>
+                            <th>{{ "teacher" | translate }}</th>
+                            <th>{{ "courseSection" | translate }}</th>
+                            <th>{{ "period" | translate }}</th>
+                            <th>{{ "action" | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>13 Apr, 2021</td>
+                            <td>Ella Brown</td>
+                            <td>ATTN001</td>
+                            <td>Attendance Period</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'take-attendance']"><mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' | translate }}</span></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>13 Apr, 2021</td>
+                            <td>Ella Brown</td>
+                            <td>GEOM001</td>
+                            <td>Period 5</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'take-attendance']"><mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' | translate }}</span></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>13 Apr, 2021</td>
+                            <td>Ella Brown</td>
+                            <td>ATTN001</td>
+                            <td>Attendance Period</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'take-attendance']"><mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' | translate }}</span></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>14 Apr, 2021</td>
+                            <td>Ella Brown</td>
+                            <td>ATTN001</td>
+                            <td>Attendance Period</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'take-attendance']"><mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' | translate }}</span></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>15 Apr, 2021</td>
+                            <td>Ella Brown</td>
+                            <td>GEOM001</td>
+                            <td>Period 5</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'take-attendance']"><mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' | translate }}</span></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

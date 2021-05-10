@@ -348,7 +348,7 @@ export class ReportCardGradesComponent implements OnInit {
   translateKey(key) {
     let trnaslateKey;
     this.translateService.get(key).subscribe((res: string) => {
-       trnaslateKey = res;
+      trnaslateKey = res;
     });
     return trnaslateKey;
   }
@@ -362,11 +362,13 @@ export class ReportCardGradesComponent implements OnInit {
             return {
               [this.translateKey('title')]: x.title,
               [this.translateKey('breakoff')]: x.breakoff,
-              [this.translateKey('weightedGPValue')]: x.weightedGpValue? x.weightedGpValue:0.00,
-              [this.translateKey('unweightedGPValue')]: x.unweightedGpValue? x.unweightedGpValue:0.00,
-              [this.translateKey('comment')]: x.comment? x.comment:'-'
+              [this.translateKey('weightedGPValue')]: x.weightedGpValue ? (x.weightedGpValue).toFixed(2) :(0).toFixed(2),
+              [this.translateKey('unweightedGPValue')]: x.unweightedGpValue ? (x.unweightedGpValue).toFixed(2) :(0).toFixed(2),
+              [this.translateKey('comment')]: x.comment ? x.comment : '-'
             };
           });
+          console.log(reportList);
+          
           this.excelService.exportAsExcelFile(reportList, 'Report_Card_Grade_List_');
         } else {
           this.snackbar.open('No records found. failed to export report card grade list', '', {

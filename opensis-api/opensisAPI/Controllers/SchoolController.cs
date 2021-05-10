@@ -160,5 +160,23 @@ namespace opensisAPI.Controllers
             }
             return schoolLogoUpdate;
         }
+
+        [HttpPost("copySchool")]
+        public ActionResult<CopySchoolViewModel> CopySchool(CopySchoolViewModel copySchoolViewModel)
+        {
+            CopySchoolViewModel copySchool = new CopySchoolViewModel();
+            try
+            {
+                copySchool = _schoolRegisterService.CopySchool(copySchoolViewModel);
+            }
+            catch (Exception es)
+            {
+                copySchool._failure = true;
+                copySchool._message = es.Message;
+            }
+            return copySchool;
+        }
+
+
     }
 }

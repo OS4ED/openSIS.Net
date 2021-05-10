@@ -11,6 +11,7 @@ import { CommonService } from '../../../../../services/common.service';
 import { takeUntil } from 'rxjs/operators';
 import { Subject } from 'rxjs';
 import { SchoolAddViewModel } from '../../../../../models/school-master.model';
+import { DefaultValuesService } from '../../../../../common/default-values.service';
 @Component({
   selector: 'vex-view-sibling',
   templateUrl: './view-sibling.component.html',
@@ -24,7 +25,7 @@ export class ViewSiblingComponent implements OnInit {
   icClose = icClose;
   address: string;
   schoolName;
-  getStudentForView = []; 
+  getStudentForView = [];
   gradeLevelTitle;
   countryName;
   mapUrl: string;
@@ -35,21 +36,22 @@ export class ViewSiblingComponent implements OnInit {
   constructor(private dialogRef: MatDialogRef<ViewSiblingComponent>,
               private snackbar: MatSnackBar,
               private parentInfoService: ParentInfoService,
+              private defaultValuesService: DefaultValuesService,
               private commonService: CommonService,
               @Optional() @Inject(MAT_DIALOG_DATA) public data: any) {}
 
 
   ngOnInit(): void {
     this.getAllCountry();
-    if (this.data.flag === 'Parent'){      
+    if (this.data.flag === 'Parent'){
       this.data.siblingDetails = this.data.studentDetails;
       this.gradeLevelTitle = this.data.studentDetails.gradeLevelTitle;
       this.schoolName = this.data.studentDetails.schoolName;
-        if (this.data.studentDetails.address !== ''){
+      if (this.data.studentDetails.address !== ''){
           this.address = this.data.studentDetails.address;
         }else{
           this.address = null;
-        }   
+        }
     }else{
       this.schoolName = this.data.siblingDetails.schoolMaster.schoolName;
       this.gradeLevelTitle = this.data.siblingDetails.studentEnrollment[0].gradeLevelTitle;
@@ -75,13 +77,13 @@ export class ViewSiblingComponent implements OnInit {
   }
   getAllCountry() {
     this.commonService.GetAllCountry(this.getCountryModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (typeof (data) === 'undefined') {
-      }
-      else {
+      if (data){
         if (data._failure) {
         } else {
           this.findCountryNameByIdOnViewMode(data.tableCountry);
         }
+      }
+      else{
       }
     });
   }
@@ -104,7 +106,7 @@ export class ViewSiblingComponent implements OnInit {
       this.mapUrl = `https://maps.google.com/?q=${address}`;
       window.open(this.mapUrl, '_blank');
     }else{
-      this.snackbar.open('Invalid  Address', 'Ok', {
+      this.snackbar.open(this.defaultValuesService.translateKey('invalidAddress'), this.defaultValuesService.translateKey('ok'), {
         duration: 5000
       });
     }

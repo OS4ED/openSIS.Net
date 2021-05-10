@@ -1,0 +1,353 @@
+<vex-page-layout>
+    <vex-page-layout-header class="" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="{{ 'dashboard' | translate }}" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Dashboards']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+    <vex-page-layout-content class="">
+
+        <div class="card px-6 py-4 border border-warn text-warn text-lg font-semibold bg-warn-light mb-4">
+            <mat-icon [icIcon]="icMissingAttendance" class="align-middle mr-3"></mat-icon> 10 {{
+            'missingAttendanceFound' | translate }}
+        </div>
+
+        <div class="card px-6 py-4 border-2 border-blue mb-4">
+            <div class="text-blue relative">
+                <mat-icon [icIcon]="icAssessment" class="align-middle mr-5"></mat-icon>
+                <mat-icon [icIcon]="icWarning" class="absolute text-warn ic-warning text-base"></mat-icon>
+                <span class="text-lg font-medium">{{ 'notification' | translate }}</span>
+            </div>
+            <ul class="pl-16 -mx-1">
+                <li class="list-disc mb-1">Pre Calculus Assignment Grades due on May 15, 2021</li>
+                <li class="list-disc mb-1">Algebra Assignment Grades due on May 15, 2021</li>
+                <li class="list-disc mb-1">Algebra Assignment Grades due on May 15, 2021</li>
+                <li class="list-disc mb-1">Algebra Assignment Grades due on May 15, 2021</li>
+                <li class="list-disc mb-1">Algebra Assignment Grades due on May 15, 2021</li>
+                <li class="list-disc mb-1">All Final Grades due on May 25, 2021</li>
+            </ul>
+        </div>
+
+        <div class="">
+            <h4 class="text-lg font-medium mb-2">
+                <span class="pr-4 border-r border-gray">{{ 'todaysClasses' | translate }}</span>
+                <span class="pl-4 text-blue">{{ 'allClasses' | translate }}</span>
+            </h4>
+            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 mb-4 ">
+                <div class="card px-4 py-2 border-l-8 border-green">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-green uppercase font-semibold">CHEM0001</h5>
+                        <p>10:00 AM</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray font-medium mb-2">
+                            <span class="pr-2">Chemistry</span>
+                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
+                            <span class="pl-2">Grade: 9</span>
+                        </div>
+                        <div>
+                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center font-medium flex-wrap">
+                        <div class="text-gray mb-2">
+                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 2</span>
+                            <span class="pl-2">Room 403</span>
+                        </div>
+                        <div>
+                            <span>M</span>
+                            <span class="text-gray-light">T</span>
+                            <span>W</span>
+                            <span class="text-gray-light">H</span>
+                            <span>F</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card px-4 py-2 border-l-8 border-cyan">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-cyan uppercase font-semibold">CHEM0007</h5>
+                        <p>11:00 AM</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray font-medium mb-2">
+                            <span class="pr-2">Chemistry</span>
+                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
+                            <span class="pl-2">Grade: 12</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center font-medium flex-wrap">
+                        <div class="text-gray mb-2">
+                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 3</span>
+                            <span class="pl-2">Room 513</span>
+                        </div>
+                        <div>
+                            <span>M</span>
+                            <span class="text-gray-light">T</span>
+                            <span class="text-gray-light">W</span>
+                            <span class="text-gray-light">H</span>
+                            <span>F</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card px-4 py-2 border-l-8 border-purple">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-purple uppercase font-semibold">CHEM0005</h5>
+                        <p>12:00 PM</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray font-medium mb-2">
+                            <span class="pr-2">Chemistry</span>
+                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
+                            <span class="pl-2">Grade: 11</span>
+                        </div>
+                        <div>
+                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center font-medium flex-wrap">
+                        <div class="text-gray mb-2">
+                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 2</span>
+                            <span class="pl-2">Room 406</span>
+                        </div>
+                        <div>
+                            <span>M</span>
+                            <span>T</span>
+                            <span class="text-gray-light">W</span>
+                            <span>H</span>
+                            <span>F</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card px-4 py-2 border-l-8 border-blue">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-blue uppercase font-semibold">CHEM0005</h5>
+                        <p>1:00 PM</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray font-medium mb-2">
+                            <span class="pr-2">Chemistry</span>
+                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
+                            <span class="pl-2">Grade: 9</span>
+                        </div>
+                        <div>
+                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center font-medium flex-wrap">
+                        <div class="text-gray mb-2">
+                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 6</span>
+                            <span class="pl-2">Room 403</span>
+                        </div>
+                        <div>
+                            <span class="text-gray-light">M</span>
+                            <span>T</span>
+                            <span>W</span>
+                            <span>H</span>
+                            <span class="text-gray-light">F</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card px-4 py-2 border-l-8 border-deep-orange">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-deep-orang uppercase font-semibold">CHEM0001</h5>
+                        <p>4:00 PM</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray font-medium mb-2">
+                            <span class="pr-2">Chemistry</span>
+                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
+                            <span class="pl-2">Grade: 9</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center font-medium flex-wrap">
+                        <div class="text-gray mb-2">
+                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 2</span>
+                            <span class="pl-2">Room 403</span>
+                        </div>
+                        <div>
+                            <span>M</span>
+                            <span class="text-gray-light">T</span>
+                            <span>W</span>
+                            <span class="text-gray-light">H</span>
+                            <span>F</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card px-4 py-2 border-l-8 border-amber">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-amber uppercase font-semibold">CHEM0001</h5>
+                        <p>5:00 PM</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray font-medium mb-2">
+                            <span class="pr-2">Chemistry</span>
+                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
+                            <span class="pl-2">Grade: 12</span>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center font-medium flex-wrap">
+                        <div class="text-gray mb-2">
+                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 3</span>
+                            <span class="pl-2">Room 513</span>
+                        </div>
+                        <div>
+                            <span>M</span>
+                            <span class="text-gray-light">T</span>
+                            <span class="text-gray-light">W</span>
+                            <span class="text-gray-light">H</span>
+                            <span>F</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="card px-4 py-2 border-l-8 border-gray">
+                    <div class="flex justify-between items-center">
+                        <h5 class="text-gray uppercase font-semibold">CHEM0001</h5>
+                        <p>6:00 PM</p>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <div class="text-gray font-medium mb-2">
+                            <span class="pr-2">Chemistry</span>
+                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
+                            <span class="pl-2">Grade: 11</span>
+                        </div>
+                        <div>
+                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
+                        </div>
+                    </div>
+                    <div class="flex justify-between items-center font-medium flex-wrap">
+                        <div class="text-gray mb-2">
+                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 5</span>
+                            <span class="pl-2">Room 406</span>
+                        </div>
+                        <div>
+                            <span>M</span>
+                            <span>T</span>
+                            <span class="text-gray-light">W</span>
+                            <span>H</span>
+                            <span>F</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="card px-6 pt-4 mb-4">
+            <h4 class="text-primary text-lg font-semibold pb-3">{{ 'notice' | translate }}</h4>
+            <mat-divider class="-mx-6"></mat-divider>
+            <mat-accordion>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header class="px-0 mr-1">
+                        <mat-panel-title class="font-semibold text-base">
+                            Lorem Ipsum is simply dummy text of the printing and typesetting industry
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p class="-mx-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                        took a galley of type and scrambled it to make a type specimen book</p>
+                </mat-expansion-panel>
+                <mat-divider class="-mx-6"></mat-divider>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header class="px-0 mr-1">
+                        <mat-panel-title class="font-semibold text-base">
+                            Lorem Ipsum is simply dummy text of the printing and typesetting
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p class="-mx-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                        took a galley of type and scrambled it to make a type specimen book</p>
+                </mat-expansion-panel>
+                <mat-divider class="-mx-6"></mat-divider>
+                <mat-expansion-panel>
+                    <mat-expansion-panel-header class="px-0 mr-1">
+                        <mat-panel-title class="font-semibold text-base">
+                            Lorem Ipsum is simply dummy text of the printing
+                        </mat-panel-title>
+                    </mat-expansion-panel-header>
+                    <p class="-mx-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
+                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
+                        took a galley of type and scrambled it to make a type specimen book</p>
+                </mat-expansion-panel>
+            </mat-accordion>
+        </div>
+
+        <div class="grid md:grid-cols-2 gap-6">
+            <div class="card overflow-auto w-full">
+                <div class="border-b py-4 px-6">
+                    <h4 class="text-lg font-semibold">{{ 'calendarEvents' | translate }}</h4>
+                </div>
+                <div class="flex w-full items-center font-bold border-b">
+                    <div class="w-6/12 py-3 pl-6 pr-4">{{ 'eventTitle' | translate }}</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">{{ 'date' | translate }}</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">{{ 'time' | translate }}</div>
+                </div>
+                <div class="flex w-full items-center border-b">
+                    <div class="w-6/12 py-3 pl-6 pr-4"><span
+                            class="inline-block h-2 w-2 bg-green rounded-full mr-3"></span>Sports Event</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 14, 2021</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">10:00 AM</div>
+                </div>
+                <div class="flex w-full items-center border-b">
+                    <div class="w-6/12 py-3 pl-6 pr-4"><span
+                            class="inline-block h-2 w-2 bg-red rounded-full mr-3"></span>Event 1</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 8, 2021</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">12:30 AM</div>
+                </div>
+                <div class="flex w-full items-center border-b">
+                    <div class="w-6/12 py-3 pl-6 pr-4"><span
+                            class="inline-block h-2 w-2 bg-blue rounded-full mr-3"></span>Event 2</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 14, 2021</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">10:45 AM</div>
+                </div>
+                <div class="flex w-full items-center border-b">
+                    <div class="w-6/12 py-3 pl-6 pr-4"><span
+                            class="inline-block h-2 w-2 bg-red rounded-full mr-3"></span>Event 3</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 9, 2021</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">11:00 AM</div>
+                </div>
+                <div class="flex w-full items-center border-b">
+                    <div class="w-6/12 py-3 pl-6 pr-4"><span
+                            class="inline-block h-2 w-2 bg-cyan rounded-full mr-3"></span>Event 4</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 19, 2021</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">12:00 AM</div>
+                </div>
+                <div class="flex w-full items-center border-b">
+                    <div class="w-6/12 py-3 pl-6 pr-4"><span
+                            class="inline-block h-2 w-2 bg-orange rounded-full mr-3"></span>Event 5</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 9, 2021</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">11:00 AM</div>
+                </div>
+            </div>
+            <div class="card overflow-auto w-full px-6 py-4">
+                <div class="flex justify-between items-center">
+                    <h3 class="text-center"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+                    <div class="flex items-center -mr-4">
+                        <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
+                            <mat-icon>arrow_back_ios</mat-icon>
+                        </button>
+                        <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarNextView>
+                            <mat-icon>arrow_forward_ios</mat-icon>
+                        </button>
+                    </div>
+                </div>
+                <mat-divider class="-mx-6 text-border mt-2"></mat-divider>
+                <ng-template #customCellTemplate let-day="day" let-locale="locale">
+                    <div class="cal-cell-top">
+                        <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
+                    </div>
+                    <div class="cal-events px-2 pb-2 justify-center" *ngIf="day.events.length > 0">
+                        <div class="text-xs px-2 py-1 rounded text-white"
+                            *ngFor="let event of day.events;let i = index;">
+                            <span class="align-middle">{{ event.title }}</span>
+                        </div>
+                    </div>
+                </ng-template>
+                <div class="-mx-6">
+                    <div [ngSwitch]="view">
+                        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+                            [cellTemplate]="customCellTemplate">
+                        </mwl-calendar-month-view>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

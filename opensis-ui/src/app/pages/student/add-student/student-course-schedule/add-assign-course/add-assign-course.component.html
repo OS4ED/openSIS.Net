@@ -13,92 +13,125 @@
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "course" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="otherGradeLevelTaught">Geometry</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.courseId" (selectionChange)="onSearchCriteriaChange()">
+                    <mat-option value="">All Course</mat-option>
+                    <mat-option *ngFor="let course of getAllCourseListModel.courseViewModelList"
+                        [value]="course.course.courseId">{{course.course.courseTitle}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "subject" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="primarySubjectTaught">Mathematics</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.courseSubject" (selectionChange)="onSearchCriteriaChange()">
+                    <mat-option value="">All Subject</mat-option>
+                    <mat-option *ngFor="let subject of getAllSubjectModel.subjectList" [value]="subject.subjectName">
+                        {{subject.subjectName}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "program" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="otherSubjectTaught">All Program</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.courseProgram" (selectionChange)="onSearchCriteriaChange()">
+                    <mat-option value="">All Program</mat-option>
+                    <mat-option *ngFor="let program of getAllProgramModel.programList" [value]="program.programName">
+                        {{program.programName}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{ "markingPeriod" | translate }}</mat-label>
-                <mat-select>
-                    <mat-option value="markingPeriod">Quarter 1</mat-option>
+                <mat-select [(ngModel)]="courseSectionSearch.markingPeriodId" (selectionChange)="onSearchCriteriaChange()">
+                    <mat-option value="">All Marking Period</mat-option>
+                    <mat-option *ngFor="let markingPeriod of getMarkingPeriodTitleListModel.getMarkingPeriodView"
+                        [value]='markingPeriod.value'>{{markingPeriod.text}}</mat-option>
                 </mat-select>
             </mat-form-field>
         </li>
     </ul>
+
+    <div class="-mx-6 border-t overflow-auto">
+        <table mat-table [dataSource]="courseSectionList" class="mat-elevation-z8 shadow-none">
+            <ng-container matColumnDef="staffSelected">
+                <th mat-header-cell *matHeaderCellDef>
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    <mat-checkbox color="primary" (click)="$event.stopPropagation()"
+                        (change)="$event.checked ? checked(element) : unChecked(element)"
+                        [checked]="isChecked(element)">
+                    </mat-checkbox>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="course">
+                <th mat-header-cell *matHeaderCellDef>{{ "course" | translate }}</th>
+                <td mat-cell *matCellDef="let element">
+                    <div>{{ element.courseTitle }}</div>
+                </td>
+            </ng-container>
+            <ng-container matColumnDef="courseSectionName">
+                <th mat-header-cell *matHeaderCellDef>{{ "courseSectionName" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.courseSectionName }}</td>
+            </ng-container>
+            <ng-container matColumnDef="markingPeriod">
+                <th mat-header-cell *matHeaderCellDef>{{ "markingPeriod" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.markingPeriodTitle }}</td>
+            </ng-container>
+            <ng-container matColumnDef="startDate">
+                <th mat-header-cell *matHeaderCellDef>{{ "startDate" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.durationStartDate | date:'shortDate' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="endDate">
+                <th mat-header-cell *matHeaderCellDef>{{ "endDate" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.durationEndDate | date:'shortDate' }}</td>
+            </ng-container>
+            <ng-container matColumnDef="seats">
+                <th mat-header-cell *matHeaderCellDef>{{ "seats" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.seats }}</td>
+            </ng-container>
+            <ng-container matColumnDef="available">
+                <th mat-header-cell *matHeaderCellDef>{{ "available" | translate }}</th>
+                <td mat-cell *matCellDef="let element">{{ element.availableSeat }}</td>
+            </ng-container>
+
+
+        
+            <ng-container matColumnDef="noData">
+                <td mat-footer-cell *matFooterCellDef colspan="8">
+                    {{loading && searching?('fetchingData' | translate):('noData' | translate) }}
+                </td>
+            </ng-container>
+
+            <tr mat-footer-row *matFooterRowDef="['noData']" [ngClass]="courseSectionList?.data.length>0?'hidden':''"></tr>
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+        </table>
+        
+        <mat-paginator [ngClass]="courseSectionList?.data.length>10?'':'hidden'" [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 40]"
+            showFirstLastButtons>
+        </mat-paginator>
+    </div>
+
+<ng-container *ngIf="this.selection.selected.length>0">
+    <h5 class="text-lg text-primary font-semibold mt-6">{{ 'selectedCourseSections' | translate }}</h5>
+    <div>
+        <ng-container *ngFor="let courseSection of this.selection.selected;">
+            <span class="rounded-full py-1 px-3 bg-skyblue-light border border-gray inline-block mt-3 mr-3">{{courseSection.courseTitle+' - '+courseSection.courseSectionName}}
+                <i class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle cursor-pointer" (click)="removeSelection(courseSection)"></i>
+            </span>
+        </ng-container>
+    </div>
+</ng-container>
 </mat-dialog-content>
 
-<div class="-mx-6 border-t overflow-auto">
-    <table mat-table [dataSource]="teacherDetails" class="mat-elevation-z8 shadow-none mb-6">
-        <ng-container matColumnDef="courseSelected">
-            <th mat-header-cell *matHeaderCellDef></th>
-            <td mat-cell *matCellDef="let element">
-                <mat-checkbox color="primary" [checked]="element.courseSelected"></mat-checkbox>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="course">
-            <th mat-header-cell *matHeaderCellDef>{{ "course" | translate }}</th>
-            <td mat-cell *matCellDef="let element">
-                <div>{{ element.course }}</div>
-            </td>
-        </ng-container>
-        <ng-container matColumnDef="courseSection">
-            <th mat-header-cell *matHeaderCellDef>{{ "courseSection" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.courseSection }}</td>
-        </ng-container>
-        <ng-container matColumnDef="markingPeriod">
-            <th mat-header-cell *matHeaderCellDef>{{ "markingPeriod" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.markingPeriod | translate }}</td>
-        </ng-container>
-        <ng-container matColumnDef="startDate">
-            <th mat-header-cell *matHeaderCellDef>{{ "startDate" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.startDate | translate }}</td>
-        </ng-container>
-        <ng-container matColumnDef="endDate">
-            <th mat-header-cell *matHeaderCellDef>{{ "endDate" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.endDate | translate }}</td>
-        </ng-container>
-        <ng-container matColumnDef="seats">
-            <th mat-header-cell *matHeaderCellDef>{{ "seats" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.seats | translate }}</td>
-        </ng-container>
-        <ng-container matColumnDef="available">
-            <th mat-header-cell *matHeaderCellDef>{{ "available" | translate }}</th>
-            <td mat-cell *matCellDef="let element">{{ element.available | translate }}</td>
-        </ng-container>
 
-        <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-        <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-    </table>
-</div>
-<h5 class="text-lg text-primary font-semibold">{{ 'selectedCourseSection' | translate }}</h5>
-<div>
-    <span class="rounded-full py-1 px-3 bg-skyblue-light border border-gray inline-block mt-3 mr-3">Geometry - GEOM001
-        <i class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle"></i>
-    </span>
-    <span class="rounded-full py-1 px-3 bg-skyblue-light border border-gray inline-block mt-3">Algebra - ALGB001
-        <i class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle"></i>
-    </span>
-</div>
 <div class="text-right p-6 pb-0">
-    <button color="primary" mat-raised-button type="submit">
+    <button color="primary" mat-raised-button type="submit" [disabled]="studentAssigningLoader" (click)="assignStudent()">
+        <mat-icon class="ml-2" *ngIf="studentAssigningLoader">
+            <mat-spinner color="primary" diameter="20">
+            </mat-spinner>
+          </mat-icon>
         {{ 'assignSelectedCourseSections' | translate }}
     </button>
 </div>

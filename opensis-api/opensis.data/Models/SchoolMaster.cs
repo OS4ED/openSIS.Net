@@ -10,6 +10,7 @@ namespace opensis.data.Models
             AttendanceCodeCategories = new HashSet<AttendanceCodeCategories>();
             Block = new HashSet<Block>();
             BlockPeriod = new HashSet<BlockPeriod>();
+            
             CourseSection = new HashSet<CourseSection>();
             CustomFields = new HashSet<CustomFields>();
             DpdownValuelist = new HashSet<DpdownValuelist>();
@@ -65,6 +66,7 @@ namespace opensis.data.Models
         public virtual ICollection<AttendanceCodeCategories> AttendanceCodeCategories { get; set; }
         public virtual ICollection<Block> Block { get; set; }
         public virtual ICollection<BlockPeriod> BlockPeriod { get; set; }
+        
         public virtual ICollection<CourseSection> CourseSection { get; set; }
         public virtual ICollection<CustomFields> CustomFields { get; set; }
         public virtual ICollection<DpdownValuelist> DpdownValuelist { get; set; }

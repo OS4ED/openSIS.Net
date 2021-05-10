@@ -74,7 +74,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   schoolListWithGradeLevelsAndEnrollCodes = [];
   selectedSchoolIndex = [];
   selectedTransferredSchoolIndex = [];
-  calendarNameInViewMode: string = "-";
+  calendarNameInViewMode = '-';
   filteredEnrollmentInfoInViewMode;
   expandEnrollmentHistory = true;
   selectedExitCodes = [];
@@ -83,7 +83,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   cloneEnrollmentForCancel;
   cloneOfCloneEnrollmentForCancel;
   cloneStudentEnrollment: StudentEnrollmentModel = new StudentEnrollmentModel();
-  
+
   editPermission = false;
   deletePermission = false;
   addPermission = false;
@@ -91,19 +91,21 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   sectionList: GetAllSectionModel = new GetAllSectionModel();
   destroySubject$: Subject<void> = new Subject();
-  sectionNameInViewMode:string='-';
+  sectionNameInViewMode = '-';
+  studentActiveStatus = true;
   constructor(private calendarService: CalendarService,
-    private studentService: StudentService,
-    private snackbar: MatSnackBar,
-    private cryptoService:CryptoService,
-    private router: Router,
-    private commonFunction:SharedFunction,
-    private sectionService:SectionService,
-    private defaultValueService:DefaultValuesService) {
+              private studentService: StudentService,
+              private snackbar: MatSnackBar,
+              private cryptoService: CryptoService,
+              private router: Router,
+              private defaultValuesService: DefaultValuesService,
+              private commonFunction: SharedFunction,
+              private sectionService: SectionService,
+              private defaultValueService: DefaultValuesService) {
   }
 
   ngOnInit(): void {
-    
+
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
@@ -113,15 +115,15 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
 
     // this.getAllSection();
-    if (this.studentCreateMode == this.studentCreate.EDIT) {
+    if (this.studentCreateMode === this.studentCreate.EDIT) {
       this.studentCreateMode = this.studentCreate.ADD;
     }
-    if (this.studentCreateMode == this.studentCreate.ADD) {
+    if (this.studentCreateMode === this.studentCreate.ADD) {
       // this.getAllCalendar();
       this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
       this.getAllStudentEnrollments();
       this.studentService.changePageMode(this.studentCreateMode);
-    } else if (this.studentCreateMode == this.studentCreate.VIEW) {
+    } else if (this.studentCreateMode === this.studentCreate.VIEW) {
       // this.getAllSchoolListWithGradeLevels();
       this.getAllStudentEnrollments();
       this.studentService.changePageMode(this.studentCreateMode);
@@ -133,16 +135,16 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   }
 
   onSchoolChange(schoolId, indexOfDynamicRow) {
-    let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
+    const index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
       return x.schoolId === +schoolId;
     });
     this.selectedSchoolIndex[indexOfDynamicRow] = index;
-    
+
     this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].schoolName = this.schoolListWithGradeLevelsAndEnrollCodes[index].schoolName;
   }
 
   onTransferredSchoolChange(transferredSchoolId, indexOfDynamicRow) {
-    let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
+    const index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
       return x.schoolId === +transferredSchoolId;
     });
     this.selectedTransferredSchoolIndex[indexOfDynamicRow] = index;
@@ -156,7 +158,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
 
   onExitCodeChange(value, indexOfDynamicRow) {
     this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]].studentEnrollmentCode?.map((item) => {
-      if (item.enrollmentCode == +value) {
+      if (item.enrollmentCode === +value) {
         this.selectedExitCodes[indexOfDynamicRow] = item.type;
       }
     })
@@ -177,9 +179,9 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
 
   getAllCalendar() {
     this.calendarService.getAllCalendar(this.calendarListModel).subscribe((res) => {
-      let allCalendarsInCurrentSchool = res.calendarList;
+      const allCalendarsInCurrentSchool = res.calendarList;
       this.calendarListModel.calendarList = allCalendarsInCurrentSchool.filter((x) => {
-        return (x.academicYear == +this.defaultValueService.getAcademicYear() && x.defaultCalender);
+        return (x.academicYear === +this.defaultValueService.getAcademicYear() && x.defaultCalender);
       });
       this.manipulateModelInEditMode();
     });
@@ -191,11 +193,11 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       this.schoolListWithGradeLevelsAndEnrollCodes = res.schoolMaster;
       for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments.length; i++) {
         this.selectedSchoolIndex[i] = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
-          return x.schoolId == +this.cloneStudentEnrollment.studentEnrollments[i].schoolId;
+          return x.schoolId === +this.cloneStudentEnrollment.studentEnrollments[i].schoolId;
         });
         this.selectedTransferredSchoolIndex[i] = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
-          return x.schoolId == +this.cloneStudentEnrollment.studentEnrollments[i].transferredSchoolId;
-        })
+          return x.schoolId === +this.cloneStudentEnrollment.studentEnrollments[i].transferredSchoolId;
+        });
       }
       this.findEnrollmentCodeIdByName();
       // this.findExitCodeIdByName();
@@ -204,7 +206,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   }
 
   editEnrollmentInfo() {
-    this.studentCreateMode = this.studentCreate.EDIT
+    this.studentCreateMode = this.studentCreate.EDIT;
     this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
     this.studentService.changePageMode(this.studentCreateMode);
   }
@@ -216,13 +218,13 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     // if(this.cloneStudentEnrollment!==this.cloneOfCloneEnrollmentForCancel){
     //   this.cloneStudentEnrollment=JSON.parse(this.cloneOfCloneEnrollmentForCancel);
     // }
-    this.studentCreateMode = this.studentCreate.VIEW
+    this.studentCreateMode = this.studentCreate.VIEW;
     this.replaceEnrollmentCodeWithName();
     this.studentService.changePageMode(this.studentCreateMode);
   }
   replaceEnrollmentCodeWithName() {
     for (let i = 0; i < this.studentEnrollmentModel.studentEnrollmentListForView?.length; i++) {
-      let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
+      const index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
         return x.schoolId == +this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId;
       });
       for (let j = 0; j < this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode?.length; j++) {
@@ -241,7 +243,7 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
 
 
   getAllStudentEnrollments() {
-    let details = this.studentService.getStudentDetails();
+    const details = this.studentService.getStudentDetails();
     if (details != null) {
       this.studentEnrollmentModel.studentGuid = details.studentMaster.studentGuid;
     } else {
@@ -250,18 +252,13 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     this.studentEnrollmentModel.studentId = this.studentService.getStudentId();
     this.studentEnrollmentModel.tenantId = this.defaultValueService.getTenantID();
     this.studentEnrollmentModel.schoolId = this.defaultValueService.getSchoolID();
-    this.studentEnrollmentModel.academicYear= this.defaultValueService.getAcademicYear()?.toString();
-    if (this.studentCreateMode == this.studentCreate.VIEW) {
+    this.studentEnrollmentModel.academicYear = this.defaultValueService.getAcademicYear()?.toString();
+    if (this.studentCreateMode === this.studentCreate.VIEW) {
       this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
     }
 
     this.studentService.getAllStudentEnrollment(this.studentEnrollmentModel).subscribe(res => {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Student Enrollments failed to fetch. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (res){
         if (res._failure) {
           this.snackbar.open( res._message, '', {
             duration: 10000
@@ -273,21 +270,26 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           this.cloneStudentEnrollment.studentEnrollments = res.studentEnrollmentListForView.filter((item) => {
             return item.exitCode == null;
           });
-          this.cloneEnrollmentForCancel=JSON.stringify(this.studentEnrollmentModel);
-          this.cloneOfCloneEnrollmentForCancel=JSON.stringify(this.cloneStudentEnrollment)
+          this.cloneEnrollmentForCancel = JSON.stringify(this.studentEnrollmentModel);
+          this.cloneOfCloneEnrollmentForCancel = JSON.stringify(this.cloneStudentEnrollment);
           for (let i = 0; i < this.cloneStudentEnrollment.studentEnrollments?.length; i++) {
             this.divCount[i] = i;
           }
-            this.getAllCalendar();
+          this.getAllCalendar();
         }
       }
-    })
+      else{
+        this.snackbar.open(this.defaultValueService.translateKey('studentEnrollmentsfailedtofetch') + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
 
   findEnrollmentCodeIdByName() {
     for (let i = 0; i < this.studentEnrollmentModel.studentEnrollmentListForView?.length; i++) {
-      let index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
+      const index = this.schoolListWithGradeLevelsAndEnrollCodes.findIndex((x) => {
         return x.schoolId == +this.studentEnrollmentModel.studentEnrollmentListForView[i].schoolId;
       });
       for (let j = 0; j < this.schoolListWithGradeLevelsAndEnrollCodes[index].studentEnrollmentCode?.length; j++) {
@@ -317,6 +319,9 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       return x.exitCode == null;
     });
     this.filteredEnrollmentInfoInViewMode=this.filteredEnrollmentInfoInViewMode.reverse();
+    if(this.filteredEnrollmentInfoInViewMode?.length==1){
+      this.filteredEnrollmentInfoInViewMode[0]?.enrollmentType == 'Drop'?this.studentActiveStatus=false:''
+    }
     if (this.studentEnrollmentModel.calenderId != null) {
       for (let i = 0; i < this.studentEnrollmentModel.studentEnrollmentListForView?.length; i++) {
         this.studentEnrollmentModel.calenderId = this.studentEnrollmentModel.calenderId.toString();
@@ -333,16 +338,16 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   updateStudentEnrollment() {
     this.currentForm.form.markAllAsTouched();
     if (this.currentForm.form.invalid) {
-      return
+      return;
     }
     delete this.studentEnrollmentModel.studentEnrollmentListForView;
     this.studentEnrollmentModel.studentEnrollments = this.cloneStudentEnrollment.studentEnrollments;
-    let details = this.studentService.getStudentDetails();
+    const details = this.studentService.getStudentDetails();
     for (let i = 0; i < this.studentEnrollmentModel.studentEnrollments?.length; i++) {
       this.studentEnrollmentModel.studentEnrollments[i].studentId = this.studentService.getStudentId();
       this.studentEnrollmentModel.studentEnrollments[i].academicYear = +this.defaultValueService.getAcademicYear();
-      this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate)
-      this.studentEnrollmentModel.studentEnrollments[i].exitDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].exitDate)
+      this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate = this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].enrollmentDate)
+      this.studentEnrollmentModel.studentEnrollments[i].exitDate = this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.studentEnrollments[i].exitDate)
       if (details != null) {
         this.studentEnrollmentModel.studentEnrollments[i].studentGuid = details.studentMaster.studentGuid;
       } else {
@@ -355,19 +360,14 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     } else {
       this.studentEnrollmentModel.studentGuid = this.studentDetailsForViewAndEdit.studentMaster.studentGuid;
     }
-    this.studentEnrollmentModel.estimatedGradDate=this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.estimatedGradDate)
+    this.studentEnrollmentModel.estimatedGradDate = this.commonFunction.formatDateSaveWithoutTime(this.studentEnrollmentModel.estimatedGradDate)
 
     this.studentEnrollmentModel.academicYear = this.defaultValueService.getAcademicYear()?.toString();
     this.studentEnrollmentModel.schoolId = +this.defaultValueService.getSchoolID();
     this.studentEnrollmentModel._userName = this.defaultValueService.getUserName();
 
     this.studentService.updateStudentEnrollment(this.studentEnrollmentModel).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Enrollment Update failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (res){
         if (res._failure) {
           this.snackbar.open( res._message, '', {
             duration: 10000
@@ -376,17 +376,16 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           this.snackbar.open(res._message, '', {
             duration: 10000
           });
-          if(res.rollingOption===RollingOptionsEnum['Do not enroll after this school year']){
-            res.studentEnrollments.map((item)=>{
-                if(+item.exitCode==2){
-              this.router.navigate(["school/students"]);
+          if (res.rollingOption === RollingOptionsEnum['Do not enroll after this school year']){
+            res.studentEnrollments.map((item) => {
+                if (+item.exitCode === 2){
+              this.router.navigate(['school/students']);
                 }
-            })
-           
+            });
           }
           for (let i = 0; i < res.studentEnrollments?.length; i++) {
-            if (res.studentEnrollments[i].enrollmentCode == "Transferred In") {
-              this.router.navigate(["school/students"]);
+            if (res.studentEnrollments[i].enrollmentCode === 'Transferred In') {
+              this.router.navigate(['school/students']);
             }
           }
           this.getAllStudentEnrollments();
@@ -394,28 +393,30 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
           // this.replaceEnrollmentCodeWithName();
           this.studentCreateMode = this.studentCreate.VIEW;
           this.studentService.changePageMode(this.studentCreateMode);
-
-
         }
       }
-    })
+      else{
+        this.snackbar.open( this.defaultValueService.translateKey('enrollmentUpdatefailed') + sessionStorage.getItem('httpError'), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
   getAllSection() {
-    if(!this.sectionList.isSectionAvailable){
-      this.sectionList.isSectionAvailable=true;
+    if (!this.sectionList.isSectionAvailable){
+      this.sectionList.isSectionAvailable = true;
       this.sectionService.GetAllSection(this.sectionList).pipe(takeUntil(this.destroySubject$)).subscribe(res => {
         if (res._failure) {
         }
         else {
           this.sectionList.tableSectionsList = res.tableSectionsList;
-          if (this.studentCreateMode == this.studentCreate.VIEW) {
+          if (this.studentCreateMode === this.studentCreate.VIEW) {
            this.findSectionNameById();
           }
         }
       });
     }
-   
   }
 
   findSectionNameById(){
@@ -427,16 +428,16 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   }
 
   onGradeLevelChange(indexOfDynamicRow){
-    let indexOfGradeLevel=this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]]?.gradelevels.findIndex((item)=>{
-      return item.gradeId==+this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].gradeId;
+    const indexOfGradeLevel = this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]]?.gradelevels.findIndex((item) => {
+      return item.gradeId === +this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].gradeId;
     });
-    this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].gradeLevelTitle=this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]]?.gradelevels[indexOfGradeLevel].title;
+    this.cloneStudentEnrollment.studentEnrollments[indexOfDynamicRow].gradeLevelTitle = this.schoolListWithGradeLevelsAndEnrollCodes[this.selectedSchoolIndex[indexOfDynamicRow]]?.gradelevels[indexOfGradeLevel].title;
   }
 
   ngOnDestroy() {
     this.destroySubject$.next();
     this.destroySubject$.complete();
-    
+
   }
 
 }

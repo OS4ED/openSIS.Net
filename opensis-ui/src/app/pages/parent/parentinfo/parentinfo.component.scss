@@ -32,4 +32,9 @@
     &:focus {
       width: 180px;
     }
-  }
+}
+
+a.disabled {
+    pointer-events: none;
+    cursor: default;
+}

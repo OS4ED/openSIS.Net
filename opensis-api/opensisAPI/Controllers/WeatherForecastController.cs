@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Logging;
+using MySql.Data.MySqlClient;
 using Newtonsoft.Json;
 using opensis.data.Helper;
 using opensis.data.Interface;
@@ -639,6 +641,28 @@ namespace opensisAPI.Controllers
             //return Ok(q.ToList());
 
             return Ok();
+        }
+
+        [HttpPost("getLanguagesWithSP")]
+        public IActionResult getLanguagesWithSP(string name)
+        {
+            string connStr = "server=localhost;database=opensisv2;user=root;password=";
+            MySqlConnection conn = new MySqlConnection(connStr);
+            conn.Open();
+
+            string rtn = "get_all_language";
+            MySqlCommand cmd = new MySqlCommand(rtn, conn);
+
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@name", "Amharic");
+
+            MySqlDataReader rdr = cmd.ExecuteReader();
+
+            var result = rdr.Read();
+            rdr.Close();
+
+            return Ok(result);
         }
     }
 }

@@ -8,7 +8,18 @@
             text-align: left;
         }
     }
+    &.routineview-table {
+      th,td {
+        @apply border-r;
+        border-color: rgba(0,0,0,0.1);
+        text-align: center;
+      }
+      th:last-child , td:last-child {
+        border-right: none;
+      }
+    }
 }
+
 .select-dropdown {
     position: relative;
     background-color: #fff;

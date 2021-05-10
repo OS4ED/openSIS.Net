@@ -390,7 +390,7 @@ namespace opensis.data.Repository
 
             //var studentDataList = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.IsActive != false);
 
-            var studentDataList = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.IsActive != false).AsNoTracking().Select(e => new StudentMaster
+            var studentDataList = this.context?.StudentMaster.Include(x => x.StudentEnrollment).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && (pageResult.IncludeInactive == false || pageResult.IncludeInactive == null ? x.IsActive!=false : true)).AsNoTracking().Select(e => new StudentMaster
             {
                 TenantId = e.TenantId,
                 SchoolId = e.SchoolId,
@@ -428,6 +428,7 @@ namespace opensis.data.Repository
                 SecondLanguageId=e.SecondLanguageId,
                 ThirdLanguageId=e.ThirdLanguageId,
                 SectionId=e.SectionId,
+                IsActive=e.IsActive,
                 StudentEnrollment = e.StudentEnrollment.Where(d => d.IsActive == true).Select(s => new StudentEnrollment
                 {
                     EnrollmentDate = s.EnrollmentDate,
@@ -475,20 +476,41 @@ namespace opensis.data.Repository
                     {
                         if (pageResult.FilterParams.Any(x => x.ColumnName.ToLower() == "gradeid"))
                         {
-                            var filterValue = Convert.ToInt32(pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "gradeid").Select(x => x.FilterValue).FirstOrDefault());
-
-                            var gradeLevelData = studentDataList.AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().GradeId == filterValue).AsQueryable();
-
-                            if (gradeLevelData.ToList().Count() > 0)
+                            var filterData = pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "gradeid").ToList();
+                            if (filterData.Count > 0)
                             {
-                                transactionIQ = gradeLevelData.AsNoTracking().ToList().AsQueryable();
-                                var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "gradeid");
-                                pageResult.FilterParams.RemoveAt(indexValue);
-                                if(pageResult.FilterParams.Count() > 0)
+                                var filterValues = filterData.Select(x => x.FilterValue).ToList();
+
+                                var gradeLevelData = studentDataList.AsNoTracking().ToList().Where(x =>filterValues.Contains(x.StudentEnrollment.FirstOrDefault().GradeId.ToString())).AsQueryable();
+
+                                if (gradeLevelData.ToList().Count() > 0)
                                 {
-                                    transactionIQ = Utility.FilteredData(pageResult.FilterParams, transactionIQ).AsQueryable();
+                                    transactionIQ = gradeLevelData.AsNoTracking().ToList().AsQueryable();
+                                    var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "gradeid");
+                                    pageResult.FilterParams.RemoveAt(indexValue);
+                                    if (pageResult.FilterParams.Count() > 0)
+                                    {
+                                        transactionIQ = Utility.FilteredData(pageResult.FilterParams, transactionIQ).AsQueryable();
+                                    }
                                 }
                             }
+                            //else
+                            //{
+                            //    var filterValue = Convert.ToInt32(pageResult.FilterParams.Where(x => x.ColumnName.ToLower() == "gradeid").Select(x => x.FilterValue).FirstOrDefault());
+
+                            //    var gradeLevelData = studentDataList.AsNoTracking().ToList().Where(x => x.StudentEnrollment.FirstOrDefault().GradeId == filterValue).AsQueryable();
+
+                            //    if (gradeLevelData.ToList().Count() > 0)
+                            //    {
+                            //        transactionIQ = gradeLevelData.AsNoTracking().ToList().AsQueryable();
+                            //        var indexValue = pageResult.FilterParams.FindIndex(x => x.ColumnName.ToLower() == "gradeid");
+                            //        pageResult.FilterParams.RemoveAt(indexValue);
+                            //        if (pageResult.FilterParams.Count() > 0)
+                            //        {
+                            //            transactionIQ = Utility.FilteredData(pageResult.FilterParams, transactionIQ).AsQueryable();
+                            //        }
+                            //    }
+                            //}
                         }
                         else
                         {
@@ -559,16 +581,24 @@ namespace opensis.data.Repository
                     }
                     
                 }
-                int totalCount = transactionIQ.AsNoTracking().ToList().Count();
-                if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
+
+                if (transactionIQ != null)
                 {
-                    transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                    int? totalCount = transactionIQ.AsNoTracking().ToList().Count();
+                    if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
+                    {
+                        transactionIQ = transactionIQ.Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+                    }
+                    studentListModel.studentMaster = transactionIQ.ToList();
+                    studentListModel.TotalCount = totalCount;
+                }
+                else
+                {
+                    studentListModel.TotalCount = 0;
                 }
                 
                 studentListModel.TenantId = pageResult.TenantId;
                 studentListModel.SchoolId = pageResult.SchoolId;
-                studentListModel.studentMaster = transactionIQ.ToList();
-                studentListModel.TotalCount = totalCount;
                 studentListModel.PageNumber = pageResult.PageNumber;
                 studentListModel._pageSize = pageResult.PageSize;
                 studentListModel._tenantName = pageResult._tenantName;
@@ -1491,7 +1521,7 @@ namespace opensis.data.Repository
                 int resultData;
                 var studentData = (from student in this.context?.StudentMaster
                                    join enrollment in this.context?.StudentEnrollment on student.StudentId equals enrollment.StudentId
-                                   where student.SchoolId == enrollment.SchoolId && student.TenantId == enrollment.TenantId && enrollment.GradeLevelTitle != null
+                                   where student.SchoolId == enrollment.SchoolId && student.TenantId == enrollment.TenantId && enrollment.GradeLevelTitle != null && enrollment.IsActive == true
                                    select new
                                    {
                                        student.TenantId,
@@ -1512,7 +1542,7 @@ namespace opensis.data.Repository
                                    });
                 if (studentData != null && studentData.Count() > 0)
                 {
-                    var StudentSibling = studentData.Where(x => x.FirstGivenName == studentSiblingListViewModel.FirstGivenName && x.LastFamilyName == studentSiblingListViewModel.LastFamilyName && x.TenantId == studentSiblingListViewModel.TenantId && x.GradeLevelTitle == studentSiblingListViewModel.GradeLevelTitle && (studentSiblingListViewModel.SchoolId == null || (x.SchoolId == studentSiblingListViewModel.SchoolId)) && (studentSiblingListViewModel.Dob == null || (x.Dob == studentSiblingListViewModel.Dob)) && (studentSiblingListViewModel.StudentInternalId == null || (x.StudentInternalId.ToLower().Trim() == studentSiblingListViewModel.StudentInternalId.ToLower().Trim()))).ToList();
+                    var StudentSibling = studentData.Where(x => x.FirstGivenName == studentSiblingListViewModel.FirstGivenName && x.LastFamilyName == studentSiblingListViewModel.LastFamilyName && x.TenantId == studentSiblingListViewModel.TenantId && (studentSiblingListViewModel.GradeLevelTitle == null || (x.GradeLevelTitle == studentSiblingListViewModel.GradeLevelTitle)) && (studentSiblingListViewModel.SchoolId == null || (x.SchoolId == studentSiblingListViewModel.SchoolId)) && (studentSiblingListViewModel.Dob == null || (x.Dob == studentSiblingListViewModel.Dob)) && (studentSiblingListViewModel.StudentInternalId == null || (x.StudentInternalId.ToLower().Trim() == studentSiblingListViewModel.StudentInternalId.ToLower().Trim()))).ToList();
                     if (StudentSibling.Count > 0)
                     {
                         var siblingsOfStudent = StudentSibling.Select(s => new GetStudentForView
@@ -1570,9 +1600,11 @@ namespace opensis.data.Repository
             {
                 if (siblingAddUpdateForStudentModel.studentMaster.StudentId > 0)
                 {
-                    var studentAssociateTo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.studentMaster.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.studentMaster.SchoolId);
-                    var studentAssociateBy = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.SchoolId);
-                    if (studentAssociateTo != null)
+                    var studentAssociateTo = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.studentMaster.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.studentMaster.SchoolId && x.TenantId == siblingAddUpdateForStudentModel.studentMaster.TenantId);
+
+                    var studentAssociateBy = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == siblingAddUpdateForStudentModel.StudentId && x.SchoolId == siblingAddUpdateForStudentModel.SchoolId && x.TenantId == siblingAddUpdateForStudentModel.TenantId);
+
+                    if (studentAssociateTo != null && studentAssociateBy != null)
                     {
                         if (studentAssociateTo.Associationship != null)
                         {
@@ -1582,16 +1614,7 @@ namespace opensis.data.Repository
                         {
                             studentAssociateTo.Associationship = siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.SchoolId + "#" + siblingAddUpdateForStudentModel.StudentId;
                         }
-                        //this.context?.SaveChanges();
-                    }
-                    else
-                    {
-                        siblingAddUpdateForStudentModel._failure = true;
-                        siblingAddUpdateForStudentModel._message = NORECORDFOUND;
-                    }
 
-                    if (studentAssociateBy != null)
-                    {
                         if (studentAssociateBy.Associationship != null)
                         {
                             studentAssociateBy.Associationship = studentAssociateBy.Associationship + " | " + siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.studentMaster.SchoolId + "#" + siblingAddUpdateForStudentModel.studentMaster.StudentId;
@@ -1600,21 +1623,20 @@ namespace opensis.data.Repository
                         {
                             studentAssociateBy.Associationship = siblingAddUpdateForStudentModel.studentMaster.TenantId + "#" + siblingAddUpdateForStudentModel.studentMaster.SchoolId + "#" + siblingAddUpdateForStudentModel.studentMaster.StudentId;
                         }
-                        //this.context?.SaveChanges();
+
+                        this.context?.SaveChanges();
+                        siblingAddUpdateForStudentModel._failure = false;
+                        siblingAddUpdateForStudentModel._message = "Sibling Added Successfully";
                     }
                     else
                     {
                         siblingAddUpdateForStudentModel._failure = true;
-                        siblingAddUpdateForStudentModel._message = NORECORDFOUND;
+                        siblingAddUpdateForStudentModel._message = "Please Select a Valid Student";
                     }
-                    this.context?.SaveChanges();
-                    siblingAddUpdateForStudentModel._failure = false;
-                    siblingAddUpdateForStudentModel._message = "Sibling Added Successfully";
                 }
             }
             catch (Exception es)
             {
-
                 siblingAddUpdateForStudentModel._message = es.Message;
                 siblingAddUpdateForStudentModel._failure = true;
                 siblingAddUpdateForStudentModel._tenantName = siblingAddUpdateForStudentModel._tenantName;
@@ -1723,10 +1745,10 @@ namespace opensis.data.Repository
                         StudentAssociateByAfterDel = null;
                     }
                     StudentAssociateBy.Associationship = StudentAssociateByAfterDel;
-                    siblingAddUpdateForStudentModel._message = "Sibling Deleted Successfully";
+                    
                 }
                 this.context?.SaveChanges();
-                
+                siblingAddUpdateForStudentModel._message = "Sibling Deleted Successfully";
             }
 
             catch (Exception es)
@@ -2441,16 +2463,17 @@ namespace opensis.data.Repository
                 studentListAdd._message = "Student Added Successfully";
                 int? MasterStudentId = 1;
 
-                var studentData = this.context?.StudentMaster.Where(x => x.SchoolId == studentListAddViewModel.studentAddViewModelList.FirstOrDefault().studentMaster.SchoolId && x.TenantId == studentListAddViewModel.studentAddViewModelList.FirstOrDefault().studentMaster.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
+                var studentData = this.context?.StudentMaster.Where(x => x.SchoolId == studentListAddViewModel.SchoolId && x.TenantId == studentListAddViewModel.TenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
 
                 if (studentData != null)
                 {
                     MasterStudentId = studentData.StudentId + 1;
                 }
-
+                int? indexNo = -1;
                 foreach (var student in studentListAddViewModel.studentAddViewModelList)
                 {
-                    UserMaster userMaster = new UserMaster();
+                    indexNo++;
+                    //UserMaster userMaster = new UserMaster();
                     var StudentEnrollmentData = new StudentEnrollment();
                     using (var transaction = this.context.Database.BeginTransaction())
                     {
@@ -2464,6 +2487,7 @@ namespace opensis.data.Repository
 
                             if (GuidIdExist != null)
                             {
+                                studentListAdd.ConflictIndexNo = studentListAdd.ConflictIndexNo != null ? studentListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                                 studentListAdd.studentAddViewModelList.Add(student);
                                 studentListAdd._failure = true;
                                 studentListAdd._message = "Student Rejected Due to Data Error";
@@ -2479,6 +2503,7 @@ namespace opensis.data.Repository
                                 bool checkInternalID = CheckInternalID(student.studentMaster.TenantId, student.studentMaster.StudentInternalId, student.studentMaster.SchoolId);
                                 if (checkInternalID == false)
                                 {
+                                    studentListAdd.ConflictIndexNo = studentListAdd.ConflictIndexNo != null ? studentListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                                     studentListAdd.studentAddViewModelList.Add(student);
                                     studentListAdd._failure = true;
                                     studentListAdd._message = "Student Rejected Due to Data Error";
@@ -2489,6 +2514,49 @@ namespace opensis.data.Repository
                             {
                                 student.studentMaster.StudentInternalId = MasterStudentId.ToString();
                             }
+
+                            if (student.studentMaster.FirstLanguageId != null)
+                            {
+                                var firstLanguageId = this.context?.Language.Where(x => x.Locale.ToLower() == student.studentMaster.FirstLanguageId.ToString().ToLower()).Select(x => x.LangId).FirstOrDefault();
+
+                                student.studentMaster.FirstLanguageId = firstLanguageId != null ? firstLanguageId : null;
+                            }
+
+                            if (student.studentMaster.SecondLanguageId != null)
+                            {
+                                var secondLanguageId = this.context?.Language.Where(x => x.Locale.ToLower() == student.studentMaster.SecondLanguageId.ToString().ToLower()).Select(x => x.LangId).FirstOrDefault();
+
+                                student.studentMaster.SecondLanguageId = secondLanguageId != null ? secondLanguageId : null;
+                            }
+
+                            if (student.studentMaster.ThirdLanguageId != null)
+                            {
+                                var thirdLanguageId = this.context?.Language.Where(x => x.Locale.ToLower() == student.studentMaster.ThirdLanguageId.ToString().ToLower()).Select(x => x.LangId).FirstOrDefault();
+
+                                    student.studentMaster.ThirdLanguageId = thirdLanguageId != null ? thirdLanguageId : null;
+                            }
+
+                            if (student.studentMaster.CountryOfBirth != null)
+                            {
+                                var countryOfBirthId = this.context?.Country.Where(x => x.Name.ToLower() == student.studentMaster.CountryOfBirth.ToString().ToLower()).Select(x => x.Id).FirstOrDefault();
+
+                                student.studentMaster.CountryOfBirth = countryOfBirthId != null ? countryOfBirthId : null;
+                            }
+
+                            if (student.studentMaster.Nationality != null)
+                            {
+                                var nationalityId = this.context?.Country.Where(x => x.Name.ToLower() == student.studentMaster.Nationality.ToString().ToLower()).Select(x => x.Id).FirstOrDefault();
+
+                                student.studentMaster.Nationality = nationalityId != null ? nationalityId : null;
+                            }
+
+                            if (student.studentMaster.SectionId != null)
+                            {
+                                var sectionId = this.context?.Sections.Where(x => x.Name.ToLower() == student.studentMaster.SectionId.ToString().ToLower()).Select(x => x.SectionId).FirstOrDefault();
+ 
+                                student.studentMaster.SectionId = sectionId != null ? sectionId : null;
+                            }
+
 
                             var schoolName = this.context?.SchoolMaster.Where(x => x.TenantId == student.studentMaster.TenantId && x.SchoolId == student.studentMaster.SchoolId).Select(s => s.SchoolName).FirstOrDefault();
 
@@ -2523,7 +2591,7 @@ namespace opensis.data.Repository
                             //Add student portal access
                             if (!string.IsNullOrWhiteSpace(student.PasswordHash) && !string.IsNullOrWhiteSpace(student.LoginEmail))
                             {
-                                //UserMaster userMaster = new UserMaster();
+                                UserMaster userMaster = new UserMaster();
 
                                 var decrypted = Utility.Decrypt(student.PasswordHash);
                                 string passwordHash = Utility.GetHashedPassword(decrypted);
@@ -2550,6 +2618,7 @@ namespace opensis.data.Repository
                                 }
                                 else
                                 {
+                                         studentListAdd.ConflictIndexNo = studentListAdd.ConflictIndexNo != null ? studentListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                                     studentListAdd.studentAddViewModelList.Add(student);
                                     studentListAdd._failure = true;
                                     studentListAdd._message = "Student Rejected Due to Data Error";
@@ -2595,9 +2664,10 @@ namespace opensis.data.Repository
                         {
                             transaction.Rollback();
                             studentListAdd.studentAddViewModelList.Add(student);
+                            studentListAdd.ConflictIndexNo = studentListAdd.ConflictIndexNo != null ? studentListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                             this.context?.StudentMaster.Remove(student.studentMaster);
                             this.context?.StudentEnrollment.Remove(StudentEnrollmentData);
-                            this.context?.UserMaster.Remove(userMaster);
+                            //this.context?.UserMaster.Remove(userMaster);
                             studentListAdd._failure = true;
                             studentListAdd._message = "Student Rejected Due to Data Error";
                             continue;
@@ -2611,6 +2681,173 @@ namespace opensis.data.Repository
                 studentListAdd._message = "Please Import Student";
             }
             return studentListAdd;
+        }
+
+        /// <summary>
+        /// Generate Transcript For Student
+        /// </summary>
+        /// <param name="transcriptViewModel"></param>
+        /// <returns></returns>
+        public TranscriptViewModel GenerateTranscriptForStudent(TranscriptViewModel transcriptViewModel)
+        {
+            TranscriptViewModel transcriptView = new TranscriptViewModel();
+            try
+            {
+                transcriptView.TenantId = transcriptViewModel.TenantId;
+                transcriptView.SchoolId = transcriptViewModel.SchoolId;
+                transcriptView._tenantName = transcriptViewModel._tenantName;
+                transcriptView._token = transcriptViewModel._token;
+                transcriptView._userName = transcriptViewModel._userName;
+        
+
+                if (transcriptViewModel.StudentsDetailsForTranscriptViewModelList.Count > 0)
+                {
+                    var schoolData = this.context?.SchoolMaster.Include(x => x.SchoolDetail).FirstOrDefault(x => x.TenantId == transcriptViewModel.TenantId && x.SchoolId == transcriptViewModel.SchoolId);
+
+                    if (schoolData != null)
+                    {
+                        transcriptView.SchoolName = schoolData.SchoolName;
+                        transcriptView.StreetAddress1 = schoolData.StreetAddress1;
+                        transcriptView.StreetAddress2 = schoolData.StreetAddress2;
+                        transcriptView.State = schoolData.State;
+                        transcriptView.City = schoolData.City;
+                        transcriptView.District = schoolData.District;
+                        transcriptView.Zip = schoolData.Zip;
+                        transcriptView.SchoolPicture = transcriptViewModel.SchoolLogo != null ? schoolData.SchoolDetail.FirstOrDefault().SchoolLogo : null;
+                    }
+
+                    if(transcriptViewModel.GradeLagend==true)
+                    {
+                        var gradeDetails = this.context?.Grade.Where(x => x.TenantId == transcriptViewModel.TenantId && x.SchoolId == transcriptViewModel.SchoolId).ToList();
+                        transcriptView.gradeList = gradeDetails;
+                    }
+
+                    foreach (var student in transcriptViewModel.StudentsDetailsForTranscriptViewModelList)
+                    {                                            
+                        decimal? totalCreditAttempeted = 0.0m;
+                        decimal? totalCreditEarned = 0.0m;
+                        decimal? cumulativeGPA = 0.0m;
+
+                        var StudentsDetailsForTranscript = new StudentsDetailsForTranscriptViewModel();
+
+                        var studentData = this.context?.StudentMaster.Include(x => x.StudentEnrollment).FirstOrDefault(x => x.TenantId == transcriptViewModel.TenantId && x.SchoolId == transcriptViewModel.SchoolId && x.StudentId == student.StudentId);
+
+                        if (studentData != null)
+                        {
+                            StudentsDetailsForTranscript.StudentGuid = studentData.StudentGuid;
+                            StudentsDetailsForTranscript.StudentId = studentData.StudentId;
+                            StudentsDetailsForTranscript.StudentInternalId = studentData.StudentInternalId;
+                            StudentsDetailsForTranscript.FirstGivenName = studentData.FirstGivenName;
+                            StudentsDetailsForTranscript.MiddleName = studentData.MiddleName;
+                            StudentsDetailsForTranscript.LastFamilyName = studentData.LastFamilyName;
+                            StudentsDetailsForTranscript.StudentPhoto = transcriptViewModel.StudentPhoto != null ? studentData.StudentPhoto : null;
+                            StudentsDetailsForTranscript.HomeAddressLineOne = studentData.HomeAddressLineOne;
+                            StudentsDetailsForTranscript.HomeAddressLineTwo = studentData.HomeAddressLineTwo;
+                            StudentsDetailsForTranscript.HomeAddressState = studentData.HomeAddressState;
+                            StudentsDetailsForTranscript.HomeAddressCity = studentData.HomeAddressCity;
+                            StudentsDetailsForTranscript.HomeAddressCountry = studentData.HomeAddressCountry;
+                            StudentsDetailsForTranscript.HomeAddressZip = studentData.HomeAddressZip;
+                           
+                            var gradeIds = transcriptViewModel.GradeLavels.Split(",");
+
+                            foreach (var grade in gradeIds.ToList())
+                            {
+                               
+                                var GradeDetailsForTranscript = new GradeDetailsForTranscriptViewModel();
+
+                                var studentDataWithCurrentGrade = studentData.StudentEnrollment.Where(x => x.GradeId == Convert.ToInt32(grade)).FirstOrDefault();
+
+                                if (studentDataWithCurrentGrade != null)
+                                {
+                                    var calenderData = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == transcriptViewModel.TenantId && x.SchoolId == studentDataWithCurrentGrade.SchoolId && x.CalenderId == studentDataWithCurrentGrade.CalenderId);
+
+                                    if(calenderData!=null)
+                                    {
+                                        GradeDetailsForTranscript.SchoolYear = calenderData.StartDate + "-" + calenderData.EndDate;
+                                    }
+
+                                    GradeDetailsForTranscript.GradeId = studentDataWithCurrentGrade.GradeId;
+                                    GradeDetailsForTranscript.GradeTitle = studentDataWithCurrentGrade.GradeLevelTitle;
+                                    GradeDetailsForTranscript.SchoolName = studentDataWithCurrentGrade.SchoolName;
+
+                                    decimal? gPValue = 0.0m;
+                                    decimal? gPAValue = 0.0m;
+                                    decimal? creditAttemped = 0.0m;
+                                    decimal? creditEarned = 0.0m;
+
+                                    var reportCardData = this.context?.StudentFinalGrade.Include(x => x.StudentFinalGradeStandard).Where(x => x.TenantId == transcriptViewModel.TenantId && x.StudentId == student.StudentId && x.GradeId == Convert.ToInt32(grade)).ToList();
+                                    if (reportCardData.Count > 0)
+                                    {
+                                        foreach (var reportCard in reportCardData)
+                                        {
+                                            
+                                            var ReportCardDetailsForTranscript = new ReportCardDetailsForTranscriptViewModel();
+                                            var courseSectionData = this.context.CourseSection.Include(x => x.Course).FirstOrDefault(x => x.TenantId == reportCard.TenantId && x.SchoolId == reportCard.SchoolId && x.CourseId == reportCard.CourseId && x.CourseSectionId == reportCard.CourseSectionId);
+
+                                            if (courseSectionData != null)
+                                            {
+                                                ReportCardDetailsForTranscript.CourseCode = courseSectionData.Course.CourseShortName;
+                                                ReportCardDetailsForTranscript.CourseSectionName = courseSectionData.CourseSectionName;
+                                                ReportCardDetailsForTranscript.CreditHours = courseSectionData.CreditHours;
+                                                ReportCardDetailsForTranscript.Grade = reportCard.GradeObtained;
+
+                                                var gradeData = this.context?.Grade.FirstOrDefault(x => x.TenantId == reportCard.TenantId && x.SchoolId == reportCard.SchoolId && x.GradeId == reportCard.StudentFinalGradeStandard.FirstOrDefault().GradeObtained);
+
+                                                if (gradeData != null)
+                                                {
+                                                    if (gradeData.Title == "F" || gradeData.Title == "Inc")
+                                                    {
+                                                        ReportCardDetailsForTranscript.CreditEarned = 0;
+
+                                                        gPValue = ReportCardDetailsForTranscript.CreditEarned * gradeData.UnweightedGpValue;
+                                                    }
+                                                    else
+                                                    {
+                                                        ReportCardDetailsForTranscript.CreditEarned = courseSectionData.CreditHours;
+                                                        
+                                                        gPValue = courseSectionData.IsWeightedCourse != true ? ReportCardDetailsForTranscript.CreditEarned * gradeData.UnweightedGpValue : ReportCardDetailsForTranscript.CreditEarned * gradeData.WeightedGpValue;
+                                                    }
+                                                }
+
+                                                ReportCardDetailsForTranscript.GPValue = gPValue; //gpValue=CreditEarned*(WeightedGpValue or UnweightedGpValue)
+                                                creditAttemped += ReportCardDetailsForTranscript.CreditHours;
+                                                creditEarned += ReportCardDetailsForTranscript.CreditEarned;
+                                                gPAValue += ReportCardDetailsForTranscript.GPValue;
+
+                                                GradeDetailsForTranscript.reportCardDetailsForTranscriptViewModel.Add(ReportCardDetailsForTranscript);
+                                            }
+                                        }
+                                    }
+                                    GradeDetailsForTranscript.CreditAttemped = creditAttemped; // Σ CreditHours of course sections
+                                    GradeDetailsForTranscript.CreditEarned = creditEarned; // Σ CreditEarned of course sections
+                                    GradeDetailsForTranscript.GPA = gPAValue / creditEarned; // Σ gpValue of course sections / Σ CreditEarned of course sections
+                                    totalCreditEarned += creditEarned;
+                                    totalCreditAttempeted += creditAttemped;
+                                    cumulativeGPA += GradeDetailsForTranscript.GPA;
+
+                                    StudentsDetailsForTranscript.gradeDetailsForTranscriptViewModel.Add(GradeDetailsForTranscript);
+                                }
+                            }
+                            StudentsDetailsForTranscript.CumulativeGPA = cumulativeGPA;
+                            StudentsDetailsForTranscript.TotalCreditAttempeted = totalCreditAttempeted; //Σ CreditAttemped 
+                            StudentsDetailsForTranscript.TotalCreditEarned = totalCreditEarned;  //Σ CreditEarned
+
+                            transcriptView.StudentsDetailsForTranscriptViewModelList.Add(StudentsDetailsForTranscript);
+                        }
+                    }
+                }
+                else
+                {
+                    transcriptView._failure = true;
+                    transcriptView._message = "Select Student Please";
+                }
+            }
+            catch (Exception es)
+            {
+                transcriptView._failure = false;
+                transcriptView._message = es.Message;
+            }
+            return transcriptView;
         }
     }
 }

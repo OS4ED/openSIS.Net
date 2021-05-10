@@ -11,6 +11,7 @@ namespace opensis.data.Models
             HonorRolls = new HashSet<HonorRolls>();
             Semesters = new HashSet<Semesters>();
             StaffCoursesectionSchedule = new HashSet<StaffCoursesectionSchedule>();
+            StudentEffortGradeMaster = new HashSet<StudentEffortGradeMaster>();
             StudentFinalGrade = new HashSet<StudentFinalGrade>();
         }
 
@@ -37,6 +38,7 @@ namespace opensis.data.Models
         public virtual ICollection<HonorRolls> HonorRolls { get; set; }
         public virtual ICollection<Semesters> Semesters { get; set; }
         public virtual ICollection<StaffCoursesectionSchedule> StaffCoursesectionSchedule { get; set; }
+        public virtual ICollection<StudentEffortGradeMaster> StudentEffortGradeMaster { get; set; }
         public virtual ICollection<StudentFinalGrade> StudentFinalGrade { get; set; }
     }
 }

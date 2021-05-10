@@ -20,6 +20,7 @@ import { SharedFunction} from '../../../shared/shared-function';
 import { ValidationService } from '../../../shared/validation.service';
 import { LoaderService } from '../../../../services/loader.service';
 import { MatCheckbox } from '@angular/material/checkbox';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 
 @Component({
   selector: 'vex-edit-notice',
@@ -56,7 +57,8 @@ export class EditNoticeComponent implements OnInit {
      private noticeService: NoticeService,private membershipService: MembershipService,
       public translateService: TranslateService, private snackbar: MatSnackBar,
       private commonFunction:SharedFunction,
-      private loaderService: LoaderService) {
+      private loaderService: LoaderService,
+      private defaultValuesService: DefaultValuesService) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((v) => {
       this.loading = v;
@@ -137,8 +139,9 @@ export class EditNoticeComponent implements OnInit {
       }
       else {
       
-        this.noticeAddViewModel.notice.validFrom=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validFrom)
-        this.noticeAddViewModel.notice.validTo=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validTo)
+        this.noticeAddViewModel.notice.validFrom=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validFrom);
+        this.noticeAddViewModel.notice.validTo=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validTo);
+        this.noticeAddViewModel.notice.createdBy= this.defaultValuesService.getUserName();
           this.noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
               this.snackbar.open(data._message, '', {

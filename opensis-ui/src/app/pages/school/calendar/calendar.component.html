@@ -8,7 +8,7 @@
   <div class="-mt-16 absolute w-full" vexContainer>
     <mat-drawer-container class="bg-transparent" vexContainer>
       <mat-card class="mb-5 mx-6 p-0">
-        <div class="flex items-center py-0 px-4" fxLayout="row" fxLayoutAlign="center center">
+        <div class="flex items-center py-4 px-4" fxLayout="row" fxLayoutAlign="center center">
 
           <div class="flex-auto">
             <div style="text-align: center !important;"><label
@@ -38,11 +38,11 @@
           </a>
         </div>
         <hr *ngIf="showCalendarView" />
-        <div class="flex-auto flex flex-col sm:flex-row justify-between items-center my-3  px-4">
-          <div *ngIf="showCalendarView" class="headline text-md text-gray">
+        <div class="flex-auto flex flex-col sm:flex-row justify-between items-center my-3  px-4"  *ngIf="showCalendarView">
+          <div class="headline text-md text-gray">
             {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</div>
 
-          <div *ngIf="showCalendarView" class="actions flex flex-col sm:flex-row justify-end items-center">
+          <div class="actions flex flex-col sm:flex-row justify-end items-center">
             <div class="chevrons">
               <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
                 <mat-icon [icIcon]="icChevronLeft"></mat-icon>

@@ -85,6 +85,7 @@ export class CustomFieldComponent implements OnInit {
       let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
       this.editStudentPermission = permissionSubCategory.rolePermission[0].canEdit;
       this.studentAddViewModel = this.schoolDetailsForViewAndEdit;
+      this.mapCustomFields();
     }
     else if (this.module === 'School') {
       this.checkNgOnInitCustomValue();
@@ -159,7 +160,6 @@ export class CustomFieldComponent implements OnInit {
             }
           }
         }
-
       }
     }
 
@@ -232,6 +232,17 @@ export class CustomFieldComponent implements OnInit {
         }
       }
 
+    })
+  }
+
+
+
+  mapCustomFields() {
+    this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields.map((item: any)=>{
+      if(item.customFieldsValue.length === 0 ){
+        item.customFieldsValue.push(new CustomFieldsValueModel())
+      }
+      // item.customFieldsValue[0].customFieldValue = item.customFieldsValue[0].customFieldValue ? item.customFieldsValue[0].customFieldValue : '';
     })
   }
 

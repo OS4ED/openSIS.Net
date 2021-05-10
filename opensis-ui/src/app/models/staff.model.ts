@@ -67,6 +67,7 @@ export class StaffMasterModel {
     public mailingAddressCity: string;
     public mailingAddressState: string;
     public mailingAddressCountry: string | number;
+    public status: string;
     public mailingAddressZip: string;
     public busNo: string;
     public busPickup : boolean;
@@ -119,13 +120,15 @@ export class StaffListModel {
     mobilePhone: string;
 }
 export class staffMasterCloneModel extends StaffMasterModel{
-    checked:boolean;
+    staffSchoolInfo: [StaffSchoolInfoListModel];
+    checked: boolean;
 }
 export class GetAllStaffModel {
     getStaffListForView: [StaffListModel];
-    staffMaster:[staffMasterCloneModel]
+    staffMaster: [staffMasterCloneModel];
     tenantId: string;
     schoolId: number;
+    includeInactive: boolean;
     pageNumber: number;
     pageSize: number;
     _pageSize: number;
@@ -318,3 +321,26 @@ export class StaffMasterSearchModel {
     
 }
 
+export class StaffImportModel extends CommonField{
+    staffAddViewModelList:StaffMasterImportModel[]
+    conflictIndexNo:string;
+    constructor(){
+        super();
+        this.staffAddViewModelList=[]
+    }
+}
+
+export class StaffMasterImportModel{
+    staffMaster:{}
+    fieldsCategoryList:FieldsCategoryModel[];
+    constructor(){
+        this.staffMaster=null;
+        this.fieldsCategoryList=[new FieldsCategoryModel];
+    }
+}
+
+export class AfterImportStatus{
+    totalStaffsSent:number;
+    totalStaffsImported:number;
+    totalStaffsImportedInPercentage:number;
+}

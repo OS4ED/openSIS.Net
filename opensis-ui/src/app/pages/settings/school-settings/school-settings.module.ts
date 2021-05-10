@@ -36,10 +36,12 @@ import {MatSortModule} from '@angular/material/sort';
 import { SharedModuleModule } from '../../../pages/shared-module/shared-module.module';
 import {DragDropModule } from '@angular/cdk/drag-drop';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import { PreferenceComponent } from '../../school/preference/preference.component';
+import { MatDividerModule } from '@angular/material/divider';
 
 
 @NgModule({
-  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent,SchoolFieldsComponent, PeriodsComponent, PeriodsListComponent],
+  declarations: [SchoolSettingsComponent,GradeLevelsComponent,SectionsComponent, RoomsComponent,SchoolFieldsComponent, PeriodsComponent, PeriodsListComponent, PreferenceComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -72,7 +74,8 @@ import { MatSlideToggleModule } from '@angular/material/slide-toggle';
     MatCheckboxModule,
     MatPaginatorModule,
     DragDropModule,
-    MatSlideToggleModule
+    MatSlideToggleModule,
+    MatDividerModule
   ]
 })
 export class SchoolSettingsModule { }

@@ -33,6 +33,7 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
       provide: DateAdapter,
       useFactory: adapterFactory
     })
-  ]
+  ],
+  exports:[AddDaysScheduleComponent]
 })
 export class AddDaysScheduleModule { }

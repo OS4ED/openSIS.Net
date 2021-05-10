@@ -31,8 +31,8 @@
                             <h4 [ngClass]="selectedCourseSection==index?'text-green font-bold':'font-bold'">
                                 {{section.courseSection.courseSectionName}}</h4>
                             <p>{{section.courseSection.durationBasedOnPeriod?section.courseSection.mpTitle:(section.courseSection.durationStartDate|date)+'
-                                - '+(section.courseSection.durationEndDate|date)}}<span
-                                    class="dot-separator"></span>Rabindra Nath Tagore</p>
+                                - '+(section.courseSection.durationEndDate|date)}}<span *ngIf="section?.staffName"
+                                class="dot-separator"></span>{{section?.staffName}}</p>
                         </a>
                         <div>
                             <div class="flex items-center">
@@ -74,7 +74,7 @@
                         class="cursor-pointer inline-block ml-2 px-1 pt-1 align-middle">
                         <mat-icon [icIcon]="icMoreVertical" class="mr-2"></mat-icon>
                     </a>
-                    <button class="text-secondary mr-4 lg:hidden" (click)="closeCourseDetails()" mat-icon-button
+                    <button class="text-secondary mr-4 lg:hidden"  mat-icon-button
                         type="button">
                         <mat-icon [icIcon]="icClose"></mat-icon>
                     </button>

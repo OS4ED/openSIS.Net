@@ -18,11 +18,11 @@
             </div>
             <div fxFlex="none" fxLayout="column" fxLayoutAlign="center end">
                 <div class="flex">
-                        <span  class="custody mr-3"  *ngIf="parent.isCustodian;else noCustody"><img src="../../../../assets/img/icons/mother.svg"
+                        <span  class="custody mr-4"  *ngIf="parent.isCustodian;else noCustody"><img src="../../../../assets/img/icons/mother.svg"
                             matTooltip="Custody of Student"
-                            class="w-6 inline-block align-middle" /></span>
+                            class="w-6 mt-2 inline-block align-middle" /></span>
                    <ng-template #noCustody>
-                        <span  class="no-custody mr-3"  ><img src="../../../../assets/img/icons/mother.svg"
+                        <span  class="no-custody mr-4"  ><img src="../../../../assets/img/icons/mother.svg"
                             matTooltip="No Custody of Student"
                             class="inline-block align-middle" /></span>
                    </ng-template>

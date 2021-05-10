@@ -14,5 +14,6 @@ namespace opensis.data.ViewModels.Student
         public List<StudentAddViewModel> studentAddViewModelList { get; set; }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
+        public string ConflictIndexNo { get; set; }
     }
 }

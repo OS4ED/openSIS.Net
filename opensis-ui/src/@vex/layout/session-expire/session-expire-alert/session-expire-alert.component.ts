@@ -1,61 +1,87 @@
-import { Component, Inject, OnDestroy, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog, MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 import { UserViewModel } from '../../../../app/models/user.model';
 import { SessionService } from '../../../services/session.service';
+import { interval, Subscription } from 'rxjs';
+import * as jwt_decode from 'jwt-decode';
+import { DefaultValuesService } from '../../../../app/common/default-values.service';
 
 @Component({
   selector: 'vex-session-expire-alert',
   templateUrl: './session-expire-alert.component.html',
   styleUrls: ['./session-expire-alert.component.scss']
 })
-export class SessionExpireAlertComponent implements OnInit,OnDestroy {
+export class SessionExpireAlertComponent implements OnInit, OnDestroy {
 
   count: number = 30;
-  searchTimer:any;
-
+  searchTimer: Subscription;
+  sessionRenewLoader: boolean = false;
+  decoded;
   constructor(private router: Router,
     public dialogRef: MatDialogRef<SessionExpireAlertComponent>,
-      @Inject(MAT_DIALOG_DATA) public data,
-      private sessionService:SessionService,
-      public translateService: TranslateService,
-      private dialog: MatDialog) {
-        translateService.use('en');
-     }
+    @Inject(MAT_DIALOG_DATA) public data,
+    private sessionService: SessionService,
+    public translateService: TranslateService,
+    private defaultValueService:DefaultValuesService,
+    private dialog: MatDialog) {
+    translateService.use('en');
+  }
 
   ngOnInit() {
-    
-    this.searchTimer = setInterval(() => {
-      if(this.count >1){
-      this.count--;
+    let tokenExpired=false;
+    this.decoded = JSON.parse(JSON.stringify(jwt_decode.default(sessionStorage.getItem('token'))));
+
+    const source = interval(1000);
+    this.searchTimer = source.subscribe(() => {
+      if(tokenExpired) {
+        this.logout();
+        return;
       }
-      else if(this.count ===1){
-        this.dialogRef.close(null)
+
+      if (this.count > 1) {
+        this.count--;
+        tokenExpired = this.checkToken()
       }
-    }, 1000);
+      else if (this.count === 1) {
+        this.dialogRef.close(null);
+        this.dialog.closeAll();
+      }
+    });
+
+  }
+
+  checkToken(){
+    const tokenExpired = Date.now() > (this.decoded.exp * 1000-120000);
+    return tokenExpired;
   }
 
   logout() {
     sessionStorage.clear();
     localStorage.clear();
+    sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
+    let a =sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
+    console.log(a);
     this.dialog.closeAll();
     this.router.navigateByUrl('/');
   }
 
   continue() {
-    const loginViewModel:UserViewModel=new UserViewModel();
-    this.sessionService.RefreshToken(loginViewModel).subscribe(res =>{
+    this.sessionRenewLoader = true;
+    const loginViewModel: UserViewModel = new UserViewModel();
+    this.sessionService.RefreshToken(loginViewModel).subscribe(res => {
+      this.sessionRenewLoader = false;
       this.dialogRef.close(res._token);
     });
   }
 
-  onCloseModal(){
+  onCloseModal() {
     this.dialogRef.close();
   }
 
-  ngOnDestroy(){
-    clearInterval(this.searchTimer);
+  ngOnDestroy() {
+    this.searchTimer.unsubscribe()
   }
 
 }

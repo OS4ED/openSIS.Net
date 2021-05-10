@@ -47,7 +47,7 @@
                 <ng-container matColumnDef="lastFamilyName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "name" | translate }}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a (click)="viewCourseSectionDetails(element)" class="text-blue cursor-pointer">
+                        <a (click)="inputTakeAttendancePermissions.canEdit ? viewCourseSectionDetails(element) : ''" class="text-blue cursor-pointer">
                             {{element.firstGivenName}}{{element.middleName ? ' '+element.middleName+ ' ' : ' '}}{{element.lastFamilyName}}</a>
                     </td>
                 </ng-container>

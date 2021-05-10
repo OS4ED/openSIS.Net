@@ -439,33 +439,33 @@ namespace opensis.core.CourseManager.Services
             return courseSectionDelete;
         }
 
-        ///// <summary>
-        ///// Get All Course Standard For Course Section
-        ///// </summary>
-        ///// <param name="courseStandardForCourseViewModel"></param>
-        ///// <returns></returns>
-        //public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
-        //{
-        //    CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
-        //    try
-        //    {
-        //        if (TokenManager.CheckToken(courseStandardForCourseViewModel._tenantName + courseStandardForCourseViewModel._userName, courseStandardForCourseViewModel._token))
-        //        {
-        //            courseStandardForCourseView = this.courseManagerRepository.GetAllCourseStandardForCourseSection(courseStandardForCourseViewModel);
-        //        }
-        //        else
-        //        {
-        //            courseStandardForCourseView._failure = true;
-        //            courseStandardForCourseView._message = TOKENINVALID;
-        //        }
-        //    }
-        //    catch (Exception es)
-        //    {
-        //        courseStandardForCourseView._failure = true;
-        //        courseStandardForCourseView._message = es.Message;
-        //    }
-        //    return courseStandardForCourseView;
-        //}
+        /// <summary>
+        /// Get All Course Standard For Course
+        /// </summary>
+        /// <param name="courseStandardForCourseViewModel"></param>
+        /// <returns></returns>
+        public CourseStandardForCourseViewModel GetAllCourseStandardForCourse(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
+        {
+            CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(courseStandardForCourseViewModel._tenantName + courseStandardForCourseViewModel._userName, courseStandardForCourseViewModel._token))
+                {
+                    courseStandardForCourseView = this.courseManagerRepository.GetAllCourseStandardForCourse(courseStandardForCourseViewModel);
+                }
+                else
+                {
+                    courseStandardForCourseView._failure = true;
+                    courseStandardForCourseView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                courseStandardForCourseView._failure = true;
+                courseStandardForCourseView._message = es.Message;
+            }
+            return courseStandardForCourseView;
+        }
 
         ///// <summary>
         ///// Delete Course Section  For Specific Schedule Type

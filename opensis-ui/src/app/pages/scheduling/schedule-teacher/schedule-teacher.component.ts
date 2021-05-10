@@ -417,7 +417,7 @@ selectionProcessing:boolean = false;
   viewCorrespondingSchedule(courseSectionDetails){
     this.dialog.open(AddDaysScheduleComponent, {
       width: '600px',
-      data:courseSectionDetails
+      data:{scheduleDetails:courseSectionDetails,fromTeacherSchedule:true}
     });
   }
 

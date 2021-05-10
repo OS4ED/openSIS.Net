@@ -1,67 +1,51 @@
 <div class="mb-6">
     <div class="grid grid-cols-4 gap-6">
         <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-            (click)="changeView(upload_file)" [class.active]="view === 1"
-            [ngClass]="view === 1 ? 'bg-primary text-white arrow-bottom' : ''">
+            (click)="changeView(bulkDataImport.UPLOAD)" [class.active]="currentTab === bulkDataImport.UPLOAD"
+            [ngClass]="currentTab === bulkDataImport.UPLOAD ? 'bg-primary text-white arrow-bottom' : ''">
             <img src="assets/img/icons/cloud-computing.svg" width="65" class="inline-block">
             <h4 class="text-lg font-medium">Upload your file</h4>
-            <p class="text-base text-gray" [ngClass]="view === 1 ? 'text-skyblue-light' : ''">Upload xls, xlsx or link
+            <p class="text-base text-gray" [ngClass]="currentTab === bulkDataImport.UPLOAD ? 'text-skyblue-light' : ''">Upload xls, xlsx or link
                 your cloud file</p>
             <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
         </div>
         <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-            (click)="changeView(map_fields)" [class.active]="view === 2"
-            [ngClass]="view === 2 ? 'bg-primary text-white arrow-bottom' : ''">
+            (click)="changeView(bulkDataImport.MAP)" [class.active]="currentTab === bulkDataImport.MAP"
+            [ngClass]="currentTab === bulkDataImport.MAP ? 'bg-primary text-white arrow-bottom' : ''">
             <img src="assets/img/icons/map-excel.svg" width="55" class="inline-block">
             <h4 class="text-lg font-medium">Map your fields</h4>
-            <p class="text-base text-gray" [ngClass]="view === 2 ? 'text-skyblue-light' : ''">Map your spreadsheet
+            <p class="text-base text-gray" [ngClass]="currentTab === bulkDataImport.MAP ? 'text-skyblue-light' : ''">Map your spreadsheet
                 columns with database fields</p>
             <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
         </div>
         <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-            (click)="changeView(preview_map)" [class.active]="view === 3"
-            [ngClass]="view === 3 ? 'bg-primary text-white arrow-bottom' : ''">
+            (click)="changeView(bulkDataImport.PREVIEW)" [class.active]="currentTab === bulkDataImport.PREVIEW"
+            [ngClass]="currentTab === bulkDataImport.PREVIEW ? 'bg-primary text-white arrow-bottom' : ''">
             <img src="assets/img/icons/map-preview.svg" width="55" class="inline-block">
             <h4 class="text-lg font-medium">Preview your mapping</h4>
-            <p class="text-base text-gray" [ngClass]="view === 3 ? 'text-skyblue-light' : ''">Review your mapping before
+            <p class="text-base text-gray" [ngClass]="currentTab === bulkDataImport.PREVIEW ? 'text-skyblue-light' : ''">Review your mapping before
                 you proceed to import</p>
             <i class="icon icon-arrow-right8 absolute text-3xl text-black"></i>
         </div>
         <div class="import-box bg-white rounded text-center py-4 px-6 relative cursor-pointer"
-            (click)="changeView(import_data)" [class.active]="view === 4"
-            [ngClass]="view === 4 ? 'bg-primary text-white arrow-bottom' : ''">
+            (click)="changeView(bulkDataImport.IMPORT)" [class.active]="currentTab === bulkDataImport.IMPORT"
+            [ngClass]="currentTab === bulkDataImport.IMPORT ? 'bg-primary text-white arrow-bottom' : ''">
             <img src="assets/img/icons/import-data.svg" width="60" class="inline-block">
             <h4 class="text-lg font-medium">Import data</h4>
-            <p class="text-base text-gray" [ngClass]="view === 4 ? 'text-skyblue-light' : ''">Finally import your data
+            <p class="text-base text-gray" [ngClass]="currentTab === bulkDataImport.IMPORT ? 'text-skyblue-light' : ''">Finally import your data
                 and see the results</p>
         </div>
     </div>
 </div>
-<div [ngSwitch]="view">
+<div [ngSwitch]="currentTab">
     <!-- Start Upload your file -->
-    <div class="upload_file" *ngSwitchCase="'1'">
+    <div class="upload_file" *ngSwitchCase="bulkDataImport.UPLOAD">
         <div class="card px-6 py-4">
-            <p class="text-center text-base"><a href="#" class="text-primary">Click here</a> to download the
+            <p class="text-center text-base"><a class="text-primary cursor-pointer" href="{{demoDownloadLink}}">Click here</a> to download the
                 sample
                 Excel sheet template.</p>
             <mat-divider class="mt-4 mb-6 -mx-6"></mat-divider>
-            <!-- <div class="text-center border-dashed border-2 p-12 border-gray-light cursor-pointer mb-4">
-                        <div class="flex justify-center">
-                            <input type="file" name="file-input" id="file-upload" class="hidden">
-                            <label class="" for="file-upload">
-                                <img src="assets/img/icons/upload.svg" width="60px"
-                                    class="inline-block mr-4 flex-shrink-0 cursor-pointer">
-                                <p class="inline-block align-middle text-left">
-                                    <span class="text-lg font-medium mb-2 inline-block">Upload file from your local
-                                        drive</span>
-                                    <br>
-                                    <a href="#" class="text-gray text-base">Click here to select a file or drop the file
-                                        here</a>
-                                </p>
-                            </label>
-                        </div>
-                    </div> -->
-            <ngx-dropzone (change)="onSelect($event)" class="mb-4">
+            <ngx-dropzone (change)="onUpload($event)" class="mb-4" [accept]="acceptedFileTypes" [disableClick]="files.length==1" multiple="false">
                 <ngx-dropzone-label>
                     <img src="assets/img/icons/upload.svg" width="60px"
                         class="inline-block mr-4 flex-shrink-0 cursor-pointer">
@@ -69,16 +53,16 @@
                         <span class="text-lg font-medium mb-2 inline-block text-black">Upload file from your local
                             drive</span>
                         <br>
-                        <a href="#" class="text-gray text-base">Click here to select a file or drop the file
+                        <a class="text-gray text-base">Click here to select a file or drop the file
                             here</a>
                     </p>
                 </ngx-dropzone-label>
                 <ngx-dropzone-preview *ngFor="let f of files" [removable]="true" (removed)="onRemove(f)">
-                    <ngx-dropzone-label>{{ f.name }} ({{ f.type }})</ngx-dropzone-label>
+                    <ngx-dropzone-label>{{ f.name }}</ngx-dropzone-label>
                 </ngx-dropzone-preview>
             </ngx-dropzone>
-            <div class="text-right mb-10">
-                <button color="primary" mat-flat-button type="submit">{{ 'uploadFile' | translate }}</button>
+            <div class="text-right mb-10" >
+                <button color="primary" (click)="uploadFile()" [disabled]="!files.length" mat-flat-button type="submit">{{ 'uploadFile' | translate }}</button>
             </div>
             <mat-divider class="mt-4 mb-6 -mx-8"></mat-divider>
             <div class="text-center -mt-12">
@@ -95,13 +79,23 @@
                     </p>
                     <div>
                         <div class="sm:w-7/12 lg:w-2/3 inline-block px-2 py-1 border border-gray-light rounded mr-4">
-                            <input name="web_link" type="text" placeholder="Enter the web link URL of the sheet"
-                                class="w-full text-base" />
+                            <input name="web_link" type="text"  (keyup)="url=url.trim()" placeholder="Enter the web link URL of the sheet"
+                                class="w-full text-base" [(ngModel)]="url" />
                         </div>
+    
                         <mat-dialog-actions fxLayout="row" fxLayoutAlign="end center">
-                            <button color="primary" mat-raised-button type="submit" class="py-0">{{
+                            <button color="primary" [disabled]="urlFetchLoader || !url" mat-raised-button type="submit" class="py-0" (click)="fetchData()">
+                                <mat-icon class="ml-2" *ngIf="urlFetchLoader">
+                                    <mat-spinner color="primary" diameter="20">
+                                    </mat-spinner>
+                                  </mat-icon>
+                                {{
                                 "fetchUploadfile" |
-                                translate }}</button>
+                                translate }}
+                                
+                            </button>
+
+                                
                         </mat-dialog-actions>
                     </div>
                 </div>
@@ -111,10 +105,10 @@
     <!-- End Upload your file -->
 
     <!-- Start map fields -->
-    <div class="map_fields" *ngSwitchCase="'2'">
+    <div class="map_fields" *ngSwitchCase="bulkDataImport.MAP">
         <div class="card px-6 py-4">
             <p class="text-base">
-                Please creat a one-to-one relationship between the fields in your spreadsheet and the fields in
+                Please create a one-to-one relationship between the fields in your spreadsheet and the fields in
                 the
                 openSIS database by selecting the appropriate fields from the right column. After you are done,
                 click Map it.
@@ -124,92 +118,23 @@
                     <table class="w-full schedule-table">
                         <thead>
                             <tr>
-                                <th width="35%">This fields are in your Excel spreadsheet</th>
+                                <th width="35%">These fields are in your Excel spreadsheet</th>
                                 <th width="35%"></th>
-                                <th width="30%">This are available fields in openSIS</th>
+                                <th width="30%">These are available fields in openSIS</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>{{"firstGivenName" | translate }}</td>
+                            <tr *ngFor="let name of headers;let i=index">
+                                <td>{{name}}</td>
                                 <td>
                                     <span
                                         class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
                                 </td>
                                 <td>
                                     <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "firstGivenName" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="firstGivenName">First/Given Name</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"middleName" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "middleName" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="middleName">Middle Name</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"lastFamilyName" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="lastFamilyName">Last/Family Name</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"studentID" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full h-1 border-t border-dashed border-gray-light"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "admissionNumber" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="admissionNumber">Admission Number</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"dob" | translate }}</td>
-                                <td></td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "dob" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="dob">Date Of Birth</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"alternateId" | translate }}</td>
-                                <td></td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "alternateId" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="select">- Select -</mat-option>
+                                        <mat-label>{{ "Select" | translate }}</mat-label>
+                                        <mat-select [(ngModel)]="newHeaders[i]">
+                                            <mat-option *ngFor="let field of fieldList" [value]="field">{{field.title}}</mat-option>
                                         </mat-select>
                                     </mat-form-field>
                                 </td>
@@ -219,7 +144,7 @@
                 </div>
             </div>
             <div class="text-right pt-4">
-                <button color="primary" mat-raised-button type="submit">
+                <button color="primary" mat-raised-button type="submit" [disabled]="headers.length!=newHeaders.length" (click)="setNewHeadersAndMapIt()">
                     {{ 'mapIt' | translate }}
                 </button>
             </div>
@@ -228,7 +153,7 @@
     <!-- End map fields -->
 
     <!-- Start prieview map -->
-    <div class="preview_map" *ngSwitchCase="'3'">
+    <div class="preview_map" *ngSwitchCase="bulkDataImport.PREVIEW">
         <div class="card px-6 py-4">
             <h4 class="text-primary">Preview</h4>
             <p class="text-base">
@@ -239,111 +164,33 @@
                     <table class="w-full schedule-table">
                         <thead>
                             <tr>
-                                <th width="35%">This fields are in your Excel spreadsheet</th>
+                                <th width="35%">These fields are in your Excel spreadsheet</th>
                                 <th width="35%"></th>
-                                <th width="30%">This are available fields in openSIS</th>
+                                <th width="30%">These are available fields in openSIS</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
-                                <td>{{"firstGivenName" | translate }}</td>
+                            <tr *ngFor="let header of headers;let i=index">
+                                <td>{{header}}</td>
                                 <td>
                                     <span
-                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
+                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green">
+                                    </span>
                                 </td>
                                 <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "firstGivenName" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="firstGivenName">First/Given Name</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
+                                    {{newHeaders[i].title}}
                                 </td>
                             </tr>
-                            <tr>
-                                <td>{{"middleName" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "middleName" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="middleName">Middle Name</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"lastFamilyName" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "lastFamilyName" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="lastFamilyName">Last/Family Name</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"studentID" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "admissionNumber" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="admissionNumber">Admission Number</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"dob" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "dateOfBirth" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="dob">Date Of Birth</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>{{"alternateId" | translate }}</td>
-                                <td>
-                                    <span
-                                        class="relative inline-block arrow-right w-full border-t border-solid bg-green"></span>
-                                </td>
-                                <td>
-                                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{ "alternateId" | translate }}</mat-label>
-                                        <mat-select>
-                                            <mat-option value="alternateId">Alternate Id</mat-option>
-                                        </mat-select>
-                                    </mat-form-field>
-                                </td>
-                            </tr>
+                           
                         </tbody>
                     </table>
                 </div>
             </div>
             <div class="text-right pt-4">
-                <button color="primary" mat-raised-button type="submit">
+                <button color="primary" mat-raised-button (click)="returnToMap()" type="submit">
                     <i class="icon icon-rotate-cw3 mr-2"></i>{{ 'changeMapping' | translate }}
                 </button>
-                <button mat-raised-button type="submit" class="bg-green ml-2 text-white">
+                <button mat-raised-button type="submit" (click)="goToImport()" class="bg-green ml-2 text-white">
                     {{ 'importStudents' | translate }}
                 </button>
             </div>
@@ -352,8 +199,17 @@
     <!-- End  prieview map -->
 
     <!-- Start import data -->
-    <div class="import_data" *ngSwitchCase="'4'">
-        <div class="card px-6 py-4 mb-4">
+    <div class="import_data" *ngSwitchCase="bulkDataImport.IMPORT">
+        <div class="card px-6 py-4 mb-4" *ngIf="failedImport">
+            <div class="text-center py-10 px-4">
+                <h4 class="text-red font-semibold">
+                    Failed to Import Students due to Unexpected Reason.
+                </h4>
+
+            </div>
+        </div>
+
+        <div class="card px-6 py-4 mb-4" *ngIf="!importDone && !failedImport">
             <div class="text-center py-10 px-4">
                 <h4 class="text-primary font-semibold">
                     Importing Students into database
@@ -363,7 +219,7 @@
             </div>
         </div>
 
-        <div class="card px-6 py-4 mb-6">
+        <div class="card px-6 py-4 mb-6" *ngIf="importDone && !failedImport">
             <div class="flex">
                 <i class="icon icon-checkmark-circle text-green mt-1 text-lg"></i>
                 <span class="text-lg inline-block align-middle text-green font-bold ml-4">Data Import
@@ -375,29 +231,29 @@
                     <div class="flex-shrink-0">
                         <div class="spinner-container">
                             <div class="spinner-background font-semibold text-primary">{{spinner1.value}}%</div>
-                            <mat-progress-spinner #spinner1 color="primary" mode="determinate" value="85"
+                            <mat-progress-spinner #spinner1 color="primary" mode="determinate" [value]="afterImportStatus.totalStudentsImportedInPercentage"
                                 strokeWidth="5" diameter="70" class="spinner-blue">
                             </mat-progress-spinner>
                         </div>
                     </div>
                     <div class="ml-4 flex flex-col justify-center">
-                        <h5 class="mb-2 text-lg font-semibold">17 Students Imported</h5>
-                        <p>3 Students rejected due to data error.</p>
+                        <h5 class="mb-2 text-lg font-semibold">{{afterImportStatus.totalStudentsImported>1?afterImportStatus.totalStudentsImported+' Students':afterImportStatus.totalStudentsImported+' Student'}} Imported</h5>
+                        <p *ngIf="rejectedStudentList?.length">{{rejectedStudentList?.length>1?rejectedStudentList?.length+' Students':rejectedStudentList?.length+' Student'}} rejected due to data error.</p>
                     </div>
                 </div>
-                <div class="text-right">
-                    <button class="p-2 text-primary border-2 border-primary rounded font-medium mr-4 mb-2"
+                <div class="text-right" *ngIf="rejectedStudentList.length>0">
+                    <button  (click)="toggleRejectedList=!toggleRejectedList" class="p-2 text-primary border-2 border-primary rounded font-medium mr-4 mb-2"
                         type="submit">
-                        <i class="icon icon-eye mr-2"></i>View Report
+                        <i class="icon icon-eye mr-2" ></i>View Report
                     </button>
-                    <button class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit">
+                    <button class="p-2 text-primary border-2 border-primary rounded font-medium" type="submit" (click)="exportRejectionList()">
                         <i class="icon icon-file-excel mr-2"></i>Download this report as Excel
                     </button>
                 </div>
             </div>
         </div>
 
-        <div class="card px-6 py-4">
+        <div class="card px-6 py-4" *ngIf="toggleRejectedList">
             <h6 class="text-base mb-3">Rejection Report</h6>
             <div class="border-t border-normal -mx-6 mt-4">
                 <div class="overflow-x-auto overflow-y-hidden rejection-table">
@@ -405,42 +261,15 @@
                         <thead>
                             <tr>
                                 <th width="1%"></th>
-                                <th>{{"firstGivenName" | translate }}</th>
-                                <th>{{"middleName" | translate }}</th>
-                                <th>{{"lastFamilyName" | translate }}</th>
-                                <th>{{"admissionNumber" | translate }}</th>
-                                <th>{{"dateOfBirth" | translate }}</th>
-                                <th>{{"alternateId" | translate }}</th>
+                                <th  *ngFor="let header of headers">{{header}}</th>
                             </tr>
                         </thead>
                         <tbody>
-                            <tr>
+                            <tr *ngFor="let fieldData of rejectedStudentList">
                                 <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
-                                <td>Arthur</td>
-                                <td>Barry</td>
-                                <td>-</td>
-                                <td>5421</td>
-                                <td>-</td>
-                                <td>STD001</td>
+                                <td *ngFor="let field of fieldData">{{field}}</td>
                             </tr>
-                            <tr>
-                                <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
-                                <td>-</td>
-                                <td>-</td>
-                                <td>Brown</td>
-                                <td>5468</td>
-                                <td>Jan 29, 2001</td>
-                                <td>STD015</td>
-                            </tr>
-                            <tr>
-                                <td><i class="icon icon-notification2 text-warn text-lg"></i></td>
-                                <td>Wang</td>
-                                <td>-</td>
-                                <td>Fang</td>
-                                <td>54531</td>
-                                <td>-</td>
-                                <td>STD079</td>
-                            </tr>
+                            
                         </tbody>
                     </table>
                 </div>
@@ -449,3 +278,4 @@
     </div>
     <!-- End import data -->
 </div>
+<div class="fixed w-full h-full z-50 top-0 left-0" *ngIf="importLoader">

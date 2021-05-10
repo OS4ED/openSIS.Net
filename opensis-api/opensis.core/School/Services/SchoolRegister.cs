@@ -242,5 +242,29 @@ namespace opensis.core.School.Services
             }
             return schoolLogoUpdate;
         }
+
+        public CopySchoolViewModel CopySchool(CopySchoolViewModel copySchoolViewModel)
+        {
+            CopySchoolViewModel copySchool = new CopySchoolViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(copySchoolViewModel._tenantName + copySchoolViewModel._userName, copySchoolViewModel._token))
+                {
+                    copySchool = this.schoolRepository.CopySchool(copySchoolViewModel);
+                }
+                else
+                {
+                    copySchool._failure = true;
+                    copySchool._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                copySchool._message = es.Message;
+                copySchool._failure = true;
+            }
+            return copySchool;
+        }
+
     }
 }

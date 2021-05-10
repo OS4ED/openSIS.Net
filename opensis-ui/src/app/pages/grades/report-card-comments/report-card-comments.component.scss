@@ -15,3 +15,28 @@
   input:focus {
     outline: none;
 }
+
+/* Animate items as they're being sorted. */
+.cdk-drop-list-dragging .cdk-drag {
+  transition: transform 250ms cubic-bezier(0, 0, 0.2, 1);
+}
+
+.cdk-drag-preview {
+  box-sizing: border-box;
+  border-radius: 4px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.2);
+  padding: 4px;
+  background: #fff;
+}
+
+.cdk-drag-placeholder	{
+  opacity: 0;
+}
+.col-md{
+  width: 50%;
+}
+
+
+
+
+

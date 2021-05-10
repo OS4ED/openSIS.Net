@@ -20,6 +20,7 @@ import { MembershipService } from '../../../../services/membership.service';
 import { SearchFilterAddViewModel } from '../../../../models/search-filter.model';
 import { DefaultValuesService } from '../../../../common/default-values.service';
 import { SharedFunction } from '../../../shared/shared-function';
+import moment from 'moment';
 
 @Component({
   selector: 'vex-search-staff',
@@ -32,13 +33,17 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
   @Output() showHideAdvanceSearch = new EventEmitter<any>();
   @Output() searchList = new EventEmitter<any>();
   @Input() filterJsonParams;
+  @Output() searchValue = new EventEmitter<any>();
+  @Input() incomingSearchValue;
+  @Input() incomingToggleValues;
+  @Output() toggelValues = new EventEmitter<any>();
   countryModel: CountryModel = new CountryModel();
   languages: LanguageModel = new LanguageModel();
   @ViewChild('f') currentForm: NgForm;
   destroySubject$: Subject<void> = new Subject();
   staffMasterSearchModel: StaffMasterSearchModel = new StaffMasterSearchModel();
   getAllStaff: GetAllStaffModel = new GetAllStaffModel();
-  searchFilterAddViewModel : SearchFilterAddViewModel= new SearchFilterAddViewModel();
+  searchFilterAddViewModel: SearchFilterAddViewModel = new SearchFilterAddViewModel();
   dobEndDate : string;
   dobStartDate : string;
   searchTitle= 'search'
@@ -52,6 +57,8 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
   maritalStatusList = [];
   languageList;
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
+  searchSchoolId: number = this.defaultValuesService.getSchoolID();
+  inactiveStaff = false;
 
   constructor(
     private commonLOV: CommonLOV,
@@ -60,12 +67,17 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
     private commonService: CommonService,
     private loginService: LoginService,
     private staffService: StaffService,
-    private defaultValuesService: DefaultValuesService, 
+    private defaultValuesService: DefaultValuesService,
     private commonFunction: SharedFunction,
-    private membershipService:MembershipService
+    private membershipService: MembershipService
   ) { }
 
   ngOnInit(): void {
+    if (this.incomingSearchValue){
+      this.inactiveStaff = this.incomingToggleValues.inactiveStaff;
+      this.searchSchoolId = this.incomingToggleValues.searchSchoolId;
+      this.staffMasterSearchModel = this.incomingSearchValue;
+    }
     if (this.filterJsonParams !== null && this.filterJsonParams !== undefined) {
       this.updateFilter = true;
       this.searchTitle='searchAndUpdateFilter';
@@ -113,7 +125,7 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
 
         }
       }
-    })
+    });
   }
 
   GetAllLanguage() {
@@ -126,6 +138,22 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
 
       }
     });
+  }
+  searchAllSchools(event){
+    if (event.checked){
+      this.searchSchoolId = 0;
+    }
+    else{
+      this.searchSchoolId = this.defaultValuesService.getSchoolID();
+    }
+  }
+  includeInactiveStaff(event){
+    if (event.checked){
+      this.inactiveStaff = true;
+    }
+    else{
+      this.inactiveStaff = false;
+    }
   }
   
   getAllMembership() {
@@ -161,7 +189,7 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
     this.params = [];
     for (let key in this.staffMasterSearchModel) {
       if (this.staffMasterSearchModel.hasOwnProperty(key))
-      if (this.staffMasterSearchModel[key] !== null && this.staffMasterSearchModel[key] !== '') {
+      if (this.staffMasterSearchModel[key] !== null && this.staffMasterSearchModel[key] !== '' && this.staffMasterSearchModel[key] !== undefined) {
         if (key === 'joiningDate' || key === 'endDate' || key === 'dob') {
           this.params.push({ "columnName": key, "filterOption": 11, "filterValue": this.commonFunction.formatDateSaveWithoutTime(this.staffMasterSearchModel[key]) })
         }
@@ -194,26 +222,71 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
             this.snackbar.open(res._message, '', {
               duration: 10000
             });
-            
           }
         }
       }
       );
     }
-    
+
     this.getAllStaff.filterParams = this.params;
     this.getAllStaff.sortingModel = null;
+    this.getAllStaff.schoolId = this.searchSchoolId;
+    this.getAllStaff.includeInactive = this.inactiveStaff;
     this.getAllStaff.dobStartDate = this.commonFunction.formatDateSaveWithoutTime(this.dobStartDate);
-    this.getAllStaff.dobEndDate= this.commonFunction.formatDateSaveWithoutTime(this.dobEndDate);
+    this.getAllStaff.dobEndDate = this.commonFunction.formatDateSaveWithoutTime(this.dobEndDate);
     this.commonService.setSearchResult(this.params);
     this.staffService.getAllStaffList(this.getAllStaff).subscribe(res => {
       if (res._failure) {
         this.searchList.emit([]);
+        this.searchValue.emit(this.currentForm.value);
+        this.toggelValues.emit({inactiveStaff: this.inactiveStaff, searchSchoolId: this.searchSchoolId});
         this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {
-        this.searchList.emit(res);
+        let outStafflist = res;
+        for (let staff of outStafflist.staffMaster){
+          if (staff.staffSchoolInfo[0].endDate){
+            let today = moment().format('DD-MM-YYYY').toString();
+            let todayarr = today.split('-');
+            let todayDate = +todayarr[0];
+            let todayMonth = +todayarr[1];
+            let todayYear = +todayarr[2];
+            let endDate = moment(staff.staffSchoolInfo[0].endDate).format('DD-MM-YYYY').toString();
+            let endDateArr = endDate.split('-');
+            let endDateDate = +endDateArr[0];
+            let endDateMonth = +endDateArr[1];
+            let endDateYear = +endDateArr[2];
+            if ( endDateYear === todayYear){
+              if (endDateMonth === todayMonth){
+                if (endDateDate >= todayDate){
+                  staff.status = 'active';
+                }
+                else {
+                  staff.status = 'inactive';
+                }
+              }
+              else if (endDateMonth < todayMonth){
+                staff.status = 'inactive';
+              }
+              else{
+                staff.status = 'active';
+              }
+            }
+            else if (endDateYear < todayYear){
+              staff.status = 'inactive';
+            }
+            else{
+              staff.status = 'active';
+            }
+          }
+          else{
+            staff.status = 'active';
+          }
+        }
+        this.searchList.emit(outStafflist);
+        this.searchValue.emit(this.currentForm.value);
+        this.toggelValues.emit({inactiveStaff: this.inactiveStaff, searchSchoolId: this.searchSchoolId});
         this.showHideAdvanceSearch.emit({ showSaveFilter:this.showSaveFilter , hide: false});
       }
     });
@@ -221,6 +294,9 @@ export class SearchStaffComponent implements OnInit,OnDestroy {
 
   resetData() {
     this.currentForm.reset();
+    this.inactiveStaff = false;
+    this.searchSchoolId = this.defaultValuesService.getSchoolID();
+    this.submit();
   }
 
   hideAdvanceSearch() {

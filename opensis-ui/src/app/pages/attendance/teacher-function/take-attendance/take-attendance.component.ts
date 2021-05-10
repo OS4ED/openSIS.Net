@@ -66,6 +66,8 @@ export class TakeAttendanceComponent implements OnInit, AfterViewInit {
   filterJsonParams;
   showAdvanceSearchPanel: boolean;
   searchCtrl: FormControl;
+  permissionCategoryForTeacherFunctions;
+  inputTakeAttendancePermissions;
 
   constructor(
     public translateService:TranslateService,
@@ -98,11 +100,9 @@ export class TakeAttendanceComponent implements OnInit, AfterViewInit {
 
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
-    const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
-    let permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 13);
-    this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
-    this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
-    this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+    this.permissionCategoryForTeacherFunctions = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 11);
+    this.inputTakeAttendancePermissions = this.permissionCategoryForTeacherFunctions.permissionSubcategory.find(x=> x.permissionSubcategoryId === 54).rolePermission[0];
+
   }
 
   ngAfterViewInit() {

@@ -54,6 +54,9 @@ export class WashInfoComponent implements OnInit,OnDestroy {
   femaleToiletTypeList;
   maleToiletTypeList;
   commonToiletTypeList;
+  femaleToiletAccessibilityList;
+  maleToiletAccessibilityList;
+  commonToiletAccessibilityList;
   lovList: LovList = new LovList();
   cloneSchool;
   destroySubject$: Subject<void> = new Subject();
@@ -98,6 +101,15 @@ export class WashInfoComponent implements OnInit,OnDestroy {
     });
     this.commonLOV.getLovByName('Common Toilet Type').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
       this.commonToiletTypeList=res;
+    });
+    this.commonLOV.getLovByName('Female Toilet Accessibility').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.femaleToiletAccessibilityList=res;
+    });
+    this.commonLOV.getLovByName('Male Toilet Accessibility').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.maleToiletAccessibilityList=res;
+    });
+    this.commonLOV.getLovByName('Common Toilet Accessibility').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+      this.commonToiletAccessibilityList=res;
     });
   }
 

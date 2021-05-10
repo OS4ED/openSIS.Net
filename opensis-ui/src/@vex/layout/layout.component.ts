@@ -12,6 +12,7 @@ import * as jwt_decode from 'jwt-decode';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionExpireAlertComponent } from './session-expire/session-expire-alert/session-expire-alert.component';
 import { DefaultValuesService } from '../../app/common/default-values.service';
+import { timer } from 'rxjs';
 
 @UntilDestroy()
 @Component({
@@ -148,6 +149,9 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     if(schoolId){
       this.defaultValueService.setSchoolID(JSON.stringify(schoolId))
     }
+    sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
+    let a =sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
+    console.log(a);
   }
 
   checkToken() { 
@@ -160,9 +164,9 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     const tokenExpired = Date.now() > (decoded.exp * 1000-120000);
 
     if (!tokenExpired) {
-      setTimeout(() => {
+      const source = timer(tokenEndTime);
+      source.subscribe(()=>{
         if(this.router.url != '/'){
-
           this.dialog.open(SessionExpireAlertComponent, {
             maxWidth: '600px',
             disableClose:true
@@ -177,7 +181,7 @@ export class LayoutComponent implements OnInit, AfterViewInit {
              this.router.navigateByUrl('/');
          });
         }
-      }, tokenEndTime);
+      });
     } else {
       this.clearStorage();
       this.dialog.closeAll();

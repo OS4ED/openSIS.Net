@@ -30,10 +30,11 @@ import { ImageCropperService } from '../../../../services/image-cropper.service'
 import { LovList } from '../../../../models/lov.model';
 import {MiscModel} from '../../../../models/misc-data-student.model';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
-import {ModuleIdentifier} from '../../../../enums/module-identifier.enum'
+import {ModuleIdentifier} from '../../../../enums/module-identifier.enum';
 import { CryptoService } from '../../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { Router } from '@angular/router';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 @Component({
   selector: 'vex-student-generalinfo',
   templateUrl: './student-generalinfo.component.html',
@@ -52,16 +53,14 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   icEdit = icEdit;
   icVisibility = icVisibility;
   icVisibilityOff = icVisibilityOff;
-
   studentCreate = SchoolCreate;
   @Input() studentCreateMode: SchoolCreate;
   @Input() studentDetailsForViewAndEdit;
   @Input() categoryId;
   @ViewChild('f') currentForm: NgForm;
-
   data;
-  moduleIdentifier=ModuleIdentifier;
-  nameOfMiscValuesForView:MiscModel=new MiscModel; //This Object contains Section Name, Nationality, Country, languages for View Mode.
+  moduleIdentifier = ModuleIdentifier;
+  nameOfMiscValuesForView: MiscModel = new MiscModel(); // This Object contains Section Name, Nationality, Country, languages for View Mode.
   countryListArr = [];
   ethnicityList = [];
   raceList = [];
@@ -77,7 +76,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   checkUserEmailAddressViewModel: CheckUserEmailAddressViewModel = new CheckUserEmailAddressViewModel();
   sectionList: GetAllSectionModel = new GetAllSectionModel();
   languages: LanguageModel = new LanguageModel();
-  lovListViewModel: LovList = new LovList()
+  lovListViewModel: LovList = new LovList();
   module = 'Student';
   saveAndNext = 'saveAndNext';
   pageStatus: string;
@@ -86,14 +85,14 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   studentInternalId = '';
   studentPortalId = '';
   visible = false;
-  pass: string = "";
-  isUser :boolean= false;
-  isStudentInternalId :boolean= false;
-  hidePasswordAccess: boolean = false;
-  hideAccess: boolean = false;
-  fieldDisabled: boolean = false;
+  pass = '';
+  isUser = false;
+  isStudentInternalId = false;
+  hidePasswordAccess = false;
+  hideAccess = false;
+  fieldDisabled = false;
   internalId: FormControl;
-  loginEmail:FormControl;
+  loginEmail: FormControl;
   cloneStudentModel;
   editPermission = false;
   deletePermission = false;
@@ -111,29 +110,29 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     private loginService: LoginService,
     private commonFunction: SharedFunction,
     private sectionService: SectionService,
+    private defaultValuesService: DefaultValuesService,
     private cd: ChangeDetectorRef,
-    private router:Router,
+    private router: Router,
     private imageCropperService: ImageCropperService,
     private cryptoService: CryptoService,
-    private commonLOV:CommonLOV) {
+    private commonLOV: CommonLOV) {
     translateService.use('en');
     this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
       this.studentAddModel = res;
       this.studentAddModel.loginEmail = this.studentAddModel.studentMaster.studentPortalId;
       this.data = this.studentAddModel?.studentMaster;
-      this.cloneStudentModel=JSON.stringify(this.studentAddModel);
+      this.cloneStudentModel = JSON.stringify(this.studentAddModel);
       this.studentInternalId = this.data.studentInternalId;
       this.studentPortalId = this.data.studentPortalId;
-      if(this.studentAddModel.studentMaster?.studentId){
+      if (this.studentAddModel.studentMaster?.studentId){
         this.accessPortal();
         this.GetAllLanguage();
-        this.initializeDropdowns()
+        this.initializeDropdowns();
       }
-    })
+    });
   }
 
   ngOnInit(): void {
-
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
@@ -141,39 +140,35 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
-    this.internalId = new FormControl('',Validators.required);
-    this.loginEmail=new FormControl('',Validators.required);
-    if (this.studentCreateMode == this.studentCreate.ADD) {
-      if(this.addPermission===false){
-        this.router.navigate(['/'])
+    this.internalId = new FormControl('', Validators.required);
+    this.loginEmail = new FormControl('', Validators.required);
+    if (this.studentCreateMode === this.studentCreate.ADD) {
+      if (this.addPermission === false){
+        this.router.navigate(['/']);
       }
       this.initializeDropdownsInAddMode();
-    } else if (this.studentCreateMode == this.studentCreate.VIEW) {
+    } else if (this.studentCreateMode === this.studentCreate.VIEW) {
       this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.data = this.studentDetailsForViewAndEdit?.studentMaster;
-      if(this.studentAddModel.studentMaster.studentPortalId == null){
+      if (this.studentAddModel.studentMaster.studentPortalId == null){
         this.data.studentPortalId = this.studentAddModel.loginEmail;
       }
       this.accessPortal();
-      this.cloneStudentModel=JSON.stringify(this.studentAddModel);
+      this.cloneStudentModel = JSON.stringify(this.studentAddModel);
+      this.GetAllLanguage();
+      this.getAllCountry();
 
-        this.GetAllLanguage();
-        this.getAllCountry();
-        // this.callLOVs();
-      
-
-    } else if (this.studentCreateMode == this.studentCreate.EDIT && (this.studentDetailsForViewAndEdit != undefined || this.studentDetailsForViewAndEdit != null)) {
+    } else if (this.studentCreateMode === this.studentCreate.EDIT && (this.studentDetailsForViewAndEdit !== undefined || this.studentDetailsForViewAndEdit !== null)) {
       this.studentAddModel = this.studentDetailsForViewAndEdit;
-      this.cloneStudentModel=JSON.stringify(this.studentAddModel);
-      this.data=this.studentAddModel.studentMaster;
-      if(this.studentAddModel.studentMaster.studentPortalId ==null){
+      this.cloneStudentModel = JSON.stringify(this.studentAddModel);
+      this.data = this.studentAddModel.studentMaster;
+      if (this.studentAddModel.studentMaster.studentPortalId == null){
         this.data.studentPortalId = this.studentAddModel.loginEmail;
       }
       else{
         this.studentPortalId = this.studentAddModel.studentMaster.studentPortalId;
       }
-      
       this.studentService.changePageMode(this.studentCreateMode);
       this.accessPortal();
       this.initializeDropdownsInAddMode();
@@ -196,29 +191,29 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   }
 
   callLOVs(){
-    this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.salutationList=res;  
+    this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.salutationList = res;
     });
-    this.commonLOV.getLovByName('Suffix').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.suffixList=res;  
+    this.commonLOV.getLovByName('Suffix').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.suffixList = res;
     });
-    this.commonLOV.getLovByName('Gender').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.genderList=res;  
+    this.commonLOV.getLovByName('Gender').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.genderList = res;
     });
-    this.commonLOV.getLovByName('Race').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.raceList=res;  
+    this.commonLOV.getLovByName('Race').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.raceList = res;
     });
-    this.commonLOV.getLovByName('Ethnicity').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.ethnicityList=res;  
+    this.commonLOV.getLovByName('Ethnicity').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.ethnicityList = res;
     });
-    this.commonLOV.getLovByName('Marital Status').pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-      this.maritalStatusList=res;  
+    this.commonLOV.getLovByName('Marital Status').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+      this.maritalStatusList = res;
     });
   }
 
   ngAfterViewInit() {
     this.studentInternalId = this.data?.studentInternalId;
-    if(this.studentAddModel.studentMaster.studentPortalId ==null){
+    if (this.studentAddModel.studentMaster.studentPortalId == null){
       this.studentPortalId = this.studentAddModel.loginEmail;
     }
     else{
@@ -226,56 +221,56 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     }
     // For Checking Internal Id
     this.internalId.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe((term) => {
-      if (term != '') {
+      if (term !== '') {
         if (this.studentInternalId === term) {
           this.internalId.setErrors(null);
         }
         else {
-          this.isStudentInternalId= true;
+          this.isStudentInternalId = true;
           this.checkStudentInternalIdViewModel.studentInternalId = term;
           this.studentService.checkStudentInternalId(this.checkStudentInternalIdViewModel).subscribe(data => {
             if (data.isValidInternalId) {
               this.internalId.setErrors(null);
-              this.isStudentInternalId= false;
+              this.isStudentInternalId = false;
             }
             else {
               this.internalId.markAsTouched();
-              this.internalId.setErrors({ 'nomatch': true });
-              this.isStudentInternalId= false;
+              this.internalId.setErrors({ nomatch: true });
+              this.isStudentInternalId = false;
             }
           });
         }
       } else {
         this.internalId.markAsTouched();
-        this.isStudentInternalId= false;
+        this.isStudentInternalId = false;
       }
     });
 
     this.loginEmail.valueChanges
     .pipe(debounceTime(600), distinctUntilChanged())
     .subscribe(term => {
-      if (term != '') {
+      if (term !== '') {
         if (this.studentPortalId === term) {
           this.loginEmail.setErrors(null);
         }
         else {
-          this.isUser= true;
+          this.isUser = true;
           this.checkUserEmailAddressViewModel.emailAddress = term;
           this.loginService.checkUserLoginEmail(this.checkUserEmailAddressViewModel).subscribe(data => {
             if (data.isValidEmailAddress) {
               this.loginEmail.setErrors(null);
-              this.isUser= false;
+              this.isUser = false;
             }
             else {
               this.loginEmail.markAsTouched();
-              this.loginEmail.setErrors({ 'nomatch': true });
-              this.isUser= false;
+              this.loginEmail.setErrors({ nomatch: true });
+              this.isUser = false;
             }
           });
         }
       } else {
         this.loginEmail.markAsTouched();
-        this.isUser= false;
+        this.isUser = false;
       }
     });
   }
@@ -292,13 +287,9 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
- 
-
-  
-
   isPortalAccess(event) {
     if (event.checked) {
-      if (this.studentCreateMode == this.studentCreate.ADD) {
+      if (this.studentCreateMode === this.studentCreate.ADD) {
         this.hidePasswordAccess = true;
       }
       else {
@@ -319,33 +310,31 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     }
   }
 
-
   getAllCountry() {
-    if(!this.countryModel.isCountryAvailable){
-      this.countryModel.isCountryAvailable=true;
+    if (!this.countryModel.isCountryAvailable){
+      this.countryModel.isCountryAvailable = true;
       this.commonService.GetAllCountry(this.countryModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-        if (typeof (data) == 'undefined') {
-          this.countryListArr = [];
-        }
-        else {
+        if (data){
           if (data._failure) {
             this.countryListArr = [];
           } else {
-            this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
-            if (this.studentCreateMode == this.studentCreate.VIEW) {
+            this.countryListArr = data.tableCountry?.sort((a, b) => a.name < b.name ? -1 : 1 );
+            if (this.studentCreateMode === this.studentCreate.VIEW) {
              this.findCountryNationalityById();
             }
           }
         }
-      })
+        else{
+          this.countryListArr = [];
+        }
+      });
     }
-    
   }
 
   findCountryNationalityById(){
     this.countryListArr.map((val) => {
-      let countryInNumber = +this.data.countryOfBirth;
-      let nationality = +this.data.nationality;
+      const countryInNumber = +this.data.countryOfBirth;
+      const nationality = +this.data.nationality;
       if (val.id === countryInNumber) {
         this.nameOfMiscValuesForView.countryName = val.name;
       }
@@ -355,50 +344,51 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     });
   }
   editGeneralInfo() {
-    this.studentCreateMode = this.studentCreate.EDIT
+    this.studentCreateMode = this.studentCreate.EDIT;
     this.callLOVs();
     this.studentService.changePageMode(this.studentCreateMode);
     this.saveAndNext = 'update';
   }
-  
+
   cancelEdit() {
-    if(JSON.stringify(this.studentAddModel)!==this.cloneStudentModel){
-      this.studentAddModel=JSON.parse(this.cloneStudentModel);
-      this.studentDetailsForViewAndEdit=JSON.parse(this.cloneStudentModel);
+    if (JSON.stringify(this.studentAddModel) !== this.cloneStudentModel){
+      this.studentAddModel = JSON.parse(this.cloneStudentModel);
+      this.studentDetailsForViewAndEdit = JSON.parse(this.cloneStudentModel);
       this.studentService.sendDetails(JSON.parse(this.cloneStudentModel));
     }
     this.findCountryNationalityById();
     this.findLanguagesById();
-    this.studentCreateMode = this.studentCreate.VIEW
-    this.imageCropperService.cancelImage("student");
+    this.studentCreateMode = this.studentCreate.VIEW;
+    this.imageCropperService.cancelImage('student');
     this.studentService.changePageMode(this.studentCreateMode);
-    this.data = this.studentAddModel.studentMaster;       
+    this.data = this.studentAddModel.studentMaster;
   }
 
   GetAllLanguage() {
-    if(!this.languages.isLanguageAvailable){
-    this.languages.isLanguageAvailable=true;
-    this.languages._tenantName = sessionStorage.getItem("tenant");
-    this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
-        this.languageList = [];
-      }
-      else {
-        this.languageList=res.tableLanguage?.sort((a, b) => {return a.locale < b.locale ? -1 : 1;} )   
-        if (this.studentCreateMode == this.studentCreate.VIEW) {
-         this.findLanguagesById()
+    if (!this.languages.isLanguageAvailable){
+      this.languages.isLanguageAvailable = true;
+      this.languages._tenantName = sessionStorage.getItem('tenant');
+      this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe(
+        (res) => {
+          if (res){
+            this.languageList = res.tableLanguage?.sort((a, b) => a.locale < b.locale ? -1 : 1 );
+            if (this.studentCreateMode === this.studentCreate.VIEW) {
+            this.findLanguagesById();
+          }
+          else{
+            this.languageList = [];
+          }
         }
-      }
-    })
-  }
+      });
+    }
   }
 
   findLanguagesById(){
     this.languageList.map((val) => {
-      let firstLanguageId = + this.data.firstLanguageId;
-      let secondLanguageId = + this.data.secondLanguageId;
-      let thirdLanguageId = + this.data.thirdLanguageId;
-      
+      const firstLanguageId = + this.data.firstLanguageId;
+      const secondLanguageId = + this.data.secondLanguageId;
+      const thirdLanguageId = + this.data.thirdLanguageId;
+
       if (val.langId === firstLanguageId) {
         this.nameOfMiscValuesForView.firstLanguage = val.locale;
       }
@@ -410,8 +400,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       }
     });
   }
-
-
   generate() {
     this.inputType = 'text';
     this.visible = true;
@@ -423,18 +411,16 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     if (this.currentForm.controls.passwordHash !== undefined) {
       this.studentAddModel.passwordHash = this.currentForm.controls.passwordHash.value;
     }
-
     if (this.currentForm.form.valid) {
-
       if (this.studentAddModel.fieldsCategoryList !== null) {
         this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
-        for (let studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId].customFields) {
-          if (studentCustomField.type === "Multiple SelectBox" && this.studentService.getStudentMultiselectValue() !== undefined) {
-            studentCustomField.customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(",", "|");
+        for (const studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId].customFields) {
+          if (studentCustomField.type === 'Multiple SelectBox' && this.studentService.getStudentMultiselectValue() !== undefined) {
+            studentCustomField.customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(',', '|');
           }
         }
       }
-      if (this.studentCreateMode == this.studentCreate.EDIT) {
+      if (this.studentCreateMode === this.studentCreate.EDIT) {
         this.updateStudent();
       } else {
         this.addStudent();
@@ -445,15 +431,10 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   updateStudent() {
     if (this.internalId.invalid) {
       this.invalidScroll();
-      return
+      return;
     }
     this.studentService.UpdateStudent(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('Student Update failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (data){
         if (data._failure) {
           this.snackbar.open( data._message, '', {
             duration: 10000
@@ -463,16 +444,20 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
             duration: 10000
           });
           this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
-          data.studentMaster.studentPhoto=null;
+          data.studentMaster.studentPhoto = null;
           this.data = data.studentMaster;
-          this.cloneStudentModel=JSON.stringify(data);
+          this.cloneStudentModel = JSON.stringify(data);
           this.findCountryNationalityById();
           this.findLanguagesById();
-          this.studentDetailsForViewAndEdit=data;
+          this.studentDetailsForViewAndEdit = data;
           this.dataAfterSavingGeneralInfo.emit(data);
-          this.studentCreateMode = this.studentCreate.VIEW
+          this.studentCreateMode = this.studentCreate.VIEW;
           this.studentService.changePageMode(this.studentCreateMode);
         }
+      }else {
+        this.snackbar.open(this.defaultValuesService.translateKey('studentUpdateFailed') + sessionStorage.getItem('httpError'), '', {
+          duration: 10000
+        });
       }
     });
   }
@@ -480,16 +465,11 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   addStudent() {
     if (this.internalId.invalid) {
       this.invalidScroll();
-      return
+      return;
     }
     this.studentAddModel.studentMaster.dob = this.commonFunction.formatDateSaveWithoutTime(this.studentAddModel.studentMaster.dob);
     this.studentService.AddStudent(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('Student Save failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (data){
         if (data._failure) {
           this.snackbar.open( data._message, '', {
             duration: 10000
@@ -503,11 +483,15 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
           this.studentService.changeCategory(4);
           this.studentService.setStudentDetails(data);
           this.dataAfterSavingGeneralInfo.emit(data);
-          this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.studentCreate.EDIT});
+          this.imageCropperService.enableUpload({module: this.moduleIdentifier.STUDENT, upload: true, mode: this.studentCreate.EDIT});
         }
       }
-
-    })
+      else{
+        this.snackbar.open(this.defaultValuesService.translateKey('studentSaveFailed') + sessionStorage.getItem('httpError'), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
   invalidScroll() {
@@ -528,11 +512,8 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       this.cd.markForCheck();
     }
   }
-
   ngOnDestroy() {
     this.destroySubject$.next();
     this.destroySubject$.complete();
   }
-
-
 }

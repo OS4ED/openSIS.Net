@@ -20,16 +20,16 @@ export class ViewStudentGeneralinfoComponent implements OnInit {
   @Input() studentCreateMode: SchoolCreate;
   @Input() categoryId;
   @Input() studentViewDetails: StudentAddModel;
-  module = "Student";
-  @Input() nameOfMiscValues
+  module = 'Student';
+  @Input() nameOfMiscValues;
   constructor(private commonFunction: SharedFunction,
-    public translateService: TranslateService
+              public translateService: TranslateService
   ) {
     translateService.use('en');
    }
 
   ngOnInit(): void {
-    
+
   }
   getAge(birthDate) {
     return this.commonFunction.getAge(birthDate);

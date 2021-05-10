@@ -591,7 +591,7 @@ namespace opensis.data.Repository
                     {
                         var parentAddress = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == parentInfo.ParentAddress.FirstOrDefault().StudentId && x.SchoolId == parentInfo.SchoolId);
                         parentInfo.ParentAddress.FirstOrDefault().AddressLineOne = (parentAddress.HomeAddressLineOne!=null)?parentAddress.HomeAddressLineOne.TrimEnd(','):null;
-                        parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo = (parentAddress.HomeAddressLineOne != null) ? parentAddress.HomeAddressLineTwo.TrimEnd(','):null;
+                        parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo = (parentAddress.HomeAddressLineTwo != null) ? parentAddress.HomeAddressLineTwo.TrimEnd(','):null;
                         parentInfo.ParentAddress.FirstOrDefault().Country = (parentAddress.HomeAddressCountry != null) ? parentAddress.HomeAddressCountry.TrimEnd(','):null;
                         parentInfo.ParentAddress.FirstOrDefault().State = (parentAddress.HomeAddressState != null) ? parentAddress.HomeAddressState.TrimEnd(','):null;
                         parentInfo.ParentAddress.FirstOrDefault().City = (parentAddress.HomeAddressCity != null) ? parentAddress.HomeAddressCity.TrimEnd(','):null;

@@ -6,11 +6,11 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class EmtyNumberCheckPipe implements PipeTransform {
 
   transform(value: number): string {
-    if(value!==null){
+    if (value){
       return value.toString();
     }
     else{
-      return "-";
+      return '-';
     }
   }
 

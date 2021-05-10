@@ -289,26 +289,26 @@ namespace opensisAPI.Controllers
             return courseSectionDelete;
         }
 
-        ///// <summary>
-        ///// Get All CourseStandard For Course
-        ///// </summary>
-        ///// <param name="courseStandardForCourseViewModel"></param>
-        ///// <returns></returns>
-        //[HttpPost("getAllCourseStandardForCourseSection")]
-        //public ActionResult<CourseStandardForCourseViewModel> GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
-        //{
-        //    CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
-        //    try
-        //    {
-        //        courseStandardForCourseView = _courseManagerService.GetAllCourseStandardForCourseSection(courseStandardForCourseViewModel);
-        //    }
-        //    catch (Exception es)
-        //    {
-        //        courseStandardForCourseView._failure = true;
-        //        courseStandardForCourseView._message = es.Message;
-        //    }
-        //    return courseStandardForCourseView;
-        //}
+        /// <summary>
+        /// Get All CourseStandard For Course
+        /// </summary>
+        /// <param name="courseStandardForCourseViewModel"></param>
+        /// <returns></returns>
+        [HttpPost("getAllCourseStandardForCourse")]
+        public ActionResult<CourseStandardForCourseViewModel> GetAllCourseStandardForCourse(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
+        {
+            CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
+            try
+            {
+                courseStandardForCourseView = _courseManagerService.GetAllCourseStandardForCourse(courseStandardForCourseViewModel);
+            }
+            catch (Exception es)
+            {
+                courseStandardForCourseView._failure = true;
+                courseStandardForCourseView._message = es.Message;
+            }
+            return courseStandardForCourseView;
+        }
 
         //[HttpPost("deleteSchedule")]
         //public ActionResult<DeleteScheduleViewModel> DeleteSchedule(DeleteScheduleViewModel deleteScheduleViewModel)

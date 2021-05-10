@@ -156,6 +156,8 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   }
   
   getAllCountry() {
+    if (!this.countryModel.isCountryAvailable){
+      this.countryModel.isCountryAvailable = true;
     this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.countryListArr = [];
@@ -170,7 +172,8 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
           }
         }
       }
-    })
+    });
+  }
   }
 
   findCountryNameById(){

@@ -22,6 +22,7 @@ import { MatCheckbox } from '@angular/material/checkbox';
 import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 
 @Component({
   selector: 'vex-add-event',
@@ -79,7 +80,8 @@ export class AddEventComponent implements OnInit {
               private calendarService: CalendarService,
               private cryptoService: CryptoService,
               private calendarEventService: CalendarEventService,
-              private fb: FormBuilder) {
+              private fb: FormBuilder,
+              private defaultValuesService: DefaultValuesService) {
     this.translate.setDefaultLang('en');
     this.form = this.fb.group({
       title: ['', Validators.required],
@@ -159,8 +161,8 @@ export class AddEventComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-        title: "Are you sure?",
-        message: "You are about to delete this event"
+        title: this.defaultValuesService.translateKey('areYouSure'),
+        message: this.defaultValuesService.translateKey('youAreAboutToDelete') + this.data.calendarEvent.title
       }
     });
     // listen to response
@@ -182,11 +184,11 @@ export class AddEventComponent implements OnInit {
       this.calendarEventService.deleteCalendarEvent(this.calendarEventAddViewModel).subscribe(
         (res) => {
           if (res._failure) {
-            this.snackbar.open('Event Deletion failed. ' + res._message, '', {
+            this.snackbar.open(res._message, '', {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Event Deleted Successfully. ', '', {
+            this.snackbar.open(res._message, '', {
               duration: 10000
             });
             this.calendarEventService.changeEvent(true);
@@ -212,11 +214,11 @@ export class AddEventComponent implements OnInit {
       if (this.calendarEventAddViewModel.schoolCalendarEvent.eventId > 0) {
         this.calendarEventService.updateCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
           if (data._failure) {
-            this.snackbar.open('Event updating failed. ' + data._message, '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Event updated successfully. ', '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
             this.dialogRef.close('submitedEvent');
@@ -227,11 +229,11 @@ export class AddEventComponent implements OnInit {
       else {
         this.calendarEventService.addCalendarEvent(this.calendarEventAddViewModel).subscribe(data => {
           if (data._failure) {
-            this.snackbar.open('Event saving failed. ' + data._message, '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Event saved successfully. ', '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
             this.dialogRef.close('submitedEvent');

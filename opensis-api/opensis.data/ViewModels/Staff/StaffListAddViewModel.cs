@@ -14,6 +14,7 @@ namespace opensis.data.ViewModels.Staff
         public List<StaffAddViewModel> StaffAddViewModelList { get; set; }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
+        public string ConflictIndexNo { get; set; }
 
     }
 }

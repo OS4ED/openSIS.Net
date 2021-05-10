@@ -1,0 +1,19 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title class="mb-4">
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "commentOn" | translate }} <span class="font-medium">Arthur Boucher's</span> {{ "attendance" | translate }} 
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+    
+</div>
+<mat-divider class="-mx-6 mb-6"></mat-divider>
+<mat-dialog-content fxLayout="column">
+    <div class="border border-gray-light rounded p-2">
+        <textarea placeholder="{{ 'yourComment' | translate }}" required class="w-full" rows="4"></textarea>
+    </div>
+    <div class="text-right pt-6">
+        <button color="primary" mat-flat-button type="submit">{{ 'submit' | translate }}
+        </button>
+    </div>
+</mat-dialog-content>

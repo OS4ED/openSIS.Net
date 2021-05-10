@@ -141,7 +141,7 @@
                                     [ngSwitch]="customField.type">
                                     <div *ngSwitchCase="'Checkbox'">
                                         <mat-checkbox
-                                            [(ngModel)]="studentAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                            [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
                                             name="{{customField.title.replace(' ','_')}}" color="primary" class="mr-6">
                                             {{customField.title}}
                                         </mat-checkbox>
@@ -151,7 +151,7 @@
                                             <mat-label>{{customField.title}}</mat-label>
                                             <mat-select name="{{customField.title.replace(' ','_')}}"
                                                 #schoolField="ngModel" [required]="customField.required ? true : null "
-                                                [(ngModel)]="studentAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue">
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue">
                                                 <mat-option *ngFor="let option of customField.selectOptions.split('|')"
                                                     [value]="option">
                                                     {{ option }}</mat-option>
@@ -168,7 +168,7 @@
                                             <mat-label>{{customField.title}}</mat-label>
                                             <textarea name="{{customField.title.replace(' ','_')}}" matInput
                                                 #schoolTextArea="ngModel"
-                                                [(ngModel)]="studentAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
                                                 [required]="customField.required ? true : null "></textarea>
                                             <mat-error *ngIf="schoolTextArea.errors?.required">
                                                 {{customField.title}} is required</mat-error>
@@ -178,7 +178,7 @@
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
                                             <input name="{{customField.title.replace(' ','_')}}" #schoolField="ngModel"
-                                                [(ngModel)]="studentAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
                                                 matInput type="customField.type" maxlength="100"
                                                 [required]="customField.required ? true : null ">
                                             <mat-error *ngIf="schoolField.errors?.required">
@@ -231,12 +231,12 @@
                                 <li
                                     *ngFor="let customField of studentAddViewModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
                                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                                    <p *ngIf="customField.type !== 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue
+                                    <p *ngIf="customField?.type !== 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0]?.customFieldValue
                                         | EmtyValueCheckPipe}}
                                     </p>
                                     <p *ngIf="customField.type === 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue}}
+                                        {{customField?.customFieldsValue[0].customFieldValue}}
                                     </p>
                                 </li>
                             </ul>

@@ -29,10 +29,16 @@ import { CustomFieldModule } from "../../../common/custom-field/custom-field.mod
 import { CustomFieldWithoutFormModule } from "../../../common/custom-field-without-form/custom-field-without-form.module";
 import { ViewGeneralInfoComponent } from './view-general-info/view-general-info.component';
 import { ViewWashInfoComponent } from './view-wash-info/view-wash-info.component';
+import { ScrollbarModule } from '../../../../@vex/components/scrollbar/scrollbar.module';
+import { AddCopySchoolComponent } from './add-copy-school/add-copy-school.component';
+import { MatDividerModule } from '@angular/material/divider';
+import {MatDialogModule} from '@angular/material/dialog';
+import {MatSlideToggleModule} from '@angular/material/slide-toggle';
+import { SuccessCopySchoolComponent } from './success-copy-school/success-copy-school.component';
 
 
 @NgModule({
-  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent, ViewGeneralInfoComponent, ViewWashInfoComponent],
+  declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent, ViewGeneralInfoComponent, ViewWashInfoComponent, AddCopySchoolComponent, SuccessCopySchoolComponent],
   imports: [
     CommonModule,
     MatIconModule,
@@ -58,8 +64,11 @@ import { ViewWashInfoComponent } from './view-wash-info/view-wash-info.component
     FormsModule,
     SharedModuleModule,
     CustomFieldModule,
-    CustomFieldWithoutFormModule
-   
+    CustomFieldWithoutFormModule,
+    ScrollbarModule,
+    MatDividerModule,
+    MatDialogModule,
+    MatSlideToggleModule
   ]
 })
 export class AddSchoolModule { }

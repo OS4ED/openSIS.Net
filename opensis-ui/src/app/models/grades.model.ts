@@ -206,7 +206,7 @@ export class SchoolSpecificStandarModel extends CommonField{
     }
 }
 
-class GradeUsStandard{
+export class GradeUsStandard{
     tenantId: string;
     schoolId: number;
     standardRefNo: string;

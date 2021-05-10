@@ -88,7 +88,7 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'affiliation'|translate}}</mat-label>
-                            <input maxlength="100"
+                            <input
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].affiliation"
                                 name="affiliation" matInput>
                         </mat-form-field>
@@ -96,7 +96,7 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'associations'|translate}}</mat-label>
-                            <input maxlength="100"
+                            <input
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].associations"
                                 name="associations" matInput>
                         </mat-form-field>
@@ -397,7 +397,7 @@
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'website'|translate}}</mat-label>
-                            <input #website="ngModel" maxlength="50"
+                            <input #website="ngModel"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].website" name="website"
                                 matInput>
                             <mat-error *ngIf="website.errors?.invalidWebsite">

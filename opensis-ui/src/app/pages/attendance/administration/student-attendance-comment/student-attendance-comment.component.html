@@ -1,0 +1,159 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title class="mb-4">
+    <h2 class="headline m-0" fxFlex="auto">Arthur Boucher</h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+
+</div>
+<mat-divider class="-mx-6 mb-6"></mat-divider>
+<mat-dialog-content fxLayout="column">
+    <div>
+        <ul class="grid grid-cols-6 col-gap-6 mb-2 px-4">
+            <li class="font-semibold">{{ 'period' | translate }}</li>
+            <li class="font-semibold">{{ 'courseSection' | translate }}</li>
+            <li class="font-semibold col-span-2">{{ 'attendanceCode' | translate }}</li>
+            <li class="font-semibold text-center">{{ 'comments' | translate }}</li>
+            <li class="font-semibold text-center">{{ 'history' | translate }}</li>
+        </ul>
+        <div class="border border-gray-light rounded px-4 py-2 mb-4">
+            <ul class="grid grid-cols-6 col-gap-6">
+                <li class="flex items-center">Daily Attendance</li>
+                <li class="flex items-center">Attendance All</li>
+                <li class="col-span-2 flex items-center">
+                    <div class="select-dropdown inline-block w-full">
+                        <select>
+                            <option value="excused_absence" selected>{{'excusedAbsence' | translate }}</option>
+                        </select>
+                    </div>
+                </li>
+                <li class="cursor-pointer flex items-center place-content-center text-lg" (click)="openExpandable(1)"><i
+                        class="icon icon-bubble"></i></li>
+                <li class="cursor-pointer flex items-center place-content-center" (click)="openExpandable(2)">
+                    <mat-icon>history</mat-icon>
+                </li>
+            </ul>
+            <div class="expand-comments" *ngIf="category==1">
+                <mat-divider class="-mx-4 my-2 bg-gray-light"></mat-divider>
+                <h4 class="text-green font-medium my-4">{{ 'comments' | translate }}</h4>
+                <div class="timeline">
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">George Smith</span> {{ 'commentedOn' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">10.45 AM</span></p>
+                        <p>Arthur didnot come to class today.</p>
+                    </div>
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">John Carter</span> {{
+                            'commentedOn' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">12.10 PM</span></p>
+                        <p>Arthur called in sick</p>
+                    </div>
+                    <div class="timeline-content">
+                        <!-- <mat-form-field class="w-full m-0" appearance="outline">
+                            <mat-label>{{ 'yourComment' | translate }}</mat-label>
+                            <input matInput placeholder="Arthur's father emailed doctor's note">
+                        </mat-form-field> -->
+                        <div class="w-full border border-gray-light rounded p-2">
+                            <label class="text-gray block">{{ 'yourComment' | translate }}</label>
+                            <input type="text" value="Arthur's father emailed doctor's note" class="w-full">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="expand-history" *ngIf="category==2">
+                <mat-divider class="-mx-4 my-2 bg-gray-light"></mat-divider>
+                <h4 class="text-green font-medium my-4">{{ 'attendanceHistory' | translate }}</h4>
+                <div class="timeline">
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">George Smith</span> {{ 'tookAttendanceOn' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">10.45 AM</span></p>
+                        <p>{{ 'attendanceCode' | translate }} : <span class="text-green">{{ 'present' | translate
+                                }}</span>
+                        </p>
+                    </div>
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">John Carter</span> {{
+                            'changedTheAttendanceCode' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">12.10 PM</span></p>
+                        <p>{{ 'attendanceCode' | translate }} : <span class="text-warn">{{ 'excusedAbsence' | translate
+                                }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="border border-gray-light rounded px-4 py-2 mb-4">
+            <ul class="grid grid-cols-6 col-gap-6">
+                <li class="flex items-center">Period 6</li>
+                <li class="flex items-center">PE-ATTN</li>
+                <li class="col-span-2 flex items-center">
+                    <div class="select-dropdown inline-block w-full">
+                        <select>
+                            <option value="excused_absence" selected>{{'present' | translate }}</option>
+                        </select>
+                    </div>
+                </li>
+                <li class="cursor-pointer flex items-center place-content-center text-lg" (click)="openExpandable(3)"><i
+                        class="icon icon-bubble"></i></li>
+                <li class="cursor-pointer flex items-center place-content-center" (click)="openExpandable(4)">
+                    <mat-icon>history</mat-icon>
+                </li>
+            </ul>
+            <div class="expand-comments" *ngIf="category==3">
+                <mat-divider class="-mx-4 my-2 bg-gray-light"></mat-divider>
+                <h4 class="text-green font-medium my-4">{{ 'comments' | translate }}</h4>
+                <div class="timeline">
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">George Smith</span> {{ 'commentedOn' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">10.45 AM</span></p>
+                        <p>Arthur didnot come to class today.</p>
+                    </div>
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">John Carter</span> {{
+                            'commentedOn' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">12.10 PM</span></p>
+                        <p>Arthur called in sick</p>
+                    </div>
+                    <div class="timeline-content">
+                        <div class="w-full border border-gray-light rounded p-2">
+                            <label class="text-gray block">{{ 'yourComment' | translate }}</label>
+                            <input type="text" value="Arthur's father emailed doctor's note" class="w-full">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="expand-history" *ngIf="category==4">
+                <mat-divider class="-mx-4 my-2 bg-gray-light"></mat-divider>
+                <h4 class="text-green font-medium my-4">{{ 'attendanceHistory' | translate }}</h4>
+                <div class="timeline">
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">George Smith</span> {{ 'tookAttendanceOn' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">10.45 AM</span></p>
+                        <p>{{ 'attendanceCode' | translate }} : <span class="text-green">{{ 'present' | translate
+                                }}</span>
+                        </p>
+                    </div>
+                    <div class="timeline-content">
+                        <p class="text-primary"><span class="font-semibold">John Carter</span> {{
+                            'changedTheAttendanceCode' |
+                            translate }} <span class="font-semibold">April 10, 2021</span> @ <span
+                                class="font-semibold">12.10 PM</span></p>
+                        <p>{{ 'attendanceCode' | translate }} : <span class="text-warn">{{ 'excusedAbsence' | translate
+                                }}</span>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="text-right pt-6">
+        <button color="primary" mat-flat-button type="submit">{{ 'submit' | translate }}
+        </button>
+    </div>
+</mat-dialog-content>

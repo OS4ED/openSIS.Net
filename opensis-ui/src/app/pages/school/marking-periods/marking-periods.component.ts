@@ -25,6 +25,7 @@ import { LayoutService } from 'src/@vex/services/layout.service';
 import { RollBasedAccessService } from '../../../services/roll-based-access.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../common/default-values.service';
 @Component({
   selector: 'vex-marking-periods',
   templateUrl: './marking-periods.component.html',
@@ -71,7 +72,8 @@ export class MarkingPeriodsComponent implements OnInit {
               private loaderService: LoaderService,
               public rollBasedAccessService: RollBasedAccessService,
               public translateService: TranslateService,private layoutService: LayoutService,
-              private cryptoService: CryptoService   ) {  
+              private cryptoService: CryptoService, 
+              private defaultValuesService: DefaultValuesService) {  
       if (localStorage.getItem('collapseValue') !== null){
         if ( localStorage.getItem('collapseValue') === 'false'){
           this.layoutService.expandSidenav();
@@ -136,27 +138,28 @@ export class MarkingPeriodsComponent implements OnInit {
   getMarkingPeriod() {
 
     this.markingPeriodService.GetMarkingPeriod(this.markingPeriodListModel).subscribe(data => {
-      if (typeof (data) == 'undefined') {
+      if (data) {
+        if (data._failure) {
+          if (data.schoolYearsView == null) {
+            this.viewFirstChild = [];
+            this.snackbar.open( data._message, '', {
+              duration: 10000
+            });
+          }
+          else {
+            this.list = data.schoolYearsView;
+            this.viewFirstMarkingPeriodChild();
+          }
+      } else {
+        this.list = data.schoolYearsView;
+        this.viewFirstMarkingPeriodChild();
+      }
+       
+      }
+      else {
         this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
-      }
-      else {
-        if (data._failure) {
-            if (data.schoolYearsView == null) {
-              this.viewFirstChild = [];
-              this.snackbar.open( data._message, '', {
-                duration: 10000
-              });
-            }
-            else {
-              this.list = data.schoolYearsView;
-              this.viewFirstMarkingPeriodChild();
-            }
-        } else {
-          this.list = data.schoolYearsView;
-          this.viewFirstMarkingPeriodChild();
-        }
       }
 
     })
@@ -213,8 +216,8 @@ export class MarkingPeriodsComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-        title: "Are you sure?",
-        message: "You are about to delete " + deleteDetails.title + "."
+        title: this.defaultValuesService.translateKey('areYouSure'),
+        message: this.defaultValuesService.translateKey('youAreAboutToDelete') + deleteDetails.title + "."
       }
     });
 
@@ -228,12 +231,7 @@ export class MarkingPeriodsComponent implements OnInit {
     if (deleteDetails.isParent) {
       this.markingPeriodAddModel.tableSchoolYears.markingPeriodId = deleteDetails.markingPeriodId;
       this.markingPeriodService.DeleteSchoolYear(this.markingPeriodAddModel).subscribe(data => {
-        if (typeof (data) == 'undefined') {
-          this.snackbar.open('School Year Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else {
+        if (data) {
           if (data._failure) {
             this.snackbar.open( data._message, '', {
               duration: 10000
@@ -247,18 +245,18 @@ export class MarkingPeriodsComponent implements OnInit {
             });
           }
         }
+        else {
+          this.snackbar.open('School Year Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
+        }
 
       })
     } else {
       if (deleteDetails.yearId > 0) {
         this.semesterAddModel.tableSemesters.markingPeriodId = deleteDetails.markingPeriodId;
         this.markingPeriodService.DeleteSemester(this.semesterAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Semester Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open( data._message, '', {
                 duration: 10000
@@ -272,18 +270,18 @@ export class MarkingPeriodsComponent implements OnInit {
               });
 
             }
+          }
+          else {
+            this.snackbar.open('School Semester Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
           }
 
         })
       } else if (deleteDetails.semesterId > 0) {
         this.quarterAddModel.tableQuarter.markingPeriodId = deleteDetails.markingPeriodId;
         this.markingPeriodService.DeleteQuarter(this.quarterAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Quarter Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open( data._message, '', {
                 duration: 10000
@@ -296,18 +294,18 @@ export class MarkingPeriodsComponent implements OnInit {
                 this.getMarkingPeriod();
               });
             }
+          }
+          else {
+            this.snackbar.open('School Quarter Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
           }
 
         })
       } else if (deleteDetails.quarterId > 0) {
         this.progressPeriodAddModel.tableProgressPeriods.markingPeriodId = deleteDetails.markingPeriodId;
         this.markingPeriodService.DeleteProgressPeriod(this.progressPeriodAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Progress Period Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open( data._message, '', {
                 duration: 10000
@@ -319,8 +317,12 @@ export class MarkingPeriodsComponent implements OnInit {
               }).afterOpened().subscribe(data => {
                 this.getMarkingPeriod();
               });
-
             }
+          }
+          else {
+            this.snackbar.open('School Progress Period Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
           }
 
         })

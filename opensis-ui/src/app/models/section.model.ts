@@ -13,7 +13,7 @@ export class TableSectionList {
 
 
 export class GetAllSectionModel extends CommonField{
-    public tableSectionsList: [TableSectionList];
+    public tableSectionsList: TableSectionList[];
     public tenantId: string;
     public schoolId: number;
     public isSectionAvailable: boolean;

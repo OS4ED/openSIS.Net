@@ -21,8 +21,7 @@ namespace opensisAPI.Controllers
         {
             _staffScheduleService = staffScheduleService;
         }
-
-        [HttpPost("staffScheduleViewForCourseSection")]
+[HttpPost("staffScheduleViewForCourseSection")]
         public ActionResult<StaffScheduleViewModel> StaffScheduleViewForCourseSection(StaffScheduleViewModel staffScheduleViewModel)
         {
             StaffScheduleViewModel staffSchedule = new StaffScheduleViewModel();
@@ -37,6 +36,7 @@ namespace opensisAPI.Controllers
             }
             return staffSchedule;
         }
+        
 
         [HttpPost("addStaffCourseSectionSchedule")]
         public ActionResult<StaffScheduleViewModel> AddStaffCourseSectionSchedule(StaffScheduleViewModel staffScheduleViewModel)

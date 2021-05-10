@@ -186,7 +186,8 @@ namespace opensis.data.Repository
             StaffListModel staffListModel = new StaffListModel();
             IQueryable<StaffMaster> transactionIQ = null;
 
-            var StaffMasterList = this.context?.StaffMaster.Include(x => x.StaffSchoolInfo).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId);
+            var StaffMasterList = this.context?.StaffMaster.Include(x => x.StaffSchoolInfo).Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && (pageResult.IncludeInactive == false || pageResult.IncludeInactive == null ? x.StaffSchoolInfo.FirstOrDefault().EndDate == null || x.StaffSchoolInfo.FirstOrDefault().EndDate >= DateTime.UtcNow : true));
+
             try
             {
                 if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
@@ -318,6 +319,7 @@ namespace opensis.data.Repository
                         SecondLanguage=e.SecondLanguage,
                         ThirdLanguage=e.ThirdLanguage,
                         StaffPhoto=pageResult.ProfilePhoto != null ? e.StaffPhoto : null,
+                        StaffSchoolInfo=e.StaffSchoolInfo.Select(s=>new StaffSchoolInfo { StartDate=s.StartDate,EndDate=s.EndDate}).ToList()
                     }).Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
                 }
                 
@@ -752,6 +754,7 @@ namespace opensis.data.Repository
                         {
                             staffSchoolInfo.Id = (int)Id;
                             staffSchoolInfo.UpdatedAt = DateTime.UtcNow;
+                            staffSchoolInfo.StaffMaster = null;
                             this.context?.StaffSchoolInfo.Add(staffSchoolInfo);
                             Id++;
                         }
@@ -948,11 +951,15 @@ namespace opensis.data.Repository
                 staffListAdd._message = "Staff Added Successfully";
 
                 int? staffId = Utility.GetMaxPK(this.context, new Func<StaffMaster, int>(x => x.StaffId));
+                int? indexNo = -1;
 
                 foreach (var staff in staffListAddViewModel.StaffAddViewModelList)
                 {
-                    UserMaster userMaster = new UserMaster();
+                    indexNo++;
+
+                     //UserMaster userMaster = new UserMaster();
                     var StaffSchoolInfoData = new StaffSchoolInfo();
+                    
                     using (var transaction = this.context.Database.BeginTransaction())
                     {
                         try
@@ -965,6 +972,7 @@ namespace opensis.data.Repository
 
                             if (GuidIdExist != null)
                             {
+                                staffListAdd.ConflictIndexNo = staffListAdd.ConflictIndexNo != null ? staffListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                                 staffListAdd.StaffAddViewModelList.Add(staff);
                                 staffListAdd._failure = true;
                                 staffListAdd._message = "Staff Rejected Due to Data Error";
@@ -979,6 +987,7 @@ namespace opensis.data.Repository
                                 bool checkInternalID = CheckInternalID(staff.staffMaster.TenantId, staff.staffMaster.StaffInternalId);
                                 if (checkInternalID == false)
                                 {
+                                    staffListAdd.ConflictIndexNo = staffListAdd.ConflictIndexNo != null ? staffListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                                     staffListAdd.StaffAddViewModelList.Add(staff);
                                     staffListAdd._failure = true;
                                     staffListAdd._message = "Staff Rejected Due to Data Error";
@@ -990,10 +999,46 @@ namespace opensis.data.Repository
                                 staff.staffMaster.StaffInternalId = staff.staffMaster.StaffId.ToString();
                             }
 
+                            if (staff.staffMaster.FirstLanguage != null)
+                            {
+                                var firstLanguageId = this.context?.Language.Where(x => x.Locale.ToLower() == staff.staffMaster.FirstLanguage.ToString().ToLower()).Select(x => x.LangId).FirstOrDefault();
+
+                                staff.staffMaster.FirstLanguage = firstLanguageId != null ? firstLanguageId : null;
+
+                            }
+
+                            if (staff.staffMaster.SecondLanguage != null)
+                            {
+                                var secondLanguageId = this.context?.Language.Where(x => x.Locale.ToLower() == staff.staffMaster.SecondLanguage.ToString().ToLower()).Select(x => x.LangId).FirstOrDefault();
+
+                                staff.staffMaster.SecondLanguage = secondLanguageId != null ? secondLanguageId : null;
+                            }
+
+                            if (staff.staffMaster.ThirdLanguage != null)
+                            {
+                                var thirdLanguageId = this.context?.Language.Where(x => x.Locale.ToLower() == staff.staffMaster.ThirdLanguage.ToString().ToLower()).Select(x => x.LangId).FirstOrDefault();
+
+                                staff.staffMaster.ThirdLanguage = thirdLanguageId != null ? thirdLanguageId : null;
+                            }
+
+                            if (staff.staffMaster.CountryOfBirth != null)
+                            {
+                                var countryOfBirthId = this.context?.Country.Where(x => x.Name.ToLower() == staff.staffMaster.CountryOfBirth.ToString().ToLower()).Select(x => x.Id).FirstOrDefault();
+
+                                staff.staffMaster.CountryOfBirth = countryOfBirthId != null ? countryOfBirthId : null;
+                            }
+
+                            if (staff.staffMaster.Nationality != null)
+                            {
+                                var nationalityId = this.context?.Country.Where(x => x.Name.ToLower() == staff.staffMaster.Nationality.ToString().ToLower()).Select(x => x.Id).FirstOrDefault();
+
+                                staff.staffMaster.Nationality = nationalityId != null ? nationalityId : null;
+                            }
+
                             //Add Staff Portal Access
                             if (!string.IsNullOrWhiteSpace(staff.PasswordHash) && !string.IsNullOrWhiteSpace(staff.staffMaster.LoginEmailAddress))
                             {
-                                //UserMaster userMaster = new UserMaster();
+                                UserMaster userMaster = new UserMaster();
 
                                 var decrypted = Utility.Decrypt(staff.PasswordHash);
                                 string passwordHash = Utility.GetHashedPassword(decrypted);
@@ -1019,6 +1064,7 @@ namespace opensis.data.Repository
                                 }
                                 else
                                 {
+                                    staffListAdd.ConflictIndexNo = staffListAdd.ConflictIndexNo != null ? staffListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                                     staffListAdd.StaffAddViewModelList.Add(staff);
                                     staffListAdd._failure = true;
                                     staffListAdd._message = "Staff Rejected Due to Data Error";
@@ -1068,11 +1114,13 @@ namespace opensis.data.Repository
                         {
                             transaction.Rollback();
                             staffListAdd.StaffAddViewModelList.Add(staff);
+                            staffListAdd.ConflictIndexNo = staffListAdd.ConflictIndexNo != null ? staffListAdd.ConflictIndexNo + "," + indexNo.ToString() : indexNo.ToString();
                             this.context?.StaffMaster.Remove(staff.staffMaster);
                             this.context?.StaffSchoolInfo.Remove(StaffSchoolInfoData);
-                            this.context?.UserMaster.Remove(userMaster);
+                            //this.context?.UserMaster.Remove(userMaster);
                             staffListAdd._failure = true;
                             staffListAdd._message = "Staff Rejected Due to Data Error";
+                            
                             //staffId--;
                             continue;
                         }

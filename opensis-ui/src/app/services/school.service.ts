@@ -34,19 +34,21 @@ export class SchoolService {
 
   ViewSchool(obj: SchoolAddViewModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
-    obj.schoolMaster.tenantId= obj.tenantId;
+    obj.schoolMaster.tenantId = this.defaultValuesService.getTenantID();
     let apiurl = this.apiUrl + obj._tenantName + "/School/viewSchool";
     return this.http.post<SchoolAddViewModel>(apiurl, obj)
   }
 
   AddSchool(obj: SchoolAddViewModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.schoolMaster.tenantId = this.defaultValuesService.getTenantID();
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/addSchool";
     return this.http.post<SchoolAddViewModel>(apiurl, obj)
   }
   UpdateSchool(obj: SchoolAddViewModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.schoolMaster.tenantId = this.defaultValuesService.getTenantID();
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/updateSchool";
     return this.http.put<SchoolAddViewModel>(apiurl, obj)
@@ -123,6 +125,7 @@ export class SchoolService {
   addUpdateSchoolLogo(obj: SchoolAddViewModel){
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     obj.schoolMaster.schoolId = this.getSchoolId();
+    obj.schoolMaster.tenantId = this.defaultValuesService.getTenantID();
     obj.schoolMaster.schoolDetail[0].id = this.getSchoolId();
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/addUpdateSchoolLogo";

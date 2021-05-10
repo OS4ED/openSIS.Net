@@ -237,12 +237,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.semesterAddModel.tableSemesters.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.semesterAddModel.tableSemesters.postStartDate); 
         this.semesterAddModel.tableSemesters.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.semesterAddModel.tableSemesters.postEndDate);       
         this.markingPeriodService.UpdateSemester(this.semesterAddModel).subscribe(data => {          
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Semester Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open( data._message, '', {
                 duration: 10000
@@ -255,6 +250,11 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.markingPeriodService.getCurrentYear(true);    
               this.dialogRef.close(true);  
             }
+          }
+          else {
+            this.snackbar.open('School Semester Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
           }
       
         })
@@ -268,12 +268,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.quarterAddModel.tableQuarter.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.quarterAddModel.tableQuarter.postStartDate); 
         this.quarterAddModel.tableQuarter.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.quarterAddModel.tableQuarter.postEndDate); 
         this.markingPeriodService.UpdateQuarter(this.quarterAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Quarter Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open( data._message, '', {
                 duration: 10000
@@ -287,6 +282,11 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.dialogRef.close(true);  
             }
           }
+          else {
+            this.snackbar.open('School Quarter Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
+          }
       
         })
       }else if(this.markingPeriodLevel === "Quarter"){
@@ -299,12 +299,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.progressPeriodAddModel.tableProgressPeriods.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.progressPeriodAddModel.tableProgressPeriods.postStartDate); 
         this.progressPeriodAddModel.tableProgressPeriods.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.progressPeriodAddModel.tableProgressPeriods.postEndDate); 
         this.markingPeriodService.UpdateProgressPeriod(this.progressPeriodAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Progress Period Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open('School Progress Period  Updation failed. ' + data._message, '', {
                 duration: 10000
@@ -318,6 +313,11 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.dialogRef.close(true);  
             }
           }
+          else {
+            this.snackbar.open('School Progress Period Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
+          }
       
         })
       }else{       
@@ -326,12 +326,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.markingPeriodAddModel.tableSchoolYears.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.postStartDate); 
         this.markingPeriodAddModel.tableSchoolYears.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.postEndDate); 
       this.markingPeriodService.UpdateSchoolYear(this.markingPeriodAddModel).subscribe(data => {
-        if (typeof (data) == 'undefined') {
-          this.snackbar.open('School Year Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else {
+        if (data) {
           if (data._failure) {
             this.snackbar.open('School Year Updation failed. ' + data._message, '', {
               duration: 10000
@@ -344,6 +339,11 @@ export class EditMarkingPeriodComponent implements OnInit {
             this.markingPeriodService.getCurrentYear(true);    
             this.dialogRef.close(true);  
           }
+        }
+        else {
+          this.snackbar.open('School Year Updation failed. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
         }    
       })
     }
@@ -359,12 +359,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.semesterAddModel.tableSemesters.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.semesterAddModel.tableSemesters.postStartDate); 
         this.semesterAddModel.tableSemesters.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.semesterAddModel.tableSemesters.postEndDate); 
         this.markingPeriodService.AddSemester(this.semesterAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Semester Submission failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open('School Semester Submission failed. ' + data._message, '', {
                 duration: 10000
@@ -379,6 +374,11 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.dialogRef.close(this.sentArray);  
             }
           }
+          else {
+            this.snackbar.open('School Semester Submission failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
+          }
       
         })
       }else if(this.markingPeriodLevel === "Semester"){
@@ -391,12 +391,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.quarterAddModel.tableQuarter.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.quarterAddModel.tableQuarter.postStartDate); 
         this.quarterAddModel.tableQuarter.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.quarterAddModel.tableQuarter.postEndDate); 
         this.markingPeriodService.AddQuarter(this.quarterAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Quarter Submission failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open('School Quarter Submission failed. ' + data._message, '', {
                 duration: 10000
@@ -411,6 +406,11 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.dialogRef.close(this.sentArray);  
             }
           }
+          else {
+            this.snackbar.open('School Quarter Submission failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
+          }
       
         })
       }else if(this.markingPeriodLevel === "Quarter"){
@@ -423,12 +423,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.progressPeriodAddModel.tableProgressPeriods.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.progressPeriodAddModel.tableProgressPeriods.postStartDate); 
         this.progressPeriodAddModel.tableProgressPeriods.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.progressPeriodAddModel.tableProgressPeriods.postEndDate); 
         this.markingPeriodService.AddProgressPeriod(this.progressPeriodAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Progress Period Submission failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open('School Progress Period Submission failed. ' + data._message, '', {
                 duration: 10000
@@ -442,6 +437,11 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.dialogRef.close(this.sentArray);  
             }
           }
+          else {
+            this.snackbar.open('School Progress Period Submission failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
+          }
       
         })
       }else{
@@ -451,12 +451,7 @@ export class EditMarkingPeriodComponent implements OnInit {
         this.markingPeriodAddModel.tableSchoolYears.postStartDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.postStartDate); 
         this.markingPeriodAddModel.tableSchoolYears.postEndDate=this.commonFunction.formatDateSaveWithoutTime(this.markingPeriodAddModel.tableSchoolYears.postEndDate); 
         this.markingPeriodService.AddSchoolYear(this.markingPeriodAddModel).subscribe(data => {
-          if (typeof (data) == 'undefined') {
-            this.snackbar.open('School Year Submission failed. ' + sessionStorage.getItem("httpError"), '', {
-              duration: 10000
-            });
-          }
-          else {
+          if (data) {
             if (data._failure) {
               this.snackbar.open('School Year Submission failed. ' + data._message, '', {
                 duration: 10000
@@ -471,6 +466,11 @@ export class EditMarkingPeriodComponent implements OnInit {
               this.sentArray=[true,sessionStorage.getItem("academicyear")]        
               this.dialogRef.close(this.sentArray);  
             }
+          }
+          else {
+            this.snackbar.open('School Year Submission failed. ' + sessionStorage.getItem("httpError"), '', {
+              duration: 10000
+            });
           }
       
         })

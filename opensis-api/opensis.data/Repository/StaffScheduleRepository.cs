@@ -251,6 +251,40 @@ namespace opensis.data.Repository
                 if (staffScheduleViewModel.staffScheduleViewList.Count() > 0)
                 {
                     staffScheduleViewModel._message = "No Conflict Detected";
+                    List<int> conflictInInputCourseSection = new List<int>();
+
+                    var courseSectionListCheck = staffScheduleViewModel.staffScheduleViewList.FirstOrDefault().courseSectionViewList.ToList();
+
+                    if (courseSectionListCheck.Count() > 0)
+                    {
+                        //This Block For Checking Period,Day Conflict Between Input Course Sections
+                        foreach (var courseSectionCheck in courseSectionListCheck)
+                        {
+                            var courseSectionCheckData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && c.CourseSectionId == courseSectionCheck.CourseSectionId).ToList();
+
+                            var courseSectionIds = courseSectionListCheck.Where(x => x.CourseSectionId != courseSectionCheck.CourseSectionId).Select(s => s.CourseSectionId);
+                            if (courseSectionIds != null)
+                            {
+                                var courseSectionInputData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && courseSectionIds.Contains(c.CourseSectionId)).ToList();
+
+                                foreach (var courseSec in courseSectionCheckData)
+                                {
+                                    courseSectionInputData = courseSectionInputData.Where(x => x.TenantId == courseSec.TenantId && x.SchoolId == courseSec.SchoolId &&
+                                      ((courseSec.FixedPeriodId != null && ((courseSec.FixedPeriodId == x.FixedPeriodId && (Regex.IsMatch(x.FixedDays.ToLower(), courseSec.FixedDays.ToLower(), RegexOptions.IgnoreCase))) || (courseSec.FixedPeriodId == x.VarPeriodId && courseSec.FixedDays.ToLower().Contains(x.VarDay.ToLower())) || (courseSec.FixedPeriodId == x.CalPeriodId && courseSec.FixedDays.ToLower().Contains(x.CalDay.ToLower())))) ||
+
+                                 (courseSec.VarPeriodId != null && ((courseSec.VarPeriodId == x.FixedPeriodId && x.FixedDays.ToLower().Contains(courseSec.VarDay.ToLower())) || (courseSec.VarPeriodId == x.VarPeriodId && courseSec.VarDay.ToLower() == x.VarDay.ToLower()) || (courseSec.VarPeriodId == x.CalPeriodId && courseSec.VarDay.ToLower() == x.CalDay.ToLower()))) ||
+
+                                 (courseSec.CalPeriodId != null && ((courseSec.CalPeriodId == x.FixedPeriodId && x.FixedDays.ToLower().Contains(courseSec.CalDay.ToLower())) || (courseSec.CalPeriodId == x.VarPeriodId && courseSec.CalDay.ToLower() == x.VarDay.ToLower()) || (courseSec.CalPeriodId == x.CalPeriodId && courseSec.CalDay.ToLower() == x.CalDay.ToLower())))) && courseSec.DurationEndDate > x.DurationStartDate).ToList();
+
+                                    if (courseSectionInputData.Count() > 0)
+                                    {
+                                        var ids = courseSectionInputData.Select(s => s.CourseSectionId).Distinct().ToList();
+                                        conflictInInputCourseSection.Add(ids.First());
+                                    }
+                                }
+                            }
+                        }
+                    } //end of input course section checking
 
                     foreach (var staff in staffScheduleViewModel.staffScheduleViewList.ToList())
                     {
@@ -260,45 +294,57 @@ namespace opensis.data.Repository
                         {
                             foreach (var courseSection in courseSectionList)
                             {
-                                var checkStaffInCourseSection = this.context.StaffCoursesectionSchedule.Where(x => x.TenantId == staffScheduleViewModel.TenantId && x.SchoolId == staffScheduleViewModel.SchoolId && x.StaffId == staff.StaffId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).ToList();
-
-                                if (checkStaffInCourseSection.Count() > 0)
+                                var check = conflictInInputCourseSection.Contains((int)courseSection.CourseSectionId);
+                                if (check == true) //checking this courseSection is in conflict Input CourseSection or not
                                 {
                                     staffScheduleViewModel._failure = true;
                                     //staffScheduleViewModel._message = "Staff already exits in course section";
                                     staffScheduleViewModel._message = "Conflict Detected";
                                     staff.ConflictStaff = true;
                                     courseSection.ConflictCourseSection = true;
-
                                 }
                                 else
-                                {
-                                    var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && c.CourseSectionId == courseSection.CourseSectionId).ToList();
+                                { 
+                                    var checkStaffInCourseSection = this.context.StaffCoursesectionSchedule.Where(x => x.TenantId == staffScheduleViewModel.TenantId && x.SchoolId == staffScheduleViewModel.SchoolId && x.StaffId == staff.StaffId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).ToList();
 
-                                    if (courseSectionAllData.FirstOrDefault().AllowTeacherConflict != true)
+                                    if (checkStaffInCourseSection.Count() > 0)
                                     {
-                                        if (courseSectionAllData.Count > 0)
+                                        staffScheduleViewModel._failure = true;
+                                        //staffScheduleViewModel._message = "Staff already exits in course section";
+                                        staffScheduleViewModel._message = "Conflict Detected";
+                                        staff.ConflictStaff = true;
+                                        courseSection.ConflictCourseSection = true;
+
+                                    }
+                                    else
+                                    {
+                                        var courseSectionAllData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && c.CourseSectionId == courseSection.CourseSectionId).ToList();
+
+                                        if (courseSectionAllData.FirstOrDefault().AllowTeacherConflict != true)
                                         {
-                                            foreach (var courseSectionData in courseSectionAllData)
+                                            if (courseSectionAllData.Count > 0)
                                             {
-                                                var checkForConflict = this.context.AllCourseSectionView.Join(this.context.StaffCoursesectionSchedule, acsv => acsv.CourseSectionId, scss => scss.CourseSectionId, (acsv, scss) => new { acsv, scss }).AsEnumerable().Where(c => c.acsv.TenantId == staffScheduleViewModel.TenantId && c.acsv.SchoolId == staffScheduleViewModel.SchoolId && c.scss.StaffId == staff.StaffId &&
-
-                                ((c.acsv.FixedPeriodId != null && ((c.acsv.FixedPeriodId == courseSectionData.FixedPeriodId && (Regex.IsMatch(courseSectionData.FixedDays.ToLower(), c.acsv.FixedDays.ToLower(), RegexOptions.IgnoreCase))) || (c.acsv.FixedPeriodId == courseSectionData.VarPeriodId && c.acsv.FixedDays.ToLower().Contains(courseSectionData.VarDay.ToLower())) || (c.acsv.FixedPeriodId == courseSectionData.CalPeriodId && c.acsv.FixedDays.ToLower().Contains(courseSectionData.CalDay.ToLower())))) ||
-
-                                (c.acsv.VarPeriodId != null && ((c.acsv.VarPeriodId == courseSectionData.FixedPeriodId && courseSectionData.FixedDays.ToLower().Contains(c.acsv.VarDay.ToLower())) || ( c.acsv.VarPeriodId == courseSectionData.VarPeriodId && c.acsv.VarDay.ToLower() == courseSectionData.VarDay.ToLower()) || (c.acsv.VarPeriodId == courseSectionData.CalPeriodId && c.acsv.VarDay.ToLower() == courseSectionData.CalDay.ToLower()))) ||
-
-                                (c.acsv.CalPeriodId != null && ((c.acsv.CalPeriodId == courseSectionData.FixedPeriodId && courseSectionData.FixedDays.ToLower().Contains(c.acsv.CalDay.ToLower())) || (c.acsv.CalPeriodId == courseSectionData.VarPeriodId && c.acsv.CalDay.ToLower() == courseSectionData.VarDay.ToLower()) || (c.acsv.CalPeriodId == courseSectionData.CalPeriodId && c.acsv.CalDay.ToLower() == courseSectionData.CalDay.ToLower())))) && c.acsv.DurationEndDate > courseSectionData.DurationStartDate).ToList();
-
-                                                if (checkForConflict.Count() > 0) 
+                                                foreach (var courseSectionData in courseSectionAllData)
                                                 {
-                                                    staffScheduleViewModel._failure = true;
-                                                    //staffScheduleViewModel._message = "Period and Room Conflict";
-                                                    staffScheduleViewModel._message = "Conflict Detected";
-                                                    staff.ConflictStaff = true;
-                                                    courseSection.ConflictCourseSection = true;
+                                                    var checkForConflict = this.context.AllCourseSectionView.Join(this.context.StaffCoursesectionSchedule, acsv => acsv.CourseSectionId, scss => scss.CourseSectionId, (acsv, scss) => new { acsv, scss }).AsEnumerable().Where(c => c.acsv.TenantId == staffScheduleViewModel.TenantId && c.acsv.SchoolId == staffScheduleViewModel.SchoolId && c.scss.StaffId == staff.StaffId &&
+
+                                    ((c.acsv.FixedPeriodId != null && ((c.acsv.FixedPeriodId == courseSectionData.FixedPeriodId && (Regex.IsMatch(courseSectionData.FixedDays.ToLower(), c.acsv.FixedDays.ToLower(), RegexOptions.IgnoreCase))) || (c.acsv.FixedPeriodId == courseSectionData.VarPeriodId && c.acsv.FixedDays.ToLower().Contains(courseSectionData.VarDay.ToLower())) || (c.acsv.FixedPeriodId == courseSectionData.CalPeriodId && c.acsv.FixedDays.ToLower().Contains(courseSectionData.CalDay.ToLower())))) ||
+
+                                    (c.acsv.VarPeriodId != null && ((c.acsv.VarPeriodId == courseSectionData.FixedPeriodId && courseSectionData.FixedDays.ToLower().Contains(c.acsv.VarDay.ToLower())) || (c.acsv.VarPeriodId == courseSectionData.VarPeriodId && c.acsv.VarDay.ToLower() == courseSectionData.VarDay.ToLower()) || (c.acsv.VarPeriodId == courseSectionData.CalPeriodId && c.acsv.VarDay.ToLower() == courseSectionData.CalDay.ToLower()))) ||
+
+                                    (c.acsv.CalPeriodId != null && ((c.acsv.CalPeriodId == courseSectionData.FixedPeriodId && courseSectionData.FixedDays.ToLower().Contains(c.acsv.CalDay.ToLower())) || (c.acsv.CalPeriodId == courseSectionData.VarPeriodId && c.acsv.CalDay.ToLower() == courseSectionData.VarDay.ToLower()) || (c.acsv.CalPeriodId == courseSectionData.CalPeriodId && c.acsv.CalDay.ToLower() == courseSectionData.CalDay.ToLower())))) && c.acsv.DurationEndDate > courseSectionData.DurationStartDate).ToList();
+
+                                                    if (checkForConflict.Count() > 0)
+                                                    {
+                                                        staffScheduleViewModel._failure = true;
+                                                        //staffScheduleViewModel._message = "Period and Room Conflict";
+                                                        staffScheduleViewModel._message = "Conflict Detected";
+                                                        staff.ConflictStaff = true;
+                                                        courseSection.ConflictCourseSection = true;
+                                                    }
                                                 }
-                                            }                                         
-                                        }                                    
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -383,9 +429,11 @@ namespace opensis.data.Repository
                         {
                             CourseSections.ScheduleType = "Block Schedule";                           
                         }
-                       
+                        CourseSections.CalendarId = scheduledCourseSection.CourseSection.CalendarId;
                         CourseSections.CourseId = scheduledCourseSection.CourseId;
                         CourseSections.CourseSectionId = scheduledCourseSection.CourseSectionId;
+                        CourseSections.GradeScaleId = scheduledCourseSection.CourseSection.GradeScaleId;
+                        CourseSections.StandardGradeScaleId = scheduledCourseSection.CourseSection.StandardGradeScaleId;
                         CourseSections.CourseSectionName = scheduledCourseSection.CourseSectionName;
                         CourseSections.YrMarkingPeriodId = scheduledCourseSection.YrMarkingPeriodId;
                         CourseSections.SmstrMarkingPeriodId = scheduledCourseSection.SmstrMarkingPeriodId;

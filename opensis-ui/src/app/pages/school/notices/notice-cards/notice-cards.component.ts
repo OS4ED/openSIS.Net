@@ -14,6 +14,7 @@ import { ConfirmDialogComponent } from '../../../../../app/pages/shared-module/c
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
 import { CryptoService } from '../../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 @Component({
   selector: 'vex-notice-cards',
   templateUrl: './notice-cards.component.html',
@@ -47,7 +48,8 @@ export class NoticeCardsComponent implements OnInit {
               public rollBasedAccessService: RollBasedAccessService,
               private Activeroute: ActivatedRoute,
               private snackbar: MatSnackBar,
-              private cryptoService: CryptoService) {
+              private cryptoService: CryptoService,
+              private defaultValuesService: DefaultValuesService) {
     translateService.use('en');
   }
 
@@ -69,8 +71,8 @@ export class NoticeCardsComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete this notice."}
+          title: this.defaultValuesService.translateKey('areYouSure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDelete') + this.title}
     });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {

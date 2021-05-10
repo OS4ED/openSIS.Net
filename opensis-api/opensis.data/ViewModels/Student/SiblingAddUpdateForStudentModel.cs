@@ -10,5 +10,6 @@ namespace opensis.data.ViewModels.Student
         public StudentMaster studentMaster { get; set; }
         public int? SchoolId { get; set; }
         public int StudentId { get; set; }
+        public Guid? TenantId { get; set; }
     }
 }

@@ -59,6 +59,8 @@ export class ParentInfoService {
     parentInfo.parentInfo.schoolId = this.defaultValuesService.getSchoolID();
     parentInfo.parentInfo.tenantId = this.defaultValuesService.getTenantID();
     parentInfo.parentInfo.parentPhoto = this.parentImage;
+    parentInfo.parentInfo.parentAddress[0].tenantId = this.defaultValuesService.getTenantID();
+    parentInfo.parentInfo.parentAddress[0].schoolId = this.defaultValuesService.getSchoolID();
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/updateParentInfo";
     return this.http.put<AddParentInfoModel>(apiurl, parentInfo);
   }

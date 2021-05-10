@@ -156,5 +156,63 @@ namespace opensis.core.StudentSchedule.Services
             }
             return studentCourseSectionScheduleDeleteModel;
         }
+
+        /// <summary>
+        /// Schedule Courses For Student360
+        /// </summary>
+        /// <param name="student360ScheduleCourseSectionListViewModel"></param>
+        /// <returns></returns>
+        public Student360ScheduleCourseSectionListViewModel ScheduleCoursesForStudent360(Student360ScheduleCourseSectionListViewModel student360ScheduleCourseSectionListViewModel)
+        {
+            Student360ScheduleCourseSectionListViewModel courseListView = new Student360ScheduleCourseSectionListViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(student360ScheduleCourseSectionListViewModel._tenantName + student360ScheduleCourseSectionListViewModel._userName, student360ScheduleCourseSectionListViewModel._token))
+                {
+                    courseListView = this.studentScheduleRepository.ScheduleCoursesForStudent360(student360ScheduleCourseSectionListViewModel);
+                }
+                else
+                {
+                    courseListView._failure = true;
+                    courseListView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+
+                courseListView._failure = true;
+                courseListView._message = es.Message;
+            }
+            return courseListView;
+        }
+
+        /// <summary>
+        /// Drop Scheduled Course Section For Student360
+        /// </summary>
+        /// <param name="scheduledStudentDropModel"></param>
+        /// <returns></returns>
+        public ScheduledStudentDropModel DropScheduledCourseSectionForStudent360(ScheduledStudentDropModel scheduledStudentDropModel)
+        {
+            ScheduledStudentDropModel ScheduledStudentDrop = new ScheduledStudentDropModel();
+            try
+            {
+                if (TokenManager.CheckToken(scheduledStudentDropModel._tenantName + scheduledStudentDropModel._userName, scheduledStudentDropModel._token))
+                {
+                    ScheduledStudentDrop = this.studentScheduleRepository.DropScheduledCourseSectionForStudent360(scheduledStudentDropModel);
+                }
+                else
+                {
+                    ScheduledStudentDrop._failure = true;
+                    ScheduledStudentDrop._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+
+                ScheduledStudentDrop._failure = true;
+                ScheduledStudentDrop._message = es.Message;
+            }
+            return ScheduledStudentDrop;
+        }
     }
 }

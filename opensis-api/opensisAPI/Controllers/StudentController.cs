@@ -586,17 +586,7 @@ namespace opensisAPI.Controllers
             StudentListAddViewModel studentListAdd = new StudentListAddViewModel();
             try
             {
-                if (studentListAddViewModel.studentAddViewModelList.FirstOrDefault().studentMaster.SchoolId > 0)
-                {
-                    studentListAdd = _studentService.AddStudentList(studentListAddViewModel);
-                }
-                else
-                {
-                    studentListAdd._token = studentListAddViewModel._token;
-                    studentListAdd._tenantName = studentListAddViewModel._tenantName;
-                    studentListAdd._failure = true;
-                    studentListAdd._message = "Please enter valid school id";
-                }
+                studentListAdd = _studentService.AddStudentList(studentListAddViewModel);
             }
             catch (Exception es)
             {
@@ -604,6 +594,22 @@ namespace opensisAPI.Controllers
                 studentListAdd._message = es.Message;
             }
             return studentListAdd;
+        }
+
+        [HttpPost("generateTranscriptForStudent")]
+        public ActionResult<TranscriptViewModel> GenerateTranscriptForStudent(TranscriptViewModel transcriptViewModel)
+        {
+            TranscriptViewModel transcriptView = new TranscriptViewModel();
+            try
+            {
+                transcriptView = _studentService.GenerateTranscriptForStudent(transcriptViewModel);
+            }
+            catch (Exception es)
+            {
+                transcriptView._failure = true;
+                transcriptView._message = es.Message;
+            }
+            return transcriptView;
         }
     }
 }

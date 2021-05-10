@@ -2,24 +2,24 @@
     <div class="sidenav-secondary">
         <vex-scrollbar class="flex-auto">
             <div class="px-gutter sm:px-0">
-                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple *ngIf="checkViewEnableOrNot(50)"
                      routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/input-final-grade']">
                     <img src="assets/img/icons/top-grades.svg" width="24" class="mr-3"> {{ "inputFinalGrade" | translate }}
                 </a>
-                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/input-effort-grade']"
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" *ngIf="checkViewEnableOrNot(51)" routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/input-effort-grade']"
                 >
                     <mat-icon class="mr-3">grading</mat-icon> {{ "inputEffortGrade" | translate }}
                 </a>
-                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRippl>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRippl *ngIf="checkViewEnableOrNot(52)">
                     <img src="assets/img/icons/exam.svg" width="24" class="mr-3"> {{ "gradebookGrades" | translate }}
                 </a>
-                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple *ngIf="checkViewEnableOrNot(53)">
                     <mat-icon class="mr-3">insights</mat-icon> {{ "progressReports" | translate }}
                 </a>
-                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/take-attendance']">
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" *ngIf="checkViewEnableOrNot(54)" routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/take-attendance']">
                     <mat-icon class="mr-3">alarm_on</mat-icon> {{ "takeAttendance" | translate }}
                 </a>
-                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple>
+                <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple *ngIf="checkViewEnableOrNot(55)">
                     <mat-icon class="mr-3">alarm_off</mat-icon> {{ "missingAttendance" | translate }}
                 </a>
             </div>

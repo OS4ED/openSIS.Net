@@ -111,7 +111,6 @@ export class StandardGradesComponent implements OnInit {
 
   applyFilter() {
     this.gradeList.filter = this.searchKey.trim().toLowerCase();
-
   }
 
   onSearchClear() {
@@ -238,11 +237,21 @@ export class StandardGradesComponent implements OnInit {
             }
             this.totalCount = this.gradeListValue.length
             this.gradeList = new MatTableDataSource(this.gradeListValue);
+            this.gradeList.filterPredicate = this.createFilter();
             this.gradeScaleListForExcel = this.gradeScaleList[index]?.grade;
           }
         }
       }
     );
+  }
+
+  createFilter(): (data: any, filter: string) => boolean {
+    let filterFunction = (data, filter): boolean => {
+      return (
+        data.title.toLowerCase().includes(filter) || data.comment.toLowerCase().includes(filter)
+      );
+    };
+    return filterFunction;
   }
 
   drop(event: CdkDragDrop<string[]>) {

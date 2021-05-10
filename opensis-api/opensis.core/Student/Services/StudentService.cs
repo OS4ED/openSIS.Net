@@ -9,7 +9,7 @@ using System.Text;
 
 namespace opensis.core.Student.Services
 {
-    public class StudentService: IStudentService
+    public class StudentService : IStudentService
     {
         private static string SUCCESS = "success";
         private static NLog.Logger logger = NLog.LogManager.GetCurrentClassLogger();
@@ -653,5 +653,26 @@ namespace opensis.core.Student.Services
             }
             return studentListAdd;
         }
+
+        /// <summary>
+        /// Generate Transcript For Student
+        /// </summary>
+        /// <param name="transcriptViewModel"></param>
+        /// <returns></returns>
+        public TranscriptViewModel GenerateTranscriptForStudent(TranscriptViewModel transcriptViewModel)
+        {
+            TranscriptViewModel transcriptView = new TranscriptViewModel();
+            if (TokenManager.CheckToken(transcriptViewModel._tenantName + transcriptViewModel._userName, transcriptViewModel._token))
+            {
+                transcriptView = this.studentRepository.GenerateTranscriptForStudent(transcriptViewModel);
+            }
+            else
+            {
+                transcriptView._failure = true;
+                transcriptView._message = TOKENINVALID;
+            }
+            return transcriptView;
+        }
+       
     }
 }

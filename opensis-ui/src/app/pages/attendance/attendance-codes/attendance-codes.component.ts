@@ -242,19 +242,20 @@ export class AttendanceCodesComponent implements OnInit {
     this.attendanceCategoryModel.attendanceCodeCategories.academicYear = categoryDetails.academicYear;
     this.attendanceCodeService.deleteAttendanceCodeCategories(this.attendanceCategoryModel).subscribe((res) => {
       if (res) {
-        this.snackbar.open('' + res._message, '', {
-          duration: 10000
-        });
-        if (indexNeedToBeSelectAfterDelete != -1) {
-          this.selectedAttendanceCategory = this.attendanceCategories[indexNeedToBeSelectAfterDelete].attendanceCategoryId;
+        if (res._failure) {
+          this.snackbar.open(res._message, '', {
+            duration: 10000
+          });
+        } else {
+          if (indexNeedToBeSelectAfterDelete != -1) {
+            this.selectedAttendanceCategory = this.attendanceCategories[indexNeedToBeSelectAfterDelete].attendanceCategoryId;
+          }
+          this.getAllAttendanceCategory();
         }
-        this.getAllAttendanceCategory();
-      } else if (res._failure) {
-        this.snackbar.open(res._message, '', {
-          duration: 10000
-        });
-      } else {
-        this.snackbar.open('Attendance Category is Failed to Delete!. ' + sessionStorage.getItem("httpError"), '', {
+
+      }
+      else {
+        this.snackbar.open(sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
@@ -318,16 +319,16 @@ export class AttendanceCodesComponent implements OnInit {
 
     this.attendanceCodeService.deleteAttendanceCode(this.attendanceCodeModel).subscribe((res) => {
       if (res) {
-        this.snackbar.open('' + res._message, '', {
-          duration: 10000
-        });
-        this.getAllAttendanceCode();
-      } else if (res._failure) {
-        this.snackbar.open(res._message, '', {
-          duration: 10000
-        });
-      } else {
-        this.snackbar.open('Attendance Code is Failed to Delete!. ' + sessionStorage.getItem("httpError"), '', {
+        if (res._failure) {
+          this.snackbar.open(res._message, '', {
+            duration: 10000
+          });
+        } else {
+          this.getAllAttendanceCode();
+        }
+      }
+      else {
+        this.snackbar.open(sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }

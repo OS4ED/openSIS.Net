@@ -36,6 +36,9 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   @Input() module;
   staffMultiSelectValue;
   studentMultiSelectValue;
+  staffCustomFields=[];
+  schoolCustomFields=[];
+  studentCustomFields=[];
   schoolMultiSelectValue
   customFieldListViewModel = new CustomFieldListViewModel();
   headerTitle: string = "Other Information";
@@ -97,8 +100,8 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   checkStudentCustomValue() {
     if (this.studentAddModel !== undefined) {
       if (this.studentAddModel?.fieldsCategoryList !== undefined && this.studentAddModel?.fieldsCategoryList?.length >0) {
-
-        for (let studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId]?.customFields) {
+        this.studentCustomFields = this.studentAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField);
+        for (let studentCustomField of this.studentCustomFields) {
           if (studentCustomField?.customFieldsValue.length == 0) {
 
             studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
@@ -118,8 +121,8 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   checkStaffCustomValue(){
     if (this.staffAddModel !== undefined) {
       if (this.staffAddModel?.fieldsCategoryList !== undefined && this.staffAddModel?.fieldsCategoryList !== null) {
-
-        for (let staffCustomField of this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields) {
+        this.staffCustomFields = this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField);
+        for (let staffCustomField of this.staffCustomFields) {
           if (staffCustomField?.customFieldsValue.length == 0) {
 
             staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
@@ -143,8 +146,8 @@ export class CustomFieldWithoutFormComponent implements OnInit {
         this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
         if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId]?.customFields !== undefined) {
 
-
-          for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          this.schoolCustomFields= this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.filter(x => !x.systemField)
+          for (let schoolCustomField of this.schoolCustomFields) {
             if (schoolCustomField.customFieldsValue.length == 0) {
 
               schoolCustomField.customFieldsValue.push(new CustomFieldsValueModel());
@@ -168,8 +171,8 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
         if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId]?.customFields !== undefined) {
 
-
-          for (let schoolCustomField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
+          this.schoolCustomFields= this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.filter(x => !x.systemField)
+          for (let schoolCustomField of this.schoolCustomFields) {
             if (schoolCustomField.customFieldsValue.length == 0) {
 
               schoolCustomField.customFieldsValue.push(new CustomFieldsValueModel());

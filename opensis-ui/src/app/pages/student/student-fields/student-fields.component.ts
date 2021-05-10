@@ -14,16 +14,17 @@ import { TranslateService } from '@ngx-translate/core';
 import { EditStudentFieldsComponent } from './edit-student-fields/edit-student-fields.component';
 import { StudentFieldsCategoryComponent } from './student-fields-category/student-fields-category.component';
 import { CustomFieldService } from '../../../services/custom-field.service';
-import {CustomFieldAddView,CustomFieldDragDropModel, CustomFieldListViewModel} from '../../../models/custom-field.model';
+import {CustomFieldAddView, CustomFieldDragDropModel, CustomFieldListViewModel} from '../../../models/custom-field.model';
 import { MatTableDataSource } from '@angular/material/table';
 import { MatSort } from '@angular/material/sort';
 import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confirm-dialog.component';
 import { LoaderService } from '../../../services/loader.service';
-import { FieldsCategoryListView,FieldsCategoryAddView } from '../../../models/fields-category.model';
+import { FieldsCategoryListView, FieldsCategoryAddView } from '../../../models/fields-category.model';
 import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum';
 import { CdkDragDrop} from '@angular/cdk/drag-drop';
 import { CryptoService } from '../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { DefaultValuesService } from '../../../common/default-values.service';
 
 
 @Component({
@@ -48,22 +49,22 @@ export class StudentFieldsComponent implements OnInit {
 
   StudentFieldsModelList;
   fieldsCategoryList;
-  currentCategoryId=null;
-  fieldCategoryModuleEnum=FieldCategoryModuleEnum
-  restrictedCategoryid=[5,6,8,9,10] //All the catagory where Custom field cannot insert
+  currentCategoryId = null;
+  fieldCategoryModuleEnum = FieldCategoryModuleEnum;
+  restrictedCategoryid = [5, 6, 8, 9, 10]; // All the catagory where Custom field cannot insert
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icEdit = icEdit;
   icDelete = icDelete;
   icSearch = icSearch;
   icFilterList = icFilterList;
-  loading:Boolean;
-  searchKey:string;
-  customFieldListViewModel:CustomFieldListViewModel= new CustomFieldListViewModel();
-  customFieldAddView:CustomFieldAddView= new CustomFieldAddView()
-  fieldsCategoryListView:FieldsCategoryListView= new FieldsCategoryListView();
-  fieldsCategoryAddView:FieldsCategoryAddView= new FieldsCategoryAddView();
-  customFieldDragDropModel:CustomFieldDragDropModel= new CustomFieldDragDropModel();
+  loading: boolean;
+  searchKey: string;
+  customFieldListViewModel: CustomFieldListViewModel = new CustomFieldListViewModel();
+  customFieldAddView: CustomFieldAddView = new CustomFieldAddView();
+  fieldsCategoryListView: FieldsCategoryListView = new FieldsCategoryListView();
+  fieldsCategoryAddView: FieldsCategoryAddView = new FieldsCategoryAddView();
+  customFieldDragDropModel: CustomFieldDragDropModel = new CustomFieldDragDropModel();
   editPermission = false;
   deletePermission = false;
   addPermission = false;
@@ -74,26 +75,27 @@ export class StudentFieldsComponent implements OnInit {
     private router: Router,
     private snackbar: MatSnackBar,
     private dialog: MatDialog,
-    public translateService:TranslateService,
-    private customFieldservice:CustomFieldService,
-    private loaderService:LoaderService,
+    public translateService: TranslateService,
+    private customFieldservice: CustomFieldService,
+    private loaderService: LoaderService,
+    private defaultValuesService: DefaultValuesService,
     private cryptoService: CryptoService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
-    }); 
- 
+    });
+
   }
-  
+
   customFieldList: MatTableDataSource<any>;
   @ViewChild(MatSort) sort: MatSort;
   onSearchClear(){
-    this.searchKey="";
+    this.searchKey = '';
     this.applyFilter();
   }
   applyFilter(){
-    this.customFieldList.filter = this.searchKey.trim().toLowerCase()
+    this.customFieldList.filter = this.searchKey.trim().toLowerCase();
   }
 
   ngOnInit(): void {
@@ -104,36 +106,36 @@ export class StudentFieldsComponent implements OnInit {
     this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
-    this.getAllCustomFieldCategory()
+    this.getAllCustomFieldCategory();
   }
   selectCategory(element){
-    this.currentCategoryId=element.categoryId;
-    this.customFieldList=new MatTableDataSource(element.customFields) ;
-    this.customFieldList.sort=this.sort;
+    this.currentCategoryId = element.categoryId;
+    this.customFieldList = new MatTableDataSource(element.customFields) ;
+    this.customFieldList.sort = this.sort;
   }
 
-   goToAdd(){   
+   goToAdd(){
     this.dialog.open(EditStudentFieldsComponent, {
-      data: {categoryID:this.currentCategoryId},
+      data: {categoryID: this.currentCategoryId},
       width: '600px'
-    }).afterClosed().subscribe((data)=>{
-      if(data==='submited'){
+    }).afterClosed().subscribe((data) => {
+      if (data === 'submited'){
         this.getAllCustomFieldCategory();
       }
     });
    }
-   goToAddCategory(){   
+   goToAddCategory(){
     this.dialog.open(StudentFieldsCategoryComponent, {
       width: '500px'
-    }).afterClosed().subscribe((data)=>{
-      if(data==='submited'){
+    }).afterClosed().subscribe((data) => {
+      if (data === 'submited'){
         this.getAllCustomFieldCategory();
       }
     });
    }
-   
 
-  getPageEvent(event){    
+
+  getPageEvent(event){
     // this.getAllSchool.pageNumber=event.pageIndex+1;
     // this.getAllSchool.pageSize=event.pageSize;
     // this.callAllSchool(this.getAllSchool);
@@ -150,60 +152,55 @@ export class StudentFieldsComponent implements OnInit {
   }
 
   deleteCustomFieldata(element){
-    this.customFieldAddView.customFields=element
+    this.customFieldAddView.customFields = element;
     this.customFieldservice.deleteCustomField(this.customFieldAddView).subscribe(
-      (res:CustomFieldAddView)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Custom Field failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
+      (res: CustomFieldAddView) => {
+        if (res){
           if (res._failure) {
             this.snackbar.open(res._message, '', {
               duration: 10000
             });
-          } 
-          else { 
-            this.getAllCustomFieldCategory()
+          }
+          else {
+            this.getAllCustomFieldCategory();
           }
         }
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('customFieldFailed') + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
       }
-    )
+    );
   }
   confirmDelete(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+element.title+"."}
+          title: this.defaultValuesService.translateKey('areYouSure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDelete') + element.title + '.'}
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
-      if(dialogResult){
+      if (dialogResult){
         this.deleteCustomFieldata(element);
       }
    });
   }
   openEditdata(element){
     this.dialog.open(EditStudentFieldsComponent, {
-      data: {information:element},
+      data: {information: element},
         width: '800px'
-    }).afterClosed().subscribe((data)=>{
-      if(data==='submited'){
+    }).afterClosed().subscribe((data) => {
+      if (data === 'submited'){
         this.getAllCustomFieldCategory();
       }
-    })
+    });
   }
   getAllCustomFieldCategory(){
-    this.fieldsCategoryListView.module=this.fieldCategoryModuleEnum.Student;
+    this.fieldsCategoryListView.module = this.fieldCategoryModuleEnum.Student;
     this.customFieldservice.getAllFieldsCategory(this.fieldsCategoryListView).subscribe(
-      (res:FieldsCategoryListView)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Field Category list failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
+      (res: FieldsCategoryListView) => {
+        if (res){
           if (res._failure) {
             if (res.fieldsCategoryList == null) {
               this.fieldsCategoryList = [];
@@ -211,48 +208,48 @@ export class StudentFieldsComponent implements OnInit {
                 duration: 10000
               });
             } else {
-              this.fieldsCategoryList = []
-            }
-          } 
-          else{
-            this.fieldsCategoryList= res.fieldsCategoryList 
-            if(this.currentCategoryId==null){
-              this.currentCategoryId=res.fieldsCategoryList[0].categoryId  
-              this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[0].customFields) ;
-              this.customFieldList.sort=this.sort;
-            }   
-            else{
-              let index = this.fieldsCategoryList.findIndex((x) => {
-                return x.categoryId === this.currentCategoryId
-              });
-              this.customFieldList=new MatTableDataSource(res.fieldsCategoryList[index].customFields) ;
-              this.customFieldList.sort=this.sort;
+              this.fieldsCategoryList = [];
             }
           }
+          else{
+            this.fieldsCategoryList = res.fieldsCategoryList;
+            if (this.currentCategoryId == null){
+              this.currentCategoryId = res.fieldsCategoryList[0].categoryId;
+              this.customFieldList = new MatTableDataSource(res.fieldsCategoryList[0].customFields) ;
+              this.customFieldList.sort = this.sort;
+            }
+            else{
+              const index = this.fieldsCategoryList.findIndex((x) => {
+                return x.categoryId === this.currentCategoryId;
+              });
+              this.customFieldList = new MatTableDataSource(res.fieldsCategoryList[index].customFields) ;
+              this.customFieldList.sort = this.sort;
+            }
+          }
+        }
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('fieldCategoryListFailed') + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
         }
       }
     );
   }
   editFieldCategory(element){
-    this.dialog.open(StudentFieldsCategoryComponent,{ 
+    this.dialog.open(StudentFieldsCategoryComponent, {
       data: element,
       width: '800px'
-    }).afterClosed().subscribe((data)=>{
-      if(data==='submited'){
+    }).afterClosed().subscribe((data) => {
+      if (data === 'submited'){
         this.getAllCustomFieldCategory();
       }
-    })
+    });
   }
   deleteFieldCategory(element){
-    this.fieldsCategoryAddView.fieldsCategory=element
+    this.fieldsCategoryAddView.fieldsCategory = element;
     this.customFieldservice.deleteFieldsCategory(this.fieldsCategoryAddView).subscribe(
-      (res: FieldsCategoryAddView)=>{
-        if (typeof(res) === 'undefined'){
-          this.snackbar.open('Field Category delete failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
+      (res: FieldsCategoryAddView) => {
+        if (res){
           if (res._failure) {
             this.snackbar.open( res._message, '', {
               duration: 10000
@@ -268,18 +265,24 @@ export class StudentFieldsComponent implements OnInit {
             this.getAllCustomFieldCategory();
           }
         }
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('fieldCategoryDeleteFailed') 
+          + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
       }
     );
   }
   confirmDeleteFieldCategory(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+element.title+"."}
+          title: this.defaultValuesService.translateKey('areYouSure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDelete') + element.title + '.'}
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
-      if(dialogResult){
+      if (dialogResult){
         this.deleteFieldCategory(element);
       }
    });
@@ -287,23 +290,25 @@ export class StudentFieldsComponent implements OnInit {
 
   drop(event: CdkDragDrop<string[]>) {
     this.customFieldDragDropModel.categoryId = this.currentCategoryId;
-    this.customFieldDragDropModel.currentSortOrder = this.customFieldList.data[event.currentIndex].sortOrder
-    this.customFieldDragDropModel.previousSortOrder = this.customFieldList.data[event.previousIndex].sortOrder
+    this.customFieldDragDropModel.currentSortOrder = this.customFieldList.data[event.currentIndex].sortOrder;
+    this.customFieldDragDropModel.previousSortOrder = this.customFieldList.data[event.previousIndex].sortOrder;
     this.customFieldservice.updateCustomFieldSortOrder(this.customFieldDragDropModel).subscribe(
       (res: CustomFieldDragDropModel) => {
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Custom Field Drag short failed. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }else{
+        if (res){
           if (res._failure) {
             this.snackbar.open( res._message, '', {
               duration: 10000
             });
-          } 
-          else{
-            this.getAllCustomFieldCategory()
           }
+          else{
+            this.getAllCustomFieldCategory();
+          }
+        }
+        else{
+          this.snackbar.open(this.defaultValuesService.translateKey('customFieldDragShortFailed')
+          + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
         }
       }
     );

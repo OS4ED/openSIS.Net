@@ -20,5 +20,6 @@ namespace opensis.data.Interface
         public SchoolListViewModel StudentEnrollmentSchoolList(SchoolListViewModel schoolListViewModel);
         public SchoolAddViewModel AddUpdateSchoolLogo(SchoolAddViewModel schoolAddViewModel);
         //Task<SchoolLogoUpdateModel> updateSchoolLogo(Guid guid, SchoolLogoUpdateModel schoolLogoUpdateModel);
+        public CopySchoolViewModel CopySchool(CopySchoolViewModel copySchoolViewModel);
     }
 }

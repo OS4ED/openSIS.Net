@@ -260,6 +260,8 @@ export class StaffGeneralinfoComponent implements OnInit {
   }
 
   getAllCountry() {
+    if (!this.countryModel.isCountryAvailable){
+      this.countryModel.isCountryAvailable = true;
     this.commonService.GetAllCountry(this.countryModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
       if (typeof (data) == 'undefined') {
         this.countryListArr = [];
@@ -276,6 +278,7 @@ export class StaffGeneralinfoComponent implements OnInit {
       }
     })
   }
+  }
 
   findNationalityNameById(){
     this.countryListArr.map((val) => {
@@ -291,7 +294,8 @@ export class StaffGeneralinfoComponent implements OnInit {
   }
 
   GetAllLanguage() {
-    
+    if (!this.languages.isLanguageAvailable){
+      this.languages.isLanguageAvailable = true;
     this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
         this.languageList = [];
@@ -304,6 +308,7 @@ export class StaffGeneralinfoComponent implements OnInit {
       }
 
     })
+  }
   }
 
   findNameById(){

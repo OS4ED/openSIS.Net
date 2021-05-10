@@ -1,0 +1,128 @@
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="{{ 'missingAttendance' | translate }}" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Attendance']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+        <div class="card overflow-auto -mt-16">
+            <h4 class="px-6 py-4 text-lg">{{ 'followingTeachersHaveMissingAttendance' | translate }}</h4>
+            <mat-divider></mat-divider>
+            <div class="px-6 py-4 pb-2">
+                <ul class="grid md:grid-cols-4 col-gap-6 row-gap-2">
+                    <li>
+                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                            <mat-label>{{ "from" | translate }}</mat-label>
+                            <input matInput [matDatepicker]="fromDate">
+                            <mat-datepicker-toggle matSuffix [for]="fromDate"></mat-datepicker-toggle>
+                            <mat-datepicker #fromDate></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                            <mat-label>{{ "to" | translate }}</mat-label>
+                            <input matInput [matDatepicker]="toDate">
+                            <mat-datepicker-toggle matSuffix [for]="toDate"></mat-datepicker-toggle>
+                            <mat-datepicker #toDate></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </div>
+            <mat-divider></mat-divider>
+            <div class="bg-white px-4 md:h-14 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="md:flex w-full justify-between">
+                    <div class="py-2" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="flex items-center">
+                            <input matInput class="px-2 py-3 border-0 outline-none w-full bg-transparent"
+                                appearance="outline" color="primary" placeholder="Search..." type="search">
+                            <button class="ml-4" mat-icon-button type="button">
+                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="pt-2 items-center">
+                        <a class="cursor-pointer p-1 mt-1 inline-block align-middle" matTooltip="Export to Excel"><i
+                                class="icon icon-file-excel text-lg"></i></a>
+                        <button class="ml-2 inline-block align-middle" fxFlex="none" mat-icon-button
+                            matTooltip="Filter Columns" type="button">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t overflow-x-auto overflow-y-hidden">
+                <table class="w-full schedule-table">
+                    <thead>
+                        <tr>
+                            <th>{{ "teacher" | translate }}</th>
+                            <th>{{ "staffId" | translate }}</th>
+                            <th>{{ "profile" | translate }}</th>
+                            <th>{{ "jobTitle" | translate }}</th>
+                            <th>{{ "schoolEmail" | translate }}</th>
+                            <th>{{ "mobilePhone" | translate }}</th>
+                            <th>{{ "action" | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Danielle Boucher</td>
+                            <td>ST0021</td>
+                            <td>Homeroom Teacher</td>
+                            <td>Teacher</td>
+                            <td>danielle.boucher@example.com</td>
+                            <td>1234567893</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'missing-attendance-details']"> <mat-icon>alarm_off</mat-icon></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Ella Brown</td>
+                            <td>ST0102</td>
+                            <td>Teacher</td>
+                            <td>Asst. Teacher</td>
+                            <td>ellab@example.com</td>
+                            <td>4534567893</td>
+                            <td class="cursor-pointer text-primary">
+                               <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'missing-attendance-details']"> <mat-icon>alarm_off</mat-icon></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Lian Fang</td>
+                            <td>ST1203</td>
+                            <td>Teacher</td>
+                            <td>Teacher</td>
+                            <td>lian.fang@example.com</td>
+                            <td>5034567893</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'missing-attendance-details']"> <mat-icon>alarm_off</mat-icon></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Adriana Gracia</td>
+                            <td>ST0018</td>
+                            <td>Teacher</td>
+                            <td>Teacher</td>
+                            <td>agarcia@example.com</td>
+                            <td>6034567893</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'missing-attendance-details']"> <mat-icon>alarm_off</mat-icon></a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Olivia Jones</td>
+                            <td>ST0056</td>
+                            <td>Homeroom Teacher</td>
+                            <td>Teacher</td>
+                            <td>oliviajones@example.com</td>
+                            <td>4434567893</td>
+                            <td class="cursor-pointer text-primary">
+                                <a [routerLink]="['/school', 'attendance', 'missing-attendance', 'missing-attendance-details']"> <mat-icon>alarm_off</mat-icon></a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

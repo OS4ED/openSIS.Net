@@ -63,7 +63,7 @@
     </form>
         <div [ngClass]="{'hidden': !submitReenroll}" class="card overflow-auto mt-6">
             <div class="flex justify-between px-6 py-4">
-                <h5 class="font-medium">Showing list of inactive students.Select students to re-enroll</h5>
+                <h5 class="font-medium">{{'showingListOfInactiveStudentsSelectStudentsToReenroll' | translate}}</h5>
                 <mat-slide-toggle color="primary" [(ngModel)]="showAllSchools" (change)="searchAllSchools($event)">{{'searchAllSchools' | translate}}</mat-slide-toggle>
             </div>
             <mat-divider></mat-divider>
@@ -180,18 +180,17 @@
         </div>
 
         <!-- After complete student re-enrollment below succes msg is shown start -->
-        <div *ngIf="showSuccessMessage" class="card -mt-16 py-12 px-6 text-center">
+        <div *ngIf="showSuccessMessage" class="card -mt-16 p-12 text-center">
             <div class="relative inline-block" width="80px">
                 <img src="assets/img/icons/re-enroll-success.svg" alt="" class="mx-auto mb-4" width="80" />
                 <span class="absolute bg-white check-wrapper">
                     <mat-icon class="text-green">check_circle</mat-icon>
                 </span>
             </div>
-            <h5 class="font-semibold text-green text-xl mb-2">Success!</h5>
-            <p class="mb-6"><span class="font-semibold">{{studentsNameList}}</span><br /> successfully re-enrolled to <span class="font-semibold">{{selectedSchoollName}}</span>
+            <h5 class="font-semibold text-green text-xl mb-2">{{'success' | translate}}</h5>
+            <p class="mb-6"><span class="font-semibold">{{studentsNameList}}</span> {{'successfullyReenrolledTo' | translate}} <span class="font-semibold">{{selectedSchoollName}}</span>
             </p>
-            <button type="submit" (click)="reenrollAnotherStudents()" class="border border-primary text-blue p-2 rounded font-medium">Re-enroll Another
-                Student</button>
+            <button type="submit" (click)="reenrollAnotherStudents()" class="border border-primary text-blue p-2 rounded font-medium">{{'reenrollAnotherStudent' | translate}}</button>
         </div>
         <!-- End After complete student re-enrollment below succes msg is shown  -->
     </vex-page-layout-content>

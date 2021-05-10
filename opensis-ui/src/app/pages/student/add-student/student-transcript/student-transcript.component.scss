@@ -1,0 +1,21 @@
+.schedule-table {
+  tr {
+    td,
+    th {
+      @apply border-b;
+      border-color: rgba(0, 0, 0, 0.1);
+      @apply px-6;
+      @apply py-2;
+    }
+    th {
+      text-align: left;
+    }
+  }
+}
+.my-tooltip {
+  white-space: pre-line;
+}
+::ng-deep .my-tooltip {
+  white-space: pre-line;
+  font-size: 12px;
+}

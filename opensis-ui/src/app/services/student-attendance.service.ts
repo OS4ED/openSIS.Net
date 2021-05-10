@@ -4,7 +4,11 @@ import { environment } from '../../environments/environment';
 import { DefaultValuesService } from '../common/default-values.service';
 import { GetAllCourseListModel } from '../models/course-manager.model';
 import { GetAllStaffModel } from '../models/staff.model';
-import { AddUpdateStudentAttendanceModel, GetAllStudentAttendanceListModel, SearchCourseSectionForStudentAttendance, StaffDetailsModel } from '../models/take-attendance-list.model';
+import {
+  AddUpdateStudentAttendanceModel,
+  GetAllStudentAttendanceListModel,
+  SearchCourseSectionForStudentAttendance,
+  StaffDetailsModel } from '../models/take-attendance-list.model';
 
 @Injectable({
   providedIn: 'root'
@@ -26,34 +30,34 @@ export class StudentAttendanceService {
   getStaffDetails() {
     return this.staffDetails;
   }
-  
-  getAllStaffList(obj:GetAllStaffModel){
+
+  getAllStaffList(obj: GetAllStaffModel){
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
-    let apiurl = this.apiUrl + obj._tenantName + "/Staff/getAllStaffList";
-    return this.http.post<GetAllStaffModel>(apiurl, obj)
+    const apiurl = this.apiUrl + obj._tenantName + '/Staff/getAllStaffList';
+    return this.http.post<GetAllStaffModel>(apiurl, obj);
   }
 
   getAllCourcesForStudentAttendance(obj: SearchCourseSectionForStudentAttendance) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
-    let apiurl = this.apiUrl + obj._tenantName + "/StudentAttendance/searchCourseSectionForStudentAttendance";
-    return this.http.post<SearchCourseSectionForStudentAttendance>(apiurl, obj)
+    const apiurl = this.apiUrl + obj._tenantName + '/StudentAttendance/searchCourseSectionForStudentAttendance';
+    return this.http.post<SearchCourseSectionForStudentAttendance>(apiurl, obj);
   }
 
   getAllCourseSectionList(courseManager: GetAllCourseListModel) {
     courseManager = this.defaultValuesService.getAllMandatoryVariable(courseManager);
-    let apiurl = this.apiUrl + courseManager._tenantName + "/CourseManager/getAllCourseList";
-    return this.http.post<GetAllCourseListModel>(apiurl, courseManager)
+    const apiurl = this.apiUrl + courseManager._tenantName + '/CourseManager/getAllCourseList';
+    return this.http.post<GetAllCourseListModel>(apiurl, courseManager);
   }
 
   getAllStudentAttendanceList(studentAttendance: GetAllStudentAttendanceListModel) {
     studentAttendance = this.defaultValuesService.getAllMandatoryVariable(studentAttendance);
-    let apiurl = this.apiUrl + studentAttendance._tenantName + "/StudentAttendance/getAllStudentAttendanceList";
-    return this.http.post<GetAllStudentAttendanceListModel>(apiurl, studentAttendance)
+    const apiurl = this.apiUrl + studentAttendance._tenantName + '/StudentAttendance/getAllStudentAttendanceList';
+    return this.http.post<GetAllStudentAttendanceListModel>(apiurl, studentAttendance);
   }
 
   addUpdateStudentAttendance(studentAttendance: AddUpdateStudentAttendanceModel) {
     studentAttendance = this.defaultValuesService.getAllMandatoryVariable(studentAttendance);
-    let apiurl = this.apiUrl + studentAttendance._tenantName + "/StudentAttendance/addUpdateStudentAttendance";
-    return this.http.post<AddUpdateStudentAttendanceModel>(apiurl, studentAttendance)
+    const apiurl = this.apiUrl + studentAttendance._tenantName + '/StudentAttendance/addUpdateStudentAttendance';
+    return this.http.post<AddUpdateStudentAttendanceModel>(apiurl, studentAttendance);
   }
 }

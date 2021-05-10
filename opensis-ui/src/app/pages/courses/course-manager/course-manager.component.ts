@@ -68,7 +68,7 @@ export class CourseManagerComponent implements OnInit {
   courseDetails = 0;
   icFilterList = icFilterList;
   icSearch = icSearch;
-  loading:boolean;
+  loading:boolean = false;
   selectedTab = 'scheduled_teachers';
   getAllCourseListModel: GetAllCourseListModel = new GetAllCourseListModel(); 
   addCourseModel:AddCourseModel= new AddCourseModel();

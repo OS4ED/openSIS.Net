@@ -9,13 +9,18 @@ import {
 import { Observable } from 'rxjs';
 import { LoaderService } from './loader.service';
 import { environment } from '../../environments/environment';
+import { DefaultValuesService } from '../common/default-values.service';
 
 @Injectable()
 export class LoaderInterceptor implements HttpInterceptor {
   private requests: HttpRequest<any>[] = [];
   apiUrl: string = environment.apiURL;
-  tenant: string='opensisv2';
-  constructor(private loaderService: LoaderService) { 
+  tenant: string;
+  constructor(
+    private loaderService: LoaderService,
+    private defaultValuesService: DefaultValuesService,
+    ) { 
+    this.tenant = this.defaultValuesService.getDefaultTenant();
   }
   removeRequest(req: HttpRequest<any>) {
     const i = this.requests.indexOf(req);

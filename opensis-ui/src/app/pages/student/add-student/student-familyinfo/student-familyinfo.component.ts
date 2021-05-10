@@ -1,4 +1,4 @@
-import { Component, OnInit ,Input} from '@angular/core';
+import { Component, OnInit , Input} from '@angular/core';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { fadeInRight400ms } from '../../../../../@vex/animations/fade-in-right.animation';
@@ -18,13 +18,13 @@ import { SchoolCreate } from '../../../../enums/school-create.enum';
   ]
 })
 export class StudentFamilyinfoComponent implements OnInit {
-  @Input() studentCreateMode:SchoolCreate;
+  @Input() studentCreateMode: SchoolCreate;
   @Input() studentDetailsForViewAndEdit;
   icEdit = icEdit;
   icDelete = icDelete;
   icAdd = icAdd;
   studentDetailsForViewAndEditData;
-  constructor(public translateService:TranslateService) { 
+  constructor(public translateService: TranslateService) {
   }
 
   ngOnInit(): void {

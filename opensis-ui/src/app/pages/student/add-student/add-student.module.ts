@@ -56,6 +56,19 @@ import { AddAssignCourseComponent } from './student-course-schedule/add-assign-c
 import { MatDividerModule } from '@angular/material/divider';
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
+import { ScheduleDetailsComponent } from './student-course-schedule/schedule-details/schedule-details.component';
+import { StudentTranscriptComponent } from './student-transcript/student-transcript.component';
+import { StudentAttendanceComponent } from './student-attendance/student-attendance.component';
+import { StudentReportCardComponent } from './student-report-card/student-report-card.component';
+import { AddCommentsComponent } from './student-report-card/add-comments/add-comments.component';
+import { AddTeacherCommentsComponent } from './student-report-card/add-teacher-comments/add-teacher-comments.component';
+import { AddAlertComponent } from './student-medicalinfo/add-alert/add-alert.component';
+import { AddMedicalComponent } from './student-medicalinfo/add-medical/add-medical.component';
+import { AddImmunizationComponent } from './student-medicalinfo/add-immunization/add-immunization.component';
+import { AddNurseVisitComponent } from './student-medicalinfo/add-nurse-visit/add-nurse-visit.component';
+import { MatDialogModule } from '@angular/material/dialog';
+import { AddDaysScheduleModule } from '../../scheduling/schedule-teacher/add-days-schedule/add-days-schedule.module';
+// import { TruncatePipe } from '../../../pipe/truncate.pipe';
 
 @NgModule({
   declarations: [
@@ -74,7 +87,18 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     ViewStudentGeneralinfoComponent,
     ViewStudentAddressandcontactsComponent,
     StudentCourseScheduleComponent,
-    AddAssignCourseComponent
+    AddAssignCourseComponent,
+    ScheduleDetailsComponent,
+    StudentTranscriptComponent,
+    StudentAttendanceComponent,
+    StudentReportCardComponent,
+    AddCommentsComponent,
+    AddTeacherCommentsComponent,
+    AddAlertComponent,
+    AddMedicalComponent,
+    AddImmunizationComponent,
+    AddNurseVisitComponent
+    // TruncatePipe
   ],
   imports: [
     CommonModule,
@@ -119,7 +143,9 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     CustomFieldModule,
     CustomFieldWithoutFormModule,
     MatTabsModule,
-    MatDividerModule
+    MatDividerModule,
+    MatDialogModule,
+    AddDaysScheduleModule
   ],
   providers: [
     DatePipe

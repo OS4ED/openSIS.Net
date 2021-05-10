@@ -14,7 +14,7 @@
     th {
       text-align: left;
       &:last-child {
-        text-align: right;
+        // text-align: right;
       }
     }
     &:last-child td {
@@ -121,4 +121,8 @@ textarea {
       }
     }
   }
+}
+
+.w-50{
+  width: 50%;
 }

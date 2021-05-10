@@ -167,7 +167,7 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'website' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 truncate">
                         <a (click) = "goToWebsite()"  target="_blank"  class="text-primary cursor-pointer">
                         {{schoolViewDetails?.schoolMaster.schoolDetail[0].website|EmtyValueCheckPipe}}
                         </a>
@@ -175,7 +175,7 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'email' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 truncate">
                         <a (click) = "goToEmail()" target="_blank"  class="text-primary cursor-pointer">
                             {{schoolViewDetails?.schoolMaster.schoolDetail[0].email|EmtyValueCheckPipe}}
                         </a>
@@ -184,7 +184,7 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'twitter' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 truncate">
                         <a (click) = "goToTwitter()"  target="_blank"  class="text-primary cursor-pointer">
                             {{schoolViewDetails?.schoolMaster.schoolDetail[0].twitter|EmtyValueCheckPipe}}
                         </a>
@@ -192,19 +192,19 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray ">{{'facebook' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 truncate"><a
                         (click) = "goToFacebook()"   target="_blank"
                             class="text-primary cursor-pointer break-all">{{schoolViewDetails?.schoolMaster.schoolDetail[0].facebook|EmtyValueCheckPipe}}</a></p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'instagram' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2"><a
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 truncate"><a
                         (click) = "goToInstagram()"  target="_blank"
                             class="text-primary cursor-pointer break-all">{{schoolViewDetails?.schoolMaster.schoolDetail[0].instagram|EmtyValueCheckPipe}}</a></p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'youtube' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 truncate">
                         <a (click) = "goToYoutube()"  target="_blank"  class="text-primary cursor-pointer">
                             {{schoolViewDetails?.schoolMaster.schoolDetail[0].youtube|EmtyValueCheckPipe}}
                         </a>
@@ -212,7 +212,7 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'linkedIn' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2 truncate">
                         <a (click) = "goToLinkedin()" target="_blank"  class="text-primary cursor-pointer">
                             {{schoolViewDetails?.schoolMaster.schoolDetail[0].linkedIn|EmtyValueCheckPipe}}
                         </a>

@@ -1,0 +1,56 @@
+.weekview-table {
+  tr {
+    td,
+    th {
+      @apply border-b;
+      @apply border-r;
+      border-color: rgba(0, 0, 0, 0.1);
+      @apply px-4;
+      @apply py-2;
+      text-align: center;
+    }
+    th:last-child,
+    td:last-child {
+      border-right: none;
+    }
+  }
+}
+
+.select-dropdown {
+  position: relative;
+  background-color: #fff;
+  border: 1px solid rgb(76, 175, 80);
+  border-radius: 4px;
+  select {
+    font-weight: normal;
+    width: 100%;
+    padding: 6px 24px 6px 10px;
+    border: none;
+    background-color: transparent;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    color: rgb(76, 175, 80);
+    min-width: 120px;
+    &:active,
+    &:focus {
+      outline: none;
+      box-shadow: none;
+    }
+  }
+  &:after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    right: 8px;
+    width: 8px;
+    height: 8px;
+    border-top: 2px solid transparent;
+    border-left: 2px solid transparent;
+    border-bottom: 2px solid #000;
+    border-right: 2px solid #000;
+    transform: rotate(45deg) translateY(-50%);
+    transition: all 0.4s ease-in-out;
+    transform-origin: 50% 0;
+  }
+}

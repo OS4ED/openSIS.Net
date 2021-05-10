@@ -13,6 +13,7 @@ namespace opensis.data.Models
             StudentDocuments = new HashSet<StudentDocuments>();
             StudentEnrollment = new HashSet<StudentEnrollment>();
             StudentCoursesectionSchedule = new HashSet<StudentCoursesectionSchedule>();
+            StudentFinalGrade = new HashSet<StudentFinalGrade>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -102,11 +103,12 @@ namespace opensis.data.Models
         public virtual Language SecondLanguage { get; set; }
         public virtual Language ThirdLanguage { get; set; }
         public virtual Sections Sections { get; set; }
-        public virtual StudentFinalGrade StudentFinalGrade { get; set; }
+       
         //public virtual ICollection<ParentAddress> ParentAddress { get; set; }
         public virtual ICollection<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
         public virtual ICollection<StudentComments> StudentComments { get; set; }
         public virtual ICollection<StudentDocuments> StudentDocuments { get; set; }
         public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }
+        public virtual ICollection<StudentFinalGrade> StudentFinalGrade { get; set; }
     }
 }

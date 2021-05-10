@@ -21,8 +21,8 @@ import { MatPaginatorModule } from '@angular/material/paginator';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
 import { MatDividerModule } from '@angular/material/divider';
 import { RouterModule } from '@angular/router';
-
-
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 
 @NgModule({
   declarations: [GradeDetailsComponent],
@@ -48,6 +48,9 @@ import { RouterModule } from '@angular/router';
     MatSlideToggleModule,
     MatDividerModule,
     RouterModule,
+    FormsModule,
+    ReactiveFormsModule,
+    MatProgressSpinnerModule
   ],
   exports: [GradeDetailsComponent]
 })

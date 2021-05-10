@@ -1,0 +1,14 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title class="mb-4">
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "comments" | translate }}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button mat-dialog-close="true" type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="mb-6"></mat-divider>
+<mat-dialog-content fxLayout="column">
+    <p class="mb-2"><mat-icon class="mr-2 inline-block align-top">check_circle</mat-icon>{{ 'worksForAcademicExcellence' | translate}}</p>
+    <p class="mb-2"><mat-icon class="mr-2 inline-block align-top">check_circle</mat-icon>{{ 'positiveAttitudeAndEffort' | translate}}</p>
+    <p class="mb-2"><mat-icon class="mr-2 inline-block align-top">check_circle</mat-icon>{{ 'makesConnectionAndAppliesKnowledge' | translate}}</p>
+</mat-dialog-content>

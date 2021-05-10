@@ -94,7 +94,6 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
     private snackbar: MatSnackBar,
     private loaderService:LoaderService,
     private cdr: ChangeDetectorRef,
-    private schoolPeriodService: SchoolPeriodService,
     private cryptoService:CryptoService) {
     translateService.use('en');
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
@@ -107,7 +106,6 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
     })
    }
  
-   visibleColumns=''
   ngOnInit(): void {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 6);
@@ -135,14 +133,6 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
         this.getAllCourseSection();
       }
     });
-  }
-
-  closeCourseDetails() {
-
-  }
-
-  initializeColor(){
-
   }
 
   ngAfterViewChecked(){
@@ -185,6 +175,12 @@ export class CourseSectionComponent implements OnInit,OnDestroy,AfterViewChecked
           this.cloneGetAllCourseSectionModel=JSON.stringify(res);
           this.findMarkingPeriodTitle();
           this.selectedSectionDetails = res.getCourseSectionForView[this.selectedCourseSection];
+          if(this.selectedSectionDetails?.courseSection?.mpStartDate){
+            this.viewDate = new Date(this.selectedSectionDetails?.courseSection?.mpStartDate);
+          }
+          else{
+            this.viewDate = new Date(this.selectedSectionDetails?.courseSection?.durationStartDate);
+          }
           let days = this.selectedSectionDetails.courseSection.schoolCalendars.days;
           if (days !== null && days !== undefined) {
             this.getDays(days);

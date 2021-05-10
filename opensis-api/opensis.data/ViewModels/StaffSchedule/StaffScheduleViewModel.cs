@@ -17,5 +17,6 @@ namespace opensis.data.ViewModels.StaffSchedule
         public int SchoolId { get; set; }
         public string CreatedBy { get; set; }
         public int? ExistingStaff { get; set; }
+        public string ConflictInInputCourseSection { get; set; }
     }
 }

@@ -1,4 +1,4 @@
-import { Component, OnInit,Input ,ViewChild} from '@angular/core';
+import { Component, OnInit, Input , ViewChild} from '@angular/core';
 import { NgForm, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
@@ -20,6 +20,7 @@ import { MiscModel } from '../../../../models/misc-data-student.model';
 import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 @Component({
   selector: 'vex-student-addressandcontacts',
   templateUrl: './student-addressandcontacts.component.html',
@@ -35,21 +36,21 @@ export class StudentAddressandcontactsComponent implements OnInit {
   @ViewChild('f') currentForm: NgForm;
   @ViewChild('checkBox') checkBox;
   f: NgForm;
-  nameOfMiscValuesForView:MiscModel=new MiscModel;
+  nameOfMiscValuesForView: MiscModel = new MiscModel();
   icEdit = icEdit;
   icCheckBox = icCheckBox;
   icCheckBoxOutlineBlank = icCheckBoxOutlineBlank;
-  countryListArr=[]; 
-  countryName="-";
-  mailingAddressCountry="-";
+  countryListArr = [];
+  countryName = '-';
+  mailingAddressCountry = '-';
   countryModel: CountryModel = new CountryModel();
   data;
-  studentCreate=SchoolCreate;
-  @Input() studentCreateMode:SchoolCreate;
+  studentCreate = SchoolCreate;
+  @Input() studentCreateMode: SchoolCreate;
   studentAddModel: StudentAddModel = new StudentAddModel();
   languageList;
-  checkBoxChecked = false; 
-  actionButtonTitle="submit" 
+  checkBoxChecked = false;
+  actionButtonTitle = 'submit';
   cloneStudentAddModel;
   editPermission = false;
   deletePermission = false;
@@ -57,15 +58,16 @@ export class StudentAddressandcontactsComponent implements OnInit {
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   constructor(public translateService: TranslateService,
-    private snackbar: MatSnackBar,
-    private studentService:StudentService,
-    private commonService:CommonService,
-    private cryptoService:CryptoService,
-    private imageCropperService:ImageCropperService) { 
+              private snackbar: MatSnackBar,
+              private studentService: StudentService,
+              private commonService: CommonService,
+              private cryptoService: CryptoService,
+              private defaultValuesService: DefaultValuesService,
+              private imageCropperService: ImageCropperService) {
       translateService.use('en');
     }
 
-  ngOnInit(): void {  
+  ngOnInit(): void {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
@@ -74,51 +76,51 @@ export class StudentAddressandcontactsComponent implements OnInit {
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.getAllCountry();
-    if(this.studentCreateMode==this.studentCreate.VIEW){
+    if (this.studentCreateMode === this.studentCreate.VIEW){
       this.studentService.changePageMode(this.studentCreateMode);
-      this.data=this.studentDetailsForViewAndEdit?.studentMaster;
+      this.data = this.studentDetailsForViewAndEdit?.studentMaster;
       this.studentAddModel = this.studentDetailsForViewAndEdit;
-      this.cloneStudentAddModel=JSON.stringify(this.studentAddModel);
+      this.cloneStudentAddModel = JSON.stringify(this.studentAddModel);
     }else{
       this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentService.getStudentDetails();
-      this.cloneStudentAddModel=JSON.stringify(this.studentAddModel);
-      this.data=this.studentAddModel?.studentMaster;
+      this.cloneStudentAddModel = JSON.stringify(this.studentAddModel);
+      this.data = this.studentAddModel?.studentMaster;
     }
   }
-  
+
   editAddressContactInfo(){
-    this.studentCreateMode=this.studentCreate.EDIT;
+    this.studentCreateMode = this.studentCreate.EDIT;
     this.studentService.changePageMode(this.studentCreateMode);
-    this.actionButtonTitle="update";
+    this.actionButtonTitle = 'update';
     this.getAllCountry();
-    this.studentAddModel.studentMaster.homeAddressCountry=+this.studentAddModel.studentMaster.homeAddressCountry;
-    this.studentAddModel.studentMaster.mailingAddressCountry=+this.studentAddModel.studentMaster.mailingAddressCountry;
+    this.studentAddModel.studentMaster.homeAddressCountry = +this.studentAddModel.studentMaster.homeAddressCountry;
+    this.studentAddModel.studentMaster.mailingAddressCountry = +this.studentAddModel.studentMaster.mailingAddressCountry;
   }
 
   cancelEdit(){
-    if(JSON.stringify(this.studentAddModel)!==this.cloneStudentAddModel){
-      this.studentAddModel=JSON.parse(this.cloneStudentAddModel);
-      this.studentDetailsForViewAndEdit=JSON.parse(this.cloneStudentAddModel);
-      this.studentService.sendDetails(JSON.parse(this.cloneStudentAddModel))
+    if (JSON.stringify(this.studentAddModel) !== this.cloneStudentAddModel){
+      this.studentAddModel = JSON.parse(this.cloneStudentAddModel);
+      this.studentDetailsForViewAndEdit = JSON.parse(this.cloneStudentAddModel);
+      this.studentService.sendDetails(JSON.parse(this.cloneStudentAddModel));
     }
     this.findCountryNameById();
     this.studentCreateMode = this.studentCreate.VIEW;
     this.studentService.changePageMode(this.studentCreateMode);
-    this.data=this.studentAddModel.studentMaster; 
-    this.imageCropperService.cancelImage("student");
+    this.data = this.studentAddModel.studentMaster;
+    this.imageCropperService.cancelImage('student');
   }
 
   copyHomeAddress(check){
     if(this.studentAddModel.studentMaster.mailingAddressSameToHome === false || this.studentAddModel.studentMaster.mailingAddressSameToHome === null){
       if(this.studentAddModel.studentMaster.homeAddressLineOne !== undefined && this.studentAddModel.studentMaster.homeAddressCity !== undefined &&
         this.studentAddModel.studentMaster.homeAddressState !== undefined && this.studentAddModel.studentMaster.homeAddressZip !== undefined ){
-      this.studentAddModel.studentMaster.mailingAddressLineOne=this.studentAddModel.studentMaster.homeAddressLineOne;
-      this.studentAddModel.studentMaster.mailingAddressLineTwo=this.studentAddModel.studentMaster.homeAddressLineTwo;
-      this.studentAddModel.studentMaster.mailingAddressCity=this.studentAddModel.studentMaster.homeAddressCity;
-      this.studentAddModel.studentMaster.mailingAddressState=this.studentAddModel.studentMaster.homeAddressState;
-      this.studentAddModel.studentMaster.mailingAddressZip=this.studentAddModel.studentMaster.homeAddressZip;
-      this.studentAddModel.studentMaster.mailingAddressCountry=+this.studentAddModel.studentMaster.homeAddressCountry;
+      this.studentAddModel.studentMaster.mailingAddressLineOne = this.studentAddModel.studentMaster.homeAddressLineOne;
+      this.studentAddModel.studentMaster.mailingAddressLineTwo = this.studentAddModel.studentMaster.homeAddressLineTwo;
+      this.studentAddModel.studentMaster.mailingAddressCity = this.studentAddModel.studentMaster.homeAddressCity;
+      this.studentAddModel.studentMaster.mailingAddressState = this.studentAddModel.studentMaster.homeAddressState;
+      this.studentAddModel.studentMaster.mailingAddressZip = this.studentAddModel.studentMaster.homeAddressZip;
+      this.studentAddModel.studentMaster.mailingAddressCountry = +this.studentAddModel.studentMaster.homeAddressCountry;
 
     }else{
       this.checkBoxChecked = check ? true : false;
@@ -126,87 +128,85 @@ export class StudentAddressandcontactsComponent implements OnInit {
         duration: 10000
       });
     }
-     
+
     }else{
-      this.studentAddModel.studentMaster.mailingAddressLineOne="";
-      this.studentAddModel.studentMaster.mailingAddressLineTwo="";
-      this.studentAddModel.studentMaster.mailingAddressCity="";
-      this.studentAddModel.studentMaster.mailingAddressState="";
-      this.studentAddModel.studentMaster.mailingAddressZip="";
-      this.studentAddModel.studentMaster.mailingAddressCountry=null;
-    }    
+      this.studentAddModel.studentMaster.mailingAddressLineOne = '';
+      this.studentAddModel.studentMaster.mailingAddressLineTwo = '';
+      this.studentAddModel.studentMaster.mailingAddressCity = '';
+      this.studentAddModel.studentMaster.mailingAddressState = '';
+      this.studentAddModel.studentMaster.mailingAddressZip = '';
+      this.studentAddModel.studentMaster.mailingAddressCountry = null;
+    }
   }
-  getAllCountry(){  
+  getAllCountry(){
     this.commonService.GetAllCountry(this.countryModel).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.countryListArr=[];
-      }
-      else {
+      if (data){
         if (data._failure) {
-          this.countryListArr=[];
-        } else {        
-          this.countryListArr=data.tableCountry?.sort((a, b) => {return a.name < b.name ? -1 : 1;} )   
-         if(this.studentCreateMode==this.studentCreate.VIEW){
+          this.countryListArr = [];
+        } else {
+          this.countryListArr = data.tableCountry?.sort((a, b) => a.name < b.name ? -1 : 1 );
+          if (this.studentCreateMode === this.studentCreate.VIEW) {
           this.findCountryNameById();
          }
-        }        
+        }
+      }else{
+        this.countryListArr = [];
       }
-    }) 
+    });
   }
 
   findCountryNameById(){
     this.countryListArr.map((val) => {
-      let countryInNumber = +this.data.homeAddressCountry;  
-      let mailingAddressCountry=+this.data.mailingAddressCountry; 
-        if(val.id === countryInNumber){
-          this.nameOfMiscValuesForView.countryName= val.name;
-        }
-        if(val.id === mailingAddressCountry){
-          this.nameOfMiscValuesForView.mailingAddressCountry= val.name;
-        }
-      })  
+      const countryInNumber = +this.data.homeAddressCountry;
+      const mailingAddressCountry = +this.data.mailingAddressCountry;
+      if (val.id === countryInNumber){
+          this.nameOfMiscValuesForView.countryName = val.name;
+      }
+      if (val.id === mailingAddressCountry){
+          this.nameOfMiscValuesForView.mailingAddressCountry = val.name;
+      }
+    });
   }
 
   checkBoxCheckInEditMode(){
-    if(this.checkBox?.checked){
-      this.studentAddModel.studentMaster.mailingAddressLineOne=this.studentAddModel.studentMaster.homeAddressLineOne;
-      this.studentAddModel.studentMaster.mailingAddressLineTwo=this.studentAddModel.studentMaster.homeAddressLineTwo;
-      this.studentAddModel.studentMaster.mailingAddressCity=this.studentAddModel.studentMaster.homeAddressCity;
-      this.studentAddModel.studentMaster.mailingAddressState=this.studentAddModel.studentMaster.homeAddressState;
-      this.studentAddModel.studentMaster.mailingAddressZip=this.studentAddModel.studentMaster.homeAddressZip;
-      this.studentAddModel.studentMaster.mailingAddressCountry=+this.studentAddModel.studentMaster.homeAddressCountry;
+    if (this.checkBox?.checked){
+      this.studentAddModel.studentMaster.mailingAddressLineOne = this.studentAddModel.studentMaster.homeAddressLineOne;
+      this.studentAddModel.studentMaster.mailingAddressLineTwo = this.studentAddModel.studentMaster.homeAddressLineTwo;
+      this.studentAddModel.studentMaster.mailingAddressCity = this.studentAddModel.studentMaster.homeAddressCity;
+      this.studentAddModel.studentMaster.mailingAddressState = this.studentAddModel.studentMaster.homeAddressState;
+      this.studentAddModel.studentMaster.mailingAddressZip = this.studentAddModel.studentMaster.homeAddressZip;
+      this.studentAddModel.studentMaster.mailingAddressCountry = +this.studentAddModel.studentMaster.homeAddressCountry;
     }
   }
   submit(){
     this.checkBoxCheckInEditMode();
-    this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {                        
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('Student Updation failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+    this.studentService.UpdateStudent(this.studentAddModel).subscribe(data => {
+      if (data){
         if (data._failure) {
           this.snackbar.open( data._message, '', {
             duration: 10000
           });
-        } else {    
+        } else {
           this.snackbar.open(data._message, '', {
             duration: 10000
           });
-        this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
-        data.studentMaster.studentPhoto=null;
-        this.data=data.studentMaster;
-        this.studentAddModel=data;
-        this.cloneStudentAddModel=JSON.stringify(data);
-        this.studentDetailsForViewAndEdit=data;
-        this.findCountryNameById();
-        this.studentCreateMode = this.studentCreate.VIEW;
-        this.studentService.changePageMode(this.studentCreateMode);
+          this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
+          data.studentMaster.studentPhoto = null;
+          this.data = data.studentMaster;
+          this.studentAddModel = data;
+          this.cloneStudentAddModel = JSON.stringify(data);
+          this.studentDetailsForViewAndEdit = data;
+          this.findCountryNameById();
+          this.studentCreateMode = this.studentCreate.VIEW;
+          this.studentService.changePageMode(this.studentCreateMode);
         }
       }
-  
-    })
+      else{
+        this.snackbar.open(this.defaultValuesService.translateKey('studentUpdationfailed') + sessionStorage.getItem('httpError'), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
 }

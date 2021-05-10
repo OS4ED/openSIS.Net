@@ -8,6 +8,7 @@ export class CustomFieldModel {
     module:string;
     type: string;
     search: boolean;
+    fieldName:string;
     title: string;
     sortOrder: number;
     selectOptions: string;

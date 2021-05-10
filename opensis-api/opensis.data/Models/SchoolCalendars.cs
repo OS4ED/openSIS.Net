@@ -8,6 +8,7 @@ namespace opensis.data.Models
         public SchoolCalendars()
         {
             CourseSection = new HashSet<CourseSection>();
+            StudentEffortGradeMaster = new HashSet<StudentEffortGradeMaster>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -26,5 +27,6 @@ namespace opensis.data.Models
 
         public virtual SchoolMaster SchoolMaster { get; set; }
         public virtual ICollection<CourseSection> CourseSection { get; set; }
+        public virtual ICollection<StudentEffortGradeMaster> StudentEffortGradeMaster { get; set; }
     }
 }

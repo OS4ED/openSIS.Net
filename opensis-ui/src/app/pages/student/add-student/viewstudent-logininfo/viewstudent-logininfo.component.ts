@@ -19,7 +19,7 @@ export class ViewstudentLogininfoComponent implements OnInit {
 
   icEdit = icEdit;
 
-  constructor(public translateService:TranslateService) { }
+  constructor(public translateService: TranslateService) { }
 
   ngOnInit(): void {
   }

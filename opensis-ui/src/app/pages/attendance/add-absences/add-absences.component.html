@@ -1,0 +1,216 @@
+<!-- Add absences -->
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Add Absences" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Attendance']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+        <div class="card -mt-16 mb-4">
+            <div class="p-4 pb-2">
+                <h4 class="text-lg mb-2 font-semibold">{{ 'addAbsenceToCourseSections' | translate }}</h4>
+                <div class="mb-4">
+                    <mat-checkbox class="example-margin mr-8" color="primary" checked="true">ATTNPD - Attendance
+                    </mat-checkbox>
+                    <mat-checkbox class="example-margin mr-8" color="primary">CHEM001 - Chemistry</mat-checkbox>
+                    <mat-checkbox class="example-margin mr-8" color="primary">GEOG101 - Geography</mat-checkbox>
+                </div>
+                <ul class="grid md:grid-cols-4 col-gap-6 row-gap-4">
+                    <li>
+                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                            <mat-label>{{ "attendanceCategory" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="main">Main</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                            <mat-label>{{ "attendanceCode" | translate }}</mat-label>
+                            <mat-select>
+                                <mat-option value="absent">Absent</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                    <li class="col-span-2">
+                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                            <mat-label>{{ "absenceReason" | translate }}</mat-label>
+                            <input matInput>
+                        </mat-form-field>
+                    </li>
+                </ul>
+                <div class="border border-gray-light rounded px-2 pb-4 my-4">
+                    <div class="flex justify-between items-center">
+                        <p class="text-sm text-gray">{{ 'absenceDates' | translate }}</p>
+                        <mat-form-field class="m-0 -mr-2">
+                            <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                            <mat-datepicker #picker [startAt]="init" [dateClass]="dateClass"></mat-datepicker>
+                            <input [value]="resetModel" matInput [matDatepicker]="picker" placeholder="Choose a date"
+                                (dateChange)="dateChanged($event)" [matChipInputFor]="chipList" hidden />
+                        </mat-form-field>
+                    </div>
+                    <div class="w-full p-0">
+                        <mat-chip-list #chipList aria-label="Choose a date" (click)="picker.open()">
+                            <mat-chip *ngFor="let value of model" [selectable]="false" [removable]="true"
+                                (removed)="remove(value)">
+                                {{ value | date }}
+                                <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                            </mat-chip>
+                        </mat-chip-list>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card overflow-auto">
+            <div class="bg-white px-3 py-2 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="flex w-full justify-between">
+                    <div class="flex">
+                        <input matInput class="px-4 py-3 border-0 outline-none w-full bg-transparent"
+                            appearance="outline" color="primary" placeholder="Search..." type="search">
+                        <button class="ml-4" mat-icon-button type="button">
+                            <mat-icon [icIcon]="icSearch"></mat-icon>
+                        </button>
+                        <a class="w-full text-primary cursor-pointer ml-3 pt-2">
+                            <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
+                            | translate}}
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="border-t overflow-x-auto overflow-y-hidden">
+                <table class="w-full schedule-table">
+                    <thead>
+                        <tr>
+                            <th width="1%">
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </th>
+                            <th>{{ "studentName" | translate }}</th>
+                            <th>{{ "studentId" | translate }}</th>
+                            <th>{{ "alternateId" | translate }}</th>
+                            <th>{{ "grade" | translate }}</th>
+                            <th>{{ "section" | translate }}</th>
+                            <th>{{ "phone" | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Arthur Boucher</td>
+                            <td>15</td>
+                            <td>STD15</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Sophia Brown</td>
+                            <td>378</td>
+                            <td>STD378</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Wang Fang</td>
+                            <td>62</td>
+                            <td>STD62</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Clare Garcia</td>
+                            <td>94</td>
+                            <td>STD94</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Amelia Jones</td>
+                            <td>37</td>
+                            <td>STD37</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Audre keita</td>
+                            <td>122</td>
+                            <td>STD122</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Arthur Boucher</td>
+                            <td>15</td>
+                            <td>STD15</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Amelia Jones</td>
+                            <td>37</td>
+                            <td>STD37</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Audre keita</td>
+                            <td>122</td>
+                            <td>STD122</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <mat-checkbox color="primary"></mat-checkbox>
+                            </td>
+                            <td class="text-primary">Arthur Boucher</td>
+                            <td>15</td>
+                            <td>STD15</td>
+                            <td>Grade 10</td>
+                            <td>Section A</td>
+                            <td>1234567812</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right p-4">
+                <button color="primary" mat-flat-button type="submit">{{ 'submit' | translate }}
+                </button>
+            </div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

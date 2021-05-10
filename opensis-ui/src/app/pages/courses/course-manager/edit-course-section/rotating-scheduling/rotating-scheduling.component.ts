@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, OnInit, Output, ViewChild} from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, ViewChild } from '@angular/core';
 import icClose from '@iconify/icons-ic/twotone-close';
 import { BlockListViewModel } from '../../../../../models/school-period.model';
 import { MatSnackBar } from '@angular/material/snack-bar';
@@ -30,7 +30,7 @@ export class RotatingSchedulingComponent implements OnInit {
   @ViewChild('form') currentForm: NgForm;
   @Input() detailsFromParentModal;
   @Output() blockScheduleData = new EventEmitter<OutputEmitDataFormat>()
-  roomIdWithCapacity=[];
+  roomIdWithCapacity = [];
   constructor(private snackbar: MatSnackBar,
     private schoolPeriodService: SchoolPeriodService,
     private roomService: RoomService,
@@ -51,7 +51,7 @@ export class RotatingSchedulingComponent implements OnInit {
   }
 
   onBlockDayChange(blockId, indexOfDynamicRow) {
-    this.blockScheduleAddModel.courseBlockScheduleList[indexOfDynamicRow].periodId=null;
+    this.blockScheduleAddModel.courseBlockScheduleList[indexOfDynamicRow].periodId = null;
 
     let index = this.blockListViewModel.getBlockListForView.findIndex((x) => {
       return x.blockId === +blockId;
@@ -115,26 +115,26 @@ export class RotatingSchedulingComponent implements OnInit {
   manipulateBlockAndPeriodInEditMode() {
     for (let [i, val] of this.detailsFromParentModal.courseSectionDetails.courseBlockSchedule.entries()) {
       this.blockScheduleAddModel.courseBlockScheduleList[i] = this.detailsFromParentModal.courseSectionDetails.courseBlockSchedule[i];
-      this.blockScheduleAddModel.courseBlockScheduleList[i].updatedBy=sessionStorage.getItem("email")
+      this.blockScheduleAddModel.courseBlockScheduleList[i].updatedBy = sessionStorage.getItem("email")
       this.divCount[i] = i;
       let index = this.blockListViewModel.getBlockListForView.findIndex((x) => {
         return x.blockId === +this.detailsFromParentModal.courseSectionDetails.courseBlockSchedule[i].blockId;
       });
       this.selectedBlocks[i] = index;
- 
-      this.blockListViewModel.getBlockListForView?.map((item,j)=>{
+
+      this.blockListViewModel.getBlockListForView?.map((item, j) => {
         let periodIndex = this.blockListViewModel.getBlockListForView[j].blockPeriod.findIndex((x) => {
-          
+
           return x.periodId == +this.detailsFromParentModal.courseSectionDetails.courseBlockSchedule[i].periodId;
         });
-        if(periodIndex!=-1){
+        if (periodIndex != -1) {
           this.selectedPeriod[i] = periodIndex;
         }
       })
 
       // for(let j=0;j<this.blockListViewModel.getBlockListForView.length;j++){
       //   let periodIndex = this.blockListViewModel.getBlockListForView[j].blockPeriod.findIndex((x) => {
-          
+
       //     return x.periodId == +this.detailsFromParentModal.courseSectionDetails.courseBlockSchedule[i].periodId;
       //   });
       //   if(periodIndex!=-1){
@@ -142,8 +142,8 @@ export class RotatingSchedulingComponent implements OnInit {
       //   }
       // }
     }
-    
-    
+
+
   }
   getAllRooms() {
     this.roomService.getAllRoom(this.roomListViewModel).subscribe(
@@ -165,8 +165,8 @@ export class RotatingSchedulingComponent implements OnInit {
           }
           else {
             this.roomListViewModel = res;
-            this.roomListViewModel.tableroomList.map((item,index)=>{
-              this.roomIdWithCapacity[item.roomId]=item.capacity;
+            this.roomListViewModel.tableroomList.map((item, index) => {
+              this.roomIdWithCapacity[item.roomId] = item.capacity;
             })
           }
         }
@@ -175,43 +175,43 @@ export class RotatingSchedulingComponent implements OnInit {
 
   sendBlockScheduleDataToParent() {
     this.currentForm.form.markAllAsTouched()
-    let invalidSeatCapacity=false;
+    let invalidSeatCapacity = false;
     invalidSeatCapacity = this.blockScheduleAddModel.courseBlockScheduleList.some((item, i) => {
-          if (this.detailsFromParentModal.form.value.seats>this.roomIdWithCapacity[item.roomId]) {
-            return true;
-          } else {
-            return false;
-          }
-        })
+      if (this.detailsFromParentModal.form.value.seats > this.roomIdWithCapacity[item.roomId]) {
+        return true;
+      } else {
+        return false;
+      }
+    })
     if (this.currentForm.form.valid && !invalidSeatCapacity) {
       this.checkDuplicateRow();
     } else {
-      this.blockScheduleData.emit({ scheduleType: 'blockSchedule',roomList: null, scheduleDetails: null, error: true });
+      this.blockScheduleData.emit({ scheduleType: 'blockSchedule', roomList: null, scheduleDetails: null, error: true });
     }
   }
 
-  checkDuplicateRow(){
+  checkDuplicateRow() {
     let Ids = [];
-      for (let [i, val] of this.blockScheduleAddModel.courseBlockScheduleList.entries()) {
-        Ids[i] = this.blockScheduleAddModel.courseBlockScheduleList[i].blockId.toString()
-          + this.blockScheduleAddModel.courseBlockScheduleList[i].periodId
-          + this.blockScheduleAddModel.courseBlockScheduleList[i].roomId
-      }
-      let checkDuplicate = Ids.sort().some((item, i) => {
-        if (item == Ids[i + 1]) {
-          this.snackbar.open('Cannot Save Duplicate Block Schedule ', '', {
-            duration: 10000
-          });
-          return true;
-        } else {
-          return false;
-        }
-      })
-      if (checkDuplicate) {
-        this.blockScheduleData.emit({ scheduleType: 'blockSchedule',roomList: null, scheduleDetails: null, error: true });
+    for (let [i, val] of this.blockScheduleAddModel.courseBlockScheduleList.entries()) {
+      Ids[i] = this.blockScheduleAddModel.courseBlockScheduleList[i].blockId?.toString()
+        + this.blockScheduleAddModel.courseBlockScheduleList[i].periodId
+        + this.blockScheduleAddModel.courseBlockScheduleList[i].roomId
+    }
+    let checkDuplicate = Ids.sort().some((item, i) => {
+      if (item == Ids[i + 1]) {
+        this.snackbar.open('Cannot Save Duplicate Block Schedule ', '', {
+          duration: 10000
+        });
+        return true;
       } else {
-        this.blockScheduleData.emit({ scheduleType: 'blockSchedule',roomList: null, scheduleDetails: this.blockScheduleAddModel.courseBlockScheduleList, error: false });
+        return false;
       }
+    })
+    if (checkDuplicate) {
+      this.blockScheduleData.emit({ scheduleType: 'blockSchedule', roomList: null, scheduleDetails: null, error: true });
+    } else {
+      this.blockScheduleData.emit({ scheduleType: 'blockSchedule', roomList: null, scheduleDetails: this.blockScheduleAddModel.courseBlockScheduleList, error: false });
+    }
   }
 
 

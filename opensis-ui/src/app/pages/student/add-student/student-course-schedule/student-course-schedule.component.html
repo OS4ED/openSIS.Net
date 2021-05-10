@@ -1,4 +1,4 @@
-<mat-card class="w-full mb-8">
+<!-- <mat-card class="w-full mb-8">
     <div class="flex items-center">
         <h3 class="font-medium flex-auto">{{'studentRequests'|translate}}</h3>
         <button mat-button [matMenuTriggerFor]="menu" type="button" mat-flat-button class="p-0 ml-2"
@@ -41,6 +41,7 @@
                                 <div class="select-dropdown">
                                     <select>
                                         <option value="select" selected>Select</option>
+                                        <option value="ARTMZ001" selected>ARTMZ001</option>
                                     </select>
                                 </div>
                             </td>
@@ -91,6 +92,7 @@
                                 <div class="select-dropdown">
                                     <select>
                                         <option value="select" selected>Select</option>
+                                        <option value="COMSC001" selected>COMSC001</option>
                                     </select>
                                 </div>
                             </td>
@@ -120,312 +122,395 @@
             <button color="primary" mat-flat-button type="submit">{{'schedule' | translate}}</button>
         </div>
     </mat-card-content>
-</mat-card>
+</mat-card> -->
 <mat-card class="w-full">
-    <div class=" mb-3">
-        <div class="grid grid-cols-3">
-            <h3 class="font-medium mt-2">{{'scheduledCourses'|translate}}</h3>
-            <div class="col-span-2 text-right">
-                <button mat-icon-button aria-label="Example icon button with a menu icon"
-                    (click)="listAll()" [class.active]="scheduleSwitch" [ngClass]="scheduleSwitch?'text-blue' : ''">
-                    <mat-icon>list_alt</mat-icon>
-                </button>
-                <button mat-icon-button aria-label="Example icon button with a menu icon"
-                    (click)="changeCalendarView(CalendarView.Week)" [class.active]="view === CalendarView.Week" [ngClass]="view === CalendarView.Week && !scheduleSwitch ? 'text-blue' : ''">
-                    <mat-icon>date_range</mat-icon>
-                </button>
-                <button mat-icon-button aria-label="Example icon button with a menu icon"
-                    (click)="changeCalendarView(CalendarView.Day)" [class.active]="view === CalendarView.Day" [ngClass]="view === CalendarView.Day && !scheduleSwitch ? 'text-blue' : ''">
-                    <mat-icon>event</mat-icon>
-                </button>
-                <button mat-flat-button color="primary" (click)="selectAssignCourse()" class="ml-2">
-                    {{'assignCourseSection' | translate}}
-                </button>
-                <button mat-button [matMenuTriggerFor]="menu" type="button" mat-flat-button class="p-0 ml-2"
-                    style="min-width: 0;">
-                    <mat-icon [icIcon]="icMoreVert"></mat-icon>
-                </button>
-                <mat-menu #menu="matMenu" [overlapTrigger]="false" xPosition="before" yPosition="below">
-                    <button mat-menu-item><i class="icon icon-printer mr-4"></i>{{ "printSchedule" | translate
-                        }}</button>
-                    <button mat-menu-item><i class="icon icon-file-excel mr-4"></i>{{"exportToExcel" | translate
-                        }}</button>
-                </mat-menu>
-            </div>
-        </div>
+  <div class="mb-3">
+    <div class="grid grid-cols-3">
+      <h3 class="font-medium mt-2">{{ "scheduledCourses" | translate }}</h3>
+      <div class="col-span-2 text-right">
+        <button
+          mat-icon-button
+          aria-label="Example icon button with a menu icon"
+          (click)="listAll()"
+          [class.active]="scheduleSwitch"
+          [ngClass]="scheduleSwitch ? 'text-blue' : ''"
+          matTooltip="{{ 'listView' | translate }}"
+          [matTooltipPosition]="'above'"
+        >
+          <mat-icon>list_alt</mat-icon>
+        </button>
+        <button
+          [disabled]="events?.length===0"
+          mat-icon-button
+          aria-label="Example icon button with a menu icon"
+          (click)="changeCalendarView(CalendarView.Week)"
+          [class.active]="view === CalendarView.Week"
+          [ngClass]="
+            view === CalendarView.Week && !scheduleSwitch ? 'text-blue' : ''
+          "
+          matTooltip="{{ 'weekView' | translate }}"
+          [matTooltipPosition]="'above'"
+        >
+          <mat-icon>date_range</mat-icon>
+        </button>
+        <button
+        [disabled]="events?.length===0"
+          mat-icon-button
+          aria-label="Example icon button with a menu icon"
+          (click)="changeCalendarView(CalendarView.Month)"
+          [class.active]="view === CalendarView.Month"
+          [ngClass]="
+            view === CalendarView.Month && !scheduleSwitch ? 'text-blue' : ''
+          "
+          matTooltip="{{ 'monthView' | translate }}"
+          [matTooltipPosition]="'above'"
+        >
+          <mat-icon [icIcon]="icCalendarToday"></mat-icon>
+        </button>
+        <button
+        [disabled]="events?.length===0"
+          mat-icon-button
+          aria-label="Example icon button with a menu icon"
+          (click)="changeCalendarView('routineView')"
+          [class.active]="view === 'routineView' && !scheduleSwitch"
+          [ngClass]="
+            view === 'routineView' && !scheduleSwitch ? 'text-blue' : ''
+          "
+          matTooltip="{{ 'routineView' | translate }}"
+          [matTooltipPosition]="'above'"
+        >
+          <mat-icon [icIcon]="icPendingActions"></mat-icon>
+        </button>
+        <button
+          mat-flat-button
+          color="primary"
+          (click)="selectAssignCourse()"
+          class="ml-2"
+        >
+          {{ "assignCourseSection" | translate }}
+        </button>
+        <button
+          mat-button
+          [matMenuTriggerFor]="menu"
+          type="button"
+          mat-flat-button
+          class="p-0 ml-2"
+          style="min-width: 0"
+        >
+          <mat-icon [icIcon]="icMoreVert"></mat-icon>
+        </button>
+        <mat-menu
+          #menu="matMenu"
+          [overlapTrigger]="false"
+          xPosition="before"
+          yPosition="below"
+        >
+          <button mat-menu-item>
+            <i class="icon icon-printer mr-4"></i
+            >{{ "printSchedule" | translate }}
+          </button>
+          <button mat-menu-item (click)="exportScheduledCourses()">
+            <i class="icon icon-file-excel mr-4"></i
+            >{{ "exportToExcel" | translate }}
+          </button>
+        </mat-menu>
+      </div>
     </div>
-    <mat-card-content>
-        <div class="mb-4" *ngIf="scheduleSwitch">
-            <div class="border-t border-normal -mx-4 mt-4">
-                <div class="overflow-x-auto overflow-y-hidden">
-                    <table class="w-full schedule-table">
-                        <thead>
-                            <tr>
-                                <th>{{ "course" | translate }}</th>
-                                <th>{{ "courseSection" | translate }}</th>
-                                <th>{{ "teachers" | translate }}</th>
-                                <th>{{ "markingPeriod" | translate }}</th>
-                                <th>{{ "enrolledDate" | translate }}</th>
-                                <th>{{ "endDropDate" | translate }}</th>
-                                <th>{{ "daysOfWeek" | translate }}</th>
-                                <th>{{ "action" | translate }}</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Attendance All</td>
-                                <td>ATTN001</td>
-                                <td>
-                                    <button matTooltip="Jolly Holmes"
-                                        aria-label="Button that displays a tooltip when focused or hovered over"
-                                        [matTooltipPosition]="'above'">
-                                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                    </button>
-                                </td>
-                                <td>Full Year</td>
-                                <td>Jan 01, 2021</td>
-                                <td>Dec 31, 2021</td>
-                                <td>N/A</td>
-                                <td>
-                                    <button matTooltip="Edit Item">
-                                        <mat-icon [icIcon]="icEdit"></mat-icon>
-                                    </button>
-                                    <button matTooltip="Delete Item" class="pl-2">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Reading</td>
-                                <td>READ001</td>
-                                <td>
-                                    <button matTooltip="Jolly Holmes"
-                                        aria-label="Button that displays a tooltip when focused or hovered over"
-                                        [matTooltipPosition]="'above'">
-                                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                    </button>
-                                </td>
-                                <td>Full Year</td>
-                                <td>Jan 01, 2021</td>
-                                <td>Dec 31, 2021</td>
-                                <td>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">T</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
-                                </td>
-                                <td>
-                                    <button matTooltip="Edit Item">
-                                        <mat-icon [icIcon]="icEdit"></mat-icon>
-                                    </button>
-                                    <button matTooltip="Delete Item" class="pl-2">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Writing</td>
-                                <td>WRT001</td>
-                                <td>
-                                    <button matTooltip="Jolly Holmes"
-                                        aria-label="Button that displays a tooltip when focused or hovered over"
-                                        [matTooltipPosition]="'above'">
-                                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                    </button>
-                                </td>
-                                <td>Full Year</td>
-                                <td>Jan 01, 2021</td>
-                                <td>Dec 31, 2021</td>
-                                <td>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">M</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">F</span>
-                                </td>
-                                <td>
-                                    <button matTooltip="Edit Item">
-                                        <mat-icon [icIcon]="icEdit"></mat-icon>
-                                    </button>
-                                    <button matTooltip="Delete Item" class="pl-2">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Algebra</td>
-                                <td>ALG001</td>
-                                <td>
-                                    <button matTooltip="Jolly Holmes"
-                                        aria-label="Button that displays a tooltip when focused or hovered over"
-                                        [matTooltipPosition]="'above'">
-                                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                    </button>
-                                </td>
-                                <td>Full Year</td>
-                                <td>Jan 01, 2021</td>
-                                <td>Dec 31, 2021</td>
-                                <td>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">M</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
-                                </td>
-                                <td>
-                                    <button matTooltip="Edit Item">
-                                        <mat-icon [icIcon]="icEdit"></mat-icon>
-                                    </button>
-                                    <button matTooltip="Delete Item" class="pl-2">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Geometry</td>
-                                <td>GEOM1</td>
-                                <td>
-                                    <button matTooltip="Jolly Holmes"
-                                        aria-label="Button that displays a tooltip when focused or hovered over"
-                                        [matTooltipPosition]="'above'">
-                                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                    </button>
-                                </td>
-                                <td>Full Year</td>
-                                <td>Jan 01, 2021</td>
-                                <td>Dec 31, 2021</td>
-                                <td>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">M</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
-                                </td>
-                                <td>
-                                    <button matTooltip="Edit Item">
-                                        <mat-icon [icIcon]="icEdit"></mat-icon>
-                                    </button>
-                                    <button matTooltip="Delete Item" class="pl-2">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Geography</td>
-                                <td>GEOG1</td>
-                                <td>
-                                    <button matTooltip="Jolly Holmes"
-                                        aria-label="Button that displays a tooltip when focused or hovered over"
-                                        [matTooltipPosition]="'above'">
-                                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                    </button>
-                                </td>
-                                <td>Full Year</td>
-                                <td>Jan 01, 2021</td>
-                                <td>Dec 31, 2021</td>
-                                <td>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">M</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
-                                </td>
-                                <td>
-                                    <button matTooltip="Edit Item">
-                                        <mat-icon [icIcon]="icEdit"></mat-icon>
-                                    </button>
-                                    <button matTooltip="Delete Item" class="pl-2">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </td>
-                            </tr>
-                            <tr>
-                                <td>Biology</td>
-                                <td>BIO001</td>
-                                <td>
-                                    <button matTooltip="Jolly Holmes"
-                                        aria-label="Button that displays a tooltip when focused or hovered over"
-                                        [matTooltipPosition]="'above'">
-                                        <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                    </button>
-                                </td>
-                                <td>Full Year</td>
-                                <td>Jan 01, 2021</td>
-                                <td>
-                                    <mat-form-field class="w-ful mb-0" appearance="outline" color="primary">
-                                        <mat-label>{{'endDropDate' | translate}}</mat-label>
-                                        <input matInput [matDatepicker]="picker">
-                                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
-                                        <mat-datepicker #picker></mat-datepicker>
-                                    </mat-form-field>
-                                </td>
-                                <td>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">M</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">H</span>
-                                    <span
-                                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
-                                </td>
-                                <td>
-                                    <button matTooltip="Edit Item">
-                                        <mat-icon [icIcon]="icEdit"></mat-icon>
-                                    </button>
-                                    <button matTooltip="Delete Item" class="pl-2">
-                                        <mat-icon [icIcon]="icDelete"></mat-icon>
-                                    </button>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-            <div class="text-right -mx-4 pt-4 px-4">
-                <button color="primary" mat-flat-button type="submit">{{'update' | translate}}</button>
-            </div>
-        </div>
+  </div>
+  <mat-card-content>
+    <div class="mb-4" *ngIf="scheduleSwitch">
+      <mat-divider></mat-divider>
+      <div class="py-3">
+        <mat-slide-toggle
+          (change)="onDropCourseChange()"
+          [(ngModel)]="showDropCourse"
+          [checked]="showDropCourse"
+          color="primary"
+          class="font-semibold"
+          >{{ "showDroppedCourses" | translate }}
+        </mat-slide-toggle>
+      </div>
+      <div class="border-t border-normal -mx-4">
+        <div class="overflow-x-auto overflow-y-hidden">
+          <table class="w-full schedule-table">
+            <thead>
+              <tr>
+                <th>{{ "course" | translate }}</th>
+                <th>{{ "courseSection" | translate }}</th>
+                <th>{{ "teachers" | translate }}</th>
+                <th>{{ "markingPeriod" | translate }}</th>
+                <th>{{ "enrolledDate" | translate }}</th>
+                <th width="180">{{ "endDropDate" | translate }}</th>
+                <th>{{ "action" | translate }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              <ng-container *ngIf="scheduleCoursesForStudent360Model?.scheduleCourseSectionForView?.length>0">
+                <tr
+                *ngFor="
+                  let course of scheduleCoursesForStudent360Model?.scheduleCourseSectionForView;
+                  let index = index
+                "
+              >
+                <td>{{ course.courseTitle }}</td>
+                <td>{{ course.courseSectionName }}</td>
+                <td>
+                  
+                  <ng-container *ngIf="course.staffMasterList?.length>0">
+                    <button *ngFor="let teacher of course?.staffMasterList"
+                      [matTooltip]="
+                        teacher.firstGivenName + ' ' + teacher.lastFamilyName
+                      "
+                      aria-label="Button that displays a tooltip when focused or hovered over"
+                      [matTooltipPosition]="'above'"
+                    >
+                      <img
+                        src="assets/img/icons/teacher_blue.svg"
+                        alt=""
+                        width="20"
+                      />
+                    </button>
+                  </ng-container>
+                  <ng-container *ngIf="course.staffMasterList?.length===0|| !course.staffMasterList">
+                    -
+                  </ng-container>
+                </td>
+                <td>{{ course.markingPeriodTitle }}</td>
+                <td>{{ course.enrolledDate | date: "mediumDate" }}</td>
+                <td>
+                  <span *ngIf="!course.takeInput; else inputBox">
+                    {{ course.effectiveDropDate | date: "mediumDate" }}
+                  </span>
 
-        <div *ngIf="!scheduleSwitch">
-            <mat-divider class="-mx-6 border-t"></mat-divider>
-            <div class="flex justify-between items-center">
-                <h3 class="text-blue font-semibold py-3"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-            </div>
-            <div [ngSwitch]="view" class="-mx-4">
-                <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events">
-                </mwl-calendar-week-view>
-                <mwl-calendar-day-view *ngSwitchCase="'day'" [viewDate]="viewDate" [events]="events">
-                </mwl-calendar-day-view>
-            </div>
+                  <ng-template #inputBox>
+                    <mat-form-field
+                      class="w-ful mb-0"
+                      appearance="outline"
+                      color="primary"
+                    >
+                      <mat-label>{{ "endDropDate" | translate }}</mat-label>
+                      <input
+                        matInput
+                        [matDatepicker]="picker"
+                        [(ngModel)]="
+                          selectionForDropDateUpdate[index].effectiveDropDate
+                        "
+                        [min]="todayDate"
+                        [max]="selectionForDropDateUpdate[index].courseSectionDurationEndDate"
+                      />
+                      <mat-datepicker-toggle
+                        matSuffix
+                        [for]="picker"
+                      ></mat-datepicker-toggle>
+                      <mat-datepicker #picker></mat-datepicker>
+                    </mat-form-field>
+                  </ng-template>
+
+                  <span
+                    class="float-right"
+                    *ngIf="!course.takeInput"
+                    [ngClass]="course.isDropped? 'text-gray' : ''"
+                    [matTooltip]="course.isDropped ? 'Dropped Course':('editItem'|translate)"
+                    [matTooltipPosition]="'left'"
+                  >
+                    <button
+                      [disabled]="course.isDropped"
+                      (click)="takeInput(index)"
+                    >
+                      <mat-icon [icIcon]="icEdit"></mat-icon>
+                    </button>
+                  </span>
+                </td>
+                <td>
+                  <button
+                    matTooltip="{{ 'infoItem' | translate }}"
+                    [matTooltipPosition]="'left'"
+                    (click)="scheduleDetails(course)"
+                  >
+                    <mat-icon [icIcon]="icInfo"></mat-icon>
+                  </button>
+                  <span
+                    [matTooltip]="course.isDropped ? 'Dropped Course' : course.isAssociationship?('deletionDisallowedDueToAssociation'|translate):('deleteItem'|translate)"
+                    [matTooltipPosition]="'left'"
+                  >
+                    <button
+                      [disabled]="course.isDropped || course.isAssociationship"
+                      [ngClass]="course.isDropped || course.isAssociationship? 'text-gray' : ''"
+                      (click)="confirmDelete(course)"
+                      class="pl-2"
+                    >
+                      <mat-icon [icIcon]="icDelete"></mat-icon>
+                    </button>
+                  </span>
+                </td>
+              </tr>
+              </ng-container>
+              <ng-container *ngIf="scheduleCoursesForStudent360Model?.scheduleCourseSectionForView?.length===0">
+                <tr>
+                  <td colspan="7" class="text-center">
+                    {{'noData'|translate}}
+                  </td>
+                </tr>
+              </ng-container>
+            </tbody>
+          </table>
         </div>
-    </mat-card-content>
+      </div>
+      <div class="text-right -mx-4 pt-4 px-4">
+        <button
+          (click)="updateDropDateOfScheduledCourses()"
+          color="primary"
+          mat-flat-button
+          type="submit"
+          [disabled]="disableUpdateCourseSection"
+        >
+          {{ "update" | translate }}
+        </button>
+      </div>
+    </div>
+
+    <div *ngIf="!scheduleSwitch">
+      <mat-divider class="-mx-6 border-t"></mat-divider>
+      <div
+        class="flex justify-center items-center"
+        *ngIf="view !== 'routineView'"
+      >
+        <div class="flex items-center">
+          <button
+            [(viewDate)]="viewDate"
+            [view]="view"
+            mat-icon-button
+            mwlCalendarPreviousView
+          >
+            <mat-icon>west</mat-icon>
+          </button>
+          <h3 class="text-blue text-center mx-4">
+            {{ viewDate | calendarDate: view + "ViewTitle":"en" }}
+          </h3>
+          <button
+            [(viewDate)]="viewDate"
+            [view]="view"
+            mat-icon-button
+            mwlCalendarNextView
+          >
+            <mat-icon>east</mat-icon>
+          </button>
+        </div>
+      </div>
+      <div [ngSwitch]="view" class="-mx-4">
+        <mwl-calendar-week-view
+          *ngSwitchCase="'week'"
+          [viewDate]="viewDate"
+          [events]="events"
+          (eventClicked)="eventClicked($event.event.meta.scheduleDetails)"
+        >
+        </mwl-calendar-week-view>
+        <mwl-calendar-month-view
+          *ngSwitchCase="'month'"
+          [viewDate]="viewDate"
+          [events]="events"
+          (eventClicked)="eventClicked($event.event.meta.scheduleDetails)"
+          [cellTemplate]="customCellTemplate"
+        >
+        </mwl-calendar-month-view>
+        <ng-container
+          *ngSwitchCase="'routineView'"
+          [ngTemplateOutlet]="routineViewContent"
+        ></ng-container>
+      </div>
+    </div>
+
+    <ng-template #customCellTemplate let-day="day" let-locale="locale">
+      <div class="cal-cell-top">
+        <span class="cal-day-number">{{
+          day.date | calendarDate: "monthViewDayNumber":locale
+        }}</span>
+      </div>
+      <div
+        class="cal-events px-2 pb-2 justify-center"
+        *ngIf="day.events.length > 0"
+      >
+        <div
+          class="text-xs px-2 py-2 rounded text-white cursor-pointer mb-1"
+          [class]="event.meta.color.backgroundColor"
+          *ngFor="let event of day.events; let i = index"
+          (click)="eventClicked(event.meta.scheduleDetails)"
+        >
+          <span class="align-middle">{{ event.meta.monthTitle }}</span>
+        </div>
+      </div>
+      <!-- <p class="bg-teal rounded uppercase text-white m-2 px-2 py-1 mt-0 text-xs" *ngFor="let event of day.events;let i = index;">{{ event.ViewTitle}}
+            </p> -->
+    </ng-template>
+
+    <ng-template #routineViewContent>
+      <div class="flex justify-end items-center py-2">
+        <div class="flex justify-center items-center w-full">
+          <button (click)="previousWeek()">
+            <mat-icon class="mt-2">west</mat-icon>
+          </button>
+          <h3 class="text-base mx-4">
+            {{'monday'|translate}}, {{currentWeek[1]|date:'mediumDate'}} - {{'friday'|translate}}, {{currentWeek[currentWeek.length-2]|date:'mediumDate'}}
+          </h3>
+          <button (click)="nextWeek()">
+            <mat-icon class="mt-2">east</mat-icon>
+          </button>
+        </div>
+        <mat-slide-toggle color="primary" [(ngModel)]="showWeekendsRoutingView"  [checked]="showWeekendsRoutingView" class="mr-6"
+          >{{ "showWeekends" | translate }}
+        </mat-slide-toggle>
+      </div>
+      <div class="overflow-x-auto overflow-y-hidden">
+        <table class="w-full schedule-table routineview-table">
+          <thead>
+            <tr>
+              <th class="bg-skyblue-light">
+                <div class="select-dropdown">
+                  <select [(ngModel)]="routineViewBasedOn">
+                    <option value="0" selected>
+                      {{ "periods" | translate }}
+                    </option>
+                    <option value="1">
+                      {{ "time" | translate }}
+                    </option>
+                  </select>
+                </div>
+              </th>
+              <ng-container *ngFor="let day of currentWeek;let i=index;let first = first;let last=last">
+                  <th  [ngClass]="(first || last)?!showWeekendsRoutingView?'hidden':'bg-red-light':'bg-primary-light'">
+                    {{ days[i]}}
+                    <p class="text-primary">{{day|date:'mediumDate'}}</p>
+                  </th>
+              
+              </ng-container>
+          
+            </tr>
+          </thead>
+          <tbody>
+            <ng-container *ngFor="let period of routineViewWithEvent.routineView">
+            <tr>
+              <td
+                [matTooltip]="routineViewBasedOn==='0'?(period.periodStartTime|transform24to12Pipe)+' - '+(period.periodEndTime|transform24to12Pipe):period.periodName"
+                [matTooltipPosition]="'above'"
+                matTooltipClass="my-tooltip"
+                class="bg-primary-light font-semibold"
+              >
+                {{routineViewBasedOn==='0'?period.periodName:(period.periodStartTime|transform24to12Pipe)+' - '+(period.periodEndTime|transform24to12Pipe)}}
+              </td>
+              <ng-container *ngFor="let courseSection of period.filteredEvents;let first=first;let last=last">
+                <td  [ngClass]="(first || last)?!showWeekendsRoutingView?'hidden':'bg-red-light':''">
+                  <ng-container *ngIf="courseSection">
+                    <p class="font-semibold" [class]="courseSection.color">{{courseSection.courseSectionName}}</p>
+                    {{courseSection.staffName?.split('-')[1]}}
+                  </ng-container>
+                </td>
+              </ng-container>
+              
+            </tr>
+          </ng-container>
+          </tbody>
+        </table>
+      </div>
+    </ng-template>
+  </mat-card-content>
 </mat-card>

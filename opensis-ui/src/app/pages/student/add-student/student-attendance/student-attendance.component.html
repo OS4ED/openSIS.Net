@@ -1,0 +1,204 @@
+<mat-card class="w-full mb-8 p-0 pt-2">
+    <div class="flex justify-between">
+        <div class="flex items-center px-4">
+            <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
+                <mat-icon>west</mat-icon>
+            </button>
+            <h3 class="text-center mx-4 text-base" *ngIf="view !== 'weekView'"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+            <h3 class="text-base mx-4" *ngIf="view == 'weekView'"> Monday, Mar 29, 2021 - Friday, Apr 2, 2021
+            </h3>
+            <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarNextView>
+                <mat-icon>east</mat-icon>
+            </button>
+        </div>
+        <div class="flex">
+            <button (click)="changeCalendarView('weekView')" [class.active]="view === 'weekView'"
+                [ngClass]="view === 'weekView' ? 'text-blue border-b-2 border-primary' : ''" class="px-4">
+                <mat-icon class="mr-2">date_range</mat-icon><span class="inline-block align-top mt-1">{{ 'weekView' |
+                    translate}}</span>
+            </button>
+            <button (click)="changeCalendarView(CalendarView.Month)" [class.active]="view === CalendarView.Month"
+                [ngClass]="view === CalendarView.Month ? 'text-blue border-b-2 border-primary' : ''" class="px-4">
+                <mat-icon class="mr-2">event</mat-icon><span class="inline-block align-top mt-1">{{ 'monthView' |
+                    translate}}</span>
+            </button>
+        </div>
+    </div>
+    <mat-divider></mat-divider>
+    <div>
+        <div [ngSwitch]="view" class="">
+            <!-- <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events">
+            </mwl-calendar-week-view> -->
+            <ng-container *ngSwitchCase="'weekView'" [ngTemplateOutlet]="weekviewContent"></ng-container>
+            <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events">
+            </mwl-calendar-month-view>
+        </div>
+    </div>
+    <ng-template #weekviewContent>
+        <div class="overflow-x-auto overflow-y-hidden">
+            <table class="w-full weekview-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th class="bg-red-light">{{ "sunday" | translate }}
+                            <p class="text-primary">Mar 28, 2021</p>
+                        </th>
+                        <th>{{ "monday" | translate }}
+                            <p class="text-primary">Mar 29, 2021</p>
+                        </th>
+                        <th>{{ "tuesday" | translate }}
+                            <p class="text-primary">Mar 30, 2021</p>
+                        </th>
+                        <th>{{ "wednesday" | translate }}
+                            <p class="text-primary">Mar 31, 2021</p>
+                        </th>
+                        <th>{{ "thursday" | translate }}
+                            <p class="text-primary">Apr 1, 2021</p>
+                        </th>
+                        <th>{{ "friday" | translate }}
+                            <p class="text-primary">Apr 2, 2021</p>
+                        </th>
+                        <th>{{ "saturday" | translate }}
+                            <p class="text-primary">Apr 3, 2021</p>
+                        </th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>Period 1</td>
+                        <td class="bg-red-light"></td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="bg-red-light"></td>
+                    </tr>
+                    <tr>
+                        <td>Period 2</td>
+                        <td class="bg-red-light"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="bg-red-light"></td>
+                    </tr>
+                    <tr>
+                        <td>Period 3</td>
+                        <td class="bg-red-light"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="bg-red-light"></td>
+                    </tr>
+                    <tr>
+                        <td>Period 4</td>
+                        <td class="bg-red-light"></td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td class="bg-red-light"></td>
+                    </tr>
+                    <tr>
+                        <td>Period 5</td>
+                        <td class="bg-red-light"></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td></td>
+                        <td>
+                            <div class="select-dropdown">
+                                <select>
+                                    <option value="present" selected>{{ "present" | translate }}</option>
+                                </select>
+                            </div>
+                        </td>
+                        <td class="bg-red-light"></td>
+                    </tr>
+                    <tr>
+                        <td>Period 6</td>
+                        <td class="bg-red-light"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="bg-red-light"></td>
+                    </tr>
+                    <tr>
+                        <td>Period 7</td>
+                        <td class="bg-red-light"></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td class="bg-red-light"></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </ng-template>
+    <div class="text-right p-4">
+        <button color="primary" mat-flat-button type="submit">{{'submit' | translate}}</button>
+    </div>
+</mat-card>

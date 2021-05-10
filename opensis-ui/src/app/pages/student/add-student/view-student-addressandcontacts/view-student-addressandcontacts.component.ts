@@ -30,7 +30,7 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
     const country = this.nameOfMiscValues.countryName;
     const state = this.studentViewDetails.studentMaster.homeAddressState;
     const zip = this.studentViewDetails.studentMaster.homeAddressZip;
-    let homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1 ? stAdd1 : ''}${stAdd2 ? ',' + stAdd2 : ''}${city ? ',' + city : ''}${state ? ',' + state : ''}${zip ? ',' + zip : ''}${country ? ',' + country : ''}`;
+    const homeAddressMapUrl = `https://maps.google.com/?q=${stAdd1 ? stAdd1 : ''}${stAdd2 ? ',' + stAdd2 : ''}${city ? ',' + city : ''}${state ? ',' + state : ''}${zip ? ',' + zip : ''}${country ? ',' + country : ''}`;
     window.open(homeAddressMapUrl, '_blank');
 
   }
@@ -42,7 +42,7 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
     const state = this.studentViewDetails.studentMaster.mailingAddressState;
     const zip = this.studentViewDetails.studentMaster.mailingAddressZip;
 
-    let mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1 ? stAdd1 : ''}${stAdd2 ? ',' + stAdd2 : ''}${city ? ',' + city : ''}${state ? ',' + state : ''}${zip ? ',' + zip : ''}${country ? ',' + country : ''}`;
+    const mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1 ? stAdd1 : ''}${stAdd2 ? ',' + stAdd2 : ''}${city ? ',' + city : ''}${state ? ',' + state : ''}${zip ? ',' + zip : ''}${country ? ',' + country : ''}`;
     window.open(mailingAddressMapUrl, '_blank');
 
   }
@@ -53,12 +53,11 @@ export class ViewStudentAddressandcontactsComponent implements OnInit {
   }
 
   openUrl(href: string) {
-    debugger;
     if (!href?.trim()) { return; }
 
     if (href.includes('@')) {
-      href = 'mailto:'+href;
-       window.open(href);
+      href = 'mailto:' + href;
+      window.open(href);
       return;
     } else
       if (!href.includes('http:') && !href.includes('https:')) {

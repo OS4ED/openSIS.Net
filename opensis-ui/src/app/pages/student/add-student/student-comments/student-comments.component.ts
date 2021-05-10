@@ -21,6 +21,7 @@ import { SharedFunction } from '../../../../pages/shared/shared-function';
 import { DatePipe } from '@angular/common';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 
 
 @Component({
@@ -42,11 +43,11 @@ export class StudentCommentsComponent implements OnInit {
   icComment = icComment;
   icPrint = icPrint;
   listCount;
-  StudentCreate=SchoolCreate;
-  @Input() studentCreateMode:SchoolCreate;
+  StudentCreate = SchoolCreate;
+  @Input() studentCreateMode: SchoolCreate;
   @Input() studentDetailsForViewAndEdit;
-  studentCommentsListViewModel:StudentCommentsListViewModel= new StudentCommentsListViewModel();
-  studentCommentsAddView:StudentCommentsAddView=new StudentCommentsAddView();
+  studentCommentsListViewModel: StudentCommentsListViewModel = new StudentCommentsListViewModel();
+  studentCommentsAddView: StudentCommentsAddView = new StudentCommentsAddView();
   editPermission = false;
   deletePermission = false;
   addPermission = false;
@@ -54,14 +55,15 @@ export class StudentCommentsComponent implements OnInit {
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
   constructor(
-    private fb: FormBuilder, 
-    private dialog: MatDialog, 
-    public translateService:TranslateService,
+    private fb: FormBuilder,
+    private dialog: MatDialog,
+    public translateService: TranslateService,
     private snackbar: MatSnackBar,
-    private studentService:StudentService,
-    private commonFunction:SharedFunction,
-    private excelService:ExcelService,
+    private studentService: StudentService,
+    private commonFunction: SharedFunction,
+    private excelService: ExcelService,
     private datePipe: DatePipe,
+    private defaultValuesService: DefaultValuesService,
     private cryptoService: CryptoService
     ) {
     translateService.use('en');
@@ -81,65 +83,59 @@ export class StudentCommentsComponent implements OnInit {
 
   openAddNew() {
     this.dialog.open(EditCommentComponent, {
-      data:{studentId:this.studentDetailsForViewAndEdit.studentMaster.studentId},
+      data: {studentId: this.studentDetailsForViewAndEdit.studentMaster.studentId},
       width: '800px'
-    }).afterClosed().subscribe((data)=>{
-      if(data==='submited'){
+    }).afterClosed().subscribe((data) => {
+      if (data === 'submited'){
         this.getAllComments();
       }
-    })
+    });
   }
   getAllComments(){
-    this.studentCommentsListViewModel.studentId=this.studentDetailsForViewAndEdit.studentMaster.studentId
+    this.studentCommentsListViewModel.studentId = this.studentDetailsForViewAndEdit.studentMaster.studentId;
     this.studentService.getAllStudentCommentsList(this.studentCommentsListViewModel).subscribe(
-      (res:StudentCommentsListViewModel)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Student Comments Not Found. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
+      (res: StudentCommentsListViewModel) => {
+        if (res){
+          if (res._failure) {
+            if (res.studentCommentsList === null){
+              this.listCount = null;
+              this.studentCommentsListViewModel.studentCommentsList = null ;
+              this.snackbar.open( res._message, '', {
+                duration: 10000
+              });
+            }else{
+              this.listCount = null;
+              this.studentCommentsListViewModel.studentCommentsList = null ;
+            }
+        }
+        else {
+          this.studentCommentsListViewModel.studentCommentsList = res.studentCommentsList;
+          this.listCount = res.studentCommentsList.length;
+          this.studentCommentsListViewModel.studentCommentsList.map( n => {
+            n.lastUpdated = this.commonFunction.serverToLocalDateAndTime(n.lastUpdated);
           });
         }
-        else{
-          if (res._failure) {     
-          
-              if(res.studentCommentsList==null){
-                this.listCount =null;
-                this.studentCommentsListViewModel.studentCommentsList=null ;
-                this.snackbar.open( res._message, '', {
-                  duration: 10000
-                });
-              }else{
-                this.listCount =null;
-                this.studentCommentsListViewModel.studentCommentsList=null ;
-              }
-             
-            /* else{
-              
-            } */
-          }
-          else {       
-            this.studentCommentsListViewModel.studentCommentsList=res.studentCommentsList
-            this.listCount =res.studentCommentsList.length;
-            this.studentCommentsListViewModel.studentCommentsList.map(n=>{
-              n.lastUpdated=this.commonFunction.serverToLocalDateAndTime(n.lastUpdated)
-            });
-          }
+        }else{
+          this.snackbar.open(this.defaultValuesService.translateKey('studentCommentsNotFound') + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
         }
       }
     );
   }
 
   exportCommentsToExcel(){
-    if(this.studentCommentsListViewModel.studentCommentsList?.length>0 || this.studentCommentsListViewModel.studentCommentsList!=null){
-      let commentList=this.studentCommentsListViewModel.studentCommentsList?.map((item)=>{
+    if (this.studentCommentsListViewModel.studentCommentsList?.length > 0 || this.studentCommentsListViewModel.studentCommentsList!=null){
+      const commentList = this.studentCommentsListViewModel.studentCommentsList?.map((item) => {
         return{
                    Comment: this.stripHtml(item.comment),
                    UpdatedBy: item.updatedBy,
-                   LastUpdated: this.datePipe.transform(item.lastUpdated,'MMM d, y, h:mm a')
-        }
+                   LastUpdated: this.datePipe.transform(item.lastUpdated, 'MMM d, y, h:mm a')
+        };
       });
-      this.excelService.exportAsExcelFile(commentList,'Comments_')
+      this.excelService.exportAsExcelFile(commentList, 'Comments_');
      }else{
-       this.snackbar.open('No Records Found. Failed to Export Comments','', {
+       this.snackbar.open(this.defaultValuesService.translateKey('noRecordsFoundFailedtoExportComments'), '', {
          duration: 5000
        });
      }
@@ -147,56 +143,56 @@ export class StudentCommentsComponent implements OnInit {
 
   stripHtml(html){
     // Create a new div element
-    let temporalDivElement = document.createElement("div");
+    const temporalDivElement = document.createElement('div');
     // Set the HTML content with the providen
     temporalDivElement.innerHTML = html;
     // Retrieve the text property of the element (cross-browser support)
-    return temporalDivElement.textContent || temporalDivElement.innerText || "";
+    return temporalDivElement.textContent || temporalDivElement.innerText || '';
 }
 
   confirmDelete(element){
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
-      maxWidth: "400px",
+      maxWidth: '400px',
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+element.title+"."}
+          title: this.defaultValuesService.translateKey('areYouSure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDelete') + element.title + '.'}
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
-      if(dialogResult){
+      if (dialogResult){
         this.deleteStudentComment(element);
       }
    });
   }
   deleteStudentComment(element){
-    this.studentCommentsAddView.studentComments=element
+    this.studentCommentsAddView.studentComments = element;
     this.studentService.deleteStudentComment(this.studentCommentsAddView).subscribe(
-      (res:StudentCommentsAddView)=>{
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('Student Comments Not Found. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
-          if (res._failure) {     
+      (res: StudentCommentsAddView) => {
+        if (res){
+          if (res._failure) {
             this.snackbar.open( res._message, '', {
               duration: 10000
             });
           }
-          else {       
+          else {
             this.getAllComments();
           }
         }
+        else{
+          this.snackbar.open( this.defaultValuesService.translateKey('studentCommentsNotFound') + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
       }
-    )
+    );
   }
   editComment(element){
     this.dialog.open(EditCommentComponent, {
-      data:{studentId:this.studentDetailsForViewAndEdit.studentMaster.studentId,information:element},
+      data: {studentId: this.studentDetailsForViewAndEdit.studentMaster.studentId, information: element},
       width: '800px'
-    }).afterClosed().subscribe((data)=>{
-      if(data==='submited'){
+    }).afterClosed().subscribe((data) => {
+      if (data === 'submited'){
         this.getAllComments();
       }
-    })
+    });
   }
 }

@@ -15,7 +15,7 @@ import { MatPaginator} from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
 import { MatTableDataSource } from '@angular/material/table';
 import { LoaderService } from '../../../services/loader.service';
-import { FormControl } from '@angular/forms';
+import { FormControl, NgForm } from '@angular/forms';
 import { debounceTime, distinctUntilChanged, takeUntil } from 'rxjs/operators';
 import { ImageCropperService } from '../../../services/image-cropper.service';
 import { LayoutService } from 'src/@vex/services/layout.service';
@@ -44,14 +44,15 @@ import { ConfirmDialogComponent } from '../../shared-module/confirm-dialog/confi
     fadeInRight400ms
   ]
 })
-export class StudentComponent implements OnInit,OnDestroy { 
+export class StudentComponent implements OnInit, OnDestroy {
   columns = [
     { label: 'Name', property: 'firstGivenName', type: 'text', visible: true },
     { label: 'Student ID', property: 'studentId', type: 'text', visible: true },
-    { label: 'Alternate ID', property: 'alternateId', type: 'text', visible: true }, 
-    { label: 'Grade Level', property: 'gradeLevelTitle', type: 'text', visible: true },    
-    { label: 'Email', property: 'schoolEmail', type: 'text', visible: true },    
+    { label: 'Alternate ID', property: 'alternateId', type: 'text', visible: true },
+    { label: 'Grade Level', property: 'gradeLevelTitle', type: 'text', visible: true },
+    { label: 'Email', property: 'schoolEmail', type: 'text', visible: true },
     { label: 'Telephone', property: 'homePhone', type: 'text', visible: true },
+    { label: 'Status', property: 'status', type: 'text', visible: false },
     { label: 'Action', property: 'action', type: 'text', visible: true }
   ];
   icImpersonate = icImpersonate;
@@ -83,11 +84,14 @@ export class StudentComponent implements OnInit,OnDestroy {
   editPermission = false;
   deletePermission = false;
   addPermission = false;
+  searchValue: any = null;
+  toggleValues: any = null;
+  searchCount: number = null;
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
-  @ViewChild(MatSort) sort:MatSort
-  showLoadFilter=true;
+  @ViewChild(MatSort) sort: MatSort;
+  showLoadFilter = true;
   constructor(
               private studentService: StudentService,
               private snackbar: MatSnackBar,
@@ -99,12 +103,12 @@ export class StudentComponent implements OnInit,OnDestroy {
               private cryptoService: CryptoService,
               public translateService: TranslateService,
               public rollBasedAccessService: RollBasedAccessService,
-      private dialog: MatDialog,
-      private commonService: CommonService
+              private dialog: MatDialog,
+              private commonService: CommonService
   ) {
     translateService.use('en');
-     this.getAllStudent.filterParams=null;
-     if(localStorage.getItem("collapseValue") !== null){
+    this.getAllStudent.filterParams=null;
+    if(localStorage.getItem("collapseValue") !== null){
       if( localStorage.getItem("collapseValue") === "false"){
         this.layoutService.expandSidenav();
       }else{
@@ -113,10 +117,10 @@ export class StudentComponent implements OnInit,OnDestroy {
     }else{
       this.layoutService.expandSidenav();
     }
-     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
         this.loading = val;
       });
-      this.callAllStudent();
+    this.callAllStudent();
     }
 
   ngOnInit(): void {
@@ -127,17 +131,45 @@ export class StudentComponent implements OnInit,OnDestroy {
     this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+    let viewPermission= permissionCategory.rolePermission[0].canView;
+    if(!viewPermission){
+      this.router.navigate(['/']);
+     }
     this.searchCtrl = new FormControl();
     this.getAllSearchFilter();
   }
 
   getSearchResult(res){
-    this.showSaveFilter= true;
-    this.totalCount= res.totalCount;
+    if (res.totalCount){
+      this.searchCount = res.totalCount;
+      this.totalCount = res.totalCount;
+    }
+    else{
+      this.searchCount = 0;
+      this.totalCount = 0;
+    }
+    this.showSaveFilter = true;
     this.pageNumber = res.pageNumber;
     this.pageSize = res.pageSize;
     this.StudentModelList = new MatTableDataSource(res.studentMaster); 
-    this.getAllStudent=new StudentListModel();
+    this.getAllStudent = new StudentListModel();
+  }
+  getToggleValues(event){
+    this.toggleValues = event;
+    if (event.inactiveStudents === true){
+      this.columns[6].visible = true;
+    }
+    else if (event.inactiveStudents === false){
+      this.columns[6].visible = false;
+    }
+  }
+  getSearchInput(event){
+    this.searchValue = event;
+  }
+  resetStudentList(){
+    this.searchCount = null;
+    this.searchValue = null;
+    this.callAllStudent();
   }
 
   ngAfterViewInit() {
@@ -178,33 +210,39 @@ export class StudentComponent implements OnInit,OnDestroy {
             filterOption:3
           }
         ]
-        if(this.sort.active!=undefined && this.sort.direction!=""){
+          if(this.sort.active!=undefined && this.sort.direction!=""){
           this.getAllStudent.sortingModel.sortColumn=this.sort.active;
           this.getAllStudent.sortingModel.sortDirection=this.sort.direction;
         }
-        Object.assign(this.getAllStudent,{filterParams: filterParams});
-        this.getAllStudent.pageNumber=1;
-        this.paginator.pageIndex=0;
-        this.getAllStudent.pageSize=this.pageSize;
-        this.callAllStudent();
+          Object.assign(this.getAllStudent,{filterParams: filterParams});
+          this.getAllStudent.pageNumber=1;
+          this.paginator.pageIndex=0;
+          this.getAllStudent.pageSize=this.pageSize;
+          this.callAllStudent();
         }
         else
         {
         Object.assign(this.getAllStudent,{filterParams: null});
-          this.getAllStudent.pageNumber=this.paginator.pageIndex+1;
-          this.getAllStudent.pageSize=this.pageSize;
-          if(this.sort.active!=undefined && this.sort.direction!=""){
+        this.getAllStudent.pageNumber=this.paginator.pageIndex+1;
+        this.getAllStudent.pageSize=this.pageSize;
+        if(this.sort.active!=undefined && this.sort.direction!=""){
             this.getAllStudent.sortingModel.sortColumn=this.sort.active;
             this.getAllStudent.sortingModel.sortDirection=this.sort.direction;
           }
-          this.callAllStudent();
+        this.callAllStudent();
         }
       })
     }
 
-  goToAdd(){   
-    this.router.navigate(["school/students/student-generalinfo"]);
+  goToAdd(){
+    this.router.navigate(["school/students/student-generalinfo"]).then(()=>{
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.createMode.ADD});
+    });
+  }
+
+  navigateToSetting(){
+    localStorage.setItem('pageId','Student Bulk Data Import')
+    this.router.navigate(["school/settings/student-settings"]);
   }
 
   saveFilter(){
@@ -234,7 +272,6 @@ export class StudentComponent implements OnInit,OnDestroy {
         }
         else {
           this.searchFilterListViewModel= res;
-          
           let filterData=this.searchFilterListViewModel.searchFilterList.filter(x=> x.filterId == this.searchFilter.filterId);
           if(filterData.length >0){
             this.searchFilter.jsonList= filterData[0].jsonList;
@@ -343,7 +380,7 @@ export class StudentComponent implements OnInit,OnDestroy {
          filterOption:3
         }
       ]
-     Object.assign(this.getAllStudent,{filterParams: filterParams});
+      Object.assign(this.getAllStudent,{filterParams: filterParams});
     }
     this.getAllStudent.pageNumber=event.pageIndex+1;
     this.getAllStudent.pageSize=event.pageSize;
@@ -352,24 +389,26 @@ export class StudentComponent implements OnInit,OnDestroy {
 
   callAllStudent(){
     if(this.getAllStudent.sortingModel?.sortColumn==""){
-      this.getAllStudent.sortingModel=null
+      this.getAllStudent.sortingModel = null;
     }
     this.studentService.GetAllStudentList(this.getAllStudent).subscribe(data => {
-      if(data._failure){
-        if(data.studentMaster===null){
-            this.StudentModelList = new MatTableDataSource([]);   
-            this.snackbar.open( data._message, '', {
+      if (data._failure){
+        if (data.studentMaster === null){
+          this.totalCount = null;
+          this.StudentModelList = new MatTableDataSource([]);
+          this.snackbar.open( data._message, '', {
               duration: 10000
             });
         } else{
-          this.StudentModelList = new MatTableDataSource([]);   
+          this.StudentModelList = new MatTableDataSource([]);
+          this.totalCount = null;
         }
       }else{
-        this.totalCount= data.totalCount;
+        this.totalCount = data.totalCount;
         this.pageNumber = data.pageNumber;
         this.pageSize = data._pageSize;
-        this.StudentModelList = new MatTableDataSource(data.studentMaster);      
-        this.getAllStudent=new StudentListModel();     
+        this.StudentModelList = new MatTableDataSource(data.studentMaster);
+        this.getAllStudent = new StudentListModel();
       }
     });
   }

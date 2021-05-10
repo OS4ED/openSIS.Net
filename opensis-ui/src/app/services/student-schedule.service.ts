@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { ScheduledStudentDropModel, ScheduleStudentListViewModel, StudentCourseSectionScheduleAddViewModel, StudentScheduleReportViewModel } from '../models/student-schedule.model';
+import { ScheduleCoursesForStudent360Model, ScheduledStudentDropModel, ScheduleStudentListViewModel, StudentCourseSectionScheduleAddViewModel, StudentScheduleReportViewModel } from '../models/student-schedule.model';
 import { DefaultValuesService } from '../common/default-values.service';
 
 @Injectable({
@@ -34,4 +34,19 @@ export class StudentScheduleService {
     let apiurl = this.apiUrl + Obj._tenantName + '/StudentSchedule/studentScheduleReport';
     return this.http.post<StudentScheduleReportViewModel>(apiurl, Obj);
   }
+
+  scheduleCoursesForStudent360(Obj: ScheduleCoursesForStudent360Model){
+    Obj = this.defaultValuesService.getAllMandatoryVariable(Obj);
+    let apiurl = this.apiUrl + Obj._tenantName + '/StudentSchedule/scheduleCoursesForStudent360';
+    return this.http.post<ScheduleCoursesForStudent360Model>(apiurl, Obj);
+  }
+
+  dropScheduledCourseSectionForStudent360(Obj: ScheduledStudentDropModel){
+    Obj = this.defaultValuesService.getAllMandatoryVariable(Obj);
+    let apiurl = this.apiUrl + Obj._tenantName + '/StudentSchedule/dropScheduledCourseSectionForStudent360';
+    return this.http.put<ScheduledStudentDropModel>(apiurl, Obj);
+  }
+  
+
+
 }

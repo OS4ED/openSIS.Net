@@ -1,49 +1,65 @@
-<vex-page-layout>
+<div class="flex container-sidenav-secondary">
     <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
-    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
-        <vex-secondary-toolbar current={{schoolTitle}} class="w-full">
-            <vex-breadcrumbs [crumbs]="['School Info',pageStatus]" class="flex-auto"></vex-breadcrumbs>
-        </vex-secondary-toolbar>
-    </vex-page-layout-header>
-    <vex-page-layout-content class="-mt-6">
-        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
-            <mat-drawer-content class="flex-auto flex items-start">
-                <div class="hidden sm:block mr-6 ng-tns-c284-386 ng-star-inserted w-1/6">
-                    <div class="max-w-xxxs w-full">
-                        <div class="h-45 mb-6 flex justify-center sm:px-0">
-                            <vex-profile-image [enableCropTool]="enableCropTool" [customCss]="'rounded'" [responseImage]="responseImage" class="bg-white p-3 rounded"></vex-profile-image>
+    <div class="sidenav-secondary">
+        <vex-scrollbar class="flex-auto vex-scrollbar">
+            <div class="h-45 text-center sm:px-0 pt-5 pb-2">
+                <vex-profile-image [enableCropTool]="enableCropTool" [customCss]="'rounded'"
+                    [responseImage]="responseImage" class="p-3 rounded"></vex-profile-image>
+            </div>
+            <div class="text-center px-4">
+                <h5 class="text-primary font-semibold mb-0">{{schoolTitle}}</h5>
+                <div *ngIf="schoolTitle !== 'Add School Information'" class="rounded-full pt-1 pb-0 px-3 border border-gray inline-block mt-3 cursor-pointer" (click)="successCopySchool()"> <mat-icon class="mr-1 text-lg">file_copy</mat-icon><span class="align-top">{{ 'copySchool' | translate}}</span></div>
+            </div>
+            <div class="px-gutter sm:px-0">
+                <p *ngFor="let field of fieldsCategory;let index=index">
+                    <a @fadeInRight class="list-item mt-2 no-underline flex items-center w-full"
+                        [ngClass]="currentCategory == field?.categoryId?'text-blue' : ''"
+                        (click)="changeCategory(field,index)" matRipple>
+                        <span *ngIf="field?.categoryId==2" class="w-full"><mat-icon [icIcon]="icCleanHands" class="mr-2">clean_hands_outlined</mat-icon><span class="align-top inline-block mt-1">{{field?.title|translate}}</span></span>
+                        <span *ngIf="field?.categoryId!=2" class="w-full"><mat-icon class="mr-2">info_outlined</mat-icon><span class="align-top inline-block mt-1">{{field?.title}}</span></span>
+                    </a>
+                </p>
+                <p>
+                    <!-- <a @fadeInRight class="list-item mt-2 no-underline flex items-center w-full" matRipple>
+                        <span class="w-full"><mat-icon  [icIcon]="icArticle" class="mr-2"></mat-icon><span class="align-top inline-block mt-1">{{'otherInformation' | translate}}</span></span>
+                    </a> -->
+                </p>
+
+            </div>
+        </vex-scrollbar>
+    </div>
+    <div class="right-content">
+        <vex-page-layout>
+
+            <vex-page-layout-header class="pb-14 pt-4" fxLayoutAlign="center start">
+                <vex-secondary-toolbar current={{schoolTitle}} class="w-full">
+                    <vex-breadcrumbs [crumbs]="['School Info',pageStatus]" class="flex-auto"></vex-breadcrumbs>
+                </vex-secondary-toolbar>
+            </vex-page-layout-header>
+            <vex-page-layout-content class="-mt-4">
+                <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+                    <mat-drawer-content class="flex-auto flex items-start">
+
+                        <div class="w-full" fxFlex="auto">
+                            <vex-general-info *ngIf="currentCategory==1" [schoolCreateMode]="schoolCreateMode"
+                                [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
+                            </vex-general-info>
+
+                            <vex-wash-info *ngIf="currentCategory==2" [schoolCreateMode]="schoolCreateMode"
+                                [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
+                            </vex-wash-info>
+                            <div *ngFor="let field of fieldsCategory;let index=index">
+                                <vex-custom-field *ngIf="field?.categoryId == currentCategory && currentCategory>2"
+                                    [categoryTitle]="field?.title" [schoolCreateMode]="schoolCreateMode"
+                                    [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory"
+                                    [module]="module">
+                                </vex-custom-field>
+                            </div>
+
                         </div>
-
-                        <div class="px-gutter sm:px-0">
-                            <p *ngFor="let field of fieldsCategory;let index=index">
-                                <button @fadeInRight class="list-item mt-2 no-underline flex items-center w-full"
-                                    [ngClass]="currentCategory == field?.categoryId?'bg-primary hover:bg-primary text-white' : ''"
-                                    (click)="changeCategory(field,index)" matRipple>
-                                    <span *ngIf="field?.categoryId==2">{{field?.title|translate}}</span>
-                                    <span *ngIf="field?.categoryId!=2">{{field?.title}}</span>
-                                </button>
-                            </p>
-
-                        </div>
-                    </div>
-                </div>
-                <div class="w-full" fxFlex="auto">
-                    <vex-general-info *ngIf="currentCategory==1" [schoolCreateMode]="schoolCreateMode"
-                        [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
-                    </vex-general-info>
-
-                    <vex-wash-info *ngIf="currentCategory==2" [schoolCreateMode]="schoolCreateMode"
-                        [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
-                    </vex-wash-info>
-                    <div *ngFor="let field of fieldsCategory;let index=index">
-                        <vex-custom-field *ngIf="field?.categoryId == currentCategory && currentCategory>2" [categoryTitle]="field?.title"
-                            [schoolCreateMode]="schoolCreateMode" [schoolDetailsForViewAndEdit]="schoolAddViewModel"
-                            [categoryId]="indexOfCategory"  [module] = "module">
-                        </vex-custom-field>
-                    </div>
-
-                </div>
-            </mat-drawer-content>
-        </mat-drawer-container>
-    </vex-page-layout-content>
-</vex-page-layout>
+                    </mat-drawer-content>
+                </mat-drawer-container>
+            </vex-page-layout-content>
+        </vex-page-layout>
+    </div>
+</div>

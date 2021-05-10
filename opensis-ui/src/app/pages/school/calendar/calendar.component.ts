@@ -30,6 +30,7 @@ import { LoaderService } from '../../../services/loader.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { RollBasedAccessService } from '../../../services/roll-based-access.service';
 import { CryptoService } from '../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../common/default-values.service';
 const colors: any = {
   blue: {
     primary: '#5c77ff',
@@ -106,7 +107,8 @@ export class CalendarComponent implements OnInit {
               public rollBasedAccessService: RollBasedAccessService,
               private loaderService: LoaderService,
               private cdr: ChangeDetectorRef,
-              private cryptoService: CryptoService ) {
+              private cryptoService: CryptoService,
+              private defaultValuesService: DefaultValuesService ) {
     this.translate.setDefaultLang('en');
     if (localStorage.getItem("collapseValue") !== null) {
       if (localStorage.getItem("collapseValue") === "false") {
@@ -295,8 +297,8 @@ export class CalendarComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-        title: "Are you sure?",
-        message: "You are about to delete " + event.title
+        title: this.defaultValuesService.translateKey('areYouSure'),
+        message: this.defaultValuesService.translateKey('youAreAboutToDelete') + event.title
       }
     });
     // listen to response
@@ -314,11 +316,11 @@ export class CalendarComponent implements OnInit {
     this.calendarService.deleteCalendar(this.calendarAddViewModel).subscribe(
       (res) => {
         if (res._failure) {
-          this.snackbar.open('Calendar Deletion failed. ' + res._message, '', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Calendar Deleted Successfully. ', '', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
           this.getAllCalendar();
@@ -354,19 +356,19 @@ export class CalendarComponent implements OnInit {
       }
       else {
         if (event.isWeekend) {
-          this.snackbar.open('Cannot add event in weekend', '', {
+          this.snackbar.open(this.defaultValuesService.translateKey('cannotAddEventInWeekend'), '', {
             duration: 2000
           });
         }
         if (!event.isWeekend) {
-          this.snackbar.open('Cannot add event in previous month', '', {
+          this.snackbar.open(this.defaultValuesService.translateKey('cannotAddEventInPreviousMonth'), '', {
             duration: 2000
           });
         }
       }
     }
     else{
-      this.snackbar.open('Have not any permission to add', '', {
+      this.snackbar.open(this.defaultValuesService.translateKey('HaveNotAnyPermissionToAdd'), '', {
         duration: 2000
       });
     }

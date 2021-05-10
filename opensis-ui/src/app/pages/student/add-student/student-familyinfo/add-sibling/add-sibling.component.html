@@ -30,14 +30,12 @@
                 <div class="flex flex-1 mx-4 md:w-1/2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
             <mat-label>{{'gradeLevel' | translate}}</mat-label>
-            <mat-select name="gradeLevel" formControlName="gradeLevel" [(ngModel)]="studentSiblingSearch.gradeLevelTitle" required>
+            <mat-select name="gradeLevel" formControlName="gradeLevel" [(ngModel)]="studentSiblingSearch.gradeLevelTitle">
                 <mat-option value=""></mat-option>
                 <mat-option *ngFor="let gradeLevel of gradeLevelArr" [value]= 'gradeLevel.title'>
                     {{gradeLevel.title}}
                 </mat-option>
-
-            </mat-select>
-            <mat-error *ngIf="form.get('gradeLevel').hasError('required')">{{'gradeLevelIsRequired'|translate}}</mat-error>                
+            </mat-select>                
         </mat-form-field>
                 </div>
                 <div class="flex flex-1 mx-4 md:w-1/2">

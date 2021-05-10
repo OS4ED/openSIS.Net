@@ -99,9 +99,8 @@
                             <mat-label>{{'femaleToiletAccessibility'|translate}}</mat-label>
                             <mat-select name="femaleToiletAccessibility"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].femaleToiletAccessibility">
-                                <mat-option value="Female Toilet Accessibility 1">Female Toilet Accessibility 1
-                                </mat-option>
-                                <mat-option value="Female Toilet Accessibility 2">Female Toilet Accessibility 2
+                                <mat-option *ngFor="let femaleToiletAccessibility of femaleToiletAccessibilityList" [value]="femaleToiletAccessibility.lovColumnValue">
+                                    {{femaleToiletAccessibility.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -145,8 +144,9 @@
                             <mat-label>{{'maleToiletAccessibility'|translate}}</mat-label>
                             <mat-select name="maleToiletAccessibility"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].maleToiletAccessibility">
-                                <mat-option value="Male Toilet Accessibility 1">Male Toilet Accessibility 1</mat-option>
-                                <mat-option value="Male Toilet Accessibility 2">Male Toilet Accessibility 2</mat-option>
+                                <mat-option *ngFor="let maleToiletAccessibility of maleToiletAccessibilityList" [value]="maleToiletAccessibility.lovColumnValue">
+                                    {{maleToiletAccessibility.lovColumnValue}}
+                                </mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -188,9 +188,8 @@
                             <mat-label>{{'commonToiletAccessibility'|translate}}</mat-label>
                             <mat-select name="commonToiletAccessibility"
                                 [(ngModel)]="schoolAddViewModel.schoolMaster.schoolDetail[0].commonToiletAccessibility">
-                                <mat-option value="Common Toilet Accessibility 1">Common Toilet Accessibility 1
-                                </mat-option>
-                                <mat-option value="Common Toilet Accessibility 2">Common Toilet Accessibility 2
+                                <mat-option *ngFor="let commonToiletAccessibility of commonToiletAccessibilityList" [value]="commonToiletAccessibility.lovColumnValue">
+                                    {{commonToiletAccessibility.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>

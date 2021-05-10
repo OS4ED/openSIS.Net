@@ -228,7 +228,7 @@ export class CourseSection {
         this.durationBasedOnPeriod=true;
     }
 }
-class markingPeriodTitle{
+export class markingPeriodTitle{
     title;
     startDate;
     endDate;
@@ -303,6 +303,7 @@ export class CourseSectionAddViewModel extends CommonField {
     public availableSeat:number;
     public totalStudentSchedule:number;
     public totalStaffSchedule:number;
+    public staffName:string;
     constructor() {
         super();
         this.courseSection = new CourseSection();

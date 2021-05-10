@@ -1,3 +1,5 @@
+<vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+
 <div class="-mt-16">
     <div class="w-full p-0">
         <div class="mb-2 lg:flex lg:flex-wrap">
@@ -6,33 +8,31 @@
                     <div class="pt-4">
                         <h4 class="px-gutter mb-4 text-gray">{{'categories'|translate}}</h4>
                         <hr />
-                        <div class="bg-skyblue-light text-blue px-6 py-3">
-                            <p class="text-gray">{{'allCourses'|translate}}</p>
+                        <div class="px-6 py-3" [ngClass]="selectedCategoryIndex==-1?'bg-skyblue-light text-blue':'cursor-pointer'" (click)="onCourseChange(-1)">
+                            <p class="">{{'allCourses'|translate}}</p>
                         </div>
                         <hr />
-                        <div class="px-6 py-3">
-                            <p class="">{{'general'|translate}}</p>
-                        </div>
-                        <hr />
-                        <div class="flex items-center justify-between px-6 py-3">
-                            <a class="cursor-pointer">Algebra 1</a>
-                            <div>
-                                <a class="cursor-pointer mr-3">
-                                    <mat-icon [icIcon]="icEdit"></mat-icon>
-                                </a>
-                                <a class="cursor-pointer">
-                                    <mat-icon [icIcon]="icDelete"></mat-icon>
-                                </a>
+                        <ng-container *ngFor="let course of getAllCommentsWithUniqueCategory.courseCommentCategories; let index=index">
+                            <div *ngIf="course.courseId" (click)="onCourseChange(index)" class="flex items-center justify-between px-6 py-3" [ngClass]="selectedCategoryIndex==index?'bg-skyblue-light text-blue':'cursor-pointer'" >
+                                <p class="">{{course.courseName}}</p>
+                                <div>
+                                    <a class="cursor-pointer" (click)="confirmDeleteGradeScale(course,0,index)">
+                                        <mat-icon [icIcon]="icDelete"></mat-icon>
+                                    </a>
+                                </div>
                             </div>
-                        </div>
-                        <hr />
+                            <hr />
+                        </ng-container>
+                        
                         <div class=" px-6 py-3">
                             <mat-form-field class="w-full m-0" appearance="outline" color="primary">
                                 <mat-label>{{ "addCourse" | translate }}</mat-label>
                                 <mat-select>
-                                    <mat-option value="course1">Course 1</mat-option>
-                                    <mat-option value="course2">Course 2</mat-option>
-                                </mat-select>
+                                <ng-container  *ngFor="let course of getAllCourseListModel?.courseViewModelList">
+                                    <mat-option *ngIf="selectedCoursesForCategory.indexOf(course.course.courseId)==-1" (click)="onCourseSelect(course.course)"  [value]="course.course">{{course.course.courseTitle}}</mat-option>
+                              </ng-container>
+                            </mat-select>
+
                             </mat-form-field>
                         </div>
                     </div>
@@ -49,56 +49,38 @@
                                     <th>{{ "actions" | translate }}</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
+                            <tbody cdkDropList (cdkDropListDropped)="onDrop($event)">
+                                <tr *ngFor="let comment of commentListBasedOnSelectedCategory;let index=index" cdkDrag cdkDragLockAxis="y">
+                                    <td class="cursor-move" cdkDragHandle>
+                                        <!-- <ng-container [ngTemplateOutlet]="dragHandleTmpl"> </ng-container> -->
                                         <mat-icon>reorder</mat-icon>
                                     </td>
-                                    <td>Good in Explanation</td>
-                                    <td>
-                                        <a class="cursor-pointer mr-3">
-                                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                                        </a>
-                                        <a class="cursor-pointer">
-                                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                                        </a>
+                                    <td *ngIf="!comment.takeInput" class="col-md">{{comment?.comment}}</td>
+                                    <td *ngIf="comment.takeInput" class="col-md">
+                                        <div class="w-full border p-2 rounded">
+                                            <input type="text" [value]="comment.comment" [(ngModel)]="comment.comment"  placeholder="Update Comment" class="w-full">
+                                        </div>
+                                    </td>
+                                    <td class="col-md">
+                                        <ng-container *ngIf="!comment.takeInput">
+                                            <a class="cursor-pointer mr-3" (click)="onCommentEdit(comment,index)">
+                                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                                            </a>
+                                            <a class="cursor-pointer" (click)="confirmDeleteGradeScale(comment,1)">
+                                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                                            </a>
+                                        </ng-container>
                                     </td>
                                 </tr>
-                                <tr>
-                                    <td>
-                                        <mat-icon>reorder</mat-icon>
-                                    </td>
-                                    <td>Takes an active role in discussions</td>
-                                    <td>
-                                        <a class="cursor-pointer mr-3">
-                                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                                        </a>
-                                        <a class="cursor-pointer">
-                                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                                        </a>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>
-                                        <mat-icon>reorder</mat-icon>
-                                    </td>
-                                    <td>Lorem Ipsum dolr sit amet, consectetur elit, sed do eiusmod</td>
-                                    <td>
-                                        <a class="cursor-pointer mr-3">
-                                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                                        </a>
-                                        <a class="cursor-pointer">
-                                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                                        </a>
-                                    </td>
-                                </tr>
+                        
                                 <tr>
                                     <td class="text-center">
                                         <i class="icon icon-plus3 text-lg"></i>
                                     </td>
                                     <td>
-                                        <div class="w-full border p-2 text-gray rounded">
-                                            <input type="text" placeholder="Add New Comments" class="w-full">
+                                        <div class="w-full border p-2 rounded">
+                                            <input type="text" [(ngModel)]="newComment" placeholder="Add New Comments" class="w-full">
+
                                         </div>
                                     </td>
                                     <td></td>
@@ -106,7 +88,7 @@
                             </tbody>
                         </table>
                         <div class="text-right p-3">
-                            <button color="primary" mat-raised-button type="submit">Submit</button>
+                            <button color="primary" mat-raised-button type="submit" (click)="addComments()">Submit</button>
                         </div>
                     </div>
                 </div>
@@ -114,4 +96,5 @@
         </div>
     </div>
 </div>
+
 

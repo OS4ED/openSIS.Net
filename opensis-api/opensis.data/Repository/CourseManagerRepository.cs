@@ -2166,51 +2166,42 @@ namespace opensis.data.Repository
             }
         }
 
-        ///// <summary>
-        ///// Get All Course StandardFor Course Section
-        ///// </summary>
-        ///// <param name="courseStandardForCourseViewModel"></param>
-        ///// <returns></returns>
-        //public CourseStandardForCourseViewModel GetAllCourseStandardForCourseSection(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
-        //{
-        //    CourseStandardForCourseViewModel courseStandardForCourseView = new CourseStandardForCourseViewModel();
-        //    try
-        //    {
-        //        var courseStandarddata = this.context?.CourseStandard.Include(x => x.GradeUsStandard).Where(x => x.TenantId == courseStandardForCourseViewModel.TenantId && x.SchoolId == courseStandardForCourseViewModel.SchoolId && x.CourseId == courseStandardForCourseViewModel.CourseId).ToList();
-        //        if (courseStandarddata.Count > 0)
-        //        {
-        //            foreach (var courseStandard in courseStandarddata)
-        //            {
-        //                var coursedata = new GetCourseStandardForCourse()
-        //                {
-        //                    StandardRefNo = courseStandard.StandardRefNo,
-        //                    GradeStandardId = courseStandard.GradeUsStandard.GradeStandardId
+        /// <summary>
+        /// Get All Course StandardFor Course
+        /// </summary>
+        /// <param name="courseStandardForCourseViewModel"></param>
+        /// <returns></returns>
+        public CourseStandardForCourseViewModel GetAllCourseStandardForCourse(CourseStandardForCourseViewModel courseStandardForCourseViewModel)
+        {
+            CourseStandardForCourseViewModel courseStandardForCourse = new CourseStandardForCourseViewModel();
+            try
+            {
+                courseStandardForCourse.TenantId = courseStandardForCourseViewModel.TenantId;
+                courseStandardForCourse.SchoolId = courseStandardForCourseViewModel.SchoolId;
+                courseStandardForCourse.CourseId = courseStandardForCourseViewModel.CourseId;
+                courseStandardForCourse._tenantName = courseStandardForCourseViewModel._tenantName;
+                courseStandardForCourse._token = courseStandardForCourseViewModel._token;
+                courseStandardForCourse._userName = courseStandardForCourseViewModel._userName;
 
-        //                };
-        //                courseStandardForCourseView.getCourseStandardForCourses.Add(coursedata);
-        //            }
-        //        }
-        //        else
-        //        {
-        //            courseStandardForCourseView._failure = true;
-        //            courseStandardForCourseView._message = NORECORDFOUND;
-        //        }
-        //        courseStandardForCourseView.TenantId = courseStandardForCourseViewModel.TenantId;
-        //        courseStandardForCourseView.SchoolId = courseStandardForCourseViewModel.SchoolId;
-        //        courseStandardForCourseView.CourseId = courseStandardForCourseViewModel.CourseId;
-        //        courseStandardForCourseView._tenantName = courseStandardForCourseViewModel._tenantName;
-        //        courseStandardForCourseView._token = courseStandardForCourseViewModel._token;
-        //    }
-        //    catch (Exception es)
-        //    {
-        //        courseStandardForCourseView.getCourseStandardForCourses = null;
-        //        courseStandardForCourseView._tenantName = courseStandardForCourseViewModel._tenantName;
-        //        courseStandardForCourseView._token = courseStandardForCourseViewModel._token;
-        //        courseStandardForCourseView._failure = true;
-        //        courseStandardForCourseView._message = es.Message;
-        //    }
-        //    return courseStandardForCourseView;
-        //}
+                var courseStandarddata = this.context?.CourseStandard.Include(x => x.GradeUsStandard).Where(x => x.TenantId == courseStandardForCourseViewModel.TenantId && x.SchoolId == courseStandardForCourseViewModel.SchoolId && x.CourseId == courseStandardForCourseViewModel.CourseId).ToList();
+                if (courseStandarddata.Count > 0)
+                {
+                    courseStandardForCourse.courseStandards = courseStandarddata;
+                }
+                else
+                {
+                    courseStandardForCourse._failure = true;
+                    courseStandardForCourse._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                courseStandardForCourse.courseStandards = null;       
+                courseStandardForCourse._failure = true;
+                courseStandardForCourse._message = es.Message;
+            }
+            return courseStandardForCourse;
+        }
 
         ///// <summary>
         ///// Delete Course Section  For Specific Schedule Type

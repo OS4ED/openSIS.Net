@@ -16,7 +16,13 @@
         </div>
     </div>
     <div class="text-right">
-        <button mat-flat-button color="primary" (click)="continue()">{{'keepMeLoggedIn' | translate}}</button>
+        <button mat-flat-button color="primary" (click)="continue()" [disabled]="sessionRenewLoader">
+            <mat-icon class="ml-2" *ngIf="sessionRenewLoader">
+                <mat-spinner color="primary" diameter="20">
+                </mat-spinner>
+              </mat-icon>
+            {{'keepMeLoggedIn' | translate}}
+        </button>
         <button mat-flat-button color="primary" class="ml-2" (click)="logout()">{{'logout' | translate}}</button>
     </div>
 </div>

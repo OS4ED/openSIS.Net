@@ -22,17 +22,23 @@ export class MembershipService {
 
   addMembership(obj: AddMembershipModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.membership.schoolId = this.defaultValuesService.getSchoolID();
+    obj.membership.tenantId = this.defaultValuesService.getTenantID();
     let apiurl = this.apiUrl + obj._tenantName + '/Membership/addMembership';
     return this.http.post<AddMembershipModel>(apiurl, obj);
   }
   updateMembership(obj: AddMembershipModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.membership.schoolId = this.defaultValuesService.getSchoolID();
+    obj.membership.tenantId = this.defaultValuesService.getTenantID();
     let apiurl = this.apiUrl + obj._tenantName + '/Membership/updateMembership';
     return this.http.put<AddMembershipModel>(apiurl, obj);
   }
 
   deleteMembership(obj: AddMembershipModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.membership.schoolId = this.defaultValuesService.getSchoolID();
+    obj.membership.tenantId = this.defaultValuesService.getTenantID();
     let apiurl = this.apiUrl + obj._tenantName + '/Membership/deleteMembership';
     return this.http.post<AddMembershipModel>(apiurl, obj);
   }

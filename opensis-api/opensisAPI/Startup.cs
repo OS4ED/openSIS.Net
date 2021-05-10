@@ -66,8 +66,12 @@ using opensis.core.StaffSchedule.Interfaces;
 using opensis.core.StaffSchedule.Services;
 using opensis.core.StudentAttendances.Interfaces;
 using opensis.core.StudentAttendances.Services;
-using opensis.core.ReportCard.Interfaces;
+using opensis.core.InputFinalGrade.Services;
+using opensis.core.InputFinalGrade.Interfaces;
 using opensis.core.ReportCard.Services;
+using opensis.core.ReportCard.Interfaces;
+using opensis.core.StudentEffortGrade.Services;
+using opensis.core.StudentEffortGrade.Interfaces;
 
 namespace opensisAPI
 {
@@ -140,8 +144,15 @@ namespace opensisAPI
             services.AddScoped<IStaffScheduleService, StaffScheduleServices>();
             services.AddScoped<IStudentAttendanceRepository, StudentAttendanceRepository>();
             services.AddScoped<IStudentAttendanceService, StudentAttendanceService>();
+
             services.AddScoped<IReportCardRepository, ReportCardRepository>();
             services.AddScoped<IReportCardService, ReportCardService>();
+
+            services.AddScoped<IInputFinalGradeRepository, InputFinalGradeRepository>();
+            services.AddScoped<IInputFinalGradeService, InputFinalGradeService>();
+
+            services.AddScoped<IStudentEffortGradeRepository, StudentEffortGradeRepository>();
+            services.AddScoped<IStudentEffortGradeService, StudentEffortGradeService>();
 
 
 

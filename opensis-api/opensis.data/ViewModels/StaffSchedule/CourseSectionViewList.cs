@@ -15,7 +15,10 @@ namespace opensis.data.ViewModels.StaffSchedule
         }
         public int? CourseSectionId { get; set; }
         public int? CourseId { get; set; }
+        public int? CalendarId { get; set; }
         public string CourseTitle { get; set; }
+        public int? GradeScaleId { get; set; }
+        public int? StandardGradeScaleId { get; set; }
         public string CourseSectionName { get; set; }
         public DateTime? DurationStartDate { get; set; }
         public DateTime? DurationEndDate { get; set; }

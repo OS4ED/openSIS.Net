@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, Output, EventEmitter, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, Output, Input, EventEmitter, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { MatAccordion } from '@angular/material/expansion';
 import { StudentService } from '../../../../services/student.service';
@@ -27,6 +27,8 @@ export class SearchParentComponent implements OnInit,OnDestroy {
   @ViewChild(MatAccordion) accordion: MatAccordion;
   @Output() showHideAdvanceSearch = new EventEmitter<boolean>();
   @Output() searchList = new EventEmitter<any>();
+  @Output() searchValue = new EventEmitter<any>();
+  @Input() incomingSearchValue;
   countryModel: CountryModel = new CountryModel();
   @ViewChild('f') currentForm: NgForm;
   destroySubject$: Subject<void> = new Subject();
@@ -38,6 +40,9 @@ export class SearchParentComponent implements OnInit,OnDestroy {
   ) { }
 
   ngOnInit(): void {
+    if (this.incomingSearchValue){
+      this.parentSearchModel = this.incomingSearchValue;
+    }
     this.getAllCountry();
   }
 
@@ -55,19 +60,19 @@ export class SearchParentComponent implements OnInit,OnDestroy {
 
         }
       }
-    })
+    });
   }
 
 
   submit() {
     this.searchList.emit(this.parentSearchModel);
+    this.searchValue.emit(this.currentForm.value);
   }
-
- 
 
   resetData() {
     this.currentForm.reset();
     this.parentSearchModel = new ParentAdvanceSearchModel();
+    this.submit();
 
   }
 
@@ -76,7 +81,7 @@ export class SearchParentComponent implements OnInit,OnDestroy {
   }
 
   onProfileChange(event){
-    this.parentSearchModel.userProfile=event.toString();
+    this.parentSearchModel.userProfile = event.toString();
   }
 
   ngOnDestroy() {

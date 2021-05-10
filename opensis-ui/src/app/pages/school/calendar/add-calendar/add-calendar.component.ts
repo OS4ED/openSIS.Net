@@ -139,11 +139,11 @@ export class AddCalendarComponent implements OnInit {
       if (this.calendarAddViewModel.schoolCalendar.calenderId > 0) {
         this.calendarService.updateCalendar(this.calendarAddViewModel).subscribe(data => {
           if (data._failure) {
-            this.snackbar.open('Calendar updating failed. ' + data._message, '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Calendar updated successfully. ', '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
             this.dialogRef.close('submited');
@@ -154,11 +154,11 @@ export class AddCalendarComponent implements OnInit {
       else {
         this.calendarService.addCalendar(this.calendarAddViewModel).subscribe(data => {
           if (data._failure) {
-            this.snackbar.open('Calendar saving failed. ' + data._message, '', {
+            this.snackbar.open( data._message, '', {
               duration: 10000
             });
           } else {
-            this.snackbar.open('Calendar saved successfully. ', '', {
+            this.snackbar.open(data._message, '', {
               duration: 10000
             });
             this.dialogRef.close('submited');

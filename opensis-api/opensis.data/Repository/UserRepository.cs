@@ -68,6 +68,34 @@ namespace opensis.data.Repository
                 }
                 else
                 {
+                    if (user.MembershipId == 4)
+                    {
+                        var userPhoto = this.context?.StaffMaster.Where(x => x.TenantId == user.TenantId && x.SchoolId == user.SchoolId && x.StaffId == user.UserId).Select(x => x.StaffPhoto).FirstOrDefault();
+
+                        if (userPhoto != null)
+                        {
+                            ReturnModel.UserPhoto = userPhoto;
+                        }
+                    }
+                    if (user.MembershipId == 7)
+                    {
+                        var userPhoto = this.context?.StudentMaster.Where(x => x.TenantId == user.TenantId && x.SchoolId == user.SchoolId && x.StudentId == user.UserId).Select(x => x.StudentPhoto).FirstOrDefault();
+
+                        if (userPhoto != null)
+                        {
+                            ReturnModel.UserPhoto = userPhoto;
+                        }
+                    }
+                    if (user.MembershipId == 6)
+                    {
+                        var userPhoto = this.context?.ParentInfo.Where(x => x.TenantId == user.TenantId && x.SchoolId == user.SchoolId && x.ParentId == user.UserId).Select(x => x.ParentPhoto).FirstOrDefault();
+
+                        if (userPhoto != null)
+                        {
+                            ReturnModel.UserPhoto = userPhoto;
+                        }
+                    }
+
                     ReturnModel.UserId = user.UserId;
                     ReturnModel.TenantId = user.TenantId;
                     ReturnModel.Email = user.EmailAddress;
@@ -81,6 +109,7 @@ namespace opensis.data.Repository
                     {
                         objModel.SchoolId = 1;
                     }
+
                     RolePermissionListViewModel rolePermissionListView = new RolePermissionListViewModel();
                     rolePermissionListView.PermissionList = new List<RolePermissionViewModel>();
 

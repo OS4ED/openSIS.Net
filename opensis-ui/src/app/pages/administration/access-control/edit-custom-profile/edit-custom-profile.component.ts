@@ -75,7 +75,7 @@ export class EditCustomProfileComponent implements OnInit {
               this.snackbar.open('Member Updation Successful.', '', {
                 duration: 10000
               });              
-              this.dialogRef.close(true);
+              this.dialogRef.close(data.membership);
             }
           }
   

@@ -1,149 +1,467 @@
-<form (ngSubmit)="submit()" #f="ngForm" appInvalidControlScroll *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
-<mat-card class="w-full">
-    <mat-card-header>
-        <mat-card-title>{{'medicalInformation'|translate}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-        <div @stagger fxLayout="column">
-            <h4 class="text-primary px-4 pb-2">{{'alertInformation'|translate}}</h4>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'criticalAlert'|translate}}</mat-label>
-                        <input name="critical_alert" [(ngModel)]="studentAddModel.studentMaster.criticalAlert"   matInput>
-                    </mat-form-field>
+<form (ngSubmit)="submit()" #f="ngForm" appInvalidControlScroll
+    *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
+    <mat-card class="w-full">
+        <h3 class="flex-auto h-9 px-4">{{'medicalInformation' | translate}}</h3>
+        <mat-card-content>
+            <div @stagger fxLayout="column" class="-mx-4">
+                <ul class="flex flex-row text-gray font-semibold">
+                    <li class="px-8 py-2 cursor-pointer" (click)="changeTab('activities')"
+                        [class.active]="currentTab === 'activities'"
+                        [ngClass]="currentTab === 'activities' ? 'text-black border-b-2 border-primary' : ''">
+                        {{'activities' | translate}}</li>
+                    <li class="px-8 py-2 cursor-pointer" (click)="changeTab('providerInformation')"
+                        [class.active]="currentTab === 'providerInformation'"
+                        [ngClass]="currentTab === 'providerInformation' ? 'text-black border-b-2 border-primary' : ''">
+                        {{'providerInformation' | translate}}</li>
+                </ul>
+                <hr class=""/>
+                <div [ngSwitch]="currentTab">
+                    <div *ngSwitchCase="'activities'" class="px-4">
+                        <!-- <h4 class="text-primary px-4 pb-2">{{'alertInformation'|translate}}</h4>
+                        <div class="mb-2 md:flex md:flex-wrap">
+                            <div class="flex flex-1 mx-4 md:w-1/2">
+                                <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                    <mat-label>{{'criticalAlert'|translate}}</mat-label>
+                                    <input name="critical_alert"
+                                        [(ngModel)]="studentAddModel.studentMaster.criticalAlert" matInput>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex flex-1 mx-4 md:w-1/2"></div>
+                        </div>
+                        <div class="mb-2 md:flex md:flex-wrap">
+                            <div class="flex flex-1 mx-4 md:w-1/2">
+                                <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                    <mat-label>{{'alertDescription'|translate}}</mat-label>
+                                    <textarea name="alertDescription"
+                                        [(ngModel)]="studentAddModel.studentMaster.alertDescription"
+                                        matInput></textarea>
+                                </mat-form-field>
+                            </div>
+                            <div class="flex flex-1 mx-4 md:w-1/2"></div>
+                        </div> -->
+                    </div>
+                    <div *ngSwitchCase="'providerInformation'">
+                        <div class="pt-6 px-4">
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'primaryCarePhysician'|translate}}</mat-label>
+                                        <input name="primaryCarePhysician"
+                                            [(ngModel)]="studentAddModel.studentMaster.primaryCarePhysician" matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'primaryCarePhysicianPhone'|translate}}</mat-label>
+                                        <input name="primaryCarePhysicianPhone"
+                                            [(ngModel)]="studentAddModel.studentMaster.primaryCarePhysicianPhone"
+                                            matInput>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'preferredMedicalFacility'|translate}}</mat-label>
+                                        <input name="medicalFacility"
+                                            [(ngModel)]="studentAddModel.studentMaster.medicalFacility" matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'preferredMedicalFacilityPhone'|translate}}</mat-label>
+                                        <input name="medicalFacilityPhone"
+                                            [(ngModel)]="studentAddModel.studentMaster.medicalFacilityPhone" matInput>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'insuranceCompany'|translate}}</mat-label>
+                                        <input name="insuranceCompany"
+                                            [(ngModel)]="studentAddModel.studentMaster.insuranceCompany" matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'insuranceCompanyPhone'|translate}}</mat-label>
+                                        <input name="insuranceCompanyPhone"
+                                            [(ngModel)]="studentAddModel.studentMaster.insuranceCompanyPhone" matInput>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'policyNumber'|translate}}</mat-label>
+                                        <input name="policyNumber"
+                                            [(ngModel)]="studentAddModel.studentMaster.policyNumber" matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'policyHolderName'|translate}}</mat-label>
+                                        <mat-select name="suffix"
+                                            [(ngModel)]="studentAddModel.studentMaster.policyHolder">
+                                            <mat-option value="" disabled *ngIf="parentsFullName?.length==0">No Parents
+                                                Found
+                                            </mat-option>
+                                            <mat-option *ngFor="let parent of parentsFullName" value="{{parent}}">
+                                                {{parent}}
+                                            </mat-option>
+                                        </mat-select>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'dentist'|translate}}</mat-label>
+                                        <input name="dentist" [(ngModel)]="studentAddModel.studentMaster.dentist"
+                                            matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'dentistsPhone'|translate}}</mat-label>
+                                        <input name="dentistPhone"
+                                            [(ngModel)]="studentAddModel.studentMaster.dentistPhone" matInput>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                            <div class="mb-2 md:flex md:flex-wrap">
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'vision'|translate}}</mat-label>
+                                        <input name="vision" [(ngModel)]="studentAddModel.studentMaster.vision"
+                                            matInput>
+                                    </mat-form-field>
+                                </div>
+                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                        <mat-label>{{'visionProvidersPhone'|translate}}</mat-label>
+                                        <input name="visionPhone"
+                                            [(ngModel)]="studentAddModel.studentMaster.visionPhone" matInput>
+                                    </mat-form-field>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
-                <div class="flex flex-1 mx-4 md:w-1/2"></div>
+               
+                <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
+                    [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
             </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'alertDescription'|translate}}</mat-label>
-                        <textarea name="alertDescription" [(ngModel)]="studentAddModel.studentMaster.alertDescription" matInput></textarea>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2"></div>
+        </mat-card-content>
+        <mat-card-actions>
+            <div class="px-4 mb-2 text-right">
+                <button mat-button type="button" *ngIf="studentCreateMode == studentCreate.EDIT"
+                    (click)="cancelEdit()">{{'cancel'|translate}}</button>
+                <button color="primary" mat-raised-button>{{'update'|translate}}</button>
             </div>
-
-            <h4 class="text-primary px-4 pb-2">{{'providerInformation'|translate}}</h4>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'primaryCarePhysician'|translate}}</mat-label>
-                        <input name="primaryCarePhysician" [(ngModel)]="studentAddModel.studentMaster.primaryCarePhysician" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'primaryCarePhysicianPhone'|translate}}</mat-label>
-                        <input name="primaryCarePhysicianPhone" [(ngModel)]="studentAddModel.studentMaster.primaryCarePhysicianPhone" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'preferredMedicalFacility'|translate}}</mat-label>
-                        <input name="medicalFacility" [(ngModel)]="studentAddModel.studentMaster.medicalFacility" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'preferredMedicalFacilityPhone'|translate}}</mat-label>
-                        <input name="medicalFacilityPhone" [(ngModel)]="studentAddModel.studentMaster.medicalFacilityPhone" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'insuranceCompany'|translate}}</mat-label>
-                        <input name="insuranceCompany" [(ngModel)]="studentAddModel.studentMaster.insuranceCompany" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'insuranceCompanyPhone'|translate}}</mat-label>
-                        <input name="insuranceCompanyPhone" [(ngModel)]="studentAddModel.studentMaster.insuranceCompanyPhone" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'policyNumber'|translate}}</mat-label>
-                        <input name="policyNumber" [(ngModel)]="studentAddModel.studentMaster.policyNumber" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'policyHolderName'|translate}}</mat-label>
-                        <mat-select name="suffix" [(ngModel)]="studentAddModel.studentMaster.policyHolder">
-                            <mat-option value="" disabled *ngIf="parentsFullName?.length==0">No Parents Found</mat-option>
-                            <mat-option *ngFor="let parent of parentsFullName" value="{{parent}}">{{parent}}</mat-option>
-                        </mat-select>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'dentist'|translate}}</mat-label>
-                        <input name="dentist" [(ngModel)]="studentAddModel.studentMaster.dentist" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'dentistsPhone'|translate}}</mat-label>
-                        <input name="dentistPhone" [(ngModel)]="studentAddModel.studentMaster.dentistPhone" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <div class="mb-2 md:flex md:flex-wrap">
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'vision'|translate}}</mat-label>
-                        <input name="vision" [(ngModel)]="studentAddModel.studentMaster.vision" matInput>
-                    </mat-form-field>
-                </div>
-                <div class="flex flex-1 mx-4 md:w-1/2">
-                    <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                        <mat-label>{{'visionProvidersPhone'|translate}}</mat-label>
-                        <input name="visionPhone" [(ngModel)]="studentAddModel.studentMaster.visionPhone" matInput>
-                    </mat-form-field>
-                </div>
-            </div>
-            <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="studentAddModel" [module] = "module" [categoryId] = "categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
-        </div>
-    </mat-card-content>
-    <mat-card-actions>
-        <div class="px-4 mb-2 text-right">
-            <button mat-button type="button" *ngIf="studentCreateMode == studentCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
-            <button color="primary" mat-raised-button>{{'update'|translate}}</button>
-        </div>
-    </mat-card-actions>
-</mat-card>
+        </mat-card-actions>
+    </mat-card>
 </form>
 
 <mat-card class="w-full" *ngIf="studentCreateMode == studentCreate.VIEW">
 
-    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
-        <h3 class="flex-auto">{{'medicalInformation' | translate}}</h3>
-        <button *ngIf="editPermission" mat-button color="primary" (click)="editMedicalInfo()"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+    <div class="flex items-center px-4" fxLayout="row" fxLayoutAlign="center center">
+        <h3 class="flex-auto h-9">{{'medicalInformation' | translate}}</h3>
+        <button *ngIf="currentTab === 'providerInformation'  && editPermission" mat-button color="primary"
+            (click)="editMedicalInfo()">
+            <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
+        </button>
     </div>
     <mat-card-content>
 
+        <!-- start update design -->
+        <div class="-mx-4">
+            <ul class="flex flex-row text-gray font-semibold">
+                <li class="px-8 py-2 cursor-pointer" (click)="changeTab('activities')"
+                    [class.active]="currentTab === 'activities'"
+                    [ngClass]="currentTab === 'activities' ? 'text-black border-b-2 border-primary' : ''">{{'activities'
+                    | translate}}</li>
+                <li class="px-8 py-2 cursor-pointer" (click)="changeTab('providerInformation')"
+                    [class.active]="currentTab === 'providerInformation'"
+                    [ngClass]="currentTab === 'providerInformation' ? 'text-black border-b-2 border-primary' : ''">
+                    {{'providerInformation' | translate}}</li>
+            </ul>
+            <mat-divider></mat-divider>
+            <div [ngSwitch]="currentTab">
+                <div *ngSwitchCase="'activities'">
+                    <div class="px-8 pt-6">
+                        <h4 class="text-green font-medium">{{'alertInformation'|translate}}</h4>
+                        <div class="border border-gray-light rounded mt-2 mb-4">
+                            <div class="overflow-x-auto overflow-y-hidden">
+                                <!-- <ul class="grid grid-cols-4 border-b p-4 font-semibold">
+                                    <li class="font-medium">{{ "criticalAlert" | translate }}</li>
+                                    <li>{{ "alertDescription" | translate }}</li>
+                                </ul>
+                                <ul class="grid grid-cols-4 border-b border-gray-light p-4 font-medium">
+                                    <li>{{studentAddModel.studentMaster.criticalAlert|EmtyValueCheckPipe}}</li>
+                                    <li>{{studentAddModel.studentMaster.alertDescription|EmtyValueCheckPipe}}</li>
+                                </ul> -->
+                                <table class="w-full medical-info-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-1/5">{{ "criticalAlert" | translate }}</th>
+                                            <th class="w-3/5">{{ "alertDescription" | translate }}</th>
+                                            <th class="w-1/5"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>{{studentAddModel.studentMaster.criticalAlert|EmtyValueCheckPipe}}</td>
+                                            <td>{{studentAddModel.studentMaster.alertDescription|EmtyValueCheckPipe}}
+                                            </td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center text-blue cursor-pointer p-2" (click)="addAlert()">
+                                <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon><span
+                                    class="inline-block mt-1 align-top font-medium">{{ 'addAlertInformation' | translate
+                                    }}</span>
+                            </div>
+                        </div>
+                        <hr class="mt-6 mb-4 -mx-8" />
+                        <h4 class="text-green font-medium">{{'medicalNotes'|translate}}</h4>
+                        <div class="border border-gray-light rounded mt-2 mb-4">
+                            <div class="overflow-x-auto overflow-y-hidden">
+                                <table class="w-full medical-info-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-1/5">{{ "date" | translate }}</th>
+                                            <th class="w-3/5">{{ "doctorsNote" | translate }}</th>
+                                            <th class="w-1/5"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>May 10, 2021</td>
+                                            <td>Arthur is allergic to prawns/crabs. He has recorded medical history of
+                                                allergic symptoms.</td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center text-blue cursor-pointer p-2" (click)="addMedicalNotes()">
+                                <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon><span
+                                    class="inline-block mt-1 align-top font-medium">{{ 'addMedicalNotes' | translate
+                                    }}</span>
+                            </div>
+                        </div>
+                        <hr class="mt-6 mb-4 -mx-8" />
+                        <h4 class="text-green font-medium">{{'immunizationPhysicalRecord'|translate}}</h4>
+                        <div class="border border-gray-light rounded mt-2 mb-4">
+                            <div class="overflow-x-auto overflow-y-hidden">
+                                <table class="w-full medical-info-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="w-1/5">{{ "type" | translate }}</th>
+                                            <th class="w-1/5">{{ "date" | translate }}</th>
+                                            <th class="w-2/5">{{ "comment" | translate }}</th>
+                                            <th class="w-1/5"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Immunization</td>
+                                            <td>May 18, 2021</td>
+                                            <td>Rotavirus immunization was done.</td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center text-blue cursor-pointer p-2" (click)="addImmunization()">
+                                <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon><span
+                                    class="inline-block mt-1 align-top font-medium">{{ 'addImmunizationPhysicalRecord' |
+                                    translate }}</span>
+                            </div>
+                        </div>
+                        <hr class="mt-6 mb-4 -mx-8" />
+                        <h4 class="text-green font-medium">{{'nurseVisitRecord'|translate}}</h4>
+                        <div class="border border-gray-light rounded mt-2 mb-0">
+                            <div class="overflow-x-auto overflow-y-hidden">
+                                <table class="w-full medical-info-table">
+                                    <thead>
+                                        <tr>
+                                            <th class="">{{ "date" | translate }}</th>
+                                            <th class="">{{ "timeIn" | translate }}</th>
+                                            <th class="">{{ "timeOut" | translate }}</th>
+                                            <th class="">{{ "reason" | translate }}</th>
+                                            <th class="">{{ "result" | translate }}</th>
+                                            <th class="">{{ "comment" | translate }}</th>
+                                            <th></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Aug 10, 2020</td>
+                                            <td>10:00AM</td>
+                                            <td>10:30AM</td>
+                                            <td>Rashes on skin</td>
+                                            <td>Treatment given</td>
+                                            <td class="">
+                                                <i class="icon icon-bubble"></i>
+                                            </td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>Aug 11, 2020</td>
+                                            <td>11:00AM</td>
+                                            <td>11:15AM</td>
+                                            <td>Regular checkup</td>
+                                            <td>Treatment given</td>
+                                            <td class="text-green">
+                                                <i class="icon icon-bubble"></i>
+                                            </td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="text-center text-blue cursor-pointer p-2" (click)="addNurseVisit()">
+                                <mat-icon [icIcon]="icAdd" class="mr-2"></mat-icon><span
+                                    class="inline-block mt-1 align-top font-medium">{{ 'addNurseVisitRecord' | translate
+                                    }}</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div *ngSwitchCase="'providerInformation'">
+                    <div class="px-4 pt-6">
+                        <div class="w-full lg:w-2/3">
+                            <ul class="grid md:grid-cols-2 col-gap-8 row-gap-10 my-0 mx-4">
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'primaryCarePhysician' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.primaryCarePhysician|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'primaryCarePhysicianPhone' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.primaryCarePhysicianPhone|EmtyValueCheckPipe}}
+                                    </p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'insuranceCompany' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.insuranceCompany|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'insuranceCompanyPhone' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.insuranceCompanyPhone|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'policyNumber' | translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.policyNumber|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'policyHolderName' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.policyHolder|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacility' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.medicalFacility|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacilityPhone' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.medicalFacilityPhone|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'dentist' | translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.dentist|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'dentistsPhone' | translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.dentistPhone|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'vision' | translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.vision|EmtyValueCheckPipe}}</p>
+                                </li>
+                                <li>
+                                    <label class="text-sm leading-5 text-gray">{{'visionProvidersPhone' |
+                                        translate}}</label>
+                                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                        {{studentAddModel.studentMaster.visionPhone|EmtyValueCheckPipe}}</p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- End update Design -->
 
-        <div @stagger fxLayout="column">
+
+        <!-- <div @stagger fxLayout="column">
             <h3 class="text-blue pt-6 pb-2 px-4">{{'alertInformation'|translate}}</h3>
             <ul class="grid md:grid-cols-2 lg:grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'criticalAlert' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.criticalAlert|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{studentAddModel.studentMaster.criticalAlert|EmtyValueCheckPipe}}</p>
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'alertDescription' | translate}}</label>
-                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.alertDescription|EmtyValueCheckPipe}}</p>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        {{studentAddModel.studentMaster.alertDescription|EmtyValueCheckPipe}}</p>
                 </li>
             </ul>
 
@@ -155,58 +473,73 @@
                 <ul class="grid md:grid-cols-2 col-gap-8 row-gap-10 my-3 mx-4">
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'primaryCarePhysician' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.primaryCarePhysician|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.primaryCarePhysician|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'primaryCarePhysicianPhone' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.primaryCarePhysicianPhone|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.primaryCarePhysicianPhone|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'insuranceCompany' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.insuranceCompany|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.insuranceCompany|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'insuranceCompanyPhone' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.insuranceCompanyPhone|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.insuranceCompanyPhone|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'policyNumber' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.policyNumber|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.policyNumber|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'policyHolderName' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.policyHolder|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.policyHolder|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacility' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.medicalFacility|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.medicalFacility|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
-                        <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacilityPhone' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.medicalFacilityPhone|EmtyValueCheckPipe}}</p>
+                        <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacilityPhone' |
+                            translate}}</label>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.medicalFacilityPhone|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'dentist' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.dentist|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.dentist|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'dentistsPhone' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.dentistPhone|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.dentistPhone|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'vision' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.vision|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.vision|EmtyValueCheckPipe}}</p>
                     </li>
                     <li>
                         <label class="text-sm leading-5 text-gray">{{'visionProvidersPhone' | translate}}</label>
-                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentAddModel.studentMaster.visionPhone|EmtyValueCheckPipe}}</p>
+                        <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            {{studentAddModel.studentMaster.visionPhone|EmtyValueCheckPipe}}</p>
                     </li>
                 </ul>
             </div>
-            <hr class="-mx-4 mt-6" [class.hide]="studentAddModel.fieldsCategoryList[categoryId].customFields.length===0">
+            <hr class="-mx-4 mt-6"
+                [class.hide]="studentAddModel.fieldsCategoryList[categoryId].customFields.length===0">
 
-            <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="studentAddModel" [module] = "module" [categoryId] = "categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
-            
-        </div>
+            <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
+                [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
+
+        </div> -->
     </mat-card-content>
 </mat-card>

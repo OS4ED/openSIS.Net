@@ -1,4 +1,5 @@
 import { CommonField } from "./common-field.model";
+import { GradeUsStandard } from "./grades.model";
 
 export class GetAllSubjectModel extends CommonField {
     public subjectList: [];
@@ -115,6 +116,7 @@ export class CourseStandardModel {
     public schoolId: number;
     public courseId: number;
     public standardRefNo: string;
+    public gradeUsStandard:GradeUsStandard;
     public createdBy: string;
     public createdOn: string;
     public updatedBy: string;
@@ -123,6 +125,13 @@ export class CourseStandardModel {
         this.createdBy = sessionStorage.getItem("email");
         this.updatedBy = sessionStorage.getItem("email");
     }
+}
+
+export class CourseStandardForCourseViewModel extends CommonField{
+    public tenantId: string;
+    public schoolId: number;
+    public courseId: number;
+    public courseStandards: CourseStandardModel[];
 }
 export class CourseModel {
     public tenantId: string;
@@ -178,6 +187,8 @@ export class SearchCourseSectionViewModel extends CommonField {
     public courseSubject: string;
     public courseProgram: string;
     public markingPeriodId: string;
+    public forStaff: boolean;
+    public forStudent: boolean;
 }
 
 export class AllCourseSectionView {

@@ -20,7 +20,7 @@ export class TableCountryModel {
 
 
 export class CountryModel extends CommonField {    
-    public tableCountry : [TableCountryModel];
+    public tableCountry : TableCountryModel[];
     public stateCount: number;   
     public isCountryAvailable:boolean;
     constructor() {

@@ -1,14 +1,17 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+<mat-dialog-content>
+
 <!-- Fixed Schedule -->
  <div *ngIf="scheduleDetails.scheduleType=='Fixed Schedule'">
-    <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-        <h2 class="headline m-0" fxFlex="auto">
-            {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
-        </h2>
-        <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-            <mat-icon [icIcon]="icClose"></mat-icon>
-        </button>
-    </div>
-    <mat-divider class="-mx-6 text-border"></mat-divider>
+
 <p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : Fixed Scheduling</p>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
@@ -26,7 +29,7 @@
         <li>
             <label class="text-sm leading-5 text-gray">{{'meetingDays' | translate}}</label>
             <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                {{scheduleDetails.meetingDays|weekDay}}</p>
+                {{data.fromTeacherSchedule?(scheduleDetails.meetingDays|weekDay):(scheduleDetails.dayOfWeek|weekDay)}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'takeAttendance' | translate}}</label>
@@ -39,15 +42,7 @@
 
 <!-- Variable Schedule -->
  <div *ngIf="scheduleDetails.scheduleType=='Variable Schedule'">
- <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">
-        {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
-    </h2>
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-        <mat-icon [icIcon]="icClose"></mat-icon>
-    </button>
-</div>
-<mat-divider class="-mx-6 text-border"></mat-divider>
+
 <p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : {{scheduleDetails.scheduleType}}</p>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
@@ -75,15 +70,7 @@
 
 <!-- Calendar Schedule -->
 <div *ngIf="scheduleDetails.scheduleType=='Calendar Schedule'" class="relative">
-<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">
-        {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
-    </h2>
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-        <mat-icon [icIcon]="icClose"></mat-icon>
-    </button>
-</div>
-<mat-divider class="-mx-6 text-border"></mat-divider>
+
 <p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : Calendar Schedule</p>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
@@ -155,14 +142,6 @@
 <!-- Block Schedule -->
 <div *ngIf="scheduleDetails.scheduleType=='Block Schedule'">
 
-<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
-    <h2 class="headline m-0" fxFlex="auto">
-        {{scheduleDetails.courseTitle}} - {{scheduleDetails.courseSectionName}}
-    </h2>
-    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
-        <mat-icon [icIcon]="icClose"></mat-icon>
-    </button>
-</div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 <p class="font-medium py-4 text-lg"><span class="text-green">Schedule Type</span> : Block/Rotation Days</p>
 <div class="-mx-6 border-t overflow-auto">
@@ -185,4 +164,23 @@
         </tbody>
     </table>
 </div> 
+
+
 </div> 
+</mat-dialog-content>
+
+<ng-container *ngIf="!data.fromTeacherSchedule">
+    <mat-divider></mat-divider>
+    <ul class="grid grid-cols-1 md:grid-cols-2 col-gap-4 my-6 px-6">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'modifiedBy' | translate}}</label>
+            <p class="mt-1 mb-4 text-sm leading-5 sm:mt-0 sm:col-span-2"><span class="text-primary">{{scheduleDetails.updatedBy?scheduleDetails.updatedBy:scheduleDetails.createdBy}}</span>
+                <br/><span class="text-xs">({{memberName}})</span>
+            </p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'modifiedDate' | translate}}</label>
+            <p class="mt-1 mb-4 text-sm leading-5 sm:mt-0 sm:col-span-2">{{scheduleDetails.updatedOn?(scheduleDetails.updatedOn| date:'mediumDate'):(scheduleDetails.createdOn | date:'mediumDate')}}</p>
+        </li>
+    </ul>
+</ng-container>

@@ -16,9 +16,8 @@ import { MatSelectModule } from '@angular/material/select';
 import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 import { FormsModule } from '@angular/forms';
 import { NgxDropzoneModule } from 'ngx-dropzone';
-
-
-
+import {HttpClientModule} from '@angular/common/http';
+import {SharedModuleModule} from '../../shared-module/shared-module.module'
 @NgModule({
   declarations: [StaffDataImportComponent],
   imports: [
@@ -37,7 +36,9 @@ import { NgxDropzoneModule } from 'ngx-dropzone';
     MatSelectModule,
     MatProgressSpinnerModule,
     FormsModule,
-    NgxDropzoneModule
+    NgxDropzoneModule,
+    HttpClientModule,
+    SharedModuleModule
   ],
   exports:[StaffDataImportComponent]
 })

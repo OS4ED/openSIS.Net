@@ -97,20 +97,21 @@ export class NoticesComponent implements OnInit, OnDestroy {
   getMemberList(){
     this.membershipService.getAllMembers(this.getAllMembersList).subscribe(
       (res) => {
-        if(typeof(res)=='undefined'){
-          this.snackbar.open('No Member Found. ' + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else{
+        if(res){
           if (res._failure) {     
-            this.snackbar.open('No Member Found. ' + res._message, '', {
+            this.snackbar.open(res._message, '', {
               duration: 10000
             });
           }
           else {       
             this.getAllMembersList = res;   
           }
+          
+        }
+        else{
+          this.snackbar.open('No Member Found. ' + sessionStorage.getItem("httpError"), '', {
+            duration: 10000
+          });
         }
     });
   }

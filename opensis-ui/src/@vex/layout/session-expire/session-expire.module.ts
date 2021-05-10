@@ -4,6 +4,8 @@ import { SessionExpireAlertComponent } from '../session-expire/session-expire-al
 import { MatDialogModule} from '@angular/material/dialog';
 import {MatButtonModule} from '@angular/material/button';
 import { TranslateModule } from '@ngx-translate/core';
+import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
+import { MatIconModule } from '@angular/material/icon';
 
 @NgModule({
   declarations: [SessionExpireAlertComponent],
@@ -11,7 +13,9 @@ import { TranslateModule } from '@ngx-translate/core';
     CommonModule,
     MatDialogModule,
     MatButtonModule,
-    TranslateModule
+    TranslateModule,
+    MatProgressSpinnerModule,
+    MatIconModule
   ]
 })
 export class SessionExpireModule { }

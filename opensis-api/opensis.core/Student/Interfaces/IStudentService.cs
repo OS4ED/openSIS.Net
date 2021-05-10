@@ -40,5 +40,6 @@ namespace opensis.core.Student.Interfaces
         public StudentListModel ReenrollmentForStudent(StudentListModel studentListModel);
         ///public SearchStudentViewModel SearchStudentForSchedule(SearchStudentViewModel searchStudentViewModel);
         public StudentListAddViewModel AddStudentList(StudentListAddViewModel studentListAddViewModel);
+        public TranscriptViewModel GenerateTranscriptForStudent(TranscriptViewModel transcriptViewModel);
     }
 }

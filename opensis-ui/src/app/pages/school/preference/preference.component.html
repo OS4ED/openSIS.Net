@@ -1,0 +1,46 @@
+<div class="w-full p-0">
+    <div class="w-9/12 m-auto">
+        <div class="card px-6 py-4 mb-8">
+            <h4 class="text-green font-medium mb-2">{{ "setHalfDayAndFullDayMinutes" | translate }}</h4>
+            <ul class="grid grid-cols-2 col-gap-6 row-gap-4">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "fullDayMinutes" | translate }}</mat-label>
+                        <input matInput value="360">
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "halfDayMinutes" | translate }}</mat-label>
+                        <input matInput value="180">
+                    </mat-form-field>
+                </li>
+            </ul>
+            <mat-divider class="my-4 -mx-6"></mat-divider>
+            <h4 class="text-green font-medium mb-2">{{ "setLoginFailureAllowanceCount" | translate }}</h4>
+            <ul class="grid grid-cols-2 col-gap-6 row-gap-4">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "noOfLoginFailuresAllowedBeforeAccountIsDisabled" | translate }}</mat-label>
+                        <input matInput value="3">
+                    </mat-form-field>
+                </li>
+            </ul>
+            <mat-divider class="my-4 -mx-6"></mat-divider>
+            <h4 class="text-green font-medium mb-2">{{ "setAllowableUserInactivityDays" | translate }}</h4>
+            <ul class="grid grid-cols-2 col-gap-6 row-gap-4">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "maxInactiveDaysAllowedBeforeAccountIsDisabled" | translate }}</mat-label>
+                        <input matInput value="60">
+                    </mat-form-field>
+                </li>
+            </ul>
+            <div class="text-right">
+                <button color="primary" mat-raised-button type="submit">
+                    {{ 'update' | translate }}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

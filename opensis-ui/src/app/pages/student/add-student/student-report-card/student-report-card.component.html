@@ -1,0 +1,219 @@
+<mat-card class="w-full mb-6">
+    <div class="">
+        <div class="mb-4">
+            <ul class="grid md:grid-cols-4 col-gap-4 row-gap-2">
+                <li>
+                    <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                        <mat-label>{{ "selectReportCardTemplate" | translate }}</mat-label>
+                        <mat-select>
+                            <mat-option value="default">Default</mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </li>
+            </ul>
+        </div>
+        <h4 class="text-green font-medium mb-2">{{ "includeOnReportCard" | translate }}</h4>
+        <div class="mb-2">
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "teacherName" | translate}}
+            </mat-slide-toggle>
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "signatureLine" | translate}}
+            </mat-slide-toggle>
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "teacherComments" | translate}}
+            </mat-slide-toggle>
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "percentage" | translate}}
+            </mat-slide-toggle>
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "gpa" | translate}}
+            </mat-slide-toggle>
+        </div>
+        <div class="mb-2">
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "yearToDateDailyAbsences" | translate}}
+            </mat-slide-toggle>
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "dailyAbsencesThisMarkingPeriod" | translate}}
+            </mat-slide-toggle>
+            <mat-slide-toggle class="mr-4" color="primary" checked="checked">
+                {{ "otherAttendanceCodeYearToDate" | translate}}
+            </mat-slide-toggle>
+            <div class="select-dropdown inline-block">
+                <select>
+                    <option value="na" selected>EA(Excused Absence)</option>
+                </select>
+            </div>
+        </div>
+        <h4 class="text-green font-medium mb-2">{{ "markingPeriods" | translate }}</h4>
+        <div class="mb-4">
+            <mat-checkbox class="mr-6">Quarter 1</mat-checkbox>
+            <mat-checkbox class="mr-6">Quarter 2</mat-checkbox>
+            <mat-checkbox checked="checked" class="mr-6" color="primary">Semester 1</mat-checkbox>
+            <mat-checkbox class="mr-6">Quarter 3</mat-checkbox>
+            <mat-checkbox class="mr-6">Quarter 4</mat-checkbox>
+            <mat-checkbox checked="checked" class="mr-6" color="primary">Semester 2</mat-checkbox>
+        </div>
+        <div class="text-right">
+            <button mat-flat-button color="primary">{{'generateReportCard' | translate }}</button>
+        </div>
+    </div>
+</mat-card>
+<mat-card class="w-full mb-6 p-0">
+    <div class="flex justify-between items-center bg-green text-white p-4 rounded-t">
+        <div>
+            <h4 class="font-medium text-lg">{{ 'yearToDateAttendance' | translate }} : 88%</h4>
+        </div>
+        <div>
+            <h4 class="font-medium text-lg">{{ 'yearToDateAbsences' | translate }} : 6</h4>
+        </div>
+        <div>
+            <button mat-flat-button color="primary">
+                <mat-icon class="mr-2" [icIcon]=icPrint></mat-icon>{{ 'print' | translate }}
+            </button>
+        </div>
+    </div>
+    <div class="w-full mb-6 p-4">
+        <div class="flex justify-between items-center -ml-4">
+            <div class="flex items-center py-1 border-l-4 border-green">
+                <h4 class="pl-4 text-xl font-medium text-green">Semester 1</h4>
+            </div>
+            <h5 class="text-medium">{{ 'absences' | translate }}: 4 <span class="mx-2">|</span> {{ 'excusedAbsences' | translate }}: 1 </h5>
+        </div>
+        <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
+            <table class="w-full schedule-table mb-10">
+                <thead>
+                    <tr>
+                        <th>{{ "course" | translate }}</th>
+                        <th>{{ "teacher" | translate }}</th>
+                        <th class="bg-red-light">{{ "grade" | translate }}</th>
+                        <th>{{ "gpa" | translate }}</th>
+                        <th>{{ "comments" | translate }}</th>
+                        <th>{{ "teacherComments" | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>English</td>
+                        <td>Adriana Martin</td>
+                        <td class="bg-red-light">A (97.78%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="text-green cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Calculas</td>
+                        <td>Ekon Williams</td>
+                        <td class="bg-red-light">B (82.78%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>American History</td>
+                        <td>Charlotte Davis</td>
+                        <td class="bg-red-light">A (92.78%)</td>
+                        <td>6.00</td>
+                        <td class="text-green cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="text-green cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Chemistry w/lab</td>
+                        <td>Robert Millar</td>
+                        <td class="bg-red-light">A (95.28%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="text-green cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Drawing</td>
+                        <td>Andrew Brown</td>
+                        <td class="bg-red-light">A (95.6%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Piano</td>
+                        <td>Danielle Boucher</td>
+                        <td class="bg-red-light">C (59.1%)</td>
+                        <td>6.00</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div class="flex justify-between items-center -ml-4">
+            <div class="flex items-center py-1 border-l-4 border-green">
+                <h4 class="pl-4 text-xl font-medium text-green">Semester 2</h4>
+            </div>
+            <h5 class="text-medium">{{ 'absences' | translate }}: 4 <span class="mx-2">|</span> {{ 'excusedAbsences' | translate }}: 1 </h5>
+        </div>
+        <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
+            <table class="w-full schedule-table">
+                <thead>
+                    <tr>
+                        <th>{{ "course" | translate }}</th>
+                        <th>{{ "teacher" | translate }}</th>
+                        <th class="bg-red-light">{{ "grade" | translate }}</th>
+                        <th>{{ "gpa" | translate }}</th>
+                        <th>{{ "comments" | translate }}</th>
+                        <th>{{ "teacherComments" | translate }}</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>English</td>
+                        <td>Adriana Martin</td>
+                        <td class="bg-red-light">A (97.78%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="text-green cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Calculas</td>
+                        <td>Ekon Williams</td>
+                        <td class="bg-red-light">B (82.78%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>American History</td>
+                        <td>Charlotte Davis</td>
+                        <td class="bg-red-light">A (92.78%)</td>
+                        <td>6.00</td>
+                        <td class="text-green cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="text-green cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Chemistry w/lab</td>
+                        <td>Robert Millar</td>
+                        <td class="bg-red-light">A (95.28%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="text-green cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Drawing</td>
+                        <td>Andrew Brown</td>
+                        <td class="bg-red-light">A (95.6%)</td>
+                        <td>4.50</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                    <tr>
+                        <td>Piano</td>
+                        <td>Danielle Boucher</td>
+                        <td class="bg-red-light">C (59.1%)</td>
+                        <td>6.00</td>
+                        <td class="cursor-pointer" (click)="addComments()"><i class="icon icon-bubble"></i></td>
+                        <td class="cursor-pointer" (click)="addTeacherComments()"><i class="icon icon-bubble"></i></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</mat-card>

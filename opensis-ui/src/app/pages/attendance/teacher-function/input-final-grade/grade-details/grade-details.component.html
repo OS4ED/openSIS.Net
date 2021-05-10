@@ -1,381 +1,171 @@
 <!-- Start Input Final Grade -->
-<div class="card -mt-16">
-    <div class="flex justify-between items-center px-4">
-        <div class="py-4">
-            <a [routerLink]="['/school/teacher-functions/input-effort-grades']" class="cursor-pointer">
-                <mat-icon class="mr-4 align-middle">west</mat-icon>
-            </a>
-            <span class="font-medium text-lg">Andrew Brown</span>
-        </div>
-        <div>
-            <mat-slide-toggle color="primary">{{ "includeInactiveStudents" | translate }}
-            </mat-slide-toggle>
-        </div>
-    </div>
-    <mat-divider class=""></mat-divider>
-    <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 col-gap-4 row-gap-2 mt-4 px-6">
-        <li>
-            <button
-                class="flex items-center h-12 w-full btn cursor-pointer bg-primary text-white p-2 rounded font-medium">
-                <mat-icon class="mr-2">move_to_inbox</mat-icon><span>{{ "getGradebookGrades" | translate }}</span>
-            </button>
-        </li>
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "courseSection" | translate }}</mat-label>
-                <mat-select name="courseSection">
-                    <mat-option value="geo">
-                        Geometry
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </li>
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ "markingPeriod" | translate }}</mat-label>
-                <mat-select name="markingPeriod">
-                    <mat-option value="Quarter">
-                        Quarter 1
-                    </mat-option>
-                </mat-select>
-            </mat-form-field>
-        </li>
-    </ul>
-    <mat-divider class=""></mat-divider>
-    <div class="lg:flex lg:flex-wrap">
-        <div class="lg:w-2/4">
-            <div class="content-left border-r">
-                <div class="overflow-x-auto overflow-y-hidden rounded border-b mb-2">
-                    <table class="w-full schedule-table">
-                        <thead>
-                            <tr>
-                                <th width="50%">{{ "studentDetails" | translate }}</th>
-                                <th width="25%">{{ "percent" | translate }}</th>
-                                <th width="25%" class="relative whitespace-nowrap">
-                                    <span class="switch-wrap -ml-8 pr-2">
-                                        <label class="switch">
-                                            <input type="checkbox" checked>
-                                            <span class="slider"></span>
-                                        </label>
-                                    </span>
-                                    {{ "letterGrade" | translate }}
-                                </th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr class="bg-skyblue-light cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>85%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select">Select</option>
-                                            <option value="A" selected>A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>75%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select">Select</option>
-                                            <option value="B" selected>B</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>0%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select" selected>Select</option>
-                                            <option value="A">A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>0%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select" selected>Select</option>
-                                            <option value="A">A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>0%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select" selected>Select</option>
-                                            <option value="A">A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>0%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select" selected>Select</option>
-                                            <option value="A">A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>0%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select" selected>Select</option>
-                                            <option value="A">A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>0%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select" selected>Select</option>
-                                            <option value="A">A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                            <tr class="cursor-pointer">
-                                <td class="whitespace-nowrap">
-                                    <div class="flex cursor-pointer">
-                                        <div class="flex-shrink-0 h-12 w-12">
-                                            <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
-                                        </div>
-                                        <div class="ml-3 flex flex-col justify-center">
-                                            <h6 class="text-sm font-semibold">Arthur Boucher</h6>
-                                            <div>
-                                                <span class="">#44568</span>
-                                                <span class="dot-separator"></span>
-                                                <span>Grade 9</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </td>
-                                <td>0%</td>
-                                <td>
-                                    <div class="select-dropdown">
-                                        <select>
-                                            <option value="select" selected>Select</option>
-                                            <option value="A">A</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-            </div>
-        </div>
-        <div class="lg:w-2/4 lg:pr-4 pl-4 content-right">
-            <h4 class="text-base font-medium text-green py-2">{{ "addPredefinedComments" | translate }}</h4>
-            <div class="w-full border rounded mb-2 p-2 pb-0">
-                <div class="select-dropdown mb-2">
-                    <select>
-                        <option value="Predefined Comments" selected>- Add Predifined Comment -</option>
-                    </select>
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Input Final Grades" class="w-full">
+            <vex-breadcrumbs [crumbs]="[pageStatus]" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6">
+
+        <div class="card -mt-16">
+            <div class="flex justify-between items-center px-4">
+                <div class="py-4">
+                    <a [routerLink]="['/school', 'staff', 'teacher-functions', 'input-final-grade']"
+                        class="cursor-pointer">
+                        <mat-icon class="mr-4 align-middle">west</mat-icon>
+                    </a>
+                    <span class="font-medium text-lg">{{staffDetails.staffFullName}}</span>
                 </div>
                 <div>
-                    <span class="rounded-full py-1 px-3 border border-primary inline-block mb-3 mr-3 text-primary">Shows
-                        positive attitute
-                        <i class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle"></i>
-                    </span>
-                    <span
-                        class="rounded-full py-1 px-3 border border-primary inline-block mb-3 mr-3 text-primary">Respectful
-                        towards Staff
-                        <i class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle"></i>
-                    </span>
-                    <span class="rounded-full py-1 px-3 border border-primary inline-block mb-3 mr-3 text-primary">Keeps
-                        desk clean
-                        <i class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle"></i>
-                    </span>
+                    <mat-slide-toggle [(ngModel)]="scheduleStudentListViewModel.includeInactive" color="primary">{{ "includeInactiveStudents" | translate }}
+                    </mat-slide-toggle>
                 </div>
             </div>
-            <h4 class="text-base font-medium text-green py-2">{{ "teacherComments" | translate }}</h4>
-            <div class="w-full border rounded mb-2 p-2">
-                <textarea placeholder="Comments" class="w-full" rows="3"></textarea>
-            </div>
-            <h4 class="text-base font-medium text-green py-4">Standard Grades</h4>
-            <div class="lg:flex lg:flex-wrap mb-4">
-                <div class="lg:w-3/4 lg:pr-4">
-                    <h4 class="text-base font-medium">CCSS.Math.Content.1.0A.A.1</h4>
-                    <p class="text-gray">Use addition and subtraction within 20 to solve word problems
-                        involving
-                        situations of adding to, taking from, putting together, taking apart, and
-                        comparing, with unknowns in all positions, e.g., by using oblects, drawinga, and
-                        equations with a symbol for the unkwon number to represent the problem.</p>
-                </div>
-                <div class="lg:w-1/4">
-                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                        <mat-label>{{ "assignGrade" | translate }}</mat-label>
-                        <mat-select name="assignGrade">
-                            <mat-option value="2">
-                                2
+            <mat-divider class=""></mat-divider>
+            <ul class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 col-gap-4 row-gap-2 mt-4 px-6">
+                <li>
+                    <button
+                        class="flex items-center h-12 w-full btn cursor-pointer bg-primary text-white p-2 rounded font-medium">
+                        <mat-icon class="mr-2">move_to_inbox</mat-icon><span>{{ "getGradebookGrades" | translate
+                            }}</span>
+                    </button>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "courseSection" | translate }}</mat-label>
+                        <mat-select (selectionChange)="selectedCourseSection($event.value)" name="courseSection"
+                            [(ngModel)]="addUpdateStudentFinalGradeModel.courseSectionId">
+                            <mat-option
+                                *ngFor="let courseSectionDetail of allScheduledCourseSectionBasedOnTeacher?.courseSectionViewList"
+                                [value]="courseSectionDetail.courseSectionId">
+                                {{courseSectionDetail.courseSectionName}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
-                </div>
-            </div>
-            <mat-divider class="my-2 -mr-4"></mat-divider>
-            <div class="lg:flex lg:flex-wrap mb-4">
-                <div class="lg:w-3/4 lg:pr-4">
-                    <h4 class="text-base font-medium">CCSS.Math.Content.1.0A.A.1</h4>
-                    <p class="text-gray">Use addition and subtraction within 20 to solve word problems
-                        involving
-                        situations of adding to, taking from, putting together, taking apart, and
-                        comparing, with unknowns in all positions, e.g., by using oblects, drawinga, and
-                        equations with a symbol for the unkwon number to represent the problem.</p>
-                </div>
-                <div class="lg:w-1/4">
-                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                        <mat-label>{{ "assignGrade" | translate }}</mat-label>
-                        <mat-select name="assignGrade">
-                            <mat-option value="2">
-                                2
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "markingPeriod" | translate }}</mat-label>
+                        <mat-select name="markingPeriod" [(value)]="addUpdateStudentFinalGradeModel.markingPeriodId" (selectionChange)="selectedMarkingPeriod($event.value)" [(ngModel)]="addUpdateStudentFinalGradeModel.markingPeriodId">
+                            <mat-option *ngFor="let period of markingPeriodList" [value]="period.value">
+                                {{period.text}}
                             </mat-option>
                         </mat-select>
                     </mat-form-field>
+                </li>
+            </ul>
+            <mat-divider class=""></mat-divider>
+            <div class="lg:flex lg:flex-wrap">
+                <div class="lg:w-2/4">
+                    <div class="content-left border-r">
+                        <div class="overflow-x-auto overflow-y-hidden rounded border-b mb-2">
+                            <table class="w-full schedule-table">
+                                <thead>
+                                    <tr>
+                                        <th width="50%">{{ "studentDetails" | translate }}</th>
+                                        <th width="25%">{{ "percent" | translate }}</th>
+                                        <th width="25%" class="relative whitespace-nowrap">
+                                            <span class="switch-wrap -ml-8 pr-2">
+                                                <label class="switch">
+                                                    <input [(ngModel)]="addUpdateStudentFinalGradeModel.isPercent"
+                                                        type="checkbox">
+                                                    <span class="slider"></span>
+                                                </label>
+                                            </span>
+                                            {{ "letterGrade" | translate }}
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr *ngIf="totalCount===0">
+                                        <div><span class="mb-5 whitespace-nowrap text-sm font-semibold">{{ showMessage | translate }}</span></div>
+                                    </tr>
+                                    <tr class="bg-skyblue-light cursor-pointer"
+                                        *ngFor="let student of studentMasterList;let i = index">
+                                        <td class="whitespace-nowrap">
+                                            <div class="flex cursor-pointer" (click)="addComments(i)" [ngClass]="{'text-primary':selectedStudent === i }">
+                                                <div class="flex-shrink-0 h-12 w-12">
+                                                    <img src="{{student.studentPhoto?'data:image/png;base64,'+ student.studentPhoto:'assets/img/default-person.jpg'}}"
+                                                        alt="" class="h-12 w-12 rounded-full" />
+                                                </div>
+                                                <div class="ml-3 flex flex-col justify-center">
+                                                    <h6 class="text-sm font-semibold">{{student.firstGivenName+" "+
+                                                        student.lastFamilyName}}</h6>
+                                                    <div>
+                                                        <span class="">{{student.studentInternalId}}</span>
+                                                        <span class="dot-separator"></span>
+                                                        <span>{{ student.gradeLevel }}</span>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td *ngIf="addUpdateStudentFinalGradeModel.isPercent"><input
+                                                class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0" max="100"
+                                                (keyup)="percentToGrade(i)" name="percentMarks" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[i].percentMarks" type="number" [disabled]="!addUpdateStudentFinalGradeModel.isPercent"></td>
+                                        <td *ngIf="!addUpdateStudentFinalGradeModel.isPercent">{{addUpdateStudentFinalGradeModel.studentFinalGradeList[i].percentMarks? addUpdateStudentFinalGradeModel.studentFinalGradeList[i].percentMarks + "%" : ""}}</td>
+                                        <td>
+                                            <mat-form-field class="w-50" appearance="outline" color="primary">
+                                                <mat-label>{{'selectGrade'|translate}}</mat-label>
+                                                <mat-select (selectionChange)="selectedGrade($event.value ,i)" name="gradeObtained" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[i].gradeObtained" [disabled]="addUpdateStudentFinalGradeModel.isPercent">
+                                                    <mat-option *ngFor="let report of reportCardGrade" value={{report.value}}>
+                                                        {{report.value}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                    </tr>
+
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+                <div *ngIf="showComment" class="lg:w-2/4 lg:pr-4 pl-4 content-right">
+                    <h4 class="text-base font-medium text-green py-2">{{ "addPredefinedComments" | translate }}</h4>
+                    <div class="w-full border rounded mb-2 p-2 pb-0">
+                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                            <mat-label>{{'addPredefinedComments'|translate}}</mat-label>
+                            <mat-select (selectionChange)="selectedReportComment($event.value)"  [compareWith]="compareObjects"  [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[selectedStudent].studentFinalGradeComments" multiple>
+                                <mat-option *ngFor="let report of reportCardComments" [value]="report">
+                                    {{report.comments}}</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                        <div>
+                            <span *ngFor="let report of addUpdateStudentFinalGradeModel.studentFinalGradeList[selectedStudent].studentFinalGradeComments"
+                                class="rounded-full py-1 px-3 border border-primary inline-block mb-3 mr-3 text-primary">{{report.comments}}
+                                <i (click)="removeComment(report.courseCommentId)" class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle cursor-pointer"></i>
+                            </span>
+                            
+                        </div>
+                    </div>
+                    <h4 class="text-base font-medium text-green py-2">{{ "teacherComments" | translate }}</h4>
+                    <div class="w-full border rounded mb-2 p-2">
+                        <textarea placeholder="Comments" name="teacherComment" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[selectedStudent].teacherComment" class="w-full" rows="3"></textarea>
+                    </div>
+                    <h4 class="text-base font-medium text-green py-4">Standard Grades</h4>
+                    <div class="lg:flex lg:flex-wrap mb-4" *ngFor="let standard of courseStandardList; let i = index" >
+                        <div class="lg:w-3/4 lg:pr-4">
+                            <h4 class="text-base font-medium">{{standard.gradeUsStandard.standardRefNo}}</h4>
+                            <p class="text-gray">{{standard.gradeUsStandard.standardDetails}}</p>
+                        </div>
+                        <div class="lg:w-1/4">
+                            <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                                <mat-label>{{ "assignGrade" | translate }}</mat-label>
+                                <mat-select [(value)]="addUpdateStudentFinalGradeModel?.studentFinalGradeList[selectedStudent]?.studentFinalGradeStandard[i].gradeObtained" (selectionChange)="setValue(standard.gradeUsStandard.gradeStandardId, $event.value,i)" name="gradeObtained">
+                                    <mat-option *ngFor="let report of gradeScaleStandardList" [value]="report.gradeId">
+                                        {{report.title}}</mat-option>
+                                </mat-select>
+                              
+                            </mat-form-field>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </div>
-    </div>
-</div>
-<!-- End Input Final Grade -->
-<div class="text-right mt-4 mb-10">
-    <button mat-raised-button color="primary">{{ "submit" | translate }}</button>
-</div>
+        <!-- End Input Final Grade -->
+        <div class="text-right mt-4 mb-10">
+            <button (click)="submitFinalGrade()" mat-raised-button color="primary">{{ "submit" | translate }}</button>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

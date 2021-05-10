@@ -347,7 +347,9 @@
             </mat-expansion-panel>
         </mat-accordion>
         <div class="px-6 py-4">
-            <mat-slide-toggle color="primary" class="mr-5">{{'searchAllSchools' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle color="primary" class="mr-5" (change)="searchAllSchools($event)" [checked]="searchSchoolId == 0" >{{'searchAllSchools' | translate}}</mat-slide-toggle>
+            <mat-slide-toggle color="primary" (change)="includeInactiveStaff($event)" [checked]="inactiveStaff">
+                {{'includeInactiveStaff' | translate}}</mat-slide-toggle>
         </div>
     </div>
     <div class="search-toolbar py-3 px-6 text-right">

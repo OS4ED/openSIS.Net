@@ -87,7 +87,17 @@ export class AddCourseSectionComponent implements OnInit, OnDestroy {
 
   searchCourseSection() {
     this.isSearchRecordAvailable = true;
-    this.courseSectionService.searchCourseSectionForSchedule(this.courseSectionSearch).subscribe((res) => {
+    let dataSet = JSON.parse(JSON.stringify(this.courseSectionSearch));
+    if(dataSet.courseSubject === ""){
+      dataSet.courseSubject = null;
+    }
+    if(dataSet.courseProgram === ""){
+      dataSet.courseProgram = null;
+    }
+    if(dataSet.markingPeriodId === ""){
+      dataSet.markingPeriodId = null;
+    }
+    this.courseSectionService.searchCourseSectionForSchedule(dataSet).subscribe((res) => {
       if (res._failure) {
         if (res.allCourseSectionViewList === null) {
           this.courseSectionList = new MatTableDataSource([]);

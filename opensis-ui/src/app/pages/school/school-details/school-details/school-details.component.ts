@@ -104,6 +104,10 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
     let permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 1);
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
+     let viewPermission= permissionCategory.rolePermission[0].canView;
+     if(!viewPermission){
+      this.router.navigate(['/']);
+     }
   }
   ngAfterViewInit() {
     //  Sorting

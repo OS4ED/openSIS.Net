@@ -307,7 +307,7 @@
 <mat-card class="w-full" *ngIf="studentCreateMode == studentCreate.VIEW">
     <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation'|translate}}</h3>
-        <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()">
+        <button *ngIf="editPermission" mat-button color="primary" (click)="editGeneralInfo()">
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
     </div>

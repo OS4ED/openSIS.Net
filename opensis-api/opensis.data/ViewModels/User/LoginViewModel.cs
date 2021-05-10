@@ -19,6 +19,7 @@ namespace opensis.data.ViewModels.User
         public string Name { get; set; }
         public string MembershipName { get; set; }
         public int? MembershipId { get; set; }
+        public byte[] UserPhoto { get; set; }
         public List<RolePermissionViewModel> PermissionList { get; set; }
     }
 }

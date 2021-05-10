@@ -95,7 +95,6 @@ export class SectionsComponent implements OnInit {
     this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
-    console.log(this.permissionListViewModel);
   }
   getSectiondetails()
   {    
