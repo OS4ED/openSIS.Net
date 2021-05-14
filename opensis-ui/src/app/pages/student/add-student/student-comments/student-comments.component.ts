@@ -44,8 +44,8 @@ export class StudentCommentsComponent implements OnInit {
   icPrint = icPrint;
   listCount;
   StudentCreate = SchoolCreate;
-  @Input() studentCreateMode: SchoolCreate;
-  @Input() studentDetailsForViewAndEdit;
+  studentCreateMode: SchoolCreate;
+  studentDetailsForViewAndEdit;
   studentCommentsListViewModel: StudentCommentsListViewModel = new StudentCommentsListViewModel();
   studentCommentsAddView: StudentCommentsAddView = new StudentCommentsAddView();
   editPermission = false;
@@ -70,6 +70,14 @@ export class StudentCommentsComponent implements OnInit {
   }
 
   ngOnInit(): void {
+
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      this.studentCreateMode = res;
+    })
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.studentDetailsForViewAndEdit = res;
+    })
+ 
 
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);

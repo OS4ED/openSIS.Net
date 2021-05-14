@@ -35,7 +35,7 @@
         matSort>
 
         <ng-container matColumnDef="periodId">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header></th>
+            <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'sortOrder'|translate}}</th>
             <td mat-cell *matCellDef="let element">
                 <mat-icon cdkDragHandle>reorder</mat-icon>
             </td>

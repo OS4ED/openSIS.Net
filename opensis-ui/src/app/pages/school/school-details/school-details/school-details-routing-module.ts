@@ -7,11 +7,14 @@ import { AddSchoolComponent } from '../../add-school/add-school.component';
 
 
 const routes: Routes = [
- {
-     path:'',
-     component: SchoolDetailsComponent
- }, 
- {path:'add-school',component:AddSchoolComponent}
+  {
+    path:'',
+    component: SchoolDetailsComponent
+},
+{
+ path:'',
+ loadChildren: () => import('../../add-school/add-school.module').then(m => m.AddSchoolModule),
+}, 
  
 ];
 

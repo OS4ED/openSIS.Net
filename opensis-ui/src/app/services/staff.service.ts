@@ -11,19 +11,21 @@ import {
   StaffSchoolInfoModel,
   StaffImportModel } from '../models/staff.model';
 import { DefaultValuesService } from '../common/default-values.service';
+import { SchoolCreate } from '../enums/school-create.enum';
 @Injectable({
   providedIn: 'root'
 })
 export class StaffService {
-  constructor(private http: HttpClient,
-              private defaultValuesService: DefaultValuesService,
-              private cryptoService: CryptoService) { }
+  staffCreate = SchoolCreate;
+
+
   apiUrl: string = environment.apiURL;
   private currentYear = new BehaviorSubject(false);
   currentY = this.currentYear.asObservable();
   userName = sessionStorage.getItem('user');
 
   private staffImage;
+  private isFirstView:boolean= true;
 
   private staffId: number;
 
@@ -43,8 +45,31 @@ export class StaffService {
   private staffDetailsForGeneralInfo = new Subject();
   getStaffDetailsForGeneral = this.staffDetailsForGeneralInfo.asObservable();
 
+  private staffCreateMode = new BehaviorSubject(this.staffCreate.ADD);
+  staffCreatedMode = this.staffCreateMode.asObservable();
+
+  private staffDetailsForViewAndEdit = new BehaviorSubject(false);
+  staffDetailsForViewedAndEdited = this.staffDetailsForViewAndEdit.asObservable();
+  
+  private categoryId = new BehaviorSubject(0);
+  categoryIdSelected = this.categoryId.asObservable();
+
+  private dataAfterSavingGeneralInfo = new Subject();
+  dataAfterSavedGeneralInfo = this.dataAfterSavingGeneralInfo.asObservable();
+
+  private checkUpdatedProfileName = new BehaviorSubject(null);
+  checkedUpdatedProfileName = this.checkUpdatedProfileName.asObservable();
+  
+  private categoryTitle = new BehaviorSubject(null);
+  selectedCategoryTitle = this.categoryTitle.asObservable();
+
   // for cancel after staff photo added
   public cloneStaffImage;
+
+  constructor(private http: HttpClient,
+    private defaultValuesService: DefaultValuesService,
+    private cryptoService: CryptoService) { }
+
   setStaffImage(imageInBase64) {
     this.staffImage = imageInBase64;
   }
@@ -183,6 +208,37 @@ export class StaffService {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     const apiurl = this.apiUrl + obj._tenantName + '/Staff/addStaffList';
     return this.http.post<StaffImportModel>(apiurl, obj);
+  }
+
+  setStaffFirstView(status){
+    this.isFirstView=status;
+  }
+  getStaffFirstView(){
+    return this.isFirstView;
+  }
+
+  setStaffCreateMode(data) {
+    this.staffCreateMode.next(data);
+  }
+
+  setStaffDetailsForViewAndEdit(data) {
+    this.staffDetailsForViewAndEdit.next(data);
+  }
+
+  setCategoryId(data) {
+    this.categoryId.next(data);
+  }
+
+  setDataAfterSavingGeneralInfo(data) {
+    this.dataAfterSavingGeneralInfo.next(data);
+  }
+
+  setCheckUpdatedProfileName(data) {
+    this.checkUpdatedProfileName.next(data);
+  }
+
+  setCategoryTitle(title: string){
+    this.categoryTitle.next(title);
   }
 
 }

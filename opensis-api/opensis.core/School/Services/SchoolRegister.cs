@@ -243,6 +243,11 @@ namespace opensis.core.School.Services
             return schoolLogoUpdate;
         }
 
+        /// <summary>
+        /// Copy School
+        /// </summary>
+        /// <param name="copySchoolViewModel"></param>
+        /// <returns></returns>
         public CopySchoolViewModel CopySchool(CopySchoolViewModel copySchoolViewModel)
         {
             CopySchoolViewModel copySchool = new CopySchoolViewModel();

@@ -151,7 +151,6 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     }
     sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
     let a =sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
-    console.log(a);
   }
 
   checkToken() { 

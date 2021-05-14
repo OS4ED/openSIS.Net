@@ -35,7 +35,7 @@ namespace opensis.data.Repository
                 if (checkGradelevelTitle !=null)
                 {
                     gradelevel._failure = true;
-                    gradelevel._message = "Gradelevel Title Already Exists";
+                    gradelevel._message = "Grade Level Title Already Exists";
                 }
                 else
                 {
@@ -44,7 +44,7 @@ namespace opensis.data.Repository
                     this.context?.Gradelevels.Add(gradelevel.tblGradelevel);
                     this.context?.SaveChanges();
                     gradelevel._failure = false;
-                    gradelevel._message = "Gradelevel Added Successsfully";
+                    gradelevel._message = "Grade Level Added Successsfully";
                 }                
             }
             catch (Exception es)
@@ -104,7 +104,7 @@ namespace opensis.data.Repository
                     if (checkGradelevelTitle != null)
                     {
                         gradelevel._failure = true;
-                        gradelevel._message = "Gradelevel Title Already Exists";
+                        gradelevel._message = "Grade Level Title Already Exists";
                     }
                     else
                     {
@@ -158,7 +158,7 @@ namespace opensis.data.Repository
                         this.context.Entry(GradeLevel).CurrentValues.SetValues(gradelevel.tblGradelevel);
                         this.context?.SaveChanges();
                         gradelevel._failure = false;
-                        gradelevel._message = "Gradelevel Updated Successsfully";
+                        gradelevel._message = "Grade Level Updated Successsfully";
                     }
                 }
                 else
@@ -189,7 +189,7 @@ namespace opensis.data.Repository
                 {
                     gradelevel.tblGradelevel = null;
                     gradelevel._failure = true;
-                    gradelevel._message = "GradeLevel cannot be deleted because it has its association";
+                    gradelevel._message = "Grade Level cannot be deleted because it has its association";
                 }
                 else
                 {
@@ -197,7 +197,7 @@ namespace opensis.data.Repository
                     this.context?.Gradelevels.Remove(GradeLevel);
                     this.context?.SaveChanges();
                     gradelevel._failure = false;
-                    gradelevel._message = "Gradelevel Deleted Successsfully";
+                    gradelevel._message = "Grade Level Deleted Successsfully";
                 }
             }
             catch (Exception es)

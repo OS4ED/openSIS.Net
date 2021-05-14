@@ -54,33 +54,44 @@ export class CustomFieldWithoutFormComponent implements OnInit {
     private staffService : StaffService
   ) {
     this.schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
-      this.schoolAddViewModel = res;
-      this.checkCustomValue();
+      if(res){
+        this.schoolAddViewModel = res;
+        this.checkCustomValue();
+      }
     });
     this.studentService.getStudentDetailsForGeneral.subscribe((res: StudentAddModel) => {
-      this.studentAddModel = res;
-      this.checkStudentCustomValue();
+      if(res){
+        this.studentAddModel = res;
+        if(res?.fieldsCategoryList?.length>0){
+          this.checkStudentCustomValue();
+        }
+      }
     })
     this.staffService.getStaffDetailsForGeneral.subscribe((res: StaffAddModel) => {
-      this.staffAddModel = res;
-      this.checkStaffCustomValue();
+      if(res){
+        this.staffAddModel = res;
+        if(res?.fieldsCategoryList?.length>0){
+          this.checkStaffCustomValue();
+        }
+      }
     })
   }
 
   ngOnInit(): void {
-
     if (this.module === 'Student') {
       this.studentAddModel = this.schoolDetailsForViewAndEdit;
-      this.checkStudentCustomValue();
-
+      if(this.schoolDetailsForViewAndEdit?.fieldsCategoryList?.length>0){
+        this.checkStudentCustomValue();
+      }
     }
     else if (this.module === 'School') {
       this.checkNgOnInitCustomValue();
     }
     else if(this.module === 'Staff') {
       this.staffAddModel = this.schoolDetailsForViewAndEdit;
-      this.checkStaffCustomValue();
-
+      if(this.schoolDetailsForViewAndEdit?.fieldsCategoryList?.length>0){
+        this.checkStaffCustomValue();
+      }
     }
   }
 
@@ -98,9 +109,10 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 }
 
   checkStudentCustomValue() {
-    if (this.studentAddModel !== undefined) {
-      if (this.studentAddModel?.fieldsCategoryList !== undefined && this.studentAddModel?.fieldsCategoryList?.length >0) {
+    if (this.studentAddModel?.fieldsCategoryList?.length>0) {
         this.studentCustomFields = this.studentAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField);
+        if(this.studentCustomFields?.length>0){
+
         for (let studentCustomField of this.studentCustomFields) {
           if (studentCustomField?.customFieldsValue.length == 0) {
 
@@ -113,14 +125,12 @@ export class CustomFieldWithoutFormComponent implements OnInit {
             }
           }
         }
-
-      }
+      } 
     }
   }
 
   checkStaffCustomValue(){
-    if (this.staffAddModel !== undefined) {
-      if (this.staffAddModel?.fieldsCategoryList !== undefined && this.staffAddModel?.fieldsCategoryList !== null) {
+      if (this.staffAddModel?.fieldsCategoryList?.length>0) {
         this.staffCustomFields = this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField);
         for (let staffCustomField of this.staffCustomFields) {
           if (staffCustomField?.customFieldsValue.length == 0) {
@@ -136,7 +146,7 @@ export class CustomFieldWithoutFormComponent implements OnInit {
         }
 
       }
-    }
+    
   }
 
   checkNgOnInitCustomValue() {

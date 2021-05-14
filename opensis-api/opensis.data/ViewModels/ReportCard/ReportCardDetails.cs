@@ -11,7 +11,7 @@ namespace opensis.data.ViewModels.ReportCard
         public string StaffName { get; set; }
         public decimal? PercentMarks { get; set; }
         public string GradeObtained { get; set; }
-        public string GPA { get; set; }
+        public decimal? GPA { get; set; }
         public string Comments { get; set; }
         public string TeacherComments { get; set; }
        

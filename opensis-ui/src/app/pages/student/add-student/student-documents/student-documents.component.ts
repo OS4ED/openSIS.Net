@@ -40,8 +40,8 @@ import { DefaultValuesService } from '../../../../common/default-values.service'
 })
 export class StudentDocumentsComponent implements OnInit {
   StudentCreate = SchoolCreate;
-  @Input() studentCreateMode: SchoolCreate;
-  @Input() studentDetailsForViewAndEdit;
+  studentCreateMode: SchoolCreate;
+  studentDetailsForViewAndEdit;
   @Input()
   columns = [
     { label: 'File', property: 'fileUploaded', type: 'text', visible: true },
@@ -98,6 +98,12 @@ export class StudentDocumentsComponent implements OnInit {
 
   }
   ngOnInit(): void {
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      this.studentCreateMode = res;
+    })
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.studentDetailsForViewAndEdit = res;
+    })
 
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);

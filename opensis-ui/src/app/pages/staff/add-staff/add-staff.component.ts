@@ -24,6 +24,8 @@ import { LoaderService } from '../../../services/loader.service';
 import { ModuleIdentifier } from '../../../enums/module-identifier.enum';
 import { RolePermissionListViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
+import { Router } from '@angular/router';
+import { CommonService } from '../../../services/common.service';
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -62,15 +64,18 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   loading: boolean;
   moduleIdentifier=ModuleIdentifier;
   profile:string;
-
+  categoryTitle: string;
   constructor(private layoutService: LayoutService, public translateService: TranslateService,
     private staffService: StaffService,
     private customFieldService: CustomFieldService,
     private snackbar: MatSnackBar,
     private loaderService:LoaderService,
+    private commonService: CommonService,
     private cdr: ChangeDetectorRef,
     private cryptoService: CryptoService,
-    private imageCropperService:ImageCropperService) {
+    private imageCropperService:ImageCropperService,
+    private router: Router,
+    ) {
     translateService.use('en');
     this.layoutService.collapseSidenav();
     this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
@@ -78,6 +83,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     });
     this.staffService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res:number) => {
       this.currentCategory = res;
+      this.checkCurrentCategoryAndRoute();
     });
     this.staffService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
       if(res==this.staffCreate.VIEW){
@@ -88,6 +94,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     });
     this.staffService.getStaffDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StaffAddModel) => {
       this.staffAddModel=res;
+      this.staffService.setStaffDetailsForViewAndEdit(this.staffAddModel);
     })
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((currentState) => {
       this.loading = currentState;
@@ -95,11 +102,25 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.staffService.dataAfterSavedGeneralInfo.subscribe((res)=>{
+      if(res){
+        this.afterSavingGeneralInfo(res);
+      }
+    });
+
+    this.staffService.checkedUpdatedProfileName.subscribe((res)=>{
+      this.profileFromSchoolInfo(res);
+    });
+
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.staffCreateMode = this.staffCreate.ADD;
+    this.staffService.setStaffCreateMode(this.staffCreateMode);
     this.staffId = this.staffService.getStaffId();
     if (this.staffId != null || this.staffId != undefined) {
       this.staffCreateMode = this.staffCreate.VIEW;
+    this.staffService.setStaffCreateMode(this.staffCreateMode);
+
      this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.staffCreate.VIEW});
       this.getStaffDetailsUsingId();
       this.onViewMode();
@@ -117,10 +138,10 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   }
 
   afterSavingGeneralInfo(data){
-    if(data.staffMaster.salutation!=null){
+    if(data?.staffMaster?.salutation!=null){
       this.staffTitle = data.staffMaster.salutation+" "+ data.staffMaster.firstGivenName + " " + data.staffMaster.lastFamilyName;
     }else{
-      this.staffTitle = data.staffMaster.firstGivenName + " " + data.staffMaster.lastFamilyName;
+      this.staffTitle = data?.staffMaster.firstGivenName + " " + data?.staffMaster.lastFamilyName;
     }
     
   }
@@ -130,18 +151,44 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   }
 
   changeCategory(field, index) {
+    this.categoryTitle = field.title;
+    this.commonService.setModuleName(this.module);
+    this.staffService.setStaffFirstView(false);
+    this.staffService.setCategoryTitle(this.categoryTitle);
+
     let staffDetails = this.staffService.getStaffDetails();
-    if (staffDetails != undefined || staffDetails != null) {
+    if (staffDetails != undefined && staffDetails != null) {
       this.staffCreateMode = this.staffCreate.EDIT;
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
+      this.staffService.setCategoryId(this.indexOfCategory);
       this.staffAddModel = staffDetails;
+      this.staffService.setStaffDetailsForViewAndEdit(this.staffAddModel);
+
     }
 
     if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
+      this.staffService.setCategoryId(this.indexOfCategory);
+
       this.pageStatus = "View Staff"
+    }
+    this.staffService.setStaffCreateMode(this.staffCreateMode);
+    this.checkCurrentCategoryAndRoute();
+  }
+
+  checkCurrentCategoryAndRoute() {
+    if(this.currentCategory === 12) {
+      this.router.navigate(['/school', 'staff', 'staff-generalinfo']);
+    } else if(this.currentCategory === 13) {
+      this.router.navigate(['/school', 'staff', 'staff-schoolinfo']);
+    } else if(this.currentCategory === 14 ) {
+      this.router.navigate(['/school', 'staff', 'staff-addressinfo']);
+    } else if(this.currentCategory === 15 ) {
+        this.router.navigate(['/school', 'staff', 'staff-certificationinfo']);
+    }else if(this.currentCategory>15){
+      this.router.navigate(['/school', 'staff', 'custom', this.categoryTitle.trim().toLowerCase().split(' ').join('-')]);
     }
   }
 
@@ -168,6 +215,8 @@ export class AddStaffComponent implements OnInit, OnDestroy {
       this.staffService.setStaffImage(this.responseImage);
       
     });
+    this.staffService.setStaffDetailsForViewAndEdit(this.staffAddModel);
+
   }
 
   getAllFieldsCategory() {
@@ -188,6 +237,8 @@ export class AddStaffComponent implements OnInit, OnDestroy {
           this.fieldsCategory = this.checkViewPermission(res.fieldsCategoryList);
           this.staffAddModel.fieldsCategoryList= this.checkViewPermission(res.fieldsCategoryList);
           this.staffService.sendDetails(this.staffAddModel);
+      this.staffService.setStaffDetailsForViewAndEdit(this.staffAddModel);
+
         }
       }
     }
@@ -209,10 +260,13 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    this.staffService.setStaffDetails(null);
+    this.staffService.setStaffDetails(undefined);
     this.staffService.setStaffImage(null);
+    this.staffService.setStaffFirstView(true);
     this.staffService.setStaffId(null);
     this.staffService.setStaffCloneImage(null);
+    this.staffService.setCategoryTitle(null);
+    this.staffService.setCategoryId(null);
     this.destroySubject$.next();
     this.destroySubject$.complete();
   }

@@ -190,6 +190,7 @@ export class SelectBarComponent implements OnInit {
             if (today <= endDate && today >= startDate) {
               this.periodCtrl.setValue(this.periods[i].periodTitle);
               sessionStorage.setItem("markingPeriodId",this.periods[i].markingPeriodId);
+              break;
             } else {
               this.periodCtrl.setValue(this.periods[0].periodTitle);
               sessionStorage.setItem("markingPeriodId",this.periods[i].markingPeriodId);

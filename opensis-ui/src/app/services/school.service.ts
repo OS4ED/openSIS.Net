@@ -6,16 +6,31 @@ import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../m
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DataAvailablity } from '../models/user.model';
 import { DefaultValuesService } from '../common/default-values.service';
+import { SchoolCreate } from '../enums/school-create.enum';
 
 @Injectable({
   providedIn: 'root'
 })
 export class SchoolService {
+  schoolCreate = SchoolCreate;
   private schoolId;
   private schoolDetails;
+  private categoryTitle = new BehaviorSubject(null);
+  selectedCategoryTitle = this.categoryTitle.asObservable();
+
   private messageSource = new BehaviorSubject(false);
   currentMessage = this.messageSource.asObservable();
   apiUrl: string = environment.apiURL;
+
+  private schoolCreateMode = new BehaviorSubject(this.schoolCreate.ADD);
+  schoolCreatedMode = this.schoolCreateMode.asObservable();
+
+  private schoolDetailsForViewAndEdit = new BehaviorSubject(false);
+  schoolDetailsForViewedAndEdited = this.schoolDetailsForViewAndEdit.asObservable();
+  
+  private categoryId = new BehaviorSubject(0);
+  categoryIdSelected = this.categoryId.asObservable();
+
   constructor(private http: HttpClient,
     private defaultValuesService: DefaultValuesService) {
   }
@@ -139,5 +154,19 @@ export class SchoolService {
     this.changeStatusTo.next(message)
   }
 
+  setSchoolCreateMode(data) {
+    this.schoolCreateMode.next(data);
+  }
 
+  setSchoolDetailsForViewAndEdit(data) {
+    this.schoolDetailsForViewAndEdit.next(data);
+  }
+
+  setCategoryId(data) {
+    this.categoryId.next(data);
+  }
+
+  setCategoryTitle(title:string){
+    this.categoryTitle.next(title);
+  }
 }

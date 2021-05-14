@@ -1,0 +1,16 @@
+.hide{
+    display: none;
+  }
+
+.table-search {
+  width: 70px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    width: 180px;
+  }
+}
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

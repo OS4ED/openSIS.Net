@@ -20,14 +20,34 @@ import { StudentCommentsAddView, StudentCommentsListViewModel } from '../models/
 import { BehaviorSubject, Subject } from 'rxjs';
 import { CryptoService } from './Crypto.service';
 import { DefaultValuesService } from '../common/default-values.service';
+import { SchoolCreate } from '../enums/school-create.enum';
 @Injectable({
   providedIn: 'root'
 })
 export class StudentService {
+  studentCreate = SchoolCreate;
   apiUrl: string = environment.apiURL;
   private currentYear = new BehaviorSubject(false);
   currentY = this.currentYear.asObservable();
+  
+  private studentCreateMode = new BehaviorSubject(this.studentCreate.ADD);
+  studentCreatedMode = this.studentCreateMode.asObservable();
+
+  private studentDetailsForViewAndEdit = new BehaviorSubject(false);
+  studentDetailsForViewedAndEdited = this.studentDetailsForViewAndEdit.asObservable();
+  
+  private categoryId = new Subject();
+  categoryIdSelected = this.categoryId.asObservable();
+
+  private categoryTitle = new BehaviorSubject(null);
+  selectedCatgoryTitle = this.categoryTitle.asObservable();
+
+  private dataAfterSavingGeneralInfo = new BehaviorSubject(0);
+  dataAfterSavingGeneralInfoChanged = this.dataAfterSavingGeneralInfo.asObservable();
+
+
   studentName: StudentName;
+  private isFirstView: boolean = true;
   constructor(
     private http: HttpClient,
     private cryptoService: CryptoService,
@@ -160,7 +180,7 @@ export class StudentService {
   }
 
   // to Update student details in General for first time.
-  private studentDetailsForGeneralInfo = new Subject;
+  private studentDetailsForGeneralInfo = new Subject();
   getStudentDetailsForGeneral = this.studentDetailsForGeneralInfo.asObservable();
 
   sendDetails(studentDetailsForGeneralInfo) {
@@ -266,4 +286,32 @@ export class StudentService {
   getStudentName() {
     return this.studentName;
   }
+
+  setStudentFirstView(status){
+    this.isFirstView=status;
+  }
+  getStudentFirstView(){
+    return this.isFirstView;
+  }
+
+  setStudentCreateMode(data) {
+    this.studentCreateMode.next(data);
+  }
+
+  setStudentDetailsForViewAndEdit(data) {
+    this.studentDetailsForViewAndEdit.next(data);
+  }
+
+  setCategoryId(data) {
+    this.categoryId.next(data);
+  }
+
+  setCategoryTitle(title :string){
+    this.categoryTitle.next(title);
+  }
+  
+  setDataAfterSavingGeneralInfo(data) {
+    this.dataAfterSavingGeneralInfo.next(data);
+  }
+
 }

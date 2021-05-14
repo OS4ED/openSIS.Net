@@ -29,6 +29,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { RollBasedAccessService } from '../../../../services/roll-based-access.service';
 import { PermissionGroup, RolePermissionListViewModel, RolePermissionViewModel } from 'src/app/models/roll-based-access.model';
 import { CryptoService } from '../../../../services/Crypto.service';
+import { DefaultValuesService } from '../../../../common/default-values.service';
+import { CommonService } from '../../../../services/common.service';
 @Component({
   selector: 'vex-school-details',
   templateUrl: './school-details.component.html',
@@ -77,6 +79,8 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     private excelService:ExcelService,
     public translateService: TranslateService,
     public rollBasedAccessService: RollBasedAccessService,
+    private defaultService: DefaultValuesService,
+    private commonService:CommonService,
     private cryptoService: CryptoService
     ) 
     { translateService.use('en');
@@ -172,7 +176,7 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
 
   goToAdd(){
     this.schoolService.setSchoolId(null);
-    this.router.navigate(["school/schoolinfo/add-school"]);
+    this.router.navigate(['/school', 'schoolinfo', 'generalinfo']);
   }  
 
   includeInactiveSchools(event){
@@ -215,10 +219,45 @@ export class SchoolDetailsComponent implements OnInit,OnDestroy {
     this.getAllSchool.pageSize=event.pageSize;
     this.callAllSchool();
   }
+
+  checkViewPermission(){
+    let categoryId;
+    let categoryName;
+     for (const permission of this.permissionListViewModel.permissionList[1].permissionGroup.permissionCategory[0].permissionSubcategory){
+      if(permission.rolePermission[0].canView){
+       categoryId=permission.permissionSubcategoryId;
+       categoryName=permission.title;
+       break;
+      }
+    }
+    if(categoryId){
+      this.checkCurrentCategoryAndRoute(categoryId,categoryName);
+    }
+
+  }
+
+  checkCurrentCategoryAndRoute(categoryId,categoryName) {
+    this.schoolService.setCategoryTitle(categoryName);
+    this.schoolService.setCategoryId(0);
+    this.commonService.setModuleName('School');
+    if(categoryId === 1) {
+      this.router.navigate(['/school', 'schoolinfo', 'generalinfo']);
+    } 
+    else if(categoryId === 2) {
+      this.router.navigate(['/school', 'schoolinfo', 'washinfo']);
+    }else if(categoryId>2){
+      this.router.navigate(['/school', 'schoolinfo', 'custom', categoryName.toLowerCase().split(' ').join('-') ]);
+    }
+  
+  }
   
   viewGeneralInfo(id:number){    
-    this.schoolService.setSchoolId(id)
-    this.router.navigate(["school/schoolinfo/add-school/"]); 
+    this.schoolService.setSchoolId(id);
+    if(id===this.defaultService.getSchoolID()){
+      this.checkViewPermission()
+    }else{
+      this.router.navigate(['/school', 'schoolinfo', 'generalinfo']);
+    }
   }
   callAllSchool(){
     if(this.getAllSchool.sortingModel?.sortColumn==""){

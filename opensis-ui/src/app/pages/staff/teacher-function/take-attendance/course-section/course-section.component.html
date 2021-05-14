@@ -1,0 +1,72 @@
+<!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
+
+        <div class="grid grid-cols-4 gap-6">
+            <div class="col-span-4 md:col-span-3">
+                <div class="card -mt-16">
+                    <div class="p-4">
+                        <a [routerLink]="['/school', 'staff', 'teacher-functions', 'take-attendance']" class="cursor-pointer">
+                            <mat-icon color="primary" class="ml-2 mr-4 align-middle">west</mat-icon>
+                        </a>
+                        <span class="font-medium text-lg">{{staffDetails?.staffFullName}}</span>
+                    </div>
+                    <mat-divider class="text-border"></mat-divider>
+                    <div class="overflow-auto">
+                        <div class="flex justify-between items-center px-4">
+                            <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
+                                <mat-icon>west</mat-icon>
+                            </button>
+                            <h3 class="text-center"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
+                            <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarNextView>
+                                <mat-icon>east</mat-icon>
+                            </button>
+                        </div>
+                        <mat-divider class="text-border"></mat-divider>
+                        <ng-template #customCellTemplate let-day="day" let-locale="locale">
+                            <div class="cal-cell-top">
+                                <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale
+                                    }}</span>
+                            </div>
+                            <div class="cal-events px-2 pb-2 justify-center" *ngIf="day.events.length > 0">
+                                <div class="text-xs px-2 py-2 rounded text-white cursor-pointer"  [ngClass]="event.meta.randomColor.backgroundColor"
+                                    *ngFor="let event of day.events;let i = index;" (click)="eventClicked(event, i)">
+                                    <span class="align-middle">{{ event.title | truncate:10 }}</span>
+                                </div>
+                            </div>
+                            <!-- <p class="bg-teal rounded uppercase text-white m-2 px-2 py-1 mt-0 text-xs" *ngFor="let event of day.events;let i = index;">{{ event.title | truncate:10 }}
+                            </p>
+                            <p class="bg-cyan rounded uppercase text-white m-2 px-2 py-1 mt-0 text-xs" *ngFor="let event of day.events;let i = index;">{{ event.title | truncate:10 }}
+                            </p>
+                            <p class="bg-pink rounded uppercase text-white m-2 px-2 py-1 mt-0 text-xs" *ngFor="let event of day.events;let i = index;">{{ event.title | truncate:10 }}
+                            </p> -->
+                        </ng-template>
+                        <div [ngSwitch]="view">
+                            <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+                                [refresh]="refresh" [cellTemplate]="customCellTemplate">
+                            </mwl-calendar-month-view>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-span-4 md:col-span-1">
+                <div class="card mt-0 md:-mt-16 p-4">
+                    <div class="title-header">
+                        <h4 class="font-medium">Course Sections of {{staffDetails?.staffFullName}}</h4>
+                        <p class="text-gray text-base">Check items to filter</p>
+                    </div>
+                    <div class="title-body">
+                        <div class="custom-checkbox mt-4" *ngFor="let courseSection of courseSectionList">
+                            <input type="checkbox" [id]="courseSection?.courseSectionId" (change)="filterWithSectionName(courseSection, $event)">
+                            <label [for]="courseSection?.courseSectionId" [ngClass]="courseSection?.randomColor.label">{{courseSection?.courseSectionName}} - {{courseSection?.periodTitle}}</label>
+                        </div>
+                        <!-- <div class="custom-checkbox mt-4">
+                            <input type="checkbox" id="period2">
+                            <label for="period2" class="label-cyan">GEOM005 - Period5</label>
+                        </div>
+                        <div class="custom-checkbox mt-4">
+                            <input type="checkbox" id="period3">
+                            <label for="period3" class="label-pink">GEOM005 - Period1</label>
+                        </div> -->
+                    </div>
+                </div>
+            </div>
+        </div>

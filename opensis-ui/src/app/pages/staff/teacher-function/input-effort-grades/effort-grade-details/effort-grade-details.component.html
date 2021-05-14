@@ -1,0 +1,136 @@
+<!-- Start Input effort Grade -->
+<!-- <vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="Input Effort Grades" class="w-full">
+            <vex-breadcrumbs [crumbs]="[pageStatus]" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+
+    <vex-page-layout-content class="-mt-6"> -->
+        <div class="card -mt-16">
+            <div class="flex justify-between items-center px-4">
+                <div class="py-4">
+                    <a [routerLink]="['/school', 'staff', 'teacher-functions', 'input-effort-grade']"
+                        class="cursor-pointer">
+                        <mat-icon class="mr-4 align-middle">west</mat-icon>
+                    </a>
+                    <span class="font-medium text-lg">{{staffDetails.staffFullName}}</span>
+                </div>
+                <div>
+                    <mat-slide-toggle color="primary">{{ "includeInactiveStudents" | translate }}
+                    </mat-slide-toggle>
+                </div>
+            </div>
+            <mat-divider class=""></mat-divider>
+            <ul class="grid grid-cols-1 md:grid-cols-4 col-gap-4 row-gap-2 mt-4 px-6">
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "courseSection" | translate }}</mat-label>
+                        <mat-select (selectionChange)="selectedCourseSection($event.value)" name="courseSection"
+                            [(ngModel)]="studentEffortGradeListModel.courseSectionId">
+                            <mat-option
+                                *ngFor="let courseSectionDetail of allScheduledCourseSectionBasedOnTeacher?.courseSectionViewList"
+                                [value]="courseSectionDetail.courseSectionId">
+                                {{courseSectionDetail.courseSectionName}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </li>
+                <li>
+                    <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-label>{{ "markingPeriod" | translate }}</mat-label>
+                        <mat-select name="markingPeriod" [(value)]="studentEffortGradeListModel.markingPeriodId"
+                            [(ngModel)]="studentEffortGradeListModel.markingPeriodId">
+                            <mat-option *ngFor="let period of markingPeriodList" [value]="period.value">
+                                {{period.text}}
+                            </mat-option>
+                        </mat-select>
+                    </mat-form-field>
+                </li>
+            </ul>
+            <mat-divider class=""></mat-divider>
+            <div *ngIf="!showStudentList" class="lg:flex lg:flex-wrap">
+                <div class="lg:w-4/12 lg:pr-4">
+                    <div class="content-left">
+                        <h4 class="font-medium text-sm py-2 px-6">Student Details</h4>
+                        <mat-divider class=""></mat-divider>
+                        <ul class="border-right">
+                            <li *ngIf="totalCount===0">
+                                <div><span class="mb-5 whitespace-nowrap text-sm font-semibold">{{ showMessage | translate }}</span></div>
+                            </li>
+                            <li class="flex py-2 px-6 bg-skyblue-light cursor-pointer"
+                                *ngFor="let student of studentMasterList;let i = index">
+
+                                <div class="flex-shrink-0 h-12 w-12">
+                                    <img src="{{student.studentPhoto?'data:image/png;base64,'+ student.studentPhoto:'assets/img/default-person.jpg'}}"
+                                        alt="" class="h-12 w-12 rounded-full" />
+                                </div>
+                                <div class="ml-3 flex flex-col justify-center" (click)="addEffortItems(i)">
+                                    <h6 class="text-sm font-semibold">{{student.firstGivenName+" "+
+                                        student.lastFamilyName}}</h6>
+                                    <div>
+                                        <span class="">{{student.studentInternalId}}</span>
+                                        <span class="dot-separator"></span>
+                                        <span>{{ student.gradeLevel }}</span>
+                                    </div>
+                                </div>
+
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+                <div *ngIf="showEffort" class="lg:w-8/12 md:pr-6 lg:pr-4 content-right">
+                    <h4 class="text-base font-medium text-green py-2">{{ "effortGrades" | translate }}</h4>
+                    <div class="overflow-x-auto overflow-y-hidden rounded border mb-2">
+                        <table class="w-full schedule-table">
+                            <thead>
+                                <tr>
+                                    <th width="40%">{{ "effortCategory" | translate }}</th>
+                                    <th width="40%">{{ "effortTitle" | translate }}</th>
+                                    <th width="20%">{{ "value" | translate }}</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr *ngFor="let effortItem of effortGradeDetailViewList;let j = index">
+                                    <td>{{effortItem.categoryName}}</td>
+                                    <td>{{effortItem.effortItemTitle}}</td>
+                                    <td>
+                                        <mat-form-field>
+                                            <mat-select
+                                                [(value)]="studentEffortGradeListModel?.studentEffortGradeList[selectedStudent]?.studentEffortGradeDetail[j].effortGradeScaleId"
+                                                (selectionChange)="selectCategory(effortItem ,j, $event)">
+                                                <mat-option *ngFor="let grade of effortGradeScaleModelList"
+                                                    [value]="grade.effortGradeScaleId">
+                                                    {{grade.gradeScaleValue}}</mat-option>
+                                            </mat-select>
+                                        </mat-form-field>
+                                    </td>
+                                </tr>
+
+                            </tbody>
+                        </table>
+                    </div>
+                    <h4 class="text-base font-medium text-green py-2">{{ "generalComments" | translate }}</h4>
+                    <div class="w-full border rounded mb-2">
+                        <textarea placeholder="Comments" name="teacherComment"
+                            [(ngModel)]="studentEffortGradeListModel?.studentEffortGradeList[selectedStudent].teacherComment"
+                            class="w-full p-2" rows="8"></textarea>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Error msg for grade scale -->
+            <div *ngIf="showStudentList" class="text-center py-32 px-6 text-warn">
+                <i class="icon icon-warning2 text-4xl"></i>
+                <p class="text-lg mt-4">Effort Grade Scale and Effort Grades are not set for this School.</p>
+                <p class="text-lg"><a href="javascript:void(0);" (click)="goToAddEffortGrade()" class="underline font-semibold">Click here</a> to set it up.</p>
+            </div>
+        </div>
+
+        <!-- End Input effort Grade -->
+
+        <div class="text-right mt-4 mb-10">
+            <button (click)="submitEffortGrade()" mat-raised-button color="primary">{{ "submit" | translate }}</button>
+        </div>
+    <!-- </vex-page-layout-content>
+</vex-page-layout> -->

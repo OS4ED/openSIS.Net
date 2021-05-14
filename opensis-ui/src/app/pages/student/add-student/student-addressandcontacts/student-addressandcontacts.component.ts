@@ -68,6 +68,12 @@ export class StudentAddressandcontactsComponent implements OnInit {
     }
 
   ngOnInit(): void {
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      this.studentCreateMode = res;
+    });
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.studentDetailsForViewAndEdit = res;
+    });
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);

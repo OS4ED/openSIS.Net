@@ -55,7 +55,7 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
     { label: 'Actions', property: 'actions', type: 'text', visible: true }
   ];
 
-  schoolSpecificStandardsList:GetAllSchoolSpecificListModel=new GetAllSchoolSpecificListModel();
+  schoolSpecificStandardsList: GetAllSchoolSpecificListModel = new GetAllSchoolSpecificListModel();
   icMoreVert = icMoreVert;
   icAdd = icAdd;
   icEdit = icEdit;
@@ -65,10 +65,10 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
   icFilterList = icFilterList;
 
   gradeLevelList: GetAllGradeLevelsModel = new GetAllGradeLevelsModel();
-  subjectList:GradeStandardSubjectCourseListModel=new GradeStandardSubjectCourseListModel();
-  courseList:GradeStandardSubjectCourseListModel=new GradeStandardSubjectCourseListModel();
-  form:FormGroup;
-  loading:boolean;
+  subjectList: GradeStandardSubjectCourseListModel = new GradeStandardSubjectCourseListModel();
+  courseList: GradeStandardSubjectCourseListModel = new GradeStandardSubjectCourseListModel();
+  form: FormGroup;
+  loading: boolean;
   schoolSpecificList: MatTableDataSource<any>;
   totalCount;
   pageNumber;
@@ -82,7 +82,8 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
 
-  constructor(private router: Router,
+  constructor(
+    private router: Router,
     private dialog: MatDialog,
     public translateService:TranslateService,
     private gradesService:GradesService,
@@ -266,24 +267,24 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
   let schoolSpecificStandard = new SchoolSpecificStandarModel(); 
   schoolSpecificStandard.gradeUsStandard.standardRefNo=deleteDetails.standardRefNo;
   schoolSpecificStandard.gradeUsStandard.gradeStandardId=deleteDetails.gradeStandardId;
-    this.gradesService.deleteGradeUsStandard(schoolSpecificStandard).subscribe((res)=>{
+  this.gradesService.deleteGradeUsStandard(schoolSpecificStandard).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
         this.snackbar.open('Failed to Delete School Specific Standard ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }else
       if (res._failure) {
-        this.snackbar.open('Failed to Delete School Specific Standard ' + res._message, 'LOL THANKS', {
+        this.snackbar.open( res._message, '', {
           duration: 10000
         });
       } else {
         this.updateExistingData=true;
         this.getAllSchoolSpecificList();
-        this.snackbar.open('School Specific Standard Deleted Successfully.', '', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       }
-    })
+    });
   }
 
   getAllSchoolSpecificList(){
@@ -292,7 +293,7 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
     }
     this.gradesService.getAllGradeUsStandardList(this.schoolSpecificStandardsList).subscribe(res => {
       if (res._failure) {
-        this.snackbar.open('School Specific Standard List failed. ' + res._message, 'LOL THANKS', {
+        this.snackbar.open( res._message, '', {
           duration: 10000
         });
       } else {
@@ -300,20 +301,19 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
         this.pageNumber = res.pageNumber;
         this.pageSize = res._pageSize;
         this.schoolSpecificList = new MatTableDataSource(res.gradeUsStandardList);
-        this.schoolSpecificStandardsList=new GetAllSchoolSpecificListModel();
+        this.schoolSpecificStandardsList = new GetAllSchoolSpecificListModel();
 
-        if(this.updateExistingData){
+        if (this.updateExistingData){
           this.getAllSubjectStandardList();
-           this.getAllCourseStandardList();
+          this.getAllCourseStandardList();
         }
       }
     });
-    
   }
 
   filterSchoolSpecificStandardsList(){
     this.form.markAllAsTouched();
-    if(this.form.valid){
+    if (this.form.valid){
         let filterParams= [
           {
             columnName: "subject",
@@ -351,7 +351,7 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
     schoolSpecificStandardsList.sortingModel=null;
     this.gradesService.getAllGradeUsStandardList(schoolSpecificStandardsList).subscribe(res => {
       if (res._failure) {
-        this.snackbar.open('Failed to Export School Specific Standards List.' + res._message, 'LOL THANKS', {
+        this.snackbar.open('Failed to Export School Specific Standards List.' + res._message, '', {
           duration: 10000
         });
       } else {
@@ -369,7 +369,7 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
           });
           this.excelService.exportAsExcelFile(StandardsList, 'School_Specific_Standards_List_')
         } else {
-          this.snackbar.open('No Records Found. Failed to Export School Specific Standards List', 'LOL THANKS', {
+          this.snackbar.open('No Records Found. Failed to Export School Specific Standards List', '', {
             duration: 5000
           });
         }
@@ -402,61 +402,61 @@ export class SchoolSpecificStandardsComponent implements OnInit,OnDestroy {
           this.gradeLevelList=res;
         }
       }
-    })
+    });
   }
 
   getAllSubjectStandardList(){
     this.subjectList=new GradeStandardSubjectCourseListModel();
     this.gradesService.getAllSubjectStandardList(this.subjectList).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
+      if (res){
+        if (res._failure) {
+          if (res.gradeUsStandardList == null) {
+            this.subjectList.gradeUsStandardList = null;
+            this.snackbar.open(res._message, '', {
+              duration: 10000
+            });
+          }
+          else{
+            this.subjectList.gradeUsStandardList = null;
+          }
+      }
+      else {
+        this.subjectList=res;
+      }
+      }
+      else{
         this.snackbar.open('Standard Subject List failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
-      else {
-        if (res._failure) {
-            if (res.gradeUsStandardList == null) {
-              this.subjectList.gradeUsStandardList = null
-              this.snackbar.open(res._message, '', {
-                duration: 10000
-              });
-            }
-            else{
-              this.subjectList.gradeUsStandardList = null
-            }
-        }
-        else {
-          this.subjectList=res;
-        }
-      }
-    })
+    });
   }
 
   getAllCourseStandardList(){
-    this.courseList=new GradeStandardSubjectCourseListModel();
+    this.courseList = new GradeStandardSubjectCourseListModel();
     this.gradesService.getAllCourseStandardList(this.courseList).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
+      if (res){
+        if (res._failure) {
+          if (res.gradeUsStandardList == null) {
+            this.courseList.gradeUsStandardList = null;
+            this.snackbar.open( res._message, '', {
+              duration: 10000
+            });
+          }
+          else{
+            this.courseList.gradeUsStandardList = null;
+          }
+        }
+        else {
+          this.courseList = res;
+        }
+      }
+      else{
         this.snackbar.open('Standard Course List failed. ' + sessionStorage.getItem("httpError"), '', {
           duration: 10000
         });
       }
-      else {
-        if (res._failure) {
-            if (res.gradeUsStandardList == null) {
-              this.courseList.gradeUsStandardList=null
-              this.snackbar.open( res._message, '', {
-                duration: 10000
-              });
-            }
-            else{
-              this.courseList.gradeUsStandardList=null
-            }
-        }
-        else {
-          this.courseList=res;
-        }
-      }
-    })
+    });
   }
 
   toggleColumnVisibility(column, event) {

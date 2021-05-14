@@ -2,6 +2,7 @@
     "SIS": "Student Information System",
     "en": "English",
     "fr": "French",
+    "sort": "Sort",
     "emailAddress": "Email Address",
     "emailAddressIsRequired": "Email address is Required",
     "password": "Password",
@@ -747,7 +748,7 @@
     "updateCustomProfile":"Update Custom Profile",
     "students": "Students",
     "showShortName": "Show Short Name",
-    "importStaffs": "Import Staffs",
+    "importStaff": "Import Staff",
     "searchAndUpdateFilter":"Search And Update Filter",
     "allCourses": "All Courses",
     "general": "General",
@@ -964,5 +965,15 @@
     "to": "To",
     "selectedDateIsNotToday": "Selected date is not today",
     "studentsFound": "Students Found",
-    "takingAttendanceFor": "Taking attendance for"
+    "takingAttendanceFor": "Taking attendance for",
+    "onlineClassroomUrl": "Online Classroom URL",
+    "onlineClassroomPassword": "Online Classroom Password",
+    "attendanceEnabled": "Attendance Enabled",
+    "save": "Save",
+    "overview": "Overview",
+    "gradebookConfiguration": "Gradebook Configuration",
+    "assignments": "Assignments",
+    "youHaveMissingAttendance": "You have missing attendance",
+    "missingAttendanceList": "Missing Attendance List",
+    "pleaseSelectCourseSectionAndMarkingPeriodForEffortGrade":"Please select course section and marking period for effort grade"
 }

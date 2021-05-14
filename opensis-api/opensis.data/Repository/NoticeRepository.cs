@@ -48,7 +48,7 @@ namespace opensis.data.Repository
                 this.context?.Notice.Add(notice.Notice);
                 this.context?.SaveChanges();
                 notice._failure = false;
-                notice._message = "Notice Added Successfuly";
+                notice._message = "Notice Added Successfully";
                 return notice;
             }
             catch (Exception ex)
@@ -106,7 +106,7 @@ namespace opensis.data.Repository
                 noticeRepository.Isactive = false;
                 this.context?.SaveChanges();
                 notice._failure = false;
-                notice._message = "Notice Deleted Successfuly";
+                notice._message = "Notice Deleted Successfully";
                 return notice;
 
             }
@@ -137,7 +137,7 @@ namespace opensis.data.Repository
                     this.context.Entry(noticeRepository).CurrentValues.SetValues(notice.Notice);
                     this.context?.SaveChanges();
                     notice._failure = false;
-                    notice._message = "Notice Updated Successfuly";
+                    notice._message = "Notice Updated Successfully";
                     return notice;
                 }
                 else

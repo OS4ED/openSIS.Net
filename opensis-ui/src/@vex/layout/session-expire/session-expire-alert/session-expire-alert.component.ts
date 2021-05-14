@@ -62,7 +62,6 @@ export class SessionExpireAlertComponent implements OnInit, OnDestroy {
     localStorage.clear();
     sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
     let a =sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
-    console.log(a);
     this.dialog.closeAll();
     this.router.navigateByUrl('/');
   }

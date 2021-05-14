@@ -14,10 +14,14 @@ const routes: Routes = [
     path: 'staff-bulk-import',
     component: StaffDataImportComponent
   },
+  // {
+  //   path: 'add-staff',
+  //   component: AddStaffComponent
+  // },
   {
-    path: 'add-staff',
-    component: AddStaffComponent
-  },
+    path:'',
+    loadChildren: () => import('../add-staff/add-staff.module').then(m => m.AddStaffModule),
+   }, 
 ];
 
 

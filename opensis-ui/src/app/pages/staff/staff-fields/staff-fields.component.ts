@@ -24,6 +24,7 @@ import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum
 import { CdkDragDrop, moveItemInArray, transferArrayItem} from '@angular/cdk/drag-drop';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
+import { SchoolService } from '../../../services/school.service';
 
 @Component({
   selector: 'vex-staff-fields',
@@ -35,7 +36,6 @@ import { CryptoService } from '../../../services/Crypto.service';
   ]
 })
 export class StaffFieldsComponent implements OnInit {
-  @Input()
   columns = [
    /* { label: '', property: 'type', type: 'text', visible: true }, */
    { label: 'Id', property: 'fieldId', type: 'text', visible: true },
@@ -74,7 +74,8 @@ export class StaffFieldsComponent implements OnInit {
     private snackbar: MatSnackBar,
     private customFieldservice:CustomFieldService,
     private loaderService:LoaderService,
-    private cryptoService: CryptoService
+    private cryptoService: CryptoService,
+    private schoolService:SchoolService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -112,6 +113,7 @@ export class StaffFieldsComponent implements OnInit {
       width: '600px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });
@@ -122,6 +124,7 @@ export class StaffFieldsComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });
@@ -173,6 +176,7 @@ export class StaffFieldsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
       if(dialogResult){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.deleteCustomFieldata(element);
       }
    });
@@ -183,6 +187,7 @@ export class StaffFieldsComponent implements OnInit {
         width: '800px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     })
@@ -232,6 +237,7 @@ export class StaffFieldsComponent implements OnInit {
       width: '800px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
+      this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     })

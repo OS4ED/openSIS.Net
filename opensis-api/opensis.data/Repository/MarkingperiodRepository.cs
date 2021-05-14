@@ -452,7 +452,7 @@ namespace opensis.data.Repository
         {
             try
             {
-                var schoolCalendar = this.context?.SchoolCalendars.FirstOrDefault(x => x.SchoolId==schoolYears.tableSchoolYears.SchoolId);
+                var schoolCalendar = this.context?.SchoolCalendars.FirstOrDefault(x => x.SchoolId==schoolYears.tableSchoolYears.SchoolId && x.TenantId== schoolYears.tableSchoolYears.TenantId && x.AcademicYear== schoolYears.tableSchoolYears.AcademicYear && x.DefaultCalender==true);
 
                 if(schoolCalendar!= null && (schoolCalendar.StartDate < schoolYears.tableSchoolYears.StartDate || schoolCalendar.EndDate > schoolYears.tableSchoolYears.EndDate))
                 {

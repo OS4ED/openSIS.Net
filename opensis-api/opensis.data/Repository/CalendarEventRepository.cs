@@ -90,21 +90,30 @@ namespace opensis.data.Repository
             try
             {
                 var calendarEventRepository = this.context?.CalendarEvents.FirstOrDefault(x => x.TenantId == calendarEvent.schoolCalendarEvent.TenantId && x.SchoolId == calendarEvent.schoolCalendarEvent.SchoolId && x.EventId == calendarEvent.schoolCalendarEvent.EventId);
-                
-                calendarEvent.schoolCalendarEvent.LastUpdated = DateTime.Now;
-                this.context.Entry(calendarEventRepository).CurrentValues.SetValues(calendarEvent.schoolCalendarEvent);
-                this.context?.SaveChanges();
-                calendarEvent._failure = false;
-                calendarEvent._message = "Calendar Event Updated Successfully";
-                return calendarEvent;
+
+                if (calendarEventRepository!=null)
+                {
+                    calendarEvent.schoolCalendarEvent.LastUpdated = DateTime.Now;
+                    calendarEvent.schoolCalendarEvent.CalendarId = calendarEventRepository.CalendarId;
+                    this.context.Entry(calendarEventRepository).CurrentValues.SetValues(calendarEvent.schoolCalendarEvent);
+                    this.context?.SaveChanges();
+                    calendarEvent._failure = false;
+                    calendarEvent._message = "Calendar Event Updated Successfully";
+                }
+                else
+                {
+                    calendarEvent.schoolCalendarEvent = null;
+                    calendarEvent._failure = false;
+                    calendarEvent._message = NORECORDFOUND;
+                }    
             }
             catch (Exception ex)
-            {
-                calendarEvent.schoolCalendarEvent = null;
+            {                
                 calendarEvent._failure = true;
-                calendarEvent._message = NORECORDFOUND;
-                return calendarEvent;
+                calendarEvent._message = ex.Message;
+                //return calendarEvent;
             }
+            return calendarEvent;
         }
         /// <summary>
         /// Get All Calendar Event

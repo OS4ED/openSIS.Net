@@ -1,0 +1,153 @@
+<div class="overview-content w-9/12 m-auto card px-6 py-4">
+    <ul class="grid lg:grid-cols-3 md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'courseSectionName' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">CHEM0001</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'course' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Chemistry</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'subject' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Science</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'calendar' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Academic Calendar</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'calendar' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Main</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">3.00</p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'seats' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><span
+                    class="pr-2 border-r border-gray">20</span><span class="pl-2 text-green font-semibold">10 {{
+                    'available' | translate }}</span></p>
+        </li>
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'attendanceCategory' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">School Default</p>
+        </li>
+    </ul>
+    <div class="flex items-center flex-wrap">
+        <p class="pr-4 mb-2">
+            <mat-icon class="mr-1 align-middle">check_box</mat-icon> {{ 'courseIsWeighted' | translate }}
+        </p>
+        <p class="pr-4 mb-2">
+            <mat-icon class="mr-1 align-middle">check_box</mat-icon> {{ 'useStandards' | translate }}
+        </p>
+        <p class="pr-4 mb-2">
+            <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon> {{ 'affectsClassRank' |
+            translate }}
+        </p>
+        <p class="pr-4 mb-2">
+            <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon> {{ 'affectsHonorRoll' |
+            translate }}
+        </p>
+        <p class="pr-4 mb-2">
+            <mat-icon class="mr-1 align-middle">check_box</mat-icon> {{ 'onlineClassRoom' | translate }}
+        </p>
+    </div>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <ul class="grid lg:grid-cols-3 md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
+        <li>
+            <label class="text-sm leading-5 text-gray">{{'standardGradeScale' | translate}}</label>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Main Standard Grade Scale</p>
+        </li>
+        <li>
+            <div (click)="addUrl()" *ngIf="hideUrl">
+                <label class="text-sm leading-5 text-gray">{{'onlineClassroomUrl' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 flex">
+                    <span
+                        class="truncate w-60 inline-block text-blue mr-4">https://us04web.zoom.us/j/783452aj567890543</span>
+                    <span class="cursor-pointer">
+                        <mat-icon [icIcon]="icEdit"></mat-icon>
+                    </span>
+                </p>
+            </div>
+            <div *ngIf="showUrlInput">
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{ "onlineClassroomUrl" | translate }}</mat-label>
+                    <input matInput value="https://us04web.zoom.us/j/783452aj567890543">
+                </mat-form-field>
+            </div>
+        </li>
+        <li>
+            <div (click)="addPassword()" *ngIf="hidePassword">
+                <label class="text-sm leading-5 text-gray">{{'onlineClassroomPassword' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 flex">
+                    <span>UJX12345</span>
+                    <span class="cursor-pointer">
+                        <mat-icon class="pl-2 text-blue">content_copy</mat-icon>
+                    </span>
+                </p>
+            </div>
+            <div *ngIf="showPasswordInput">
+                <div class="grid grid-cols-3 col-gap-4">
+                    <mat-form-field class="col-span-2 w-full mb-0 mr-4" appearance="outline" color="primary">
+                        <mat-label>{{ "onlineClassroomPassword" | translate }}</mat-label>
+                        <input matInput value="UJX12345">
+                    </mat-form-field>
+                    <button mat-flat-button color="primary" class="col-span-1">{{ "save" | translate
+                        }}</button>
+                </div>
+            </div>
+        </li>
+    </ul>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <div>
+        <h4 class="text-green font-semibold mb-2 text-lg">{{ 'duration' | translate }}</h4>
+        <ul class="grid md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'markingPeriod' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><span class="font-semibold">Quarter
+                        3</span> - Mar 10, 2021 to Jun 09, 2021</p>
+            </li>
+        </ul>
+    </div>
+    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <div>
+        <h4 class="font-semibold mb-2 text-lg">
+            <span class="text-green">{{ 'scheduleType' | translate }}</span> : {{ 'fixedSchedule' | translate }}</h4>
+        <ul class="grid lg:grid-cols-3 md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'room' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Room 101</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'period' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Perod 1</p>
+            </li>
+            <li>
+                <label class="text-sm leading-5 text-gray">{{'meetingDays' | translate}}</label>
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    <span
+                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">S</span>
+                    <span
+                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">M</span>
+                    <span
+                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                    <span
+                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">W</span>
+                    <span
+                        class="w-5 h-5 text-center text-xs bg-primary rounded inline-block text-white mr-1 font-medium">T</span>
+                    <span
+                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
+                    <span
+                        class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">S</span>
+                </p>
+            </li>
+        </ul>
+        <div class="mb-4">
+            <span class="mr-2 bg-black rounded inline-block text-white w-6 h-6 p-1 align-middle">
+                <mat-icon [icIcon]="icHowtoReg" class="text-base align-middle"></mat-icon>
+            </span>{{ 'attendanceEnabled' | translate }}
+        </div>
+    </div>
+</div>

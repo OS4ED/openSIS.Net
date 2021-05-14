@@ -32,6 +32,8 @@ import { RolePermissionListViewModel } from "../../../models/roll-based-access.m
 import { CryptoService } from "../../../services/Crypto.service";
 import { TranslateService } from "@ngx-translate/core";
 import { DefaultValuesService } from "../../../common/default-values.service";
+import { Router } from "@angular/router";
+import { CommonService } from "../../../services/common.service";
 
 @Component({
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -67,6 +69,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   destroySubject$: Subject<void> = new Subject();
   loading: boolean;
   moduleIdentifier = ModuleIdentifier;
+  categoryTitle: string;
   constructor(
     private layoutService: LayoutService,
     private studentService: StudentService,
@@ -77,7 +80,9 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     private defaultValuesService: DefaultValuesService,
     private cdr: ChangeDetectorRef,
     private cryptoService: CryptoService,
-    public translateService: TranslateService
+    public translateService: TranslateService,
+    private router: Router,
+    private commonService:CommonService
   ) {
     translateService.use("en");
 
@@ -92,6 +97,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroySubject$))
       .subscribe((res: number) => {
         this.currentCategory = res;
+      this.checkCurrentCategoryAndRoute();
       });
     this.studentService.modeToUpdate
       .pipe(takeUntil(this.destroySubject$))
@@ -111,14 +117,23 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       .pipe(takeUntil(this.destroySubject$))
       .subscribe((res: StudentAddModel) => {
         this.studentAddModel = res;
+    this.studentService.setStudentDetailsForViewAndEdit(this.studentAddModel);
+
       });
   }
 
   ngOnInit(): void {
+    this.checkCurrentCategoryAndRoute();
+
+    this.studentService.dataAfterSavingGeneralInfoChanged.subscribe((res)=>{
+      this.afterSavingGeneralInfo(res);
+    })
+
     this.permissionListViewModel = JSON.parse(
       this.cryptoService.dataDecrypt(localStorage.getItem("permissions"))
     );
     this.studentCreateMode = this.studentCreate.ADD;
+    this.studentService.setStudentCreateMode(this.studentCreateMode);
     this.studentId = this.studentService.getStudentId();
     if (this.studentId) {
       this.imageCropperService.enableUpload({
@@ -127,6 +142,8 @@ export class AddStudentComponent implements OnInit, OnDestroy {
         mode: this.studentCreate.VIEW,
       });
       this.studentCreateMode = this.studentCreate.VIEW;
+    this.studentService.setStudentCreateMode(this.studentCreateMode);
+
       this.getStudentDetailsUsingId();
       this.onViewMode();
     } else if (this.studentCreateMode === this.studentCreate.ADD) {
@@ -163,20 +180,64 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     return permission;
   }
   changeCategory(field, index) {
+    this.categoryTitle=field.title;
+    this.studentService.setCategoryTitle(this.categoryTitle);
+    this.commonService.setModuleName(this.module);
     const studentDetails = this.studentService.getStudentDetails();
+    this.studentService.setStudentFirstView(false)
 
-    if (studentDetails !== undefined || studentDetails != null) {
+    if (studentDetails !== undefined && studentDetails != null) {
       this.studentCreateMode = this.studentCreate.EDIT;
+      
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
+      this.studentService.setCategoryId(this.indexOfCategory);
+
       this.studentAddModel = studentDetails;
+    this.studentService.setStudentDetailsForViewAndEdit(this.studentAddModel);
+
     }
 
     if (this.studentCreateMode === this.studentCreate.VIEW) {
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
+      this.studentService.setCategoryId(this.indexOfCategory);
+
       this.pageStatus = "View Student";
     }
+    this.studentService.setStudentCreateMode(this.studentCreateMode);
+    this.checkCurrentCategoryAndRoute();
+  }
+
+  checkCurrentCategoryAndRoute() {
+    if(this.currentCategory === 3) {
+      this.router.navigate(['/school', 'students', 'student-generalinfo']);
+    } else if(this.currentCategory === 4 ) {
+      this.router.navigate(['/school', 'students', 'student-enrollmentinfo']);
+    } else if(this.currentCategory === 5 ) {
+        this.router.navigate(['/school', 'students', 'student-address-contact']);
+    } else if(this.currentCategory === 6 ) {
+      this.router.navigate(['/school', 'students', 'student-familyinfo']);
+    } else if(this.currentCategory === 7 ) {
+      this.router.navigate(['/school', 'students', 'student-medicalinfo']);
+    }
+     else if(this.currentCategory === 8 ) {
+      this.router.navigate(['/school', 'students', 'student-comments']);
+    } else if(this.currentCategory === 9 ) {
+      this.router.navigate(['/school', 'students', 'student-documents']);
+    } else if(this.currentCategory === 100 ) {
+      this.router.navigate(['/school', 'students', 'student-course-schedule']);
+    }  else if(this.currentCategory === 101 ) {
+      this.router.navigate(['/school', 'students', 'student-attendance']);
+    }  else if(this.currentCategory === 102 ) {
+      this.router.navigate(['/school', 'students', 'student-transcript']);
+    }  else if(this.currentCategory === 103 ) {
+      this.router.navigate(['/school', 'students', 'student-report-card']);
+    }
+    else if(this.indexOfCategory > 6 ) {
+      this.router.navigate(['/school', 'students', 'custom', this.categoryTitle.trim().toLowerCase().split(' ').join('-')]);
+    }
+
   }
 
   getAllFieldsCategory() {
@@ -198,6 +259,8 @@ export class AddStudentComponent implements OnInit, OnDestroy {
             this.studentAddModel.fieldsCategoryList = this.checkViewPermission(
               res.fieldsCategoryList
             );
+    this.studentService.setStudentDetailsForViewAndEdit(this.studentAddModel);
+
             this.studentService.sendDetails(this.studentAddModel);
           }
         } else {
@@ -232,6 +295,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
 
   changeTempCategory(step: number = 3) {
     this.currentCategory = step;
+    this.checkCurrentCategoryAndRoute();
   }
 
   getStudentDetailsUsingId() {
@@ -253,6 +317,8 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       this.studentService.setStudentCloneImage(this.responseImage);
       this.checkCriticalAlertFromMedical(this.studentAddModel);
     });
+    this.studentService.setStudentDetailsForViewAndEdit(this.studentAddModel);
+
   }
 
   ngAfterViewChecked() {
@@ -260,20 +326,24 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   }
 
   afterSavingGeneralInfo(data) {
-    this.studentTitle =
+    if(data) {
+      this.studentTitle =
       data.studentMaster.firstGivenName +
       " " +
       data.studentMaster.lastFamilyName;
 
     let studentName = data.studentMaster.firstGivenName + '|' + null + '|' + data.studentMaster.lastFamilyName;
     this.studentService.setStudentName(studentName)
+    }
   }
 
   ngOnDestroy() {
-    // this.studentService.setStudentDetails(null);
+    this.studentService.setStudentDetails(undefined);
     this.studentService.setStudentImage(null);
     this.studentService.setStudentId(null);
-    // this.studentService.sendDetails(null);
+    this.studentService.setStudentFirstView(true);
+    this.studentService.sendDetails(undefined);
+    this.studentService.setCategoryTitle(null);
     this.studentService.setStudentCloneImage(null);
     this.destroySubject$.next();
     this.destroySubject$.complete();

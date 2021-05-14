@@ -5,6 +5,7 @@ import icCheckBox from '@iconify/icons-ic/check-box';
 import icCheckBoxOutlineBlank from '@iconify/icons-ic/check-box-outline-blank';
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { StaffService } from 'src/app/services/staff.service';
 
 @Component({
   selector: 'vex-view-staff-addressinfo',
@@ -28,11 +29,15 @@ export class ViewStaffAddressinfoComponent implements OnInit {
   mailingAddressMapUrl: string;
   constructor(
               public translateService: TranslateService,
-              private snackbar: MatSnackBar) {
+              private snackbar: MatSnackBar,
+              private staffService: StaffService) {
     translateService.use('en');
   }
 
   ngOnInit(): void {
+
+ 
+
     this.nameOfMiscValues.countryName=this.nameOfMiscValues.countryName=='-'?'':this.nameOfMiscValues.countryName;
     this.nameOfMiscValues.mailingAddressCountry=this.nameOfMiscValues.mailingAddressCountry=='-'?'':this.nameOfMiscValues.mailingAddressCountry;
 
@@ -59,6 +64,20 @@ export class ViewStaffAddressinfoComponent implements OnInit {
       this.mailingAddressMapUrl = `https://maps.google.com/?q=${stAdd1?stAdd1:''}${stAdd2?','+stAdd2:''}${city?','+city:''}${state?','+state:''}${country?','+country:''}${zip?','+zip:''}`;
       window.open(this.mailingAddressMapUrl, '_blank');
     
+  }
+
+  openUrl(href: string) {
+    if (!href?.trim()) { return; }
+
+    if (href.includes('@')) {
+      href = 'mailto:' + href;
+      window.open(href);
+      return;
+    } else
+      if (!href.includes('http:') && !href.includes('https:')) {
+        href = 'http://' + href;
+      }
+    window.open(href);
   }
 
 }

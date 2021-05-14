@@ -18,26 +18,18 @@ export class StudentEffortGradeMaster {
     public updatedBy: string;
     public updatedOn: string;
     public studentEffortGradeDetail: StudentEffortGradeDetail[];
+    constructor() {
+        this.studentEffortGradeDetail = [];
+    }
 }
 
 export class StudentEffortGradeDetail {
-    public tenantId: string;
-    public schoolId: number;
-    public studentId: number;
-    public commentId: number;
-    public studentFinalGradeSrlno: number;
-    public id: number;
     public effortCategoryId: number;
     public effortItemId: number;
     public effortGradeScaleId: number;
-    public createdBy: string;
-    public createdOn: string;
-    public updatedBy: string;
-    public updatedOn: string;
 }
-
 export class StudentEffortGradeListModel extends CommonField {
-    studentEffortGradeList = [];
+    studentEffortGradeList: StudentEffortGradeMaster[];
     tenantId: string;
     schoolId: number;
     calendarId: number;

@@ -2726,7 +2726,8 @@ namespace opensis.data.Repository
                     {                                            
                         decimal? totalCreditAttempeted = 0.0m;
                         decimal? totalCreditEarned = 0.0m;
-                        decimal? cumulativeGPA = 0.0m;
+                        decimal? cumulativeGPValue = 0.0m;
+                        decimal? cumulativeCreditHours = 0.0m;
 
                         var StudentsDetailsForTranscript = new StudentsDetailsForTranscriptViewModel();
 
@@ -2823,12 +2824,12 @@ namespace opensis.data.Repository
                                     GradeDetailsForTranscript.GPA = gPAValue / creditEarned; // Σ gpValue of course sections / Σ CreditEarned of course sections
                                     totalCreditEarned += creditEarned;
                                     totalCreditAttempeted += creditAttemped;
-                                    cumulativeGPA += GradeDetailsForTranscript.GPA;
-
+                                    cumulativeGPValue += gPAValue;
+                                    cumulativeCreditHours += creditAttemped;
                                     StudentsDetailsForTranscript.gradeDetailsForTranscriptViewModel.Add(GradeDetailsForTranscript);
                                 }
                             }
-                            StudentsDetailsForTranscript.CumulativeGPA = cumulativeGPA;
+                            StudentsDetailsForTranscript.CumulativeGPA = cumulativeGPValue / cumulativeCreditHours;  // Σ gpValue of all course sections / Σ CreditHours of all course sections
                             StudentsDetailsForTranscript.TotalCreditAttempeted = totalCreditAttempeted; //Σ CreditAttemped 
                             StudentsDetailsForTranscript.TotalCreditEarned = totalCreditEarned;  //Σ CreditEarned
 

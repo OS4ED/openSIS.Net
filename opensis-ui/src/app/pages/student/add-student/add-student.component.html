@@ -29,6 +29,13 @@
                                 <a [ngClass]="currentCategory==field.categoryId?'text-blue' : ''"
                                     @fadeInRight>{{field.title}}</a>
                             </li>
+
+                            <!-- <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 6"
+                                [categoryTitle]="field.title" [studentCreateMode]="studentCreateMode"
+                                [schoolDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory"
+                                [module]="module">
+                            </vex-custom-field> -->
+
                         </ul>
                     </div>
                 </mat-expansion-panel>
@@ -74,59 +81,61 @@
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
             <vex-page-layout-content class="-mt-4">
+                
                 <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
                     <mat-drawer-content class="flex-auto flex items-start">
                         <div class="w-full" fxFlex="auto">
-                            <vex-student-generalinfo *ngIf="currentCategory==3" [studentCreateMode]="studentCreateMode"
+                            <router-outlet></router-outlet>
+                            <!-- <vex-student-generalinfo *ngIf="currentCategory==3" [studentCreateMode]="studentCreateMode"
                                 [studentDetailsForViewAndEdit]="studentAddModel"
                                 (dataAfterSavingGeneralInfo)="afterSavingGeneralInfo($event)"
                                 [categoryId]="indexOfCategory">
-                            </vex-student-generalinfo>
+                            </vex-student-generalinfo> -->
 
-                            <vex-student-addressandcontacts *ngIf="currentCategory==5"
+                            <!-- <vex-student-addressandcontacts *ngIf="currentCategory==5"
                                 [studentCreateMode]="studentCreateMode"
                                 [studentDetailsForViewAndEdit]="studentAddModel">
-                            </vex-student-addressandcontacts>
+                            </vex-student-addressandcontacts> -->
 
-                            <vex-student-enrollmentinfo *ngIf="currentCategory==4"
+                            <!-- <vex-student-enrollmentinfo *ngIf="currentCategory==4"
                                 [studentCreateMode]="studentCreateMode"
                                 [studentDetailsForViewAndEdit]="studentAddModel">
-                            </vex-student-enrollmentinfo>
+                            </vex-student-enrollmentinfo> -->
 
-                            <vex-student-familyinfo *ngIf="currentCategory==6" [studentCreateMode]="studentCreateMode"
+                            <!-- <vex-student-familyinfo *ngIf="currentCategory==6" [studentCreateMode]="studentCreateMode"
                                 [studentDetailsForViewAndEdit]="studentAddModel">
-                            </vex-student-familyinfo>
+                            </vex-student-familyinfo> -->
 
                             <!-- <vex-student-logininfo *ngIf="currentCategory==7">
                     </vex-student-logininfo> -->
 
-                            <vex-student-medicalinfo *ngIf="currentCategory==7" [studentCreateMode]="studentCreateMode"
+                            <!-- <vex-student-medicalinfo *ngIf="currentCategory==7" [studentCreateMode]="studentCreateMode"
                                 [studentDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory"
                                 (studentDetailsForParent)="checkCriticalAlertFromMedical($event)">
-                            </vex-student-medicalinfo>
+                            </vex-student-medicalinfo> -->
 
-                            <vex-student-comments *ngIf="currentCategory==8" [studentCreateMode]="studentCreateMode"
+                            <!-- <vex-student-comments *ngIf="currentCategory==8" [studentCreateMode]="studentCreateMode"
                                 [studentDetailsForViewAndEdit]="studentAddModel">
-                            </vex-student-comments>
+                            </vex-student-comments> -->
 
-                            <vex-student-documents *ngIf="currentCategory==9" [studentCreateMode]="studentCreateMode"
+                            <!-- <vex-student-documents *ngIf="currentCategory==9" [studentCreateMode]="studentCreateMode"
                                 [studentDetailsForViewAndEdit]="studentAddModel">
-                            </vex-student-documents>
+                            </vex-student-documents> -->
 
-                            <vex-student-course-schedule *ngIf="currentCategory==100">
+                            <!-- <vex-student-course-schedule *ngIf="currentCategory==100"> -->
 
-                            </vex-student-course-schedule>
+                            <!-- </vex-student-course-schedule>
                             <vex-student-attendance *ngIf="currentCategory==101"></vex-student-attendance>
                             <vex-student-transcript *ngIf="currentCategory==102"></vex-student-transcript>
-                            <vex-student-report-card *ngIf="currentCategory==103"></vex-student-report-card>
+                            <vex-student-report-card *ngIf="currentCategory==103"></vex-student-report-card> -->
 
-                            <div *ngFor="let field of fieldsCategory;let index=index">
+                            <!-- <div *ngFor="let field of fieldsCategory;let index=index">
                                 <vex-custom-field *ngIf="field.categoryId == currentCategory && indexOfCategory > 6"
                                     [categoryTitle]="field.title" [studentCreateMode]="studentCreateMode"
                                     [schoolDetailsForViewAndEdit]="studentAddModel" [categoryId]="indexOfCategory"
                                     [module]="module">
                                 </vex-custom-field>
-                            </div>
+                            </div> -->
 
                         </div>
                     </mat-drawer-content>

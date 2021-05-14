@@ -5,8 +5,8 @@
         </vex-secondary-toolbar>
     </vex-page-layout-header>    
     <vex-page-layout-content [ngClass]="pageId=='Staff Bulk Data Import'?'':'-mt-6'" >
-        <mat-drawer-container class="bg-transparent flex-auto flex" [ngClass]="pageId=='Staff Bulk Data Import'?'':'-mt-16'" >
-            <mat-drawer-content class="flex-auto flex items-start">
+        <div class="bg-transparent flex-auto flex" [ngClass]="pageId=='Staff Bulk Data Import'?'':'-mt-16'" >
+            <div class="flex-auto flex items-start">
                 <div  class="w-full p-0">
                     <div *ngIf="pageId=='Staff Fields'">
                         <vex-staff-fields></vex-staff-fields>
@@ -15,7 +15,7 @@
                         <vex-staff-data-import></vex-staff-data-import>
                     </div>
                 </div>
-            </mat-drawer-content>
-        </mat-drawer-container>
+            </div>
+        </div>
     </vex-page-layout-content>
 </vex-page-layout>

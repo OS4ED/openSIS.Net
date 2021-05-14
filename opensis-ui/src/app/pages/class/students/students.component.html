@@ -1,0 +1,176 @@
+<div class="card">
+    <div class="bg-white px-4 md:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+        <div class="md:flex w-full justify-between">
+            <div class="py-2" fxLayout="row" fxLayoutAlign="start center">
+                <div class="flex items-center">
+                    <input matInput class="px-2 py-3 border-0 outline-none w-full bg-transparent" appearance="outline"
+                        color="primary" placeholder="Search..." type="search">
+                    <button class="ml-4" mat-icon-button type="button">
+                        <mat-icon [icIcon]="icSearch"></mat-icon>
+                    </button>
+                </div>
+            </div>
+            <div class="pt-2 items-center">
+                <a class="cursor-pointer p-1 mt-1 inline-block align-middle" matTooltip="Export to Excel"><i
+                        class="icon icon-file-excel text-lg"></i></a>
+                <button class="ml-2 inline-block align-middle" fxFlex="none" mat-icon-button matTooltip="Filter Columns"
+                    type="button">
+                    <mat-icon>filter_list</mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="border-t overflow-x-auto overflow-y-hidden">
+        <table class="w-full schedule-table">
+            <thead>
+                <tr>
+                    <th>{{ "studentName" | translate }}</th>
+                    <th>{{ "studentID" | translate }}</th>
+                    <th>{{ "alternateID" | translate }}</th>
+                    <th>{{ "gradeLevel" | translate }}</th>
+                    <th>{{ "section" | translate }}</th>
+                    <th>{{ "phone" | translate }}</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Arthur Boucher</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>4512</td>
+                    <td>4512</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Danny Anderson</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>3127</td>
+                    <td>3127</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Justin Aponte</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>3356</td>
+                    <td>3356</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Julie Davis</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>4123</td>
+                    <td>4123</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Javier Holmes</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>2599</td>
+                    <td>2599</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Roman Loafer</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>2345</td>
+                    <td>2345</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Colin Parker</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>1234</td>
+                    <td>1234</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+                <tr>
+                    <td>
+                        <div class="flex cursor-pointer">
+                            <div class="flex-shrink-0 h-12 w-12">
+                                <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                            </div>
+                            <div class="ml-3 flex flex-col justify-center">
+                                <h6 class="text-sm font-medium text-primary">Andrew Aponte</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>6754</td>
+                    <td>6754</td>
+                    <td>Grade 09</td>
+                    <td>Section A</td>
+                    <td>1234567893</td>
+                </tr>
+            </tbody>
+        </table>
+        <mat-paginator [length]="totalCount" [class.hide]="totalCount==0" [pageSize]="pageSize"
+                [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons></mat-paginator>
+    </div>

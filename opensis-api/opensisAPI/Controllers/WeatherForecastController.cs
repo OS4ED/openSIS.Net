@@ -664,5 +664,374 @@ namespace opensisAPI.Controllers
 
             return Ok(result);
         }
+
+        [HttpPost("InsertCopyStudent")]
+        public IActionResult InsertCopyStudent(int schoolId,int studentId)
+        {
+            Guid tenantId = new Guid("1e93c7bf-0fae-42bb-9e09-a1cedc8c0355");
+
+            for (int i = 1; i < 3; i++)
+            {
+                int? MasterStudentId = 1;
+
+                var studentData = this.context?.StudentMaster.Where(x => x.SchoolId == schoolId && x.TenantId == tenantId).OrderByDescending(x => x.StudentId).FirstOrDefault();
+
+                if (studentData != null)
+                {
+                    MasterStudentId = studentData.StudentId + 1;
+                }
+
+                var studentDataList = this.context?.StudentMaster.FirstOrDefault(n => n.TenantId == tenantId && n.SchoolId == schoolId && n.StudentId == studentId);
+
+                Guid GuidId = Guid.NewGuid();
+                var student = new List<StudentMaster>()
+                {
+                    new StudentMaster()
+                    {
+                        TenantId=tenantId,
+                        SchoolId=schoolId,
+                        StudentId=(int)MasterStudentId,
+                        AlternateId="STUDENT-0"+MasterStudentId,
+                        StudentInternalId="ST-00"+MasterStudentId,
+                        DistrictId=studentDataList.DistrictId,
+                        StateId=studentDataList.StateId,
+                        AdmissionNumber="STD"+MasterStudentId,
+                        RollNumber="0"+MasterStudentId,
+                        Salutation="Mr.",
+                        FirstGivenName=studentDataList.FirstGivenName+MasterStudentId,
+                        MiddleName=studentDataList.MiddleName,
+                        LastFamilyName=studentDataList.LastFamilyName+MasterStudentId,
+                        Suffix=studentDataList.Suffix,
+                        PreferredName=studentDataList.PreferredName,
+                        PreviousName=studentDataList.PreviousName,
+                        SocialSecurityNumber=studentDataList.SocialSecurityNumber,
+                        OtherGovtIssuedNumber=studentDataList.OtherGovtIssuedNumber,
+                        Dob=studentDataList.Dob,
+                        Gender=studentDataList.Gender,
+                        MaritalStatus=studentDataList.MaritalStatus,
+                        CountryOfBirth=studentDataList.CountryOfBirth,
+                        Nationality=studentDataList.Nationality,
+                        FirstLanguageId=studentDataList.FirstLanguageId,
+                        SecondLanguageId=studentDataList.SecondLanguageId,
+                        ThirdLanguageId=studentDataList.ThirdLanguageId,
+                        HomePhone=studentDataList.HomePhone,
+                        MobilePhone=studentDataList.MobilePhone,
+                        PersonalEmail=studentDataList.PersonalEmail,
+                        SchoolEmail=studentDataList.SchoolEmail,
+                        Twitter=studentDataList.Twitter,
+                        Facebook=studentDataList.Facebook,
+                        Instagram=studentDataList.Instagram,
+                        Youtube=studentDataList.Youtube,
+                        Linkedin=studentDataList.Linkedin,
+                        HomeAddressLineOne=studentDataList.HomeAddressLineOne,
+                        HomeAddressLineTwo=studentDataList.HomeAddressLineTwo,
+                        HomeAddressCity=studentDataList.HomeAddressCity,
+                        HomeAddressState=studentDataList.HomeAddressState,
+                        HomeAddressZip=studentDataList.HomeAddressZip,
+                        BusNo=studentDataList.BusNo,
+                        SchoolBusPickUp=studentDataList.SchoolBusPickUp,
+                        SchoolBusDropOff=studentDataList.SchoolBusDropOff,
+                        MailingAddressSameToHome=studentDataList.MailingAddressSameToHome,
+                        MailingAddressLineOne=studentDataList.MailingAddressLineOne,
+                        MailingAddressLineTwo=studentDataList.MailingAddressLineTwo,
+                        MailingAddressCity=studentDataList.MailingAddressCity,
+                        MailingAddressState=studentDataList.MailingAddressState,
+                        MailingAddressZip=studentDataList.MailingAddressZip,
+                        MailingAddressCountry=studentDataList.MailingAddressCountry,
+                        HomeAddressCountry=studentDataList.HomeAddressCountry,
+                        StudentPortalId=studentDataList.PersonalEmail,
+                        AlertDescription=studentDataList.AlertDescription,
+                        CriticalAlert=studentDataList.CriticalAlert,
+                        Dentist=studentDataList.Dentist,
+                        DentistPhone=studentDataList.DentistPhone,
+                        InsuranceCompany=studentDataList.InsuranceCompany,
+                        InsuranceCompanyPhone=studentDataList.InsuranceCompanyPhone,
+                        MedicalFacility=studentDataList.MedicalFacility,
+                        MedicalFacilityPhone=studentDataList.MedicalFacilityPhone,
+                        PolicyHolder=studentDataList.PolicyHolder,
+                        PolicyNumber=studentDataList.PolicyNumber,
+                        PrimaryCarePhysician=studentDataList.PrimaryCarePhysician,
+                        PrimaryCarePhysicianPhone=studentDataList.PrimaryCarePhysicianPhone,
+                        Vision=studentDataList.Vision,
+                        VisionPhone=studentDataList.VisionPhone,
+                        EconomicDisadvantage=studentDataList.EconomicDisadvantage,
+                        Eligibility504=studentDataList.Eligibility504,
+                        EstimatedGradDate=studentDataList.EstimatedGradDate,
+                        FreeLunchEligibility=studentDataList.FreeLunchEligibility,
+                        LepIndicator=studentDataList.LepIndicator,
+                        SpecialEducationIndicator=studentDataList.SpecialEducationIndicator,                        
+                        LastUpdated=DateTime.UtcNow,
+                        UpdatedBy="Super Admin",
+                        EnrollmentType=studentDataList.EnrollmentType,
+                        IsActive=true,
+                        StudentGuid=GuidId,
+                        Ethnicity=studentDataList.Ethnicity,
+                        Associationship=studentDataList.Associationship,
+                        Race=studentDataList.Race,
+                        SectionId=studentDataList.SectionId,                      
+                    }
+                }.ToList();
+                this.context?.StudentMaster.AddRange(student);
+                this.context?.SaveChanges();
+
+                int? ParentId = 1;
+                
+                var parentInfoData = this.context?.ParentInfo.Where(x => x.SchoolId == schoolId && x.TenantId == tenantId).OrderByDescending(x => x.ParentId).FirstOrDefault();
+
+                if (parentInfoData != null)
+                {
+                    ParentId = parentInfoData.ParentId + 1;
+                }
+
+                var parentdataList = this.context?.ParentInfo.Include(m=>m.ParentAddress).
+                                    Join(this.context?.ParentAssociationship,
+                                    pi => pi.ParentId, pa => pa.ParentId,
+                                    (pi, pa) => new { pi, pa }).Where(c => c.pi.TenantId == tenantId && c.pi.SchoolId == schoolId && c.pa.StudentId == studentId && c.pa.TenantId == tenantId && c.pa.SchoolId == schoolId).ToList();                
+
+                if (parentdataList.Count>0)
+                {                   
+                   List<ParentAssociationship> parentAssociationshipList = new List<ParentAssociationship>();
+                   List<ParentInfo> parentInfoList = new List<ParentInfo>();
+                   List<ParentAddress> parentAddressList = new List<ParentAddress>();
+
+                    foreach (var parentdata in parentdataList)
+                    {
+                        var parentinfo = new ParentInfo()
+                        {
+                            TenantId= parentdata.pi.TenantId,
+                            SchoolId=parentdata.pi.SchoolId,
+                            ParentId = (int)ParentId,
+                            Firstname=parentdata.pi.Firstname+i,
+                            Lastname=parentdata.pi.Lastname+i,
+                            HomePhone= parentdata.pi.HomePhone,
+                            WorkPhone=parentdata.pi.WorkPhone,
+                            BusDropoff= parentdata.pi.BusDropoff,
+                            BusNo= parentdata.pi.BusNo,
+                            BusPickup= parentdata.pi.BusPickup,
+                            IsPortalUser=parentdata.pi.IsPortalUser,
+                            LoginEmail= parentdata.pi.LoginEmail,
+                            Middlename= parentdata.pi.Middlename,
+                            Mobile= parentdata.pi.Mobile,
+                            ParentGuid= parentdata.pi.ParentGuid,
+                            PersonalEmail= parentdata.pi.PersonalEmail,
+                            Salutation= parentdata.pi.Salutation,
+                            Suffix= parentdata.pi.Suffix,
+                            UserProfile= parentdata.pi.UserProfile,
+                            WorkEmail= parentdata.pi.WorkEmail,
+                            UpdatedBy= "Super Admin",
+                            LastUpdated=DateTime.UtcNow
+                        };
+                        parentInfoList.Add(parentinfo);
+
+                        foreach (var ParentAddressData in parentdata.pi.ParentAddress)
+                        {
+                            var parentAddress = new ParentAddress()
+                            {
+                                TenantId= ParentAddressData.TenantId,
+                                SchoolId= ParentAddressData.SchoolId,
+                                ParentId= (int)ParentId,
+                                StudentId = (int)MasterStudentId,
+                                StudentAddressSame= ParentAddressData.StudentAddressSame,
+                                AddressLineOne= ParentAddressData.AddressLineOne,
+                                AddressLineTwo= ParentAddressData.AddressLineTwo,
+                                Country= ParentAddressData.Country,
+                                City= ParentAddressData.City,
+                                State= ParentAddressData.State,
+                                Zip= ParentAddressData.Zip,
+                                LastUpdated=DateTime.UtcNow,
+                                UpdatedBy= "Super Admin",
+                            };
+                            parentAddressList.Add(parentAddress);
+                        }
+
+                        var parentAssociationship = new ParentAssociationship()
+                        {
+                            TenantId = parentdata.pa.TenantId,
+                            SchoolId = parentdata.pa.SchoolId,
+                            ParentId = (int)ParentId,
+                            StudentId = (int)MasterStudentId,
+                            Associationship = parentdata.pa.Associationship,
+                            IsCustodian = parentdata.pa.IsCustodian,
+                            Relationship = parentdata.pa.Relationship,
+                            ContactType = parentdata.pa.ContactType,
+                            UpdatedBy = "Super Admin",
+                            LastUpdated = DateTime.UtcNow
+
+                        };
+                        parentAssociationshipList.Add(parentAssociationship);
+                        ParentId++;
+                    }
+                    this.context?.ParentAssociationship.AddRange(parentAssociationshipList.Distinct());
+                    this.context?.ParentInfo.AddRange(parentInfoList);
+                    this.context?.ParentAddress.AddRange(parentAddressList);
+                    this.context?.SaveChanges();
+                }
+
+                var studentEnrollmentData = this.context?.StudentEnrollment.FirstOrDefault(x => x.TenantId == tenantId && x.SchoolId == schoolId && x.StudentId == studentId);
+
+                if (studentEnrollmentData !=null)
+                {
+                    var StudentEnrollmentData = new StudentEnrollment()
+                    {
+                        TenantId = tenantId,
+                        SchoolId = schoolId,
+                        StudentId = (int)MasterStudentId,
+                        EnrollmentId = 1,
+                        SchoolName = studentEnrollmentData.SchoolName,
+                        RollingOption = studentEnrollmentData.RollingOption,
+                        EnrollmentCode = studentEnrollmentData.EnrollmentCode,
+                        CalenderId = studentEnrollmentData.CalenderId,
+                        GradeLevelTitle = studentEnrollmentData.GradeLevelTitle,
+                        EnrollmentDate = DateTime.UtcNow,
+                        StudentGuid = GuidId,
+                        IsActive = true,
+                        GradeId = studentEnrollmentData.GradeId,
+                        LastUpdated= DateTime.UtcNow,
+                        UpdatedBy= "Super Admin"                      
+                    };
+                    this.context?.StudentEnrollment.Add(StudentEnrollmentData);
+                }                
+            }
+            this.context?.SaveChanges();
+            return Ok();
+        }
+
+        [HttpPost("InsertCopyStaff")]
+        public IActionResult InsertCopyStaff(int schoolId, int staffId)
+        {
+            try
+            {
+                Guid tenantId = new Guid("1e93c7bf-0fae-42bb-9e09-a1cedc8c0355");
+
+                var staffData = this.context?.StaffMaster.Include(c => c.StaffSchoolInfo).FirstOrDefault(b => b.SchoolId == schoolId && b.TenantId == tenantId && b.StaffId == staffId);
+
+                int? staffID = Utility.GetMaxPK(this.context, new Func<StaffMaster, int>(x => x.StaffId));
+                int? Id = Utility.GetMaxPK(this.context, new Func<StaffSchoolInfo, int>(x => (int)x.Id));
+
+                if (staffData != null)
+                {
+                    //List<StaffSchoolInfo> staffSchoolInfoList = new List<StaffSchoolInfo>();
+                    
+                    for (int i = 1; i < 3; i++)
+                    {
+                        Guid GuidId = Guid.NewGuid();
+
+                        var Staff = new StaffMaster()
+                        {
+                            TenantId = tenantId,
+                            SchoolId = schoolId,
+                            StaffId = (int)staffID,
+                            Salutation = staffData.Salutation,
+                            AlternateId = "STAFF-0" + staffID,
+                            StaffInternalId = "STF-00" + staffID,
+                            BusDropoff = staffData.BusDropoff,
+                            BusNo = staffData.BusNo,
+                            BusPickup = staffData.BusPickup,
+                            CountryOfBirth = staffData.CountryOfBirth,
+                            DisabilityDescription = staffData.DisabilityDescription,
+                            DistrictId = staffData.DistrictId,
+                            Dob = staffData.Dob,
+                            EmergencyEmail = staffData.EmergencyEmail,
+                            EmergencyFirstName = staffData.EmergencyFirstName + staffID,
+                            EmergencyHomePhone = staffData.EmergencyHomePhone,
+                            EmergencyLastName = staffData.EmergencyLastName + staffID,
+                            EmergencyMobilePhone = staffData.EmergencyMobilePhone,
+                            EmergencyWorkPhone = staffData.EmergencyWorkPhone,
+                            EndDate = staffData.EndDate,
+                            Ethnicity = staffData.Ethnicity,
+                            Facebook = staffData.Facebook,
+                            FirstGivenName = staffData.FirstGivenName + staffID,
+                            MiddleName = staffData.MiddleName,
+                            LastFamilyName = staffData.LastFamilyName + staffID,
+                            Gender = staffData.Gender,
+                            FirstLanguage = staffData.FirstLanguage,
+                            HomeAddressCity = staffData.HomeAddressCity,
+                            HomeAddressCountry = staffData.HomeAddressCountry,
+                            HomeAddressLineOne = staffData.HomeAddressLineOne,
+                            HomeAddressLineTwo = staffData.HomeAddressLineTwo,
+                            HomeAddressState = staffData.HomeAddressState,
+                            HomeAddressZip = staffData.HomeAddressZip,
+                            HomePhone = staffData.HomePhone,
+                            HomeroomTeacher = staffData.HomeroomTeacher,
+                            Instagram = staffData.Instagram,
+                            JobTitle = staffData.JobTitle,
+                            JoiningDate = staffData.JoiningDate,
+                            Linkedin = staffData.Linkedin,
+                            LoginEmailAddress = staffData.LoginEmailAddress,
+                            MailingAddressCity = staffData.MailingAddressCity,
+                            MailingAddressCountry = staffData.MailingAddressCountry,
+                            MailingAddressLineOne = staffData.MailingAddressLineOne,
+                            MailingAddressLineTwo = staffData.MailingAddressLineTwo,
+                            MailingAddressSameToHome = staffData.MailingAddressSameToHome,
+                            MailingAddressState = staffData.MailingAddressState,
+                            MailingAddressZip = staffData.MailingAddressZip,
+                            MaritalStatus = staffData.MaritalStatus,
+                            MobilePhone = staffData.MobilePhone,
+                            Nationality = staffData.Nationality,
+                            OfficePhone = staffData.OfficePhone,
+                            OtherGovtIssuedNumber = staffData.OtherGovtIssuedNumber,
+                            OtherGradeLevelTaught = staffData.OtherGradeLevelTaught,
+                            OtherSubjectTaught = staffData.OtherSubjectTaught,
+                            PersonalEmail = staffData.PersonalEmail,
+                            PhysicalDisability = staffData.PhysicalDisability,
+                            PortalAccess = staffData.PortalAccess,
+                            PreferredName = staffData.PreferredName,
+                            PreviousName = staffData.PreviousName,
+                            PrimaryGradeLevelTaught = staffData.PrimaryGradeLevelTaught,
+                            PrimarySubjectTaught = staffData.PrimarySubjectTaught,
+                            Profile = staffData.Profile,
+                            Race = staffData.Race,
+                            RelationshipToStaff = staffData.RelationshipToStaff,
+                            SchoolEmail = staffData.SchoolEmail,
+                            SocialSecurityNumber = staffData.SocialSecurityNumber,
+                            StateId = staffData.StateId,
+                            Youtube = staffData.Youtube,
+                            Twitter = staffData.Twitter,
+                            ThirdLanguage = staffData.ThirdLanguage,
+                            Suffix = staffData.Suffix,
+                            StaffGuid = GuidId,
+                            LastUpdated = DateTime.UtcNow,
+                            LastUpdatedBy = "Super Admin",
+                            SecondLanguage = staffData.SecondLanguage,
+                        };
+                        this.context?.StaffMaster.Add(Staff);
+                        this.context?.SaveChanges();
+
+                        if (staffData.StaffSchoolInfo.ToList().Count > 0)
+                        {
+                            //int? Id = Utility.GetMaxPK(this.context, new Func<StaffSchoolInfo, int>(x => (int)x.Id));
+
+                            foreach (var StaffSchoolInfoData in staffData.StaffSchoolInfo)
+                            {
+                                var StaffschoolInfo = new StaffSchoolInfo()
+                                {
+                                    SchoolId = StaffSchoolInfoData.SchoolId,
+                                    TenantId = StaffSchoolInfoData.TenantId,
+                                    Id = (int)Id,
+                                    Profile = StaffSchoolInfoData.Profile,
+                                    SchoolAttachedId = StaffSchoolInfoData.SchoolAttachedId,
+                                    SchoolAttachedName = StaffSchoolInfoData.SchoolAttachedName,
+                                    StartDate = StaffSchoolInfoData.StartDate,
+                                    EndDate = StaffSchoolInfoData.EndDate,
+                                    StaffId = staffID,
+                                    UpdatedBy = "Super Admin",
+                                    UpdatedAt = DateTime.UtcNow,
+                                };
+                                this.context?.StaffSchoolInfo.Add(StaffschoolInfo);
+                                this.context?.SaveChanges();
+                                Id++;
+                                staffID++;
+                            }
+                        }
+                    }
+                }
+            }
+            catch (Exception es)
+            {
+
+                throw;
+            }            
+            return Ok();
+        }
     }
 }

@@ -23,6 +23,7 @@ import {FieldCategoryModuleEnum} from '../../../enums/field-category-module.enum
 import { CdkDragDrop} from '@angular/cdk/drag-drop';
 import { CryptoService } from '../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
+import { SchoolService } from '../../../services/school.service';
 
 @Component({
   selector: 'vex-school-fields',
@@ -74,7 +75,8 @@ export class SchoolFieldsComponent implements OnInit {
     public translateService:TranslateService,
     private customFieldservice:CustomFieldService,
     private loaderService:LoaderService,
-    private cryptoService: CryptoService
+    private cryptoService: CryptoService,
+    private schoolService: SchoolService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -111,6 +113,7 @@ export class SchoolFieldsComponent implements OnInit {
       width: '600px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });
@@ -121,6 +124,7 @@ export class SchoolFieldsComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((data)=>{
       if(data==='submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });
@@ -167,6 +171,7 @@ export class SchoolFieldsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
       if(dialogResult){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.deleteCustomFieldata(element);
       }
    });
@@ -177,6 +182,7 @@ openEditdata(element){
       width: '800px'
   }).afterClosed().subscribe((data)=>{
     if(data==='submited'){
+      this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
       this.getAllCustomFieldCategory();
     }
   })
@@ -226,6 +232,7 @@ editFieldCategory(element){
     width: '800px'
   }).afterClosed().subscribe((data)=>{
     if (data === 'submited'){
+      this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
       this.getAllCustomFieldCategory();
     }
   })

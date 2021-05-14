@@ -5,7 +5,7 @@
         </vex-secondary-toolbar>
     </vex-page-layout-header>
     <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
-    <div class="-mt-6 absolute w-full" vexContainer>
+    <div class="-mt-6 w-full" vexContainer>
         <mat-drawer-container class="bg-transparent flex-auto flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
             <mat-drawer [(opened)]="menuOpen" mode="over" class="w-10/12">
                 <mat-card @stagger class="w-full">

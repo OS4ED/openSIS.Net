@@ -26,6 +26,10 @@
   }
 }
 
+.cal-month-view .cal-day-cell {
+  min-height: 80px;
+}
+
 vex-calendar {
   .calendar-bg {
     background: url("/assets/img/demo/landscape.jpg") no-repeat center;

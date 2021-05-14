@@ -1,0 +1,20 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ headerTitle | translate }} <b>{{data.studentName}}</b>
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content class="mb-1">
+    <mat-form-field appearance="outline" color="primary" class="w-full mt-4">
+        <mat-label>Enter Comment</mat-label>
+        <textarea matInput [(ngModel)]="comments"></textarea>
+    </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="pt-0 pb-2">
+    <button mat-button mat-dialog-close>Cancel</button>
+    <button color="primary" mat-flat-button type="submit" class="text-white ml-2" (click)="addOrUpdateComments()">{{actionButtonTitle|translate}}</button>
+</mat-dialog-actions>

@@ -1,7 +1,7 @@
 <!--School Module-->
 <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory && module =='School'">
     <div class="py-6" @stagger fxLayout="column"
-        *ngIf="schoolCustomFields.length > 0">
+        *ngIf="schoolCustomFields?.length > 0">
         <ul *ngIf="schoolCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
             <fieldset ngModelGroup="vex-custom-field-without-form">
                 <li *ngFor="let customField of schoolCustomFields; let index = index"
@@ -104,7 +104,7 @@
 
 <div *ngIf="studentAddModel?.fieldsCategoryList && module =='Student'">
     <div class="py-6" @stagger fxLayout="column"
-        *ngIf="studentCustomFields.length > 0">
+        *ngIf="studentCustomFields?.length > 0">
         <ul *ngIf="studentCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
             <fieldset ngModelGroup="vex-custom-field-without-form">
                 <li *ngFor="let customField of studentCustomFields; let index = index"
@@ -206,7 +206,7 @@
 <!--Start Staff Module-->
 <div *ngIf="staffAddModel?.fieldsCategoryList && module =='Staff'">
     <div class="py-6" @stagger fxLayout="column"
-        *ngIf="staffCustomFields.length > 0">
+        *ngIf="staffCustomFields?.length > 0">
         <ul *ngIf="staffCreateMode==schoolCreate.EDIT" class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
             <fieldset ngModelGroup="vex-custom-field-without-form">
                 <li *ngFor="let customField of staffCustomFields; let index = index"

@@ -1,0 +1,88 @@
+
+        <div class="card overflow-auto -mt-16">
+            <div class="bg-white px-6 md:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="md:flex w-full justify-between">
+                    <div class="py-3" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="flex items-center">
+                            <input [formControl]="searchCtrl"
+                                class="py-3 border-0 outline-none w-full bg-transparent table-search"
+                                placeholder="Search..." type="search">
+                            <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
+                            <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                                <mat-icon>search</mat-icon>
+                            </button>
+                            <a (click)="showAdvanceSearch()" class="text-primary cursor-pointer ml-3 w-full">
+                                <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
+                                | translate}}
+                            </a>
+                        </div>
+                    </div>
+                    <div class="pt-3">
+                        <a class="cursor-pointer p-1 mt-1 inline-block align-middle" (click)="exportStaffListToExcel()" matTooltip="Export to Excel"><i
+                                class="icon icon-file-excel text-lg"></i></a>
+                        <button [matMenuTriggerFor]="columnFilterMenu" class="ml-2 inline-block align-middle"
+                            fxFlex="none" mat-icon-button matTooltip="Filter Columns" type="button">
+                            <mat-icon>filter_list</mat-icon>
+                        </button>
+                        <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
+                            <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
+                                class="checkbox-item mat-menu-item">
+                                <mat-checkbox (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+                                    {{column.label}}
+                                </mat-checkbox>
+                            </button>
+                        </mat-menu>
+                    </div>
+                </div>
+            </div>
+
+            <table mat-table [dataSource]="staffList" class="mat-elevation-z8 shadow-none" matSort>
+                <ng-container matColumnDef="lastFamilyName">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "name" | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                        <a (click)="inputTakeAttendancePermissions.canEdit ? viewCourseSectionDetails(element) : ''" class="text-blue cursor-pointer">
+                            {{element.firstGivenName}}{{element.middleName ? ' '+element.middleName+ ' ' : ' '}}{{element.lastFamilyName}}</a>
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="staffInternalId" >
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "staffId" | translate }}</th>
+                    <td mat-cell *matCellDef="let element">
+                        {{ element.staffInternalId }}
+                    </td>
+                </ng-container>
+                <ng-container matColumnDef="profile">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'profile' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">{{ element.profile }}</td>
+                </ng-container>
+                <ng-container matColumnDef="jobTitle">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'jobTitle' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">{{ element.jobTitle }}</td>
+                </ng-container>
+                <ng-container matColumnDef="schoolEmail">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'schoolEmail' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">{{ element.schoolEmail | EmtyValueCheckPipe }}</td>
+                </ng-container>
+                <ng-container matColumnDef="mobilePhone">
+                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ 'mobilePhone' | translate }}</th>
+                    <td mat-cell *matCellDef="let element">{{ element.mobilePhone | EmtyValueCheckPipe }}</td>
+                </ng-container>
+                <ng-container matColumnDef="noData">
+                    <td mat-footer-cell *matFooterCellDef colspan="7">
+                        {{loading?('fetchingData' | translate):('noData' | translate) }}
+                    </td>
+                </ng-container>
+                <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+                <tr mat-row *matRowDef="let row; columns: visibleColumns"></tr>
+                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hidden]="totalCount>0"></tr>
+            </table>
+            <mat-paginator [length]="totalCount" [class.hidden]="totalCount<11" [pageSize]="pageSize"
+            [pageSizeOptions]="[10, 20, 30, 40]" (page)='getPageEvent($event)' showFirstLastButtons></mat-paginator>
+        </div>
+
+
+<div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
+    <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20" @fadeInRight>
+        <vex-search-staff (searchList)="getSearchResult($event)" [filterJsonParams]="filterJsonParams" (showHideAdvanceSearch)="hideAdvanceSearch($event)"></vex-search-staff>
+    </div>
+    <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
+</div>

@@ -45,7 +45,7 @@ namespace opensis.data.Repository
                 ReturnModel._tenantName = objModel._tenantName;
                 //var encryptedPassword = EncodePassword(objModel.Password);
                 var user = this.context?.UserMaster.Include(x => x.Membership).Where(x => x.EmailAddress == objModel.Email && x.TenantId == objModel.TenantId
-                  && x.PasswordHash == passwordHash).FirstOrDefault();
+                  && x.PasswordHash == passwordHash && (x.MembershipId==1 || x.MembershipId == 2 || x.MembershipId == 3)).FirstOrDefault();
                 var correctEmailList = this.context?.UserMaster.Where(x => x.EmailAddress.Contains(objModel.Email)).ToList();
                 var correctPasswordList = this.context?.UserMaster.Where(x => x.PasswordHash == passwordHash).ToList();
                 if (user == null && correctEmailList.Count > 0 && correctPasswordList.Count == 0)
@@ -61,6 +61,12 @@ namespace opensis.data.Repository
                     ReturnModel._message = EMAILMESSAGE;
                 }
                 else if (user == null && correctEmailList.Count == 0 && correctPasswordList.Count == 0)
+                {
+                    ReturnModel.UserId = null;
+                    ReturnModel._failure = true;
+                    ReturnModel._message = PASSWORDMESSAGE;
+                }
+                else if (user == null && correctEmailList.Count > 0 && correctPasswordList.Count > 0)
                 {
                     ReturnModel.UserId = null;
                     ReturnModel._failure = true;

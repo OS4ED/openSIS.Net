@@ -154,6 +154,7 @@ export class AssociateStudent {
 export class RemoveAssociateParent extends CommonField {
     public parentInfo: ParentInfoModel;
     public studentId: number;
+    studentSchoolId: number;
     constructor() {
         super();
         this.parentInfo = new ParentInfoModel();

@@ -41,8 +41,8 @@ import { DefaultValuesService } from '../../../../common/default-values.service'
 export class StaffSchoolinfoComponent implements OnInit {
   getSchoolList: OnlySchoolListModel = new OnlySchoolListModel();
   staffCreate = SchoolCreate;
-  @Input() staffDetailsForViewAndEdit;
-  @Input() staffCreateMode: SchoolCreate;
+  staffDetailsForViewAndEdit;
+  staffCreateMode: SchoolCreate;
   @Output() checkUpdatedProfileName= new EventEmitter<string>()
   @ViewChild('f') currentForm: NgForm;
   divCount = [1];
@@ -80,6 +80,13 @@ export class StaffSchoolinfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    this.staffService.staffCreatedMode.subscribe((res)=>{
+      this.staffCreateMode = res;
+    })
+    this.staffService.staffDetailsForViewedAndEdited.subscribe((res)=>{
+      this.staffDetailsForViewAndEdit = res;
+    })
+
     this.permissionListViewModel = this.rollBasedAccessService.getPermission();
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
@@ -193,7 +200,8 @@ export class StaffSchoolinfoComponent implements OnInit {
     let currentProfileIndex=schoolInfo.findIndex((item)=>{
       return item.schoolId==this.defaultValuesService.schoolID
     })
-    this.checkUpdatedProfileName.emit(schoolInfo[currentProfileIndex].profile)
+    // this.checkUpdatedProfileName.emit(schoolInfo[currentProfileIndex].profile)
+    this.staffService.setCheckUpdatedProfileName(schoolInfo[currentProfileIndex].profile);
   }
 
   manipulateArray() {

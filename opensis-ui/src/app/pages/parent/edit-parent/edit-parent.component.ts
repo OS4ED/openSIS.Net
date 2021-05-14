@@ -63,7 +63,6 @@ export class EditParentComponent implements OnInit {
 
   ngOnInit(): void {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
-    console.log(this.permissionListViewModel.permissionList[3].permissionGroup.permissionCategory);
     this.permissionListViewModel.permissionList[3].permissionGroup.permissionCategory.forEach(category => {
       if (category.rolePermission[0].canView){
         if (category.title === 'General Info'){

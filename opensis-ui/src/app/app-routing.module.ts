@@ -67,7 +67,7 @@ const routes: Routes = [
         children: [
           {
             path: 'students',
-            loadChildren: () => import('./pages/student/studentinfo/student.module').then(m => m.StudentModule),
+            loadChildren: () => import('./pages/student/student.module').then(m => m.StudentModule),
             canActivate: [AuthGuard]
             
           }
@@ -99,7 +99,7 @@ const routes: Routes = [
         children: [
           {
             path: 'staff',
-            loadChildren: () => import('./pages/staff/staffinfo/staffinfo.module').then(m => m.StaffinfoModule),
+            loadChildren: () => import('./pages/staff/saff.module').then(m => m.StaffModule),
             canActivate: [AuthGuard]          
           }
         ]
@@ -199,11 +199,11 @@ const routes: Routes = [
       {
         path: '',
         children: [
-          {
-            path: 'staff/teacher-functions',
-            loadChildren: () => import('./pages/attendance/teacher-function/teacher-function.module').then(m => m.TeacherFunctionModule),
-            // canActivate: [AuthGuard]            
-          }
+          // {
+          //   path: 'staff/teacher-functions',
+          //   loadChildren: () => import('./pages/attendance/teacher-function/teacher-function.module').then(m => m.TeacherFunctionModule),
+          //   // canActivate: [AuthGuard]            
+          // }
         ]
       },
       {
@@ -255,7 +255,17 @@ const routes: Routes = [
             // canActivate: [AuthGuard]            
           }
         ]
-      },             
+      }, 
+      {
+        path: '',
+        children: [
+          {
+            path: 'class',
+            loadChildren: () => import('./pages/class/class.module').then(m => m.ClassModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },            
     ]
   },
 ];

@@ -113,8 +113,8 @@ export class EditparentGeneralinfoComponent implements OnInit, OnDestroy {
     this.imageCropperService.enableUpload({ module: this.moduleIdentifier.PARENT, upload: true, mode: this.parentCreate.VIEW });
     this.callLOVs();
     this.parentInfo = {};
-
-    if (this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')) {
+    this.getParentDetailsUsingId();
+    /* if (this.parentDetailsForViewAndEdit.parentInfo.hasOwnProperty('firstname')) {
       this.addParentInfoModel = this.parentDetailsForViewAndEdit;
       this.parentInfo = this.addParentInfoModel.parentInfo;
       this.studentInfo = this.addParentInfoModel.getStudentForView;
@@ -126,8 +126,22 @@ export class EditparentGeneralinfoComponent implements OnInit, OnDestroy {
         this.studentInfo = this.addParentInfoModel.getStudentForView;
         this.setEmptyValue(this.parentInfo, this.studentInfo);
       })
-    }
+    } */
 
+  }
+  
+  getParentDetailsUsingId(){
+    this.addParentInfoModel.parentInfo.parentId = this.parentInfoService.getParentId();;
+    this.parentInfoService.viewParentInfo(this.addParentInfoModel).subscribe(
+      (res)=>{
+        if (res){
+          this.addParentInfoModel = res;
+          this.parentInfo = res.parentInfo;
+          this.studentInfo = res.getStudentForView;
+          this.setEmptyValue(this.parentInfo, this.studentInfo);
+        }
+      }
+    );
   }
   setEmptyValue(parentInfo, studentInfo) {
 
@@ -203,7 +217,7 @@ export class EditparentGeneralinfoComponent implements OnInit, OnDestroy {
           this.snackbar.open(data._message, '', {
             duration: 10000
           });
-          this.router.navigateByUrl('/school/parents');
+          this.getParentDetailsUsingId();
         }
       }
     })
@@ -229,7 +243,7 @@ export class EditparentGeneralinfoComponent implements OnInit, OnDestroy {
       width: '600px'
     }).afterClosed().subscribe(data => {
       if (data) {
-        this.router.navigateByUrl('/school/parents');
+        this.getParentDetailsUsingId();
       }
 
     });
@@ -249,12 +263,13 @@ export class EditparentGeneralinfoComponent implements OnInit, OnDestroy {
       // if user pressed yes dialogResult will be true, 
       // if user pressed no - it will be false
       if (dialogResult) {
-        this.deleteParentInfo(deleteDetails.studentId);
+        this.deleteParentInfo(deleteDetails);
       }
     });
   }
-  deleteParentInfo(studentId) {
-    this.removeAssociateParent.studentId = studentId;
+  deleteParentInfo(deleteDetails) {
+    this.removeAssociateParent.studentId = deleteDetails.studentId;
+    this.removeAssociateParent.studentSchoolId = deleteDetails.schoolId;
     this.removeAssociateParent.parentInfo.parentId = this.parentInfo.parentId;
     this.parentInfoService.removeAssociatedParent(this.removeAssociateParent).subscribe(
       data => {
@@ -273,7 +288,7 @@ export class EditparentGeneralinfoComponent implements OnInit, OnDestroy {
             this.snackbar.open(data._message, '', {
               duration: 10000
             }).afterOpened().subscribe(data => {
-              this.router.navigateByUrl('/school/parents');
+              this.getParentDetailsUsingId();
             });
 
           }

@@ -29,10 +29,10 @@ export class EditSectionComponent implements OnInit {
   ssectionModalActionTitle="submit";
   isEdit=false;
   constructor(private dialogRef: MatDialogRef<EditSectionComponent>, private fb: FormBuilder,
-    private sectionService:SectionService,
-    private snackbar: MatSnackBar,
-    private router:Router,
-    @Inject(MAT_DIALOG_DATA) public data) { }
+              private sectionService:SectionService,
+              private snackbar: MatSnackBar,
+              private router:Router,
+              @Inject(MAT_DIALOG_DATA) public data) { }
 
   ngOnInit(): void {
     this.form = this.fb.group(
@@ -42,11 +42,11 @@ export class EditSectionComponent implements OnInit {
        
       });
 
-      if (this.data && (Object.keys(this.data).length !== 0 || Object.keys(this.data).length > 0) ){
-        this.sectionModalTitle="editSection";
-        this.ssectionModalActionTitle="update"       
-        this.sectionAddModel.tableSections.name=this.data.editDetails.name;
-        this.sectionAddModel.tableSections.sortOrder=this.data.editDetails.sortOrder;
+    if (this.data && (Object.keys(this.data).length !== 0 || Object.keys(this.data).length > 0) ){
+        this.sectionModalTitle = 'editSection';
+        this.ssectionModalActionTitle = 'update';
+        this.sectionAddModel.tableSections.name = this.data.editDetails.name;
+        this.sectionAddModel.tableSections.sortOrder = this.data.editDetails.sortOrder;
       }
   }
   get f() {
@@ -56,12 +56,10 @@ export class EditSectionComponent implements OnInit {
   closeDialog(){
     this.dialogRef.close(false);
   }
-  
   submit() {
-    
     if (this.form.valid) {
         this.sectionAddModel.tableSections.schoolId=+sessionStorage.getItem("selectedSchoolId");
-      if (this.data && (Object.keys(this.data).length !== 0 || Object.keys(this.data).length > 0) ){
+        if (this.data && (Object.keys(this.data).length !== 0 || Object.keys(this.data).length > 0) ){
 
         this.sectionAddModel.tableSections.sectionId = this.data.editDetails.sectionId;
         this.sectionService.UpdateSection(this.sectionAddModel).subscribe(data => {
@@ -72,20 +70,18 @@ export class EditSectionComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Section Updation failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {
-              
-              this.snackbar.open('Section Updation Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
               });
-              
-              this.dialogRef.close(true);            
+              this.dialogRef.close(true);
             }
           }
   
-        })
+        });
       }else{
         this.sectionService.SaveSection(this.sectionAddModel).subscribe(data => {
           if (typeof (data) == 'undefined') {
@@ -95,13 +91,13 @@ export class EditSectionComponent implements OnInit {
           }
           else {
             if (data._failure) {
-              this.snackbar.open('Section Submission failed. ' + data._message, '', {
+              this.snackbar.open( data._message, '', {
                 duration: 10000
               });
             } else {
-              this.snackbar.open('Section Submission Successful.', '', {
+              this.snackbar.open(data._message, '', {
                 duration: 10000
-              });              
+              });
               this.dialogRef.close(true);
             }
           }

@@ -35,6 +35,25 @@
                                                 {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
+                                    <div *ngSwitchCase="'Number'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input matInput type="field.type" maxlength="100"  [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                                [required]="customField.required ? true : null"
+                                                name="{{customField.title.replace(' ','_')}}">
+                                        </mat-form-field>
+                                    </div>
+                
+                                    <div *ngSwitchCase="'Date'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input name="{{customField.title.replace(' ','_')}}"
+                                                [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                                [matDatepicker]="testDate" matInput [required]="customField.required ? true : null ">
+                                            <mat-datepicker-toggle [for]="testDate" matSuffix></mat-datepicker-toggle>
+                                            <mat-datepicker #testDate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
                                     <div *ngSwitchCase="'Textarea'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
@@ -102,12 +121,15 @@
                                 <li
                                     *ngFor="let customField of schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields; let index = index">
                                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                                    <p *ngIf="customField.type !== 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                    <p *ngIf="customField.type !== 'Checkbox' && customField.type !== 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                                         {{schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue
                                         | EmtyValueCheckPipe}}
                                     </p>
                                     <p *ngIf="customField.type === 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                                         {{schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue}}
+                                    </p>
+                                    <p *ngIf="customField.type === 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue | date:'mediumDate' | EmtyValueCheckPipe}}
                                     </p>
                                 </li>
                             </ul>
@@ -174,6 +196,25 @@
                                                 {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
+                                    <div *ngSwitchCase="'Number'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input matInput type="field.type" maxlength="100"  [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
+                                                [required]="customField.required ? true : null"
+                                                name="{{customField.title.replace(' ','_')}}">
+                                        </mat-form-field>
+                                    </div>
+                
+                                    <div *ngSwitchCase="'Date'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input name="{{customField.title.replace(' ','_')}}"
+                                                [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
+                                                [matDatepicker]="testDate" matInput [required]="customField.required ? true : null ">
+                                            <mat-datepicker-toggle [for]="testDate" matSuffix></mat-datepicker-toggle>
+                                            <mat-datepicker #testDate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
                                     <div *ngSwitchCase="'Text'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
@@ -231,12 +272,15 @@
                                 <li
                                     *ngFor="let customField of studentAddViewModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
                                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                                    <p *ngIf="customField?.type !== 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                    <p *ngIf="customField?.type !== 'Checkbox' && customField.type !== 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                                         {{customField?.customFieldsValue[0]?.customFieldValue
                                         | EmtyValueCheckPipe}}
                                     </p>
                                     <p *ngIf="customField.type === 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                                         {{customField?.customFieldsValue[0].customFieldValue}}
+                                    </p>
+                                    <p *ngIf="customField.type === 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0].customFieldValue | date:'mediumDate' | EmtyValueCheckPipe}}
                                     </p>
                                 </li>
                             </ul>
@@ -304,6 +348,25 @@
                                                 {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
+                                    <div *ngSwitchCase="'Number'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input matInput type="field.type" maxlength="100"  [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                                [required]="customField.required ? true : null"
+                                                name="{{customField.title.replace(' ','_')}}">
+                                        </mat-form-field>
+                                    </div>
+                
+                                    <div *ngSwitchCase="'Date'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input name="{{customField.title.replace(' ','_')}}"
+                                                [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                                [matDatepicker]="testDate" matInput [required]="customField.required ? true : null ">
+                                            <mat-datepicker-toggle [for]="testDate" matSuffix></mat-datepicker-toggle>
+                                            <mat-datepicker #testDate></mat-datepicker>
+                                        </mat-form-field>
+                                    </div>
                                     <div *ngSwitchCase="'Text'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
@@ -361,12 +424,15 @@
                                 <li
                                     *ngFor="let customField of staffAddViewModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
                                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                                    <p *ngIf="customField.type !== 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                    <p *ngIf="customField.type !== 'Checkbox' && customField.type !== 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                                         {{staffAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue
                                         | EmtyValueCheckPipe}}
                                     </p>
                                     <p *ngIf="customField.type === 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
                                         {{staffAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue}}
+                                    </p>
+                                    <p *ngIf="customField.type === 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{staffAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue | date:'mediumDate' | EmtyValueCheckPipe}}
                                     </p>
                                 </li>
                             </ul>

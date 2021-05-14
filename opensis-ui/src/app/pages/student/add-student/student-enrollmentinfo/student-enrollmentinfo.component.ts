@@ -60,8 +60,8 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   icTrasnferOut = icTrasnferOut;
   icDrop = icDrop;
   studentCreate = SchoolCreate;
-  @Input() studentCreateMode: SchoolCreate;
-  @Input() studentDetailsForViewAndEdit;
+  studentCreateMode: SchoolCreate;
+  studentDetailsForViewAndEdit;
   rollingOptions = Object.keys(RollingOptionsEnum);
   exitCodes = [];
   calendarListModel: CalendarListModel = new CalendarListModel();
@@ -105,6 +105,12 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      this.studentCreateMode = res;
+    });
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.studentDetailsForViewAndEdit = res;
+    });
 
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);

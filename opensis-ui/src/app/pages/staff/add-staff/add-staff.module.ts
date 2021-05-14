@@ -19,7 +19,6 @@ import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { MatProgressSpinnerModule } from '@angular/material/progress-spinner';
 import { TranslateModule } from '@ngx-translate/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -43,6 +42,7 @@ import { CustomFieldModule } from '../../../../../src/app/common/custom-field/cu
 import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/custom-field-without-form/custom-field-without-form.module';
 import { ViewStaffGeneralinfoComponent } from './view-staff-generalinfo/view-staff-generalinfo.component';
 import { ViewStaffAddressinfoComponent } from './view-staff-addressinfo/view-staff-addressinfo.component';
+import { AddStaffRoutingModule } from './add-staff-routing-module';
 
 
 
@@ -60,6 +60,7 @@ import { ViewStaffAddressinfoComponent } from './view-staff-addressinfo/view-sta
   ],
   imports: [
     CommonModule,
+    AddStaffRoutingModule,
     MatIconModule,
     MatButtonModule,
     MatFormFieldModule,
@@ -78,7 +79,7 @@ import { ViewStaffAddressinfoComponent } from './view-staff-addressinfo/view-sta
     MatSelectModule,
     MatProgressSpinnerModule,
     TranslateModule,
-    BrowserAnimationsModule,
+    // BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModuleModule,
@@ -98,4 +99,4 @@ import { ViewStaffAddressinfoComponent } from './view-staff-addressinfo/view-sta
     CustomFieldWithoutFormModule
   ]
 })
-export class StaffinfoModule { }
+export class AddStaffModule { }

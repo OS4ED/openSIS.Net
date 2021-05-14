@@ -36,14 +36,14 @@ namespace opensis.data.Repository
                         var parentInfo = this.context?.ParentInfo.FirstOrDefault(x => x.ParentId == parentInfoAddViewModel.parentInfo.ParentId);
                         if (parentInfo != null)
                         {
-                            var AssociationshipData = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfo.TenantId && x.SchoolId == parentInfo.SchoolId && x.ParentId == parentInfo.ParentId && x.StudentId== parentInfoAddViewModel.parentAssociationship.StudentId);
+                            var AssociationshipData = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfo.TenantId && x.SchoolId == parentInfoAddViewModel.parentAssociationship.SchoolId && x.ParentId == parentInfo.ParentId && x.StudentId== parentInfoAddViewModel.parentAssociationship.StudentId);
                             if (AssociationshipData != null)
                             {
                                 AssociationshipData.Associationship = true;
                             }
                             else
                             {
-                                var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentInfo.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship,ContactType= parentInfoAddViewModel.parentAssociationship.ContactType };
+                                var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentAssociationship.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship,ContactType= parentInfoAddViewModel.parentAssociationship.ContactType };
                                 this.context?.ParentAssociationship.Add(parentAssociationship);
                             }
                         }
@@ -102,7 +102,7 @@ namespace opensis.data.Repository
                         }
 
                         this.context?.ParentInfo.Add(parentInfoAddViewModel.parentInfo);
-                        var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentInfo.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship, ContactType = parentInfoAddViewModel.parentAssociationship.ContactType};
+                        var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentAssociationship.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship, ContactType = parentInfoAddViewModel.parentAssociationship.ContactType};
                         this.context?.ParentAssociationship.Add(parentAssociationship);
 
                     }
@@ -295,7 +295,7 @@ namespace opensis.data.Repository
                         }
                     }
                     
-                    parentInfoAddViewModel.parentInfo.UserProfile = parentInfoUpdate.UserProfile;
+                    //parentInfoAddViewModel.parentInfo.UserProfile = parentInfoUpdate.UserProfile;
                     parentInfoAddViewModel.parentInfo.ParentGuid =parentInfoUpdate.ParentGuid;
                     parentInfoAddViewModel.parentInfo.LastUpdated = DateTime.UtcNow;
                     this.context.Entry(parentInfoUpdate).CurrentValues.SetValues(parentInfoAddViewModel.parentInfo);
@@ -711,14 +711,20 @@ namespace opensis.data.Repository
         {
             try
             {
-                var ParentInfo = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfoDeleteViewModel.parentInfo.TenantId && x.SchoolId == parentInfoDeleteViewModel.parentInfo.SchoolId && x.ParentId == parentInfoDeleteViewModel.parentInfo.ParentId && x.StudentId==parentInfoDeleteViewModel.StudentId);
+                var ParentInfo = this.context?.ParentAssociationship.FirstOrDefault(x => x.TenantId == parentInfoDeleteViewModel.parentInfo.TenantId && x.SchoolId == parentInfoDeleteViewModel.StudentSchoolId && x.ParentId == parentInfoDeleteViewModel.parentInfo.ParentId && x.StudentId==parentInfoDeleteViewModel.StudentId);
                 if (ParentInfo != null)
                 {
                     ParentInfo.Associationship = false;
                     this.context?.SaveChanges();
+                    parentInfoDeleteViewModel._failure = false;
+                    parentInfoDeleteViewModel._message = "Parent Associationship Removed Successfully";
                 }
-                parentInfoDeleteViewModel._failure = false;
-                parentInfoDeleteViewModel._message = "Parent Associationship Removed Successfully";
+                else
+                {
+                    parentInfoDeleteViewModel._failure = true;
+                    parentInfoDeleteViewModel._message = NORECORDFOUND;
+                }
+                
             }
             catch (Exception es)
             {

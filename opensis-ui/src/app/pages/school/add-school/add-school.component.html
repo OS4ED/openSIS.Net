@@ -41,20 +41,21 @@
                     <mat-drawer-content class="flex-auto flex items-start">
 
                         <div class="w-full" fxFlex="auto">
-                            <vex-general-info *ngIf="currentCategory==1" [schoolCreateMode]="schoolCreateMode"
+                            <router-outlet></router-outlet>
+                            <!-- <vex-general-info *ngIf="currentCategory==1" [schoolCreateMode]="schoolCreateMode"
                                 [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
-                            </vex-general-info>
+                            </vex-general-info> -->
 
-                            <vex-wash-info *ngIf="currentCategory==2" [schoolCreateMode]="schoolCreateMode"
+                            <!-- <vex-wash-info *ngIf="currentCategory==2" [schoolCreateMode]="schoolCreateMode"
                                 [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory">
-                            </vex-wash-info>
-                            <div *ngFor="let field of fieldsCategory;let index=index">
+                            </vex-wash-info> -->
+                            <!-- <div *ngFor="let field of fieldsCategory;let index=index">
                                 <vex-custom-field *ngIf="field?.categoryId == currentCategory && currentCategory>2"
                                     [categoryTitle]="field?.title" [schoolCreateMode]="schoolCreateMode"
                                     [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId]="indexOfCategory"
                                     [module]="module">
                                 </vex-custom-field>
-                            </div>
+                            </div> -->
 
                         </div>
                     </mat-drawer-content>

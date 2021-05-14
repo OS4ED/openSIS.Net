@@ -32,6 +32,7 @@ import { LayoutService } from 'src/@vex/services/layout.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { CryptoService } from '../../../services/Crypto.service';
 import { LoaderService } from '../../../services/loader.service';
+import { DefaultValuesService } from '../../../common/default-values.service';
 
 @Component({
   selector: 'vex-course-manager',
@@ -123,17 +124,18 @@ export class CourseManagerComponent implements OnInit {
   addPermission = false;
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
-  filteredCourseListModel:CourseListFilterModel = new CourseListFilterModel();
+  filteredCourseListModel: CourseListFilterModel = new CourseListFilterModel();
   constructor(
-    public translateService:TranslateService,
+    public translateService: TranslateService,
     private dialog: MatDialog,
-    private gradeLevelService:GradeLevelService,
-    private courseManager:CourseManagerService,
+    private gradeLevelService: GradeLevelService,
+    private courseManager: CourseManagerService,
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
+    private defaultValuesService: DefaultValuesService,
     private layoutService: LayoutService,
     private cryptoService: CryptoService,
-    private loaderService:LoaderService) {
+    private loaderService: LoaderService) {
       translateService.use('en');
       this.loaderService.isLoading.subscribe((val) => {
         this.loading = val;
@@ -206,25 +208,25 @@ export class CourseManagerComponent implements OnInit {
             this.selectedCourseObj = this.courseList[this.selectedCourses].course;           
             this.standard = this.courseList[this.selectedCourses].course.courseStandard;
             this.courseIndex = this.selectedCourses;
-          }       
-        }      
+          }
+        }
       }
     });
   }
 
   getAllProgramList(){   
-    this.courseManager.GetAllProgramsList(this.getAllProgramModel).subscribe(data => {          
-      this.programList=data.programList;      
+    this.courseManager.GetAllProgramsList(this.getAllProgramModel).subscribe(data => {
+      this.programList=data.programList;
     });
   }
-  getAllSubjectList(){   
-    this.courseManager.GetAllSubjectList(this.getAllSubjectModel).subscribe(data => {          
-      this.subjectList=data.subjectList;      
+  getAllSubjectList(){
+    this.courseManager.GetAllSubjectList(this.getAllSubjectModel).subscribe(data => {
+      this.subjectList=data.subjectList;
     });
   }
   getAllGradeLevelList(){   
-    this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevelsModel).subscribe(data => {          
-      this.gradeLevelList=data.tableGradelevelList;      
+    this.gradeLevelService.getAllGradeLevels(this.getAllGradeLevelsModel).subscribe(data => {
+      this.gradeLevelList=data.tableGradelevelList;
     });
   }
   toggleColumnVisibility(column, event) {
@@ -331,14 +333,14 @@ export class CourseManagerComponent implements OnInit {
       let courseIndex=this.courseList.findIndex((item)=>{
         return item.course.courseId==event.courseId;
       });
-      if(courseIndex!=-1){
-        this.courseList[courseIndex].courseSectionCount=event.courseSectionCount;
+      if(courseIndex !== -1){
+        this.courseList[courseIndex].courseSectionCount = event.courseSectionCount;
       }
   }
 
   courseSections(selectedCourseDetails) {
-   this.selectedCourseDetails=selectedCourseDetails.course;
-    this.showCourses = false;
+   this.selectedCourseDetails = selectedCourseDetails.course;
+   this.showCourses = false;
   }
 
   closeCourseDetails() {
@@ -372,26 +374,25 @@ export class CourseManagerComponent implements OnInit {
   deleteCourse(element,index){   
     this.addCourseModel.course.courseId = element.courseId;   
     this.courseManager.DeleteCourse(this.addCourseModel).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('Course Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (data){
         if (data._failure) {
-          this.snackbar.open('Course Deletion failed. ' + data._message, 'LOL THANKS', {
+          this.snackbar.open( data._message, '', {
             duration: 10000
           });
         } else {
 
-          this.snackbar.open('Course Deletion Successful.', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           }).afterOpened().subscribe(data => {
-            this.deletedCourse = index;            
+            this.deletedCourse = index;
             this.getAllCourse();
           });
-          
         }
+      }
+      else{
+        this.snackbar.open('Course Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
       }
     });
   }
@@ -403,7 +404,7 @@ export class CourseManagerComponent implements OnInit {
       if(res){
         this.getAllCourse();
       }
-    });   
+    });
   }
 
   openModalManagePrograms() {
@@ -414,7 +415,7 @@ export class CourseManagerComponent implements OnInit {
       if(res){
         this.getAllCourse();
       }
-    });   
+    });
   }
   confirmDelete(element,index){
     
@@ -422,8 +423,8 @@ export class CourseManagerComponent implements OnInit {
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+element.courseTitle+"."}
+          title: this.defaultValuesService.translateKey('areyousure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDelete') + element.courseTitle+"."}
     });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {

@@ -367,7 +367,7 @@ export class EditContactComponent implements OnInit, OnDestroy {
         }
       });
     }else{
-
+      this.addParentInfoModel.parentAssociationship.schoolId = this.studentDetailsForViewAndEditDataDetails?.studentMaster?.schoolId;
       this.parentInfoService.addParentForStudent(this.addParentInfoModel).subscribe(data => {
         if (data){
           if (data._failure) {

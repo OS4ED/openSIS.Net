@@ -189,10 +189,14 @@ namespace opensis.data.Repository
             {
                 var getLanguageData = this.context?.Language.FirstOrDefault(x => x.LangId == languageUpdate.Language.LangId);
 
-                if (getLanguageData.Lcid.ToLower() == "en-us".ToLower() || getLanguageData.Lcid.ToLower() == "fr-fr".ToLower() || getLanguageData.Lcid.ToLower() == "es-es".ToLower())
+                if (getLanguageData.Lcid!=null)
                 {
-                    languageUpdate._message = "This Language is not editable";
-                    languageUpdate._failure = true;
+                    if (getLanguageData.Lcid.ToLower() == "en-us".ToLower() || getLanguageData.Lcid.ToLower() == "fr-fr".ToLower() || getLanguageData.Lcid.ToLower() == "es-es".ToLower())
+                    {
+                        languageUpdate._message = "This Language is not editable";
+                        languageUpdate._failure = true;
+                        return languageUpdate;
+                    }
                 }
                 else
                 {

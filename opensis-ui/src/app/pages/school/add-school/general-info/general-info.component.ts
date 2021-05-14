@@ -54,9 +54,9 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
 
   schoolCreate = SchoolCreate;
   @ViewChild('f') currentForm: NgForm;
-  @Input() schoolCreateMode: SchoolCreate;
-  @Input() schoolDetailsForViewAndEdit;
-  @Input() categoryId;
+  schoolCreateMode: SchoolCreate;
+  schoolDetailsForViewAndEdit;
+  categoryId;
   editPermission= false;
   permissionList = [];
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
@@ -117,6 +117,18 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.schoolService.schoolCreatedMode.subscribe((res)=>{
+      this.schoolCreateMode = res;
+    });
+
+    this.schoolService.schoolDetailsForViewedAndEdited.subscribe((res)=>{
+      this.schoolDetailsForViewAndEdit = res;
+    });
+
+    this.schoolService.categoryIdSelected.subscribe((res)=>{
+      this.categoryId = res;
+    });
+
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     if (this.schoolCreateMode === this.schoolCreate.VIEW){
       this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 2);
@@ -147,7 +159,7 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
       this.schoolInternalId = this.schoolDetailsForViewAndEdit.schoolMaster.schoolInternalId;
       this.imageCropperService.enableUpload({module: this.moduleIdentifier.SCHOOL, upload: true, mode: this.schoolCreate.VIEW});
     }
-    else if (this.schoolCreateMode == this.schoolCreate.EDIT && (this.schoolDetailsForViewAndEdit != undefined || this.schoolDetailsForViewAndEdit != null)) {
+    else if (this.schoolCreateMode == this.schoolCreate.EDIT && (this.schoolDetailsForViewAndEdit != undefined && this.schoolDetailsForViewAndEdit != null)) {
       this.getAllCountry();
       this.initializeDropdownsForSchool();
       this.schoolService.changePageMode(this.schoolCreateMode);
@@ -460,33 +472,34 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this.schoolService.AddSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('General Info Submission failed. ' + sessionStorage.getItem('httpError'), '', {
-          duration: 10000
-        });
-      }
-      else {
-        if (data._failure) {
-          this.snackbar.open('General Info Submission failed. ' + data._message, 'LOL THANKS', {
-            duration: 10000
-          });
-        } else {
-
-          this.snackbar.open('General Info Submission Successful.', '', {
-            duration: 10000
-          });
-          this.schoolService.setSchoolId(data.schoolMaster.schoolId);
-          this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
-          const schoolIdToString = data.schoolMaster.schoolId.toString();
-          sessionStorage.setItem('selectedSchoolId', schoolIdToString);
-          this.schoolService.changeMessage(true);
-          this.schoolService.changeCategory(2);
-          this.schoolService.setSchoolDetails(data);
+    this.schoolService.AddSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(
+      data => {
+        if (data){
+          if (data._failure) {
+            this.snackbar.open( data._message, '', {
+              duration: 10000
+            });
+          } else {
+            this.snackbar.open(data._message, '', {
+              duration: 10000
+            });
+            this.schoolService.setSchoolId(data.schoolMaster.schoolId);
+            this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
+            const schoolIdToString = data.schoolMaster.schoolId.toString();
+            sessionStorage.setItem('selectedSchoolId', schoolIdToString);
+            this.schoolService.changeMessage(true);
+            this.schoolService.changeCategory(2);
+            this.schoolService.setSchoolDetails(data);
+          }
         }
-      }
+        else{
+          this.snackbar.open('General Info Submission failed. ' + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
 
-    });
+      }
+    );
   }
 
   updateSchool() {
@@ -497,31 +510,31 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
     }
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolOpened);
     this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed = this.commonFunction.formatDateSaveWithoutTime(this.schoolAddViewModel.schoolMaster.schoolDetail[0].dateSchoolClosed);
-    this.schoolService.UpdateSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (typeof (data) == 'undefined') {
-        this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem('httpError'), '', {
-          duration: 10000
-        });
-      }
-      else {
-        if (data._failure) {
-          this.snackbar.open('General Info Updation failed. ' + data._message, '', {
-            duration: 10000
-          });
-        } else {
-
-          this.snackbar.open('General Info Updation Successful.', '', {
-            duration: 10000
-          });
-          this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
-          data.schoolMaster.schoolDetail[0].schoolLogo = null;
-          this.schoolService.changeMessage(true);
-          this.schoolCreateMode = this.schoolCreate.VIEW;
-          this.cloneSchool = JSON.stringify(data);
-          this.schoolService.changePageMode(this.schoolCreateMode);
-          this.imageCropperService.enableUpload({module: this.moduleIdentifier.SCHOOL, upload: true, mode: this.schoolCreate.VIEW});
+    this.schoolService.UpdateSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(
+      data => {
+        if (data){
+          if (data._failure) {
+            this.snackbar.open( data._message, '', {
+              duration: 10000
+            });
+          } else {
+            this.snackbar.open(data._message, '', {
+              duration: 10000
+            });
+            this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
+            data.schoolMaster.schoolDetail[0].schoolLogo = null;
+            this.schoolService.changeMessage(true);
+            this.schoolCreateMode = this.schoolCreate.VIEW;
+            this.cloneSchool = JSON.stringify(data);
+            this.schoolService.changePageMode(this.schoolCreateMode);
+            this.imageCropperService.enableUpload({module: this.moduleIdentifier.SCHOOL, upload: true, mode: this.schoolCreate.VIEW});
+          }
         }
-      }
+        else{
+          this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem('httpError'), '', {
+            duration: 10000
+          });
+        }
     });
   }
 

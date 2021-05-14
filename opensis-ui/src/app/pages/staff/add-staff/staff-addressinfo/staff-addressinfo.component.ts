@@ -37,8 +37,8 @@ import { RollBasedAccessService } from '../../../../services/roll-based-access.s
 export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   staffCreate = SchoolCreate;
   moduleIdentifier=ModuleIdentifier;
-  @Input() staffDetailsForViewAndEdit;
-  @Input() categoryId;
+  staffDetailsForViewAndEdit;
+  categoryId;
   @ViewChild('f') currentForm: NgForm;
   @Input() staffCreateMode: SchoolCreate;
   nameOfMiscValuesForView: MiscModel = new MiscModel();
@@ -73,6 +73,18 @@ export class StaffAddressinfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+
+    this.staffService.staffCreatedMode.subscribe((res)=>{
+      this.staffCreateMode = res;
+    })
+    this.staffService.staffDetailsForViewedAndEdited.subscribe((res)=>{
+      this.staffDetailsForViewAndEdit = res;
+    })
+
+    this.staffService.categoryIdSelected.subscribe((res)=>{
+      this.categoryId = res;
+    })
+
     this.permissionListViewModel = this.rollBasedAccessService.getPermission();
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);

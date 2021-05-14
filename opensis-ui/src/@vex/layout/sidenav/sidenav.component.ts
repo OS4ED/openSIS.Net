@@ -35,6 +35,7 @@ export class SidenavComponent implements OnInit {
   icArrowDropDown = icArrowDropDown;
   userName: string;
   membershipName: string;
+  userPhoto;
    destroySubject$ = new Subject<void>();
   constructor(private navigationService: NavigationService,
     private layoutService: LayoutService,
@@ -50,6 +51,17 @@ export class SidenavComponent implements OnInit {
   ngOnInit() {
     this.userName = sessionStorage.getItem('user');
     this.membershipName = sessionStorage.getItem('membershipName');
+    this.getUserPhoto();
+  }
+
+  getUserPhoto(){
+    let photo = sessionStorage.getItem('userPhoto');
+
+    if(photo !== "null"){
+      this.userPhoto ='data:image/png;base64,'+ photo;
+    }else{
+      this.userPhoto = '../../../assets/img/profilePic.jpg';
+    }
   }
 
   onMouseEnter() {

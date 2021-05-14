@@ -9,6 +9,7 @@ namespace opensis.data.ViewModels.ParentInfos
     {
         public ParentInfo parentInfo { get; set; }
         public int StudentId { get; set; }
+        public int StudentSchoolId { get; set; }
     }
 
 }

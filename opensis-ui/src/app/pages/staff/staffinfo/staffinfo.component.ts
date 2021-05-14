@@ -232,12 +232,12 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
   viewStaffDetails(id) {
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.createMode.VIEW});
     this.staffService.setStaffId(id);
-    this.router.navigate(["school/staff/add-staff"]); 
+    this.router.navigate(['/school', 'staff', 'staff-generalinfo']); 
   }
 
   goToAdd() {
     this.staffService.setStaffId(null);
-    this.router.navigate(["school/staff/add-staff"]);
+    this.router.navigate(['/school', 'staff', 'staff-generalinfo']); 
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.createMode.ADD});
 
   }
@@ -396,7 +396,6 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
   getToggleValues(event){
     this.toggleValues = event;
     if (event.inactiveStaff === true){
-      console.log(this.columns[6].label);
       this.columns[6].visible = true;
     }
     else if (event.inactiveStaff === false){

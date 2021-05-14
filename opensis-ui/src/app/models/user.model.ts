@@ -12,6 +12,7 @@ export class UserViewModel extends CommonField {
     public membershipId:number;
     public userId?:  number;
     public tenantId: string;
+    public userPhoto: string;
     public schoolId:number;
     public permissionList: PermissionGroup[];
     constructor() {

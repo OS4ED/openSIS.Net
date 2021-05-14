@@ -17,7 +17,6 @@ import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatInputModule } from '@angular/material/input';
 import { MatSelectModule } from '@angular/material/select';
 import { TranslateModule } from '@ngx-translate/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import {  RouterModule } from '@angular/router';
 
@@ -56,7 +55,6 @@ import { StudentDataImportModule } from '../../student/student-data-import/stude
     MatDatepickerModule,
     MatNativeDateModule,
     TranslateModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
     RouterModule,

@@ -133,86 +133,84 @@ export class EditSchoolSpecificStandardComponent implements OnInit, OnDestroy{
 
   getAllGradeLevel() {
     this.gradeLevelService.getAllGradeLevels(this.gradeLevelList).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Grade Level List failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (res){
         if (res._failure) {
           if (res._message === "NO RECORD FOUND") {
             if (res.tableGradelevelList == null) {
-              this.gradeLevelList.tableGradelevelList=[]
+              this.gradeLevelList.tableGradelevelList = [];
             }
 
           } else {
-            this.snackbar.open('Grade Level List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           }
 
         }
         else {
-          this.gradeLevelList=res;
+          this.gradeLevelList = res;
         }
       }
-    })
+      else{
+        this.snackbar.open('Grade Level List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
   getAllSubjectStandardList(){
     this.gradesService.getAllSubjectStandardList(this.subjectList).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Standard Subject List failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (res){
         if (res._failure) {
           if (res._message === "NO RECORD FOUND") {
             if (res.gradeUsStandardList == null) {
               this.subjectList.gradeUsStandardList=null
             }
-
           } else {
-            this.snackbar.open('Standard Subject List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           }
-
         }
         else {
-          this.subjectList=res;
+          this.subjectList = res;
         }
       }
-    })
+      else{
+        this.snackbar.open('Standard Subject List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
   getAllCourseStandardList(){
     this.gradesService.getAllCourseStandardList(this.courseList).subscribe((res) => {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Standard Course List failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+      if (res){
         if (res._failure) {
           if (res._message === "NO RECORD FOUND") {
             if (res.gradeUsStandardList == null) {
-              this.courseList.gradeUsStandardList=null
+              this.courseList.gradeUsStandardList = null;
             }
 
           } else {
-            this.snackbar.open('Standard Course List failed. ' + res._message, 'LOL THANKS', {
+            this.snackbar.open( res._message, '', {
               duration: 10000
             });
           }
 
         }
         else {
-          this.courseList=res;
+          this.courseList = res;
         }
       }
-    })
+      else {
+        this.snackbar.open('Standard Course List failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+    });
   }
 
   submit(){
@@ -244,16 +242,16 @@ export class EditSchoolSpecificStandardComponent implements OnInit, OnDestroy{
         });
       }else
       if (res._failure) {
-        this.snackbar.open('Failed to Update School Specific Standard ' + res._message, 'LOL THANKS', {
+        this.snackbar.open( res._message, '', {
           duration: 10000
         });
       } else {
-        this.snackbar.open('School Specific Standard Updated Successfully.', '', {
+        this.snackbar.open(res._message , '', {
           duration: 10000
         });
         this.dialogRef.close(true);
       }
-    })
+    });
   }
 
   addSchoolSpecificStandards(){
@@ -272,16 +270,16 @@ export class EditSchoolSpecificStandardComponent implements OnInit, OnDestroy{
         });
       }else
       if (res._failure) {
-        this.snackbar.open('Failed to Add School Specific Standard ' + res._message, 'LOL THANKS', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
       } else {
-        this.snackbar.open('School Specific Standard Added Successfully.', '', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
         this.dialogRef.close(true);
       }
-    })
+    });
 
   }
 

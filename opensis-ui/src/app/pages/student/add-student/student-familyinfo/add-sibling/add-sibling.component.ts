@@ -168,10 +168,10 @@ export class AddSiblingComponent implements OnInit {
           });
         }else
         {
-
           this.addParentInfoModel.parentAssociationship.studentId = studentDetails.studentId;
           this.addParentInfoModel.parentInfo.parentAddress[0].studentId = studentDetails.studentId;
           this.addParentInfoModel.parentAssociationship.parentId = this.val.data.parentInfo.parentId;
+          this.addParentInfoModel.parentAssociationship.schoolId = studentDetails.schoolId;
           this.addParentInfoModel.parentInfo.parentAddress[0].parentId = this.val.data.parentInfo.parentId;
           this.addParentInfoModel.parentInfo.parentId = this.val.data.parentInfo.parentId;
           this.addParentInfoModel.parentAssociationship.relationship = obj.relationship;
@@ -212,6 +212,7 @@ export class AddSiblingComponent implements OnInit {
         this.addParentInfoModel.parentAssociationship.relationship = contactRelationship;
         this.addParentInfoModel.parentAssociationship.isCustodian = isCustodian;
         this.addParentInfoModel.parentAssociationship.studentId = studentDetails.studentId;
+        this.addParentInfoModel.parentAssociationship.schoolId = studentDetails.schoolId;
         this.addParentInfoModel.parentInfo.parentAddress[0].studentId = studentDetails.studentId;
         this.addParentInfoModel.parentAssociationship.parentId = this.val.data.parentInfo.parentId;
         this.addParentInfoModel.parentInfo.parentAddress[0].parentId = this.val.data.parentInfo.parentId;
@@ -226,7 +227,8 @@ export class AddSiblingComponent implements OnInit {
             }
             else
             {
-              this.snackbar.open(data._message, '', {
+              // static comment added because same api is called for parent associate for student 
+              this.snackbar.open("Student Added Successfully", '', {
               duration: 10000
               });
               this.dialogRef.close(true);

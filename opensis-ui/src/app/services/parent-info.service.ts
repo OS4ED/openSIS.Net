@@ -46,8 +46,6 @@ export class ParentInfoService {
   }
   viewParentInfo(parentInfo: AddParentInfoModel) {
     parentInfo = this.defaultValuesService.getAllMandatoryVariable(parentInfo);
-    // parentInfo.parentAssociationship.schoolId = this.defaultValuesService.getSchoolID();
-    // parentInfo.parentAssociationship.tenantId = this.defaultValuesService.getTenantID();
     parentInfo.parentInfo.schoolId = this.defaultValuesService.getSchoolID();
     parentInfo.parentInfo.tenantId = this.defaultValuesService.getTenantID();
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/viewParentInfo";
@@ -73,6 +71,7 @@ export class ParentInfoService {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     obj.parentInfo.schoolId = this.defaultValuesService.getSchoolID();
     obj.parentInfo.tenantId = this.defaultValuesService.getTenantID();
+    obj.parentAssociationship.tenantId= this.defaultValuesService.getTenantID();
     obj.passwordHash = this.cryptoService.encrypt(obj.passwordHash);
     obj.parentInfo.parentPhoto = this.parentImage;
     let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/addParentForStudent";
@@ -100,6 +99,7 @@ export class ParentInfoService {
   removeAssociatedParent(obj: RemoveAssociateParent) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     obj.parentInfo.schoolId = this.defaultValuesService.getSchoolID();
+    obj.parentInfo.parentAddress[0].tenantId = this.defaultValuesService.getTenantID();
     obj.parentInfo.tenantId = this.defaultValuesService.getTenantID();
     let apiurl = this.apiUrl + obj._tenantName + "/ParentInfo/removeAssociatedParent";
     return this.http.post<RemoveAssociateParent>(apiurl, obj);

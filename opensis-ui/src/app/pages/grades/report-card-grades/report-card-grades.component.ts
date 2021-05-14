@@ -367,7 +367,6 @@ export class ReportCardGradesComponent implements OnInit {
               [this.translateKey('comment')]: x.comment ? x.comment : '-'
             };
           });
-          console.log(reportList);
           
           this.excelService.exportAsExcelFile(reportList, 'Report_Card_Grade_List_');
         } else {

@@ -46,11 +46,11 @@ import { Router } from '@angular/router';
 export class StaffGeneralinfoComponent implements OnInit {
   moduleIdentifier = ModuleIdentifier;
   staffCreate = SchoolCreate;
-  @Input() staffDetailsForViewAndEdit;
-  @Input() categoryId;
+  staffDetailsForViewAndEdit;
+  categoryId;
   @Output() dataAfterSavingGeneralInfo = new EventEmitter<any>();
   @ViewChild('f') currentForm: NgForm;
-  @Input() staffCreateMode: SchoolCreate;
+  staffCreateMode: SchoolCreate;
   nameOfMiscValuesForView:MiscModel=new MiscModel();
   countryModel: CountryModel = new CountryModel();
   staffAddModel: StaffAddModel = new StaffAddModel();
@@ -130,6 +130,17 @@ export class StaffGeneralinfoComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.staffService.staffCreatedMode.subscribe((res)=>{
+      this.staffCreateMode = res;
+    })
+    this.staffService.staffDetailsForViewedAndEdited.subscribe((res)=>{
+      this.staffDetailsForViewAndEdit = res;
+    })
+
+    this.staffService.categoryIdSelected.subscribe((res)=>{
+      this.categoryId = res;
+    })
+
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 5);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 10);
@@ -148,8 +159,10 @@ export class StaffGeneralinfoComponent implements OnInit {
     } else if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.staffService.changePageMode(this.staffCreateMode);
       this.accessPortal();
-      this.getAllCountry();
-      this.GetAllLanguage();
+      if(!this.staffService.getStaffFirstView()){
+        this.GetAllLanguage();
+        this.getAllCountry();
+      }
       this.staffAddModel = this.staffDetailsForViewAndEdit;
       this.data = this.staffDetailsForViewAndEdit?.staffMaster;
       this.cloneStaffAddModel=JSON.stringify(this.staffAddModel);
@@ -461,7 +474,8 @@ export class StaffGeneralinfoComponent implements OnInit {
           this.staffService.setStaffCloneImage(data.staffMaster.staffPhoto);
           this.staffService.changeCategory(13);
           this.staffService.setStaffDetails(data);
-          this.dataAfterSavingGeneralInfo.emit(data);
+          // this.dataAfterSavingGeneralInfo.emit(data);
+          this.staffService.setDataAfterSavingGeneralInfo(data);
           this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.staffCreate.EDIT});
         }
       }
@@ -494,7 +508,9 @@ export class StaffGeneralinfoComponent implements OnInit {
           });
           this.staffService.setStaffCloneImage(data.staffMaster.staffPhoto);
           data.staffMaster.staffPhoto=null;
-          this.dataAfterSavingGeneralInfo.emit(data);
+          // this.dataAfterSavingGeneralInfo.emit(data);
+          this.staffService.setDataAfterSavingGeneralInfo(data);
+
           this.staffAddModel.staffMaster = data.staffMaster;
           this.staffDetailsForViewAndEdit=data;
           this.cloneStaffAddModel=JSON.stringify(this.staffAddModel);

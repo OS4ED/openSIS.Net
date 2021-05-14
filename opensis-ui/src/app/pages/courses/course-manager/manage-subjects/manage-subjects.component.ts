@@ -8,13 +8,14 @@ import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animati
 import { stagger60ms } from '../../../../../@vex/animations/stagger.animation';
 import {GetAllSubjectModel,AddSubjectModel,UpdateSubjectModel,SubjectModel,DeleteSubjectModel,MassUpdateSubjectModel} from '../../../../models/course-manager.model';
 import {CourseManagerService} from '../../../../services/course-manager.service';
-import {MatSnackBar} from  '@angular/material/snack-bar';
-import { FormBuilder,NgForm,FormGroup, Validators } from '@angular/forms';
+import {MatSnackBar} from '@angular/material/snack-bar';
+import { FormBuilder, NgForm, FormGroup, Validators } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 import { ConfirmDialogComponent } from '../../../shared-module/confirm-dialog/confirm-dialog.component';
 import { MatDialog } from '@angular/material/dialog';
 import { CryptoService } from '../../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
+import { DefaultValuesService } from '../../../../common/default-values.service';
 @Component({
   selector: 'vex-manage-subjects',
   templateUrl: './manage-subjects.component.html',
@@ -51,13 +52,14 @@ export class ManageSubjectsComponent implements OnInit {
   hideDiv={};
   constructor(
     private dialogRef: MatDialogRef<ManageSubjectsComponent>,
-    private courseManager:CourseManagerService,
+    private courseManager: CourseManagerService,
     private snackbar: MatSnackBar,
     private fb: FormBuilder,
-    public translateService:TranslateService,
+    public translateService: TranslateService,
+    private defaultValuesService: DefaultValuesService,
     private dialog: MatDialog,
-    private cryptoService: CryptoService) { 
-      translateService.use('en');   
+    private cryptoService: CryptoService) {
+      translateService.use('en');
     }
 
   ngOnInit(): void {  
@@ -74,29 +76,27 @@ export class ManageSubjectsComponent implements OnInit {
       if(data._failure){
         if(data._message==="NO RECORD FOUND"){
           this.subjectList=[];
-          this.snackbar.open('NO RECORD FOUND. ', '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
-          });        
+          });
         }
-      }else{      
-        this.subjectList=data.subjectList;
-        this.subjectList.map((val,index)=>{
-          this.updateSubjectModel.subjectList.push(new SubjectModel());   
-          this.hideinput[index] = true; 
-          this.hideDiv[index] = false; 
-        })
-         
+      }else{
+        this.subjectList = data.subjectList;
+        this.subjectList.map((val, index) => {
+          this.updateSubjectModel.subjectList.push(new SubjectModel());
+          this.hideinput[index] = true;
+          this.hideDiv[index] = false;
+        });
       }
     });
   }
   confirmDelete(deleteDetails){
-    
     // call our modal window
     const dialogRef = this.dialog.open(ConfirmDialogComponent, {
       maxWidth: "400px",
       data: {
-          title: "Are you sure?",
-          message: "You are about to delete "+deleteDetails.subjectName+"."}
+          title: this.defaultValuesService.translateKey('areYouSure'),
+          message: this.defaultValuesService.translateKey('youAreAboutToDelete') + deleteDetails.subjectName + '.'}
     });
     // listen to response
     dialogRef.afterClosed().subscribe(dialogResult => {
@@ -109,30 +109,26 @@ export class ManageSubjectsComponent implements OnInit {
   }
 
   deleteSubject(deleteDetails){
-  this.deleteSubjectModel.subject.subjectId=deleteDetails.subjectId;    
+  this.deleteSubjectModel.subject.subjectId = deleteDetails.subjectId;
   this.courseManager.DeleteSubject(this.deleteSubjectModel).subscribe(data => {
-    if (typeof (data) == 'undefined') {
-      this.snackbar.open('Subject Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
-        duration: 10000
-      });
-    }
-    else {
+    if (data){
       if (data._failure) {
-        this.snackbar.open('Subject Deletion failed. ' + data._message, 'LOL THANKS', {
+        this.snackbar.open( data._message, '', {
           duration: 10000
         });
       } else {
-     
-        this.snackbar.open('Subject Deletion Successful.', '', {
+        this.snackbar.open(data._message, '', {
           duration: 10000
         }).afterOpened().subscribe(data => {
           this.getAllSubjectList();
         });
-        
       }
+    }else{
+      this.snackbar.open('Subject Deletion failed. ' + sessionStorage.getItem("httpError"), '', {
+        duration: 10000
+      });
     }
-
-  })
+  });
 }
 
 updateSubject(element,index){
@@ -146,7 +142,7 @@ updateSubject(element,index){
     this.updateSubjectModel.subjectList[index].subjectId = val.subjectId;
     this.hideinput[index] = false;
     this.hideDiv[index] = true;
-  })  
+  });
 }
 
 
@@ -157,11 +153,11 @@ updateSubject(element,index){
         if(val.subjectId > 0){
           obj["subjectId"] = val.subjectId;
           obj["subjectName"] = val.subjectName;
-          obj["tenantId"]= sessionStorage.getItem("tenantId");
-          obj["schoolId"] = +sessionStorage.getItem("selectedSchoolId");  
-          obj["createdBy"] = sessionStorage.getItem("email");       
-          obj["updatedBy"]=  sessionStorage.getItem("email");       
-          this.massUpdateSubjectModel.subjectList.push(obj); 
+          obj["tenantId"]= this.defaultValuesService.getTenantID();
+          obj["schoolId"] = this.defaultValuesService.getSchoolID();
+          obj["createdBy"] = this.defaultValuesService.getEmailId();
+          obj["updatedBy"]= this.defaultValuesService.getEmailId();
+          this.massUpdateSubjectModel.subjectList.push(obj);
         }
       }      
     })
@@ -178,33 +174,30 @@ updateSubject(element,index){
       this.massUpdateSubjectModel.subjectList.push(obj1); 
     }
     if(this.massUpdateSubjectModel.subjectList.length > 0){
-      this.courseManager.AddEditSubject(this.massUpdateSubjectModel).subscribe(data => {     
-        if(typeof(data)=='undefined'){
+      this.courseManager.AddEditSubject(this.massUpdateSubjectModel).subscribe(data => {
+        if (data){
+
+          if (data._failure) {
+            this.snackbar.open( data._message, '', {
+              duration: 10000
+            });
+          } 
+          else{
+            this.snackbar.open('Subject Submission Successful.', '', {
+              duration: 10000
+            }).afterOpened().subscribe(data => {
+                this.getAllSubjectList();
+                this.massUpdateSubjectModel.subjectList=[{}];
+                this.addSubjectModel.subjectList= [new SubjectModel()];
+            });
+            this.dialogRef.close(true);
+          }
+        }else{
           this.snackbar.open('Subject Submission failed. ' + sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
-        else{
-          if (data._failure) {
-            this.snackbar.open('Subject Submission failed. ' + data._message, 'LOL THANKS', {
-              duration: 10000
-            });
-          } 
-          else{       
-            
-            this.snackbar.open('Subject Submission Successful.', '', {
-              duration: 10000
-            }).afterOpened().subscribe(data => {
-              
-                this.getAllSubjectList();
-              
-              this.massUpdateSubjectModel.subjectList=[{}];
-              this.addSubjectModel.subjectList= [new SubjectModel()];
-            });
-            this.dialogRef.close(true);
-          }        
-        }      
       });
-    } 
-  }   
+    }
+  }
 }

@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ViewChild } from '@angular/core';
+import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { SharedFunction } from '../../../../src/app/pages/shared/shared-function';
 import { FieldsCategoryListView, FieldsCategoryModel } from '../../models/fields-category.model';
@@ -14,13 +14,16 @@ import { SchoolCreate } from '../../../../src/app/enums/school-create.enum';
 import { SchoolAddViewModel } from '../../models/school-master.model';
 import { SchoolService } from '../../../../src/app/services/school.service';
 import { CustomFieldsValueModel } from '../../models/custom-fields-value.model';
-import { Router } from '@angular/router';
 import { StudentAddModel } from '../../models/student.model';
 import { StudentService } from '../../../../src/app/services/student.service';
 import { StaffAddModel } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
 import { CryptoService } from '../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../models/roll-based-access.model';
+import { CommonService } from '../../services/common.service';
+import { DefaultValuesService } from '../default-values.service';
+import { Subject } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 @Component({
   selector: 'vex-custom-field',
@@ -32,15 +35,15 @@ import { RolePermissionListViewModel, RolePermissionViewModel } from '../../mode
     fadeInRight400ms
   ]
 })
-export class CustomFieldComponent implements OnInit {
+export class CustomFieldComponent implements OnInit, OnDestroy {
   SchoolCreate = SchoolCreate;
-  @Input() schoolCreateMode;
-  @Input() studentCreateMode;
-  @Input() staffCreateMode;
-  @Input() categoryTitle;
-  @Input() categoryId;
-  @Input() schoolDetailsForViewAndEdit;
-  @Input() module;
+  schoolCreateMode;
+  studentCreateMode;
+  staffCreateMode;
+  categoryTitle;
+  categoryId;
+  schoolDetailsForViewAndEdit;
+  module;
   icEdit = icEdit;
   icAdd = icAdd;
   viewInfo: boolean = true;
@@ -59,48 +62,134 @@ export class CustomFieldComponent implements OnInit {
   permissionGroup:RolePermissionViewModel= new RolePermissionViewModel();
   f: NgForm;
   formActionButtonTitle = "update";
+  destroySubject$: Subject<void> = new Subject();
+
   constructor(
     private snackbar: MatSnackBar,
     private commonFunction: SharedFunction,
     private studentService: StudentService,
     private schoolService: SchoolService,
     private staffService: StaffService,
-    private router: Router,
-    private cryptoService: CryptoService
+    private commonService:CommonService,
+    private cryptoService: CryptoService,
+    private defaultService: DefaultValuesService
   ) {
-    if (this.module === 'School') {
-      this.schoolService.getSchoolDetailsForGeneral.subscribe((res: SchoolAddViewModel) => {
-        this.schoolAddViewModel = res;
-        this.checkCustomValue();
-      });
-    }
+ 
   }
 
   ngOnInit(): void {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
-    if (this.module === 'Student') {
+
+    this.module = this.commonService.getModuleName();
+
+  // School Details Subscription
+    this.schoolService.selectedCategoryTitle.subscribe((res)=>{
+      if(res && this.module==='School'){
+        this.categoryTitle = res;
+      }
+    });
+    this.schoolService.categoryIdSelected.subscribe((res)=>{
+      if(res && this.module==='School'){
+        this.categoryId = res;
+        this.checkCustomValue();
+      }
+    });
+    this.schoolService.schoolCreatedMode.subscribe((res)=>{
+      if(res && this.module==='School'){
+        this.schoolCreateMode = res;
+      }
+    });
+    this.schoolService.schoolDetailsForViewedAndEdited.subscribe((res)=>{
+      if(res && this.module==='School'){
+        this.schoolDetailsForViewAndEdit = res;
+      }
+    });
+
+  
+// Student Details Subscription
+    this.studentService.selectedCatgoryTitle.subscribe((res)=>{
+      if(res && this.module==='Student'){
+        this.categoryTitle=res;
+      }
+    })
+    this.studentService.categoryIdSelected.subscribe((res)=>{
+      if(res && this.module==='Student'){
+        this.categoryId = res;
       this.checkStudentCustomValue();
+      }
+    });
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      if(res && this.module==='Student'){
+        this.studentCreateMode = res;
+      }
+    })
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      if(res && this.module==='Student'){
+        this.schoolDetailsForViewAndEdit = res;
+      }
+    })
+
+    // Staff Details Subscription
+    this.staffService.staffDetailsForViewedAndEdited.subscribe((res)=>{
+      if(res && this.module==='Staff'){
+        this.schoolDetailsForViewAndEdit = res;
+      }
+    })
+
+    this.staffService.selectedCategoryTitle.subscribe((res)=>{
+      if(res && this.module==='Staff'){
+        this.categoryTitle=res;
+      }
+    })
+    this.staffService.categoryIdSelected.subscribe((res)=>{
+      if(res && this.module==='Staff'){
+        this.categoryId = res;
+        this.checkStaffCustomValue();
+      }
+    });
+    this.staffService.staffCreatedMode.subscribe((res)=>{
+      if(res && this.module==='Staff'){
+        this.staffCreateMode = res;
+      }
+    })
+   
+
+
+    if (this.module === 'School') {
+      this.schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
+        this.schoolAddViewModel = res;
+        this.checkCustomValue();
+      });
+    }
+    if (this.module === 'Student') {
+      debugger;
+      console.log(this.categoryTitle);
+      console.log(this.categoryId)
       this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 3);
       let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 5);
       let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
       this.editStudentPermission = permissionSubCategory.rolePermission[0].canEdit;
       this.studentAddViewModel = this.schoolDetailsForViewAndEdit;
-      this.mapCustomFields();
+      this.checkStudentCustomValue();
     }
     else if (this.module === 'School') {
       this.checkNgOnInitCustomValue();
-      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
-      let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
-      let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
-      this.editSchoolPermission = permissionSubCategory.rolePermission[0].canEdit;
+      if(this.schoolAddViewModel.schoolMaster.schoolId===this.defaultService.getSchoolID()){
+        this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
+        let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
+        let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
+        this.editSchoolPermission = permissionSubCategory.rolePermission[0].canEdit;
+      }else{
+         this.editSchoolPermission=true;
+      }
     }
     else if (this.module === 'Staff') {
-      this.checkStaffCustomValue();
       this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 5);
       let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 10);
       let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
       this.editStaffPermission = permissionSubCategory.rolePermission[0].canEdit;
       this.staffAddViewModel = this.schoolDetailsForViewAndEdit;
+      this.checkStaffCustomValue();
     }
   }
 
@@ -167,7 +256,6 @@ export class CustomFieldComponent implements OnInit {
 
   checkStaffCustomValue() {
     if (this.staffAddViewModel !== undefined) {
-      let catId = this.categoryId;
       if (this.staffAddViewModel.fieldsCategoryList !== undefined) {
 
         for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
@@ -188,9 +276,8 @@ export class CustomFieldComponent implements OnInit {
   }
 
   checkCustomValue() {
-
+   this.categoryId=this.categoryId || 0;
     if (this.schoolAddViewModel !== undefined) {
-      let catId = this.categoryId;
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined) {
 
         for (let customField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
@@ -242,10 +329,16 @@ export class CustomFieldComponent implements OnInit {
       if(item.customFieldsValue.length === 0 ){
         item.customFieldsValue.push(new CustomFieldsValueModel())
       }
-      // item.customFieldsValue[0].customFieldValue = item.customFieldsValue[0].customFieldValue ? item.customFieldsValue[0].customFieldValue : '';
     })
   }
 
+  mapStaffCustomFields(){
+    this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields.map((item: any)=>{
+      if(item.customFieldsValue.length === 0 ){
+        item.customFieldsValue.push(new CustomFieldsValueModel())
+      }
+    })
+  }
 
   updateSchool() {
     this.schoolAddViewModel.selectedCategoryId = this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].categoryId;
@@ -321,4 +414,12 @@ export class CustomFieldComponent implements OnInit {
     this.schoolService.changePageMode(this.schoolCreateMode);
     this.formActionButtonTitle = 'update';
   }
+
+  ngOnDestroy() {
+    console.log('123')
+    this.destroySubject$.next();
+    this.destroySubject$.complete();
+  }
 }
+
+

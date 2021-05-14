@@ -7,6 +7,7 @@ import icEdit from '@iconify/icons-ic/twotone-edit';
 import icDelete from '@iconify/icons-ic/twotone-delete';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import { SchoolCreate } from '../../../../enums/school-create.enum';
+import { StudentService } from '../../../../services/student.service';
 @Component({
   selector: 'vex-student-familyinfo',
   templateUrl: './student-familyinfo.component.html',
@@ -24,10 +25,17 @@ export class StudentFamilyinfoComponent implements OnInit {
   icDelete = icDelete;
   icAdd = icAdd;
   studentDetailsForViewAndEditData;
-  constructor(public translateService: TranslateService) {
+  constructor(public translateService: TranslateService,
+    private studentService: StudentService) {
   }
 
   ngOnInit(): void {
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      this.studentCreateMode = res;
+    });
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.studentDetailsForViewAndEdit = res;
+    });
     this.studentDetailsForViewAndEditData = this.studentDetailsForViewAndEdit;
   }
 

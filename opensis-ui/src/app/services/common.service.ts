@@ -16,8 +16,9 @@ import { DefaultValuesService } from '../common/default-values.service';
 export class CommonService {
   apiUrl:string = environment.apiURL;
   private searchResult;
-  constructor(private http: HttpClient,private defaultValuesService: DefaultValuesService) { }
+  private moduleName: string;
 
+  constructor(private http: HttpClient,private defaultValuesService: DefaultValuesService) { }
   GetAllCountry(obj: CountryModel){  
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllCountries"; 
@@ -149,4 +150,10 @@ export class CommonService {
     return this.searchResult;
   }
 
+  setModuleName(moduleName){
+    this.moduleName = moduleName;
+  }
+  getModuleName(){
+    return this.moduleName;
+  }
 }

@@ -1,0 +1,23 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">{{'saveFilter'|translate}}</h2>
+
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 text-border"></mat-divider>
+
+<mat-dialog-content [formGroup]="form" fxLayout="column">
+
+    <mat-form-field class="w-full mt-6" appearance="outline" color="primary">
+        <mat-label>{{'title' | translate}}</mat-label>
+        <input matInput formControlName="filterName" type="text"  name="filterName" required>
+        <mat-error *ngIf="form.get('filterName').hasError('whitespace')">{{'titleIsRequired'|translate}}</mat-error>
+    </mat-form-field>
+
+</mat-dialog-content>
+
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="py-6">
+    <button mat-button mat-dialog-close type="button">{{'cancel' | translate}}</button>
+    <button color="primary" (click)="submit()" mat-raised-button type="submit">{{'submit' | translate}}</button>
+</mat-dialog-actions>

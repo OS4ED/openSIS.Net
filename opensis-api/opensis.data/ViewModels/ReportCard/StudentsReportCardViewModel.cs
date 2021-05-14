@@ -19,7 +19,7 @@ namespace opensis.data.ViewModels.ReportCard
         public string AlternateId { get; set; }
         public string StudentInternalId { get; set; }
         public string GradeTitle { get; set; }
-        public string YearToDateAttendencePercent { get; set; }
+        public decimal? YearToDateAttendencePercent { get; set; }
         public int? YearToDateAbsencesInDays { get; set; }
 
     }

@@ -5,17 +5,20 @@
       <vex-breadcrumbs [crumbs]="['School Info','Calendar']" class="flex-auto"></vex-breadcrumbs>
     </vex-secondary-toolbar>
   </vex-page-layout-header>
-  <div class="-mt-16 absolute w-full" vexContainer>
+  <div class="-mt-16 w-full" vexContainer>
     <mat-drawer-container class="bg-transparent" vexContainer>
       <mat-card class="mb-5 mx-6 p-0">
-        <div class="flex items-center py-4 px-4" fxLayout="row" fxLayoutAlign="center center">
+        <div class="flex items-center px-4" fxLayout="row" fxLayoutAlign="center center">
 
           <div class="flex-auto">
             <div style="text-align: center !important;"><label
                 *ngIf="!showCalendarView && isMarkingPeriod!='null'">{{'NoCalendarWereFound'| translate }}</label></div>
-            <div style="text-align: center !important;"><label
-                  *ngIf="isMarkingPeriod=='null'"><ic-icon [icon]="icWarning"  inline="true"></ic-icon>{{'pleaseCreateMarkingPeriodBeforeAddingCalender'| translate}}</label></div>
-            <mat-form-field *ngIf="showCalendarView" class="select-calendar">
+            <div style="text-align: center !important;"><label *ngIf="isMarkingPeriod=='null'">
+                <ic-icon [icon]="icWarning" inline="true"></ic-icon>{{'pleaseCreateMarkingPeriodBeforeAddingCalender'|
+                translate}}
+              </label></div>
+            <mat-form-field *ngIf="showCalendarView" class="my-3"  appearance="outline" color="primary">
+              <mat-label>{{'calendar' | translate}}</mat-label>
               <mat-select [(value)]="selectedCalendar" (selectionChange)="changeCalendar($event.value)">
                 <mat-option *ngFor="let calendar of calendars" [value]="calendar">
                   {{calendar.title}}
@@ -77,9 +80,9 @@
             </div>
           </div>
         </ng-template>
-        <div *ngIf="showCalendarView" class="calendar-wrap border-t">
-          <vex-scrollbar *ngIf="events$ | async; let events" [ngSwitch]="view" class="px-0 shadow flex-auto relative"
-            vexContainer>
+        <div *ngIf="showCalendarView" class="border-t">
+          <!-- <vex-scrollbar *ngIf="events$ | async; let events" [ngSwitch]="view" class="px-0 shadow flex-auto relative" vexContainer> -->
+            <div *ngIf="events$ | async; let events" [ngSwitch]="view">
             <mwl-calendar-month-view *ngSwitchCase="'month'" [refresh]="refresh"
               (beforeViewRender)="beforeMonthViewRender($event)" [viewDate]="viewDate" [events]="events"
               (dayClicked)="openAddNewEvent($event.day)" [cellTemplate]="customCellTemplate"
@@ -91,7 +94,8 @@
             <mwl-calendar-day-view *ngSwitchCase="'day'" (eventTimesChanged)="eventTimesChanged($event)"
               [refresh]="refresh" [viewDate]="viewDate" [events]="events">
             </mwl-calendar-day-view>
-          </vex-scrollbar>
+            </div>
+          <!-- </vex-scrollbar> -->
         </div>
       </mat-card>
     </mat-drawer-container>

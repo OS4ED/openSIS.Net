@@ -29,7 +29,6 @@ import { StudentDocumentsComponent } from '../add-student/student-documents/stud
 import { StudentContactsComponent } from '../add-student/student-familyinfo/student-contacts/student-contacts.component';
 import { SiblingsinfoComponent } from '../add-student/student-familyinfo/siblingsinfo/siblingsinfo.component';
 import { TranslateModule } from '@ngx-translate/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { MatCheckboxModule } from '@angular/material/checkbox';
@@ -68,6 +67,7 @@ import { AddImmunizationComponent } from './student-medicalinfo/add-immunization
 import { AddNurseVisitComponent } from './student-medicalinfo/add-nurse-visit/add-nurse-visit.component';
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddDaysScheduleModule } from '../../scheduling/schedule-teacher/add-days-schedule/add-days-schedule.module';
+import { AddStudentRoutingModule } from './add-student-routing';
 // import { TruncatePipe } from '../../../pipe/truncate.pipe';
 
 @NgModule({
@@ -106,6 +106,7 @@ import { AddDaysScheduleModule } from '../../scheduling/schedule-teacher/add-day
       provide: DateAdapter,
       useFactory: adapterFactory
     }),
+    AddStudentRoutingModule,
     MatIconModule,
     MatInputModule,
     MatSelectModule,
@@ -124,7 +125,6 @@ import { AddDaysScheduleModule } from '../../scheduling/schedule-teacher/add-day
     MatRadioModule,
     MatNativeDateModule,
     TranslateModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
     SharedModuleModule,
@@ -148,7 +148,7 @@ import { AddDaysScheduleModule } from '../../scheduling/schedule-teacher/add-day
     AddDaysScheduleModule
   ],
   providers: [
-    DatePipe
+    // DatePipe
   ]
 })
 export class AddStudentModule { }

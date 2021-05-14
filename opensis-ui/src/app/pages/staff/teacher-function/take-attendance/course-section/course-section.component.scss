@@ -1,0 +1,55 @@
+.custom-checkbox {
+  display: block;
+  margin-bottom: 15px;
+
+  input {
+    padding: 0;
+    height: initial;
+    width: initial;
+    margin-bottom: 0;
+    display: none;
+    cursor: pointer;
+
+    &:checked + label:after {
+        content: "";
+        display: block;
+        position: absolute;
+        top: 2px;
+        left: 9px;
+        width: 6px;
+        height: 12px;
+        border: solid #ffffff;
+        border-width: 0 2px 2px 0;
+        transform: rotate(45deg);
+      }
+  }
+  label {
+    position: relative;
+    cursor: pointer;
+
+    &:before {
+      content: "";
+      -webkit-appearance: none;
+      padding: 12px;
+      display: inline-block;
+      vertical-align: middle;
+      margin-right: 12px;
+      border-radius: 0.25rem;
+    }
+  }
+  label.label-pink {
+    &:before {
+        background-color: #e91e63;
+    }
+  }
+  label.label-cyan {
+    &:before {
+        background-color: #00bcd4;
+    }
+  }
+  label.label-teal {
+    &:before {
+        background-color: #009688;
+    }
+  }
+}

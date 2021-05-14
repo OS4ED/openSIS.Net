@@ -737,6 +737,26 @@ namespace opensis.data.Repository
                         staffMaster.OtherGradeLevelTaught = staffSchoolInfoAddViewModel.OtherGradeLevelTaught;
                         staffMaster.PrimarySubjectTaught = staffSchoolInfoAddViewModel.PrimarySubjectTaught;
                         staffMaster.OtherSubjectTaught = staffSchoolInfoAddViewModel.OtherSubjectTaught;
+
+                        var userMaster = this.context?.UserMaster.Include(x => x.Membership).FirstOrDefault(x => x.TenantId == staffSchoolInfoAddViewModel.TenantId && x.UserId == staffSchoolInfoAddViewModel.StaffId && x.SchoolId == staffSchoolInfoAddViewModel.SchoolId);
+
+                        if (userMaster != null)
+                        {
+                            var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == staffSchoolInfoAddViewModel.TenantId && x.SchoolId == staffSchoolInfoAddViewModel.SchoolId && x.Profile.ToLower() == staffSchoolInfoAddViewModel.staffSchoolInfoList.FirstOrDefault().Profile.ToLower());
+
+                            if (membership != null)
+                            {
+                                userMaster.MembershipId = membership.MembershipId;
+                                
+                            }
+                            else
+                            {
+                                userMaster.MembershipId = 4;
+                            }
+
+                            userMaster.LastUpdated = DateTime.Now;
+                        }
+
                         this.context?.SaveChanges();
                     }
 

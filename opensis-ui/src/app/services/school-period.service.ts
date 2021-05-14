@@ -14,6 +14,8 @@ export class SchoolPeriodService {
 
   deleteBlockPeriod(obj: BlockPeriodAddViewModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.blockPeriod.tenantId = this.defaultValuesService.getTenantID();
+    obj.blockPeriod.schoolId = this.defaultValuesService.getSchoolID();
     let apiurl = this.apiUrl + obj._tenantName + "/Period/deleteBlockPeriod";
     return this.http.post<BlockPeriodAddViewModel>(apiurl, obj);
   }
@@ -48,6 +50,8 @@ export class SchoolPeriodService {
   }
   deleteBlock(obj: BlockAddViewModel){
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.block.tenantId = this.defaultValuesService.getTenantID();
+    obj.block.schoolId = this.defaultValuesService.getSchoolID();
     let apiurl = this.apiUrl + obj._tenantName + '/Period/deleteBlock' ;
     return this.http.post<BlockAddViewModel>(apiurl, obj);
   }

@@ -1,5 +1,4 @@
 import { NgModule } from '@angular/core';
-import { BrowserModule } from '@angular/platform-browser'
 import { CommonModule } from '@angular/common';
 import { AddSchoolComponent } from './add-school.component';
 import { MatIconModule } from '@angular/material/icon';
@@ -22,7 +21,6 @@ import { MatSelectModule } from '@angular/material/select';
 import{GeneralInfoComponent} from '../add-school/general-info/general-info.component';
 import{WashInfoComponent} from '../add-school/wash-info/wash-info.component';
 import { TranslateModule } from '@ngx-translate/core';
-import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../shared-module/shared-module.module';
 import { CustomFieldModule } from "../../../common/custom-field/custom-field.module";
@@ -35,13 +33,16 @@ import { MatDividerModule } from '@angular/material/divider';
 import {MatDialogModule} from '@angular/material/dialog';
 import {MatSlideToggleModule} from '@angular/material/slide-toggle';
 import { SuccessCopySchoolComponent } from './success-copy-school/success-copy-school.component';
+import { AddSchoolRoutingModule } from './add-school-routing-module';
 
 
 @NgModule({
   declarations: [AddSchoolComponent,GeneralInfoComponent,WashInfoComponent, ViewGeneralInfoComponent, ViewWashInfoComponent, AddCopySchoolComponent, SuccessCopySchoolComponent],
   imports: [
     CommonModule,
+    AddSchoolRoutingModule,
     MatIconModule,
+    AddSchoolRoutingModule,
     MatInputModule,
     MatCheckboxModule,
     MatSelectModule,
@@ -59,7 +60,6 @@ import { SuccessCopySchoolComponent } from './success-copy-school/success-copy-s
     MatNativeDateModule,
     MatProgressSpinnerModule,
     TranslateModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
     SharedModuleModule,

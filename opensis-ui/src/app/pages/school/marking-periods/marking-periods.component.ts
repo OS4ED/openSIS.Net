@@ -154,7 +154,6 @@ export class MarkingPeriodsComponent implements OnInit {
         this.list = data.schoolYearsView;
         this.viewFirstMarkingPeriodChild();
       }
-       
       }
       else {
         this.snackbar.open('General Info Updation failed. ' + sessionStorage.getItem("httpError"), '', {

@@ -83,6 +83,15 @@ export class StudentMedicalinfoComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      this.studentCreateMode = res;
+    })
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.studentDetailsForViewAndEdit = res;
+    })
+    this.studentService.categoryIdSelected.subscribe((res)=>{
+      this.categoryId = res;
+    })
     this.currentTab = 'activities';
     if (this.studentCreateMode === this.studentCreate.VIEW) {
       this.permissionListViewModel = JSON.parse(

@@ -25,6 +25,7 @@ import { CdkDragDrop} from '@angular/cdk/drag-drop';
 import { CryptoService } from '../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../models/roll-based-access.model';
 import { DefaultValuesService } from '../../../common/default-values.service';
+import { SchoolService } from '../../../services/school.service';
 
 
 @Component({
@@ -79,7 +80,8 @@ export class StudentFieldsComponent implements OnInit {
     private customFieldservice: CustomFieldService,
     private loaderService: LoaderService,
     private defaultValuesService: DefaultValuesService,
-    private cryptoService: CryptoService
+    private cryptoService: CryptoService,
+    private schoolService:SchoolService
     ) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((val) => {
@@ -120,6 +122,7 @@ export class StudentFieldsComponent implements OnInit {
       width: '600px'
     }).afterClosed().subscribe((data) => {
       if (data === 'submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });
@@ -129,6 +132,7 @@ export class StudentFieldsComponent implements OnInit {
       width: '500px'
     }).afterClosed().subscribe((data) => {
       if (data === 'submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });
@@ -182,6 +186,7 @@ export class StudentFieldsComponent implements OnInit {
     });
     dialogRef.afterClosed().subscribe(dialogResult => {
       if (dialogResult){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.deleteCustomFieldata(element);
       }
    });
@@ -192,6 +197,7 @@ export class StudentFieldsComponent implements OnInit {
         width: '800px'
     }).afterClosed().subscribe((data) => {
       if (data === 'submited'){
+        this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });
@@ -241,6 +247,7 @@ export class StudentFieldsComponent implements OnInit {
       width: '800px'
     }).afterClosed().subscribe((data) => {
       if (data === 'submited'){
+      this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
         this.getAllCustomFieldCategory();
       }
     });

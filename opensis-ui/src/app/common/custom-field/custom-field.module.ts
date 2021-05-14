@@ -18,7 +18,6 @@ import { ContainerModule } from '../../../../src/@vex/directives/container/conta
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { MatNativeDateModule } from '@angular/material/core';
 import { TranslateModule } from '@ngx-translate/core';
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { SharedModuleModule } from '../../../../src/app/pages/shared-module/shared-module.module';
 
@@ -44,7 +43,6 @@ import { SharedModuleModule } from '../../../../src/app/pages/shared-module/shar
     MatDatepickerModule,
     MatNativeDateModule,
     TranslateModule,
-    BrowserAnimationsModule,
     ReactiveFormsModule,
     FormsModule,
     SharedModuleModule

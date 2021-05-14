@@ -28,9 +28,9 @@ import { GetAllSectionModel, TableSectionList } from '../../../../models/section
 import { CheckUserEmailAddressViewModel } from '../../../../models/user.model';
 import { ImageCropperService } from '../../../../services/image-cropper.service';
 import { LovList } from '../../../../models/lov.model';
-import {MiscModel} from '../../../../models/misc-data-student.model';
+import { MiscModel } from '../../../../models/misc-data-student.model';
 import { CommonLOV } from '../../../shared-module/lov/common-lov';
-import {ModuleIdentifier} from '../../../../enums/module-identifier.enum';
+import { ModuleIdentifier } from '../../../../enums/module-identifier.enum';
 import { CryptoService } from '../../../../services/Crypto.service';
 import { RolePermissionListViewModel, RolePermissionViewModel } from '../../../../models/roll-based-access.model';
 import { Router } from '@angular/router';
@@ -54,9 +54,9 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   icVisibility = icVisibility;
   icVisibilityOff = icVisibilityOff;
   studentCreate = SchoolCreate;
-  @Input() studentCreateMode: SchoolCreate;
-  @Input() studentDetailsForViewAndEdit;
-  @Input() categoryId;
+  studentCreateMode;
+  studentDetailsForViewAndEdit;
+  categoryId;
   @ViewChild('f') currentForm: NgForm;
   data;
   moduleIdentifier = ModuleIdentifier;
@@ -99,7 +99,6 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   addPermission = false;
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
-
   @Output() dataAfterSavingGeneralInfo = new EventEmitter<any>();
   constructor(
     private el: ElementRef,
@@ -115,35 +114,39 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     private router: Router,
     private imageCropperService: ImageCropperService,
     private cryptoService: CryptoService,
-    private commonLOV: CommonLOV) {
+    private commonLOV: CommonLOV,
+    ) {
     translateService.use('en');
-    this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
-      this.studentAddModel = res;
-      this.studentAddModel.loginEmail = this.studentAddModel.studentMaster.studentPortalId;
-      this.data = this.studentAddModel?.studentMaster;
-      this.cloneStudentModel = JSON.stringify(this.studentAddModel);
-      this.studentInternalId = this.data.studentInternalId;
-      this.studentPortalId = this.data.studentPortalId;
-      if (this.studentAddModel.studentMaster?.studentId){
-        this.accessPortal();
-        this.GetAllLanguage();
-        this.initializeDropdowns();
-      }
-    });
   }
 
   ngOnInit(): void {
+    this.getStudentDetails().then(() => {
+      this.accessPortal();
+      this.GetAllLanguage();
+      this.getAllCountry();
+     
+    })
+
+    this.studentService.studentCreatedMode.subscribe((res)=>{
+      this.studentCreateMode = res;
+    })
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.studentDetailsForViewAndEdit = res;
+    })
+    this.studentService.categoryIdSelected.subscribe((res)=>{
+      this.categoryId = res;
+    })
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
-    const permissionSubCategory = permissionCategory.permissionSubcategory.find( x => x.permissionSubcategoryId === 3);
+    const permissionSubCategory = permissionCategory.permissionSubcategory.find(x => x.permissionSubcategoryId === 3);
     this.editPermission = permissionSubCategory.rolePermission[0].canEdit;
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
     this.internalId = new FormControl('', Validators.required);
     this.loginEmail = new FormControl('', Validators.required);
     if (this.studentCreateMode === this.studentCreate.ADD) {
-      if (this.addPermission === false){
+      if (this.addPermission === false) {
         this.router.navigate(['/']);
       }
       this.initializeDropdownsInAddMode();
@@ -151,46 +154,61 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       this.studentService.changePageMode(this.studentCreateMode);
       this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.data = this.studentDetailsForViewAndEdit?.studentMaster;
-      if (this.studentAddModel.studentMaster.studentPortalId == null){
+      if (!this.studentAddModel.studentMaster.studentPortalId) {
         this.data.studentPortalId = this.studentAddModel.loginEmail;
       }
       this.accessPortal();
       this.cloneStudentModel = JSON.stringify(this.studentAddModel);
-      this.GetAllLanguage();
-      this.getAllCountry();
+      if(!this.studentService.getStudentFirstView()){
+        this.GetAllLanguage();
+        this.getAllCountry();
+      }
 
     } else if (this.studentCreateMode === this.studentCreate.EDIT && (this.studentDetailsForViewAndEdit !== undefined || this.studentDetailsForViewAndEdit !== null)) {
       this.studentAddModel = this.studentDetailsForViewAndEdit;
       this.cloneStudentModel = JSON.stringify(this.studentAddModel);
       this.data = this.studentAddModel.studentMaster;
-      if (this.studentAddModel.studentMaster.studentPortalId == null){
+      if (!this.studentAddModel.studentMaster.studentPortalId) {
         this.data.studentPortalId = this.studentAddModel.loginEmail;
       }
-      else{
+      else {
         this.studentPortalId = this.studentAddModel.studentMaster.studentPortalId;
       }
       this.studentService.changePageMode(this.studentCreateMode);
       this.accessPortal();
       this.initializeDropdownsInAddMode();
       this.saveAndNext = 'update';
-      if (this.studentAddModel.studentMaster.studentPortalId !== null) {
+      if (this.studentAddModel.studentMaster.studentPortalId) {
         this.hideAccess = true;
         this.fieldDisabled = true;
       }
     }
   }
 
-  initializeDropdowns(){
-    this.getAllCountry();
+  getStudentDetails() {
+    return new Promise((resolve, rej) => {
+      this.studentService.getStudentDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: StudentAddModel) => {
+        this.studentAddModel = res;
+        this.studentAddModel.loginEmail = this.studentAddModel.studentMaster.studentPortalId;
+        this.data = this.studentAddModel?.studentMaster;
+        this.cloneStudentModel = JSON.stringify(this.studentAddModel);
+        this.studentInternalId = this.data.studentInternalId;
+        this.studentPortalId = this.data.studentPortalId;
+        if (this.studentAddModel.studentMaster?.studentId) {
+          resolve([])
+        }
+      });
+    })
   }
 
-  initializeDropdownsInAddMode(){
+
+  initializeDropdownsInAddMode() {
     this.callLOVs();
     this.getAllCountry();
     this.GetAllLanguage();
   }
 
-  callLOVs(){
+  callLOVs() {
     this.commonLOV.getLovByName('Salutation').pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       this.salutationList = res;
     });
@@ -213,10 +231,10 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
 
   ngAfterViewInit() {
     this.studentInternalId = this.data?.studentInternalId;
-    if (this.studentAddModel.studentMaster.studentPortalId == null){
+    if (this.studentAddModel.studentMaster.studentPortalId == null) {
       this.studentPortalId = this.studentAddModel.loginEmail;
     }
-    else{
+    else {
       this.studentPortalId = this.data?.studentPortalId;
     }
     // For Checking Internal Id
@@ -247,32 +265,32 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     });
 
     this.loginEmail.valueChanges
-    .pipe(debounceTime(600), distinctUntilChanged())
-    .subscribe(term => {
-      if (term !== '') {
-        if (this.studentPortalId === term) {
-          this.loginEmail.setErrors(null);
+      .pipe(debounceTime(600), distinctUntilChanged())
+      .subscribe(term => {
+        if (term !== '') {
+          if (this.studentPortalId === term) {
+            this.loginEmail.setErrors(null);
+          }
+          else {
+            this.isUser = true;
+            this.checkUserEmailAddressViewModel.emailAddress = term;
+            this.loginService.checkUserLoginEmail(this.checkUserEmailAddressViewModel).subscribe(data => {
+              if (data.isValidEmailAddress) {
+                this.loginEmail.setErrors(null);
+                this.isUser = false;
+              }
+              else {
+                this.loginEmail.markAsTouched();
+                this.loginEmail.setErrors({ nomatch: true });
+                this.isUser = false;
+              }
+            });
+          }
+        } else {
+          this.loginEmail.markAsTouched();
+          this.isUser = false;
         }
-        else {
-          this.isUser = true;
-          this.checkUserEmailAddressViewModel.emailAddress = term;
-          this.loginService.checkUserLoginEmail(this.checkUserEmailAddressViewModel).subscribe(data => {
-            if (data.isValidEmailAddress) {
-              this.loginEmail.setErrors(null);
-              this.isUser = false;
-            }
-            else {
-              this.loginEmail.markAsTouched();
-              this.loginEmail.setErrors({ nomatch: true });
-              this.isUser = false;
-            }
-          });
-        }
-      } else {
-        this.loginEmail.markAsTouched();
-        this.isUser = false;
-      }
-    });
+      });
   }
 
   accessPortal() {
@@ -311,27 +329,27 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   }
 
   getAllCountry() {
-    if (!this.countryModel.isCountryAvailable){
+    if (!this.countryModel.isCountryAvailable) {
       this.countryModel.isCountryAvailable = true;
       this.commonService.GetAllCountry(this.countryModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-        if (data){
+        if (data) {
           if (data._failure) {
             this.countryListArr = [];
           } else {
-            this.countryListArr = data.tableCountry?.sort((a, b) => a.name < b.name ? -1 : 1 );
+            this.countryListArr = data.tableCountry?.sort((a, b) => a.name < b.name ? -1 : 1);
             if (this.studentCreateMode === this.studentCreate.VIEW) {
-             this.findCountryNationalityById();
+              this.findCountryNationalityById();
             }
           }
         }
-        else{
+        else {
           this.countryListArr = [];
         }
       });
     }
   }
 
-  findCountryNationalityById(){
+  findCountryNationalityById() {
     this.countryListArr.map((val) => {
       const countryInNumber = +this.data.countryOfBirth;
       const nationality = +this.data.nationality;
@@ -351,7 +369,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   }
 
   cancelEdit() {
-    if (JSON.stringify(this.studentAddModel) !== this.cloneStudentModel){
+    if (JSON.stringify(this.studentAddModel) !== this.cloneStudentModel) {
       this.studentAddModel = JSON.parse(this.cloneStudentModel);
       this.studentDetailsForViewAndEdit = JSON.parse(this.cloneStudentModel);
       this.studentService.sendDetails(JSON.parse(this.cloneStudentModel));
@@ -365,25 +383,26 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
   }
 
   GetAllLanguage() {
-    if (!this.languages.isLanguageAvailable){
+    if (!this.languages.isLanguageAvailable) {
       this.languages.isLanguageAvailable = true;
       this.languages._tenantName = sessionStorage.getItem('tenant');
       this.loginService.getAllLanguage(this.languages).pipe(takeUntil(this.destroySubject$)).subscribe(
         (res) => {
-          if (res){
-            this.languageList = res.tableLanguage?.sort((a, b) => a.locale < b.locale ? -1 : 1 );
+          if (res) {
+            this.languageList = res.tableLanguage?.sort((a, b) => a.locale < b.locale ? -1 : 1);
             if (this.studentCreateMode === this.studentCreate.VIEW) {
-            this.findLanguagesById();
+              this.findLanguagesById();
+            }
           }
-          else{
+          else {
             this.languageList = [];
           }
         }
-      });
+      );
     }
   }
 
-  findLanguagesById(){
+  findLanguagesById() {
     this.languageList.map((val) => {
       const firstLanguageId = + this.data.firstLanguageId;
       const secondLanguageId = + this.data.secondLanguageId;
@@ -412,7 +431,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       this.studentAddModel.passwordHash = this.currentForm.controls.passwordHash.value;
     }
     if (this.currentForm.form.valid) {
-      if (this.studentAddModel.fieldsCategoryList !== null) {
+      if (this.studentAddModel.fieldsCategoryList !== null && this.categoryId) {
         this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
         for (const studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId].customFields) {
           if (studentCustomField.type === 'Multiple SelectBox' && this.studentService.getStudentMultiselectValue() !== undefined) {
@@ -434,9 +453,9 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       return;
     }
     this.studentService.UpdateStudent(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (data){
+      if (data) {
         if (data._failure) {
-          this.snackbar.open( data._message, '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
         } else {
@@ -450,11 +469,12 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
           this.findCountryNationalityById();
           this.findLanguagesById();
           this.studentDetailsForViewAndEdit = data;
-          this.dataAfterSavingGeneralInfo.emit(data);
+          this.studentService.setDataAfterSavingGeneralInfo(data);
+          // this.dataAfterSavingGeneralInfo.emit(data);
           this.studentCreateMode = this.studentCreate.VIEW;
           this.studentService.changePageMode(this.studentCreateMode);
         }
-      }else {
+      } else {
         this.snackbar.open(this.defaultValuesService.translateKey('studentUpdateFailed') + sessionStorage.getItem('httpError'), '', {
           duration: 10000
         });
@@ -469,9 +489,9 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     }
     this.studentAddModel.studentMaster.dob = this.commonFunction.formatDateSaveWithoutTime(this.studentAddModel.studentMaster.dob);
     this.studentService.AddStudent(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-      if (data){
+      if (data) {
         if (data._failure) {
-          this.snackbar.open( data._message, '', {
+          this.snackbar.open(data._message, '', {
             duration: 10000
           });
         } else {
@@ -482,11 +502,13 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
           this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
           this.studentService.changeCategory(4);
           this.studentService.setStudentDetails(data);
-          this.dataAfterSavingGeneralInfo.emit(data);
+          this.studentService.setDataAfterSavingGeneralInfo(data);
+
+          // this.dataAfterSavingGeneralInfo.emit(data);
           this.imageCropperService.enableUpload({module: this.moduleIdentifier.STUDENT, upload: true, mode: this.studentCreate.EDIT});
         }
       }
-      else{
+      else {
         this.snackbar.open(this.defaultValuesService.translateKey('studentSaveFailed') + sessionStorage.getItem('httpError'), '', {
           duration: 10000
         });

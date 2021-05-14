@@ -53,11 +53,11 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
   @Input() enableCropTool = true;
   @Input() customCss = 'rounded-full border-2 border-gray-light';
   @Input() responseImage;
-  loading:boolean;
+  loading: boolean;
   staffAddModel: StaffAddModel = new StaffAddModel();
-  studentAddModel:StudentAddModel = new StudentAddModel();
-  schoolAddModel:SchoolAddViewModel = new SchoolAddViewModel();
-  AddParentInfoModel:AddParentInfoModel = new AddParentInfoModel();
+  studentAddModel: StudentAddModel = new StudentAddModel();
+  schoolAddModel: SchoolAddViewModel = new SchoolAddViewModel();
+  AddParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
   constructor(private dialog: MatDialog,
     private imageCropperService: ImageCropperService,
     private snackbar: MatSnackBar,
@@ -66,9 +66,9 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     private parentService: ParentInfoService,
     private studentService: StudentService,
     private loaderService: LoaderService) {
-      this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
-        this.loading = val;
-      });
+    this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
+      this.loading = val;
+    });
 
     this.imageCropperService.shareImageStatus.pipe(takeUntil(this.destroySubject$)).subscribe((message) => {
       if (message == "school") {
@@ -160,7 +160,6 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
   }
 
   callCropper(event) {
-    this.croppedImage
     this.imageChangedEvent = event;
     this.showCropTool = true;
     this.openModal();
@@ -185,16 +184,16 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     this.croppedImage = '';
     let sendImageData2 = (e) => {
       this.imageCropperService.sendUncroppedEvent(e);
-    if (this.moduleIdentifier == this.modules.SCHOOL && this.createMode!=this.modes.ADD) {
+      if (this.moduleIdentifier == this.modules.SCHOOL && this.createMode != this.modes.ADD) {
         this.updateSchoolImage();
-        }
+      }
       this.fileUploader.value = null;
     }
     sendImageData2(e);
   }
 
   openModal() {
-        let dialogRef = this.dialog.open(this.mytemplate, {
+    let dialogRef = this.dialog.open(this.mytemplate, {
       width: '700px',
     });
 
@@ -208,20 +207,21 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
   onClose() {
     this.hideCropperToolButton = false;
     this.fileUploader.value = null;
+    // this.cancelPhoto();
     // this.showCropperandButton=true;
     this.dialog.closeAll();
   }
 
-  cancelPhoto(){
+  cancelPhoto() {
     if (this.moduleIdentifier == this.modules.STUDENT) {
       this.preview = '';
       this.croppedImage = '';
       this.responseImage = this.studentService.getStudentCloneImage();
       this.dialog.closeAll();
     } else if (this.moduleIdentifier == this.modules.STAFF) {
-       this.preview = '';
-        this.croppedImage = '';
-        this.responseImage = this.staffService.getStaffCloneImage();
+      this.preview = '';
+      this.croppedImage = '';
+      this.responseImage = this.staffService.getStaffCloneImage();
       this.dialog.closeAll();
     }
   }
@@ -230,26 +230,26 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     if (this.moduleIdentifier == this.modules.STUDENT) {
       this.updateStudentImage();
     } else if (this.moduleIdentifier == this.modules.STAFF) {
-        this.updateStaffImage();
+      this.updateStaffImage();
     } else if (this.moduleIdentifier == this.modules.PARENT) {
       this.updateParentImage();
-  }
+    }
   }
 
-  updateSchoolImage(){
-    this.schoolService.addUpdateSchoolLogo(this.schoolAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+  updateSchoolImage() {
+    this.schoolService.addUpdateSchoolLogo(this.schoolAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
-        this.snackbar.open('School Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open(sessionStorage.getItem("httpError"), '', {
           duration: 5000
         });
       }
       else {
         if (res._failure) {
-          this.snackbar.open('School Image Update failed. ' + res._message, '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
         } else {
-          this.snackbar.open('School Image Updated Successfully.', '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
           this.schoolService.setSchoolCloneImage(res.schoolMaster.schoolDetail[0].schoolLogo);
@@ -258,20 +258,20 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateStudentImage(){
-    this.studentService.addUpdateStudentPhoto(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+  updateStudentImage() {
+    this.studentService.addUpdateStudentPhoto(this.studentAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
-        this.snackbar.open('Student Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open(sessionStorage.getItem("httpError"), '', {
           duration: 5000
         });
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Student Image Update failed. ' + res._message, '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
         } else {
-          this.snackbar.open('Student Image Updated Successfully.', '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
           this.studentService.setStudentCloneImage(res.studentMaster.studentPhoto);
@@ -281,20 +281,20 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateStaffImage(){
-    this.staffService.addUpdateStaffPhoto(this.staffAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+  updateStaffImage() {
+    this.staffService.addUpdateStaffPhoto(this.staffAddModel).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
-        this.snackbar.open('Staff Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open(sessionStorage.getItem("httpError"), '', {
           duration: 5000
         });
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Staff Image Update failed. ' + res._message, '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
         } else {
-          this.snackbar.open('Staff Image Updated Successfully.', '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
           this.staffService.setStaffCloneImage(res.staffMaster.staffPhoto);
@@ -304,20 +304,20 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     });
   }
 
-  updateParentImage(){
-    this.parentService.addUpdateParentPhoto(this.AddParentInfoModel).pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
+  updateParentImage() {
+    this.parentService.addUpdateParentPhoto(this.AddParentInfoModel).pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (typeof (res) == 'undefined') {
-        this.snackbar.open('Parent Image Update failed. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open(sessionStorage.getItem("httpError"), '', {
           duration: 5000
         });
       }
       else {
         if (res._failure) {
-          this.snackbar.open('Parent Image Update failed. ' + res._message, '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
         } else {
-          this.snackbar.open('Parent Image Updated Successfully.', '', {
+          this.snackbar.open(res._message, '', {
             duration: 5000
           });
           this.dialog.closeAll();

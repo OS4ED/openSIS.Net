@@ -36,10 +36,10 @@ import { RollBasedAccessService } from '../../../../services/roll-based-access.s
 export class WashInfoComponent implements OnInit,OnDestroy {
   schoolCreate = SchoolCreate;
   moduleIdentifier = ModuleIdentifier;
-  @Input() schoolCreateMode: SchoolCreate;
+  schoolCreateMode: SchoolCreate;
   icEdit = icEdit;
-  @Input() schoolDetailsForViewAndEdit;
-  @Input() categoryId;
+  schoolDetailsForViewAndEdit;
+  categoryId;
   form: FormGroup;
   washinfo = WashInfoEnum;
   @ViewChild('f') currentForm: NgForm;
@@ -67,11 +67,25 @@ export class WashInfoComponent implements OnInit,OnDestroy {
     private imageCropperService: ImageCropperService,
     private commonService: CommonService,
     public rollBasedAccessService: RollBasedAccessService,
-    private commonLOV:CommonLOV) {
+    private commonLOV:CommonLOV,
+    private router: Router
+    ) {
     translateService.use('en');
 
   }
   ngOnInit(): void {
+
+    this.schoolService.schoolCreatedMode.subscribe((res)=>{
+      this.schoolCreateMode = res;
+    });
+
+    this.schoolService.schoolDetailsForViewedAndEdited.subscribe((res)=>{
+      this.schoolDetailsForViewAndEdit = res;
+    });
+
+    this.schoolService.categoryIdSelected.subscribe((res)=>{
+      this.categoryId = res;
+    });
 
     if (this.schoolCreateMode === this.schoolCreate.VIEW) {
       this.permissionListViewModel = this.rollBasedAccessService.getPermission();
@@ -90,6 +104,11 @@ export class WashInfoComponent implements OnInit,OnDestroy {
       this.schoolAddViewModel = this.schoolService.getSchoolDetails();
       this.cloneSchool = JSON.stringify(this.schoolAddViewModel);
     }
+
+    if(!this.schoolAddViewModel) {
+      this.router.navigate(['/school', 'schoolinfo', 'generalinfo']);
+    }
+
   }
 
   initializeDropdownValues() {
@@ -139,32 +158,32 @@ export class WashInfoComponent implements OnInit,OnDestroy {
       if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== null) {
         this.modifyCustomFields();
       }
-      this.schoolService.UpdateSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(data => {
-        if (typeof (data) === 'undefined') {
-          this.snackbar.open(`Wash Info Updation failed` + sessionStorage.getItem("httpError"), '', {
-            duration: 10000
-          });
-        }
-        else {
-          if (data._failure) {
-            this.snackbar.open(`Wash Info Updation failed` + data._message, '', {
+      this.schoolService.UpdateSchool(this.schoolAddViewModel).pipe(takeUntil(this.destroySubject$)).subscribe(
+        data => {
+          if (data){
+            if (data._failure) {
+              this.snackbar.open( data._message, '', {
+                duration: 10000
+              });
+            } else {
+              this.snackbar.open(data._message, '', {
+                duration: 10000
+              });
+              this.schoolCreateMode = this.schoolCreate.VIEW;
+              this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
+              data.schoolMaster.schoolDetail[0].schoolLogo = null;
+              this.schoolDetailsForViewAndEdit = data;
+              this.cloneSchool = JSON.stringify(this.schoolDetailsForViewAndEdit);
+              this.schoolService.changePageMode(this.schoolCreateMode);
+              this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
+            }
+          }else{
+            this.snackbar.open(`Wash Info Updation failed` + sessionStorage.getItem("httpError"), '', {
               duration: 10000
             });
-          } else {
-            this.snackbar.open(`Wash Info Updation Successful`, '', {
-              duration: 10000
-            });
-            this.schoolCreateMode = this.schoolCreate.VIEW;
-            this.schoolService.setSchoolCloneImage(data.schoolMaster.schoolDetail[0].schoolLogo);
-            data.schoolMaster.schoolDetail[0].schoolLogo=null;
-            this.schoolDetailsForViewAndEdit=data;
-            this.cloneSchool=JSON.stringify(this.schoolDetailsForViewAndEdit);
-            this.schoolService.changePageMode(this.schoolCreateMode);
-            this.imageCropperService.enableUpload({module:this.moduleIdentifier.SCHOOL,upload:true,mode:this.schoolCreate.VIEW});
           }
         }
-
-      })
+      );
     }
   }
 

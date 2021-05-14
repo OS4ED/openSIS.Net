@@ -17,7 +17,9 @@
                 </li>
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'userProfile' | translate}}</label>
-                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">-</p>
+                    <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                        {{parentInfo.userProfile | EmtyValueCheckPipe}}
+                    </p>
                     </li>
                 </ul>
     

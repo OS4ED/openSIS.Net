@@ -1,0 +1,38 @@
+<vex-page-layout>
+    <vex-page-layout-header class="" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="{{ 'CHEM0001' | translate }}" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Class']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+    <vex-page-layout-content>
+        <div class="card mb-6 -mt-6 -mx-6">
+            <div class="flex flex-col justify-between items-center ">
+                <ul class="flex flex-row">
+                    <li class="px-4 py-2 cursor-pointer font-medium" (click)="changeTab('overview')"
+                        [class.active]="currentTab === 'overview'"
+                        [ngClass]="currentTab === 'overview' ? 'text-primary border-b-2 border-primary' : ''">
+                        {{'overview' | translate}}
+                    </li>
+                    <li class="px-4 py-2 cursor-pointer font-medium" (click)="changeTab('students')"
+                        [class.active]="currentTab === 'students'"
+                        [ngClass]="currentTab === 'students' ? 'text-primary border-b-2 border-primary' : ''">
+                        {{'students' | translate}}
+                    </li>
+                    <li class="px-4 py-2 cursor-pointer font-medium" (click)="changeTab('attendance')"
+                        [class.active]="currentTab === 'attendance'"
+                        [ngClass]="currentTab === 'attendance' ? 'text-primary border-b-2 border-primary' : ''">
+                        {{'attendance' | translate}}
+                    </li>
+                    <li class="px-4 py-2 cursor-pointer font-medium">{{'gradebookConfiguration' | translate}}</li>
+                    <li class="px-4 py-2 cursor-pointer font-medium">{{'assignments' | translate}}</li>
+                    <li class="px-4 py-2 cursor-pointer font-medium">{{'grades' | translate}}</li>
+                </ul>
+            </div>
+        </div>
+        <div>
+            <vex-course-overview *ngIf="currentTab === 'overview'"></vex-course-overview>
+            <vex-students *ngIf="currentTab === 'students'"></vex-students>
+            <vex-attendance *ngIf="currentTab === 'attendance'"></vex-attendance>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

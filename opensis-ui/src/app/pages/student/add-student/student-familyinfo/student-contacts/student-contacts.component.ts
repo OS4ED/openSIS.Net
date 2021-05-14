@@ -124,6 +124,7 @@ export class StudentContactsComponent implements OnInit {
   }
   deleteParentInfo(parentId){
     this.removeAssociateParent.parentInfo.parentId = parentId;
+    this.removeAssociateParent.studentSchoolId = this.studentDetailsForViewAndEditData.studentMaster.schoolId;
     this.removeAssociateParent.studentId = this.studentDetailsForViewAndEditData.studentMaster.studentId;
     this.parentInfoService.removeAssociatedParent(this.removeAssociateParent).subscribe(
       data => {

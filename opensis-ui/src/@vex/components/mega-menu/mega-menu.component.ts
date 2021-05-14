@@ -28,7 +28,7 @@ export class MegaMenuComponent implements OnInit {
     {
       icon: icSchool,
       label: 'School',
-      route: './school/schoolinfo/add-school'
+      route: './school/schoolinfo/generalinfo'
     },
     {
       icon: icStudents,
@@ -38,7 +38,7 @@ export class MegaMenuComponent implements OnInit {
     {
       icon: icStaff,
       label: 'Staff',
-      route: './school/staff/add-staff'
+      route: './school/staff/staff-generalinfo'
     },
     {
       icon: icEvent,

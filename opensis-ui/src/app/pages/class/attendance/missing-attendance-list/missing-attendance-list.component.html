@@ -1,0 +1,82 @@
+<div class="bg-white px-6 md:h-14 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+    <div class="md:flex w-full justify-between">
+        <div class="py-2" fxLayout="row" fxLayoutAlign="start center">
+            <div class="flex items-center">
+                <input matInput class="py-3 border-0 outline-none w-full bg-transparent" appearance="outline"
+                    color="primary" placeholder="Search..." type="search">
+                <button class="ml-4" mat-icon-button type="button">
+                    <mat-icon [icIcon]="icSearch"></mat-icon>
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="border-t overflow-x-auto overflow-y-hidden">
+    <table class="w-full schedule-table">
+        <thead>
+            <tr>
+                <th>{{ "date" | translate }}</th>
+                <th>{{ "courseSection" | translate }}</th>
+                <th>{{ "period" | translate }}</th>
+                <th>{{ "action" | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>13 Apr, 2021</td>
+                <td>ATTN001</td>
+                <td>Attendance Period</td>
+                <td class="cursor-pointer text-primary">
+                    <div>
+                        <mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' |
+                            translate }}</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>13 Apr, 2021</td>
+                <td>GEOM001</td>
+                <td>Period 5</td>
+                <td class="cursor-pointer text-primary">
+                    <div>
+                        <mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' |
+                            translate }}</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>13 Apr, 2021</td>
+                <td>ATTN001</td>
+                <td>Attendance Period</td>
+                <td class="cursor-pointer text-primary">
+                    <div>
+                        <mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' |
+                            translate }}</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>14 Apr, 2021</td>
+                <td>ATTN001</td>
+                <td>Attendance Period</td>
+                <td class="cursor-pointer text-primary">
+                    <div>
+                        <mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' |
+                            translate }}</span>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>15 Apr, 2021</td>
+                <td>GEOM001</td>
+                <td>Period 5</td>
+                <td class="cursor-pointer text-primary">
+                    <div>
+                        <mat-icon class="mr-1 align-middle">how_to_reg</mat-icon><span>{{ 'takeAttendance' |
+                            translate }}</span>
+                    </div>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
