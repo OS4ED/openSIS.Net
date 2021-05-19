@@ -132,6 +132,8 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   checkStaffCustomValue(){
       if (this.staffAddModel?.fieldsCategoryList?.length>0) {
         this.staffCustomFields = this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField);
+        if(this.staffCustomFields?.length>0 ){
+
         for (let staffCustomField of this.staffCustomFields) {
           if (staffCustomField?.customFieldsValue.length == 0) {
 
@@ -144,6 +146,8 @@ export class CustomFieldWithoutFormComponent implements OnInit {
             }
           }
         }
+      }
+
 
       }
     

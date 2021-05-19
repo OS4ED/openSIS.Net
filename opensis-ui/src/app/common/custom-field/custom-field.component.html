@@ -147,8 +147,9 @@
 <!--Start Student Module-->
 
 <div *ngIf="studentAddViewModel.fieldsCategoryList && module =='Student'">
-    <div *ngIf="studentCreateMode == SchoolCreate.EDIT">
+    <div *ngIf="studentCreateMode == SchoolCreate.EDIT || studentCreateMode===SchoolCreate.ADD">
         <mat-card class="w-full">
+            <h3 class="flex-auto" *ngIf="studentAddViewModel.fieldsCategoryList[categoryId]?.customFields.length==0">{{ categoryTitle }}</h3>
             <div *ngIf="studentAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
                 <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
                     <mat-card-header>
@@ -299,8 +300,9 @@
 
 <!--Start Staff Module-->
 <div *ngIf="staffAddViewModel.fieldsCategoryList && module =='Staff'">
-    <div *ngIf="staffCreateMode == SchoolCreate.EDIT">
+    <div *ngIf="staffCreateMode == SchoolCreate.EDIT || staffCreateMode == SchoolCreate.ADD">
         <mat-card class="w-full">
+        <h3 class="flex-auto" *ngIf="staffAddViewModel.fieldsCategoryList[categoryId]?.customFields.length==0">{{ categoryTitle }}</h3>
             <div *ngIf="staffAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
                 <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
                     <mat-card-header>

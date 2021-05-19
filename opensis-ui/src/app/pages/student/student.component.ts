@@ -363,8 +363,60 @@ export class StudentComponent implements OnInit, OnDestroy {
 
   viewStudentDetails(id){  
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STUDENT,upload:true,mode:this.createMode.VIEW});
-    this.studentService.setStudentId(id)
-    this.router.navigate(["school/students/student-generalinfo"]); 
+    this.studentService.setStudentId(id);
+    this.checkViewPermission();
+    // this.router.navigate(["school/students/student-generalinfo"]); 
+  }
+
+  checkViewPermission(){
+    let categoryId;
+    let categoryName;
+    
+     for (const permission of this.permissionListViewModel.permissionList[2].permissionGroup.permissionCategory[0].permissionSubcategory){
+      if(permission.rolePermission[0].canView){
+       categoryId=permission.permissionSubcategoryId;
+       categoryName=permission.title;
+       break;
+      }
+    }
+    if(categoryId){
+      this.checkCurrentCategoryAndRoute(categoryId,categoryName);
+    }
+
+  }
+
+  checkCurrentCategoryAndRoute(categoryId,categoryName) {
+    this.studentService.setCategoryTitle(categoryName);
+    this.studentService.setCategoryId(0);
+    this.commonService.setModuleName('Student');
+    if(categoryId === 3) {
+      this.router.navigate(['/school', 'students', 'student-generalinfo']);
+    } else if(categoryId === 4 ) {
+      this.router.navigate(['/school', 'students', 'student-enrollmentinfo']);
+    } else if(categoryId === 5 ) {
+        this.router.navigate(['/school', 'students', 'student-address-contact']);
+    } else if(categoryId === 6 ) {
+      this.router.navigate(['/school', 'students', 'student-familyinfo']);
+    } else if(categoryId === 7 ) {
+      this.router.navigate(['/school', 'students', 'student-medicalinfo']);
+    }
+     else if(categoryId === 8 ) {
+      this.router.navigate(['/school', 'students', 'student-comments']);
+    } else if(categoryId === 9 ) {
+      this.router.navigate(['/school', 'students', 'student-documents']);
+    } else if(categoryId === 100 ) {
+      this.router.navigate(['/school', 'students', 'student-course-schedule']);
+    }  else if(categoryId === 101 ) {
+      this.router.navigate(['/school', 'students', 'student-attendance']);
+    }  else if(categoryId === 102 ) {
+      this.router.navigate(['/school', 'students', 'student-transcript']);
+    }  else if(categoryId === 103 ) {
+      this.router.navigate(['/school', 'students', 'student-report-card']);
+    }
+    else if(categoryId > 9 ) {
+      this.router.navigate(['/school', 'students', 'custom', categoryName.trim().toLowerCase().split(' ').join('-')]);
+    }
+
   }
 
   getPageEvent(event){

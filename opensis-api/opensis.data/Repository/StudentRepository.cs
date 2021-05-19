@@ -1428,7 +1428,7 @@ namespace opensis.data.Repository
                             Hide = y.Hide,
                             LastUpdate = y.LastUpdate,
                             UpdatedBy = y.UpdatedBy,
-                            CustomFields = y.CustomFields.Select(z => new CustomFields
+                            CustomFields = y.CustomFields.Where(x => x.SystemField != true).Select(z => new CustomFields
                             {
                                 TenantId = z.TenantId,
                                 SchoolId = z.SchoolId,

@@ -81,9 +81,19 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     this.imageCropperService.getCroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       this.staffService.setStaffImage(res[1]);
     });
-    this.staffService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res:number) => {
-      this.currentCategory = res;
+    this.staffService.selectedCategoryTitle.pipe(takeUntil(this.destroySubject$)).subscribe((res:string) => {
+      if(res && res!==this.categoryTitle){
+        this.categoryTitle=res;
+        let index=0;
+        this.fieldsCategory.map((item,i)=>{
+          if(item.title===this.categoryTitle){
+            this.currentCategory=item.categoryId;
+            index=i;
+          }
+        });
+      this.staffService.setCategoryId(index);
       this.checkCurrentCategoryAndRoute();
+      }
     });
     this.staffService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
       if(res==this.staffCreate.VIEW){
@@ -102,7 +112,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
+    this.commonService.setModuleName(this.module);
     this.staffService.dataAfterSavedGeneralInfo.subscribe((res)=>{
       if(res){
         this.afterSavingGeneralInfo(res);
@@ -161,20 +171,17 @@ export class AddStaffComponent implements OnInit, OnDestroy {
       this.staffCreateMode = this.staffCreate.EDIT;
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
-      this.staffService.setCategoryId(this.indexOfCategory);
       this.staffAddModel = staffDetails;
       this.staffService.setStaffDetailsForViewAndEdit(this.staffAddModel);
-
     }
 
     if (this.staffCreateMode == this.staffCreate.VIEW) {
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
-      this.staffService.setCategoryId(this.indexOfCategory);
-
       this.pageStatus = "View Staff"
     }
     this.staffService.setStaffCreateMode(this.staffCreateMode);
+    this.staffService.setCategoryId(this.indexOfCategory);
     this.checkCurrentCategoryAndRoute();
   }
 
@@ -201,7 +208,8 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     this.staffAddModel.staffMaster.staffId = this.staffId;
     this.staffService.viewStaff(this.staffAddModel).subscribe(data => {
       this.staffAddModel = data;
-      this.fieldsCategory = this.checkViewPermission(data.fieldsCategoryList);
+      this.staffAddModel.fieldsCategoryList = this.checkViewPermission(data.fieldsCategoryList);
+      this.fieldsCategory = this.staffAddModel.fieldsCategoryList;
       this.profileFromSchoolInfo(data.staffMaster.profile)
       this.responseImage = this.staffAddModel.staffMaster.staffPhoto;
       this.staffService.setStaffCloneImage(this.staffAddModel.staffMaster.staffPhoto);
@@ -234,11 +242,10 @@ export class AddStaffComponent implements OnInit, OnDestroy {
           });
         }
         else {
-          this.fieldsCategory = this.checkViewPermission(res.fieldsCategoryList);
           this.staffAddModel.fieldsCategoryList= this.checkViewPermission(res.fieldsCategoryList);
+          this.fieldsCategory = this.staffAddModel.fieldsCategoryList;
           this.staffService.sendDetails(this.staffAddModel);
-      this.staffService.setStaffDetailsForViewAndEdit(this.staffAddModel);
-
+          this.staffService.setStaffDetailsForViewAndEdit(this.staffAddModel);
         }
       }
     }
@@ -255,7 +262,6 @@ export class AddStaffComponent implements OnInit, OnDestroy {
      }
     }
     });
-    this.currentCategory = category[0]?.categoryId;
     return category;
   }
 

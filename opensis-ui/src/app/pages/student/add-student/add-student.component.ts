@@ -93,11 +93,22 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       .subscribe((res) => {
         this.studentService.setStudentImage(res[1]);
       });
-    this.studentService.categoryToSend
+    this.studentService.selectedCatgoryTitle
       .pipe(takeUntil(this.destroySubject$))
-      .subscribe((res: number) => {
-        this.currentCategory = res;
-      this.checkCurrentCategoryAndRoute();
+      .subscribe((res: string) => {
+        if(res && res!==this.categoryTitle){
+          this.categoryTitle=res;
+          let index=0;
+          this.fieldsCategory.map((item,i)=>{
+            if(item.title===this.categoryTitle){
+              this.currentCategory=item.categoryId;
+              index=i;
+            }
+          })
+    this.studentService.setCategoryId(index);
+        
+        this.checkCurrentCategoryAndRoute();
+        }
       });
     this.studentService.modeToUpdate
       .pipe(takeUntil(this.destroySubject$))
@@ -123,8 +134,8 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.checkCurrentCategoryAndRoute();
-
+    // this.checkCurrentCategoryAndRoute();
+    this.commonService.setModuleName(this.module);
     this.studentService.dataAfterSavingGeneralInfoChanged.subscribe((res)=>{
       this.afterSavingGeneralInfo(res);
     })
@@ -180,6 +191,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     return permission;
   }
   changeCategory(field, index) {
+
     this.categoryTitle=field.title;
     this.studentService.setCategoryTitle(this.categoryTitle);
     this.commonService.setModuleName(this.module);
@@ -191,7 +203,6 @@ export class AddStudentComponent implements OnInit, OnDestroy {
       
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
-      this.studentService.setCategoryId(this.indexOfCategory);
 
       this.studentAddModel = studentDetails;
     this.studentService.setStudentDetailsForViewAndEdit(this.studentAddModel);
@@ -201,10 +212,10 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     if (this.studentCreateMode === this.studentCreate.VIEW) {
       this.currentCategory = field.categoryId;
       this.indexOfCategory = index;
-      this.studentService.setCategoryId(this.indexOfCategory);
 
       this.pageStatus = "View Student";
     }
+    this.studentService.setCategoryId(this.indexOfCategory);
     this.studentService.setStudentCreateMode(this.studentCreateMode);
     this.checkCurrentCategoryAndRoute();
   }
@@ -234,7 +245,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     }  else if(this.currentCategory === 103 ) {
       this.router.navigate(['/school', 'students', 'student-report-card']);
     }
-    else if(this.indexOfCategory > 6 ) {
+    else if(this.currentCategory > 9 ) {
       this.router.navigate(['/school', 'students', 'custom', this.categoryTitle.trim().toLowerCase().split(' ').join('-')]);
     }
 
@@ -303,7 +314,9 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.studentService.viewStudent(this.studentAddModel).subscribe((data) => {
       this.studentAddModel = data;
       this.responseImage = this.studentAddModel.studentMaster.studentPhoto;
-      this.fieldsCategory = this.checkViewPermission(data.fieldsCategoryList);
+      this.studentAddModel.fieldsCategoryList = this.checkViewPermission(data.fieldsCategoryList);
+      this.fieldsCategory = this.studentAddModel.fieldsCategoryList
+
       this.studentAddModel.studentMaster.studentPhoto = null;
 
       this.studentService.sendDetails(this.studentAddModel);

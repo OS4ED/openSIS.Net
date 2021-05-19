@@ -4,23 +4,32 @@
         <mat-card-title>{{'familyInformation'|translate}}</mat-card-title>
     </mat-card-header>
     <mat-card-content>
-    <div class="-mx-4">
-        <mat-tab-group>
-            <mat-tab label="{{'contacts'|translate}}">
-              <ng-template matTabContent>
+      <div class="-mx-4">
+        <ul class="flex flex-row text-gray font-semibold">
+          
+            <li class="px-8 py-2 cursor-pointer" (click)="changeTab('contacts')"
+            [class.active]="currentTab === 'contacts'"
+            [ngClass]="currentTab === 'contacts' ? 'text-black border-b-2 border-primary' : ''">
+            {{'contacts' | translate}}</li>
+            <li class="px-8 py-2 cursor-pointer" (click)="changeTab('siblingInfo')"
+            [class.active]="currentTab === 'siblingInfo'"
+            [ngClass]="currentTab === 'siblingInfo' ? 'text-black border-b-2 border-primary' : ''">
+            {{'siblingInfo' | translate}}</li>
+        </ul>
+      
+        <hr class=""/>
+        <div [ngSwitch]="currentTab">
+          <div *ngSwitchCase="'contacts'" class="px-4">
             <div class="px-gutter pt-6">
-                <vex-student-contacts [studentDetailsForViewAndEditData]="studentDetailsForViewAndEditData"></vex-student-contacts>
+              <vex-student-contacts [studentDetailsForViewAndEditData]="studentDetailsForViewAndEditData"></vex-student-contacts>
             </div>
-            </ng-template>
-            </mat-tab>
-            <mat-tab label="{{'siblingInfo'|translate}}">
-              <ng-template matTabContent>
+          </div>
+          <div *ngSwitchCase="'siblingInfo'" class="px-4">
             <div class="px-gutter pt-6">
-                    <vex-siblingsinfo></vex-siblingsinfo>
+              <vex-siblingsinfo></vex-siblingsinfo>
             </div>
-              </ng-template>
-            </mat-tab>
-          </mat-tab-group>
-    </div>
+          </div>
+        </div>
+      </div>
     </mat-card-content>
 </mat-card>

@@ -138,7 +138,9 @@ export class StaffGeneralinfoComponent implements OnInit {
     })
 
     this.staffService.categoryIdSelected.subscribe((res)=>{
-      this.categoryId = res;
+      if(res){
+        this.categoryId = res;
+      }
     })
 
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
@@ -430,12 +432,11 @@ export class StaffGeneralinfoComponent implements OnInit {
     if (this.currentForm.controls.passwordHash !== undefined) {
       this.staffAddModel.passwordHash = this.currentForm.controls.passwordHash.value;
     }
-
     if (this.currentForm.form.valid) {
-      if (this.staffAddModel.fieldsCategoryList !== null) {
-        this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId].categoryId;
+      if (this.staffAddModel.fieldsCategoryList !== null && this.categoryId) {
+        this.staffAddModel.selectedCategoryId = this.staffAddModel.fieldsCategoryList[this.categoryId]?.categoryId;
         
-        for (let staffCustomField of this.staffAddModel.fieldsCategoryList[this.categoryId].customFields) {
+        for (let staffCustomField of this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields) {
           if (staffCustomField.type === "Multiple SelectBox" && this.staffService.getStaffMultiselectValue() !== undefined) {
             staffCustomField.customFieldsValue[0].customFieldValue = this.staffService.getStaffMultiselectValue().toString().replaceAll(",", "|");
           }
@@ -472,7 +473,7 @@ export class StaffGeneralinfoComponent implements OnInit {
           });
           this.staffService.setStaffId(data.staffMaster.staffId);
           this.staffService.setStaffCloneImage(data.staffMaster.staffPhoto);
-          this.staffService.changeCategory(13);
+          this.checkPermissionAndSwitchNextCategory();
           this.staffService.setStaffDetails(data);
           // this.dataAfterSavingGeneralInfo.emit(data);
           this.staffService.setDataAfterSavingGeneralInfo(data);
@@ -480,6 +481,23 @@ export class StaffGeneralinfoComponent implements OnInit {
         }
       }
     })
+  }
+  checkPermissionAndSwitchNextCategory(){
+    let categoryTitle: string;
+    let count=0;   
+    let index=0; 
+     for (const [i,permission] of this.permissionListViewModel.permissionList[4].permissionGroup.permissionCategory[0].permissionSubcategory?.entries()){
+      if(permission.rolePermission[0].canView){
+        count++
+       categoryTitle = permission.permissionSubcategoryName;
+       index=i;
+       if(count==2) break;
+      }
+    }
+
+    if(categoryTitle){
+    this.staffService.setCategoryTitle(categoryTitle);
+    }
   }
 
   updateStaff() {

@@ -30,10 +30,15 @@ import { FormsModule } from "@angular/forms";
 import { ReactiveFormsModule } from '@angular/forms';
 import { MatMomentDateModule } from '@angular/material-moment-adapter';
 import { MatPaginatorModule } from '@angular/material/paginator';
+import { AssignmentsComponent } from './assignments/assignments.component';
+import { AddAssignmentComponent } from './assignments/add-assignment/add-assignment.component';
+import { CreateAssignmentComponent } from './assignments/create-assignment/create-assignment.component';
+import { MatSelectModule } from '@angular/material/select';
+import { QuillModule } from 'ngx-quill';
 
 
 @NgModule({
-  declarations: [ClassComponent, CourseOverviewComponent, StudentsComponent, AttendanceComponent, MissingAttendanceListComponent, AddTeacherCommentsComponent],
+  declarations: [ClassComponent, CourseOverviewComponent, StudentsComponent, AttendanceComponent, MissingAttendanceListComponent, AddTeacherCommentsComponent, AssignmentsComponent, AddAssignmentComponent, CreateAssignmentComponent],
   imports: [
     CommonModule,
     ClassRoutingModule,
@@ -58,7 +63,33 @@ import { MatPaginatorModule } from '@angular/material/paginator';
     FormsModule,
     ReactiveFormsModule,
     MatMomentDateModule,
-    MatPaginatorModule
+    MatPaginatorModule,
+    MatSelectModule,
+    QuillModule.forRoot({
+      modules: {
+        toolbar: [
+          ['bold', 'italic', 'underline', 'strike'],        // toggled buttons
+          ['blockquote', 'code-block'],
+
+          [{ header: 1 }, { header: 2 }],               // custom button values
+          [{ list: 'ordered' }, { list: 'bullet' }],
+          [{ script: 'sub' }, { script: 'super' }],      // superscript/subscript
+          [{ indent: '-1' }, { indent: '+1' }],          // outdent/indent
+          [{ direction: 'rtl' }],                         // text direction
+
+          [{ size: ['small', false, 'large', 'huge'] }],  // custom dropdown
+          [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+          [{ color: [] }, { background: [] }],          // dropdown with defaults from theme
+          [{ align: [] }],
+
+          ['clean'],                                         // remove formatting button
+
+          ['link', 'image', 'video']                         // link and image, video
+          
+        ]
+      }
+    })
   ]
 })
 export class ClassModule { }

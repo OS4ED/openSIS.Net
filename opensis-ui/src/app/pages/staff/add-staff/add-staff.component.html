@@ -38,36 +38,32 @@
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
             <vex-page-layout-content class="-mt-4">
-                <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
-                    <mat-drawer-content class="flex-auto flex items-start">
-                        <div class="w-full" fxFlex="auto">
-                            <router-outlet></router-outlet>
-                            <!-- <vex-staff-generalinfo *ngIf="currentCategory==12" [staffCreateMode]="staffCreateMode"
-                            (dataAfterSavingGeneralInfo)="afterSavingGeneralInfo($event)" [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
-                            </vex-staff-generalinfo> -->
+                <div class="w-full -mt-16">
+                    <router-outlet></router-outlet>
+                    <!-- <vex-staff-generalinfo *ngIf="currentCategory==12" [staffCreateMode]="staffCreateMode"
+                    (dataAfterSavingGeneralInfo)="afterSavingGeneralInfo($event)" [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
+                    </vex-staff-generalinfo> -->
 
-                            <!-- <vex-staff-schoolinfo *ngIf="currentCategory==13" [staffCreateMode]="staffCreateMode"
-                                [staffDetailsForViewAndEdit]="staffAddModel" (checkUpdatedProfileName)="profileFromSchoolInfo($event)"></vex-staff-schoolinfo> -->
+                    <!-- <vex-staff-schoolinfo *ngIf="currentCategory==13" [staffCreateMode]="staffCreateMode"
+                        [staffDetailsForViewAndEdit]="staffAddModel" (checkUpdatedProfileName)="profileFromSchoolInfo($event)"></vex-staff-schoolinfo> -->
 
 
-                            <!-- <vex-staff-addressinfo *ngIf="currentCategory==14" [staffCreateMode]="staffCreateMode"
-                                [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
-                            </vex-staff-addressinfo> -->
+                    <!-- <vex-staff-addressinfo *ngIf="currentCategory==14" [staffCreateMode]="staffCreateMode"
+                        [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
+                    </vex-staff-addressinfo> -->
 
-                            <!-- <vex-staff-certificationinfo *ngIf="currentCategory==15"></vex-staff-certificationinfo> -->
+                    <!-- <vex-staff-certificationinfo *ngIf="currentCategory==15"></vex-staff-certificationinfo> -->
 
-                            <!-- <div *ngFor="let field of fieldsCategory;let index=index">
-                                <vex-custom-field *ngIf="field.categoryId == currentCategory && currentCategory>15"
-                                    [categoryTitle]="field.title" [module]="module"
-                                    [schoolDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory"
-                                    [staffCreateMode]="staffCreateMode" [schoolDetailsForViewAndEdit]="staffAddModel"
-                                    [categoryId]="indexOfCategory">
-                                </vex-custom-field>
-                            </div> -->
+                    <!-- <div *ngFor="let field of fieldsCategory;let index=index">
+                        <vex-custom-field *ngIf="field.categoryId == currentCategory && currentCategory>15"
+                            [categoryTitle]="field.title" [module]="module"
+                            [schoolDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory"
+                            [staffCreateMode]="staffCreateMode" [schoolDetailsForViewAndEdit]="staffAddModel"
+                            [categoryId]="indexOfCategory">
+                        </vex-custom-field>
+                    </div> -->
 
-                        </div>
-                    </mat-drawer-content>
-                </mat-drawer-container>
+                </div>
             </vex-page-layout-content>
         </vex-page-layout>
     </div>

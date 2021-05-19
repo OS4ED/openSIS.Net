@@ -51,7 +51,7 @@ export class StaffService {
   private staffDetailsForViewAndEdit = new BehaviorSubject(false);
   staffDetailsForViewedAndEdited = this.staffDetailsForViewAndEdit.asObservable();
   
-  private categoryId = new BehaviorSubject(0);
+  private categoryId = new BehaviorSubject(null);
   categoryIdSelected = this.categoryId.asObservable();
 
   private dataAfterSavingGeneralInfo = new Subject();

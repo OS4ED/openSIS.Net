@@ -25,7 +25,8 @@ export class AttendanceCategoryComponent implements OnInit {
   editDetails;
   attendanceCategoryModalTitle="addAttendanceCategory";
   attendanceCategoryModalActionButton="submit";
-  constructor(private dialogRef: MatDialogRef<AttendanceCategoryComponent>,
+  constructor(
+    private dialogRef: MatDialogRef<AttendanceCategoryComponent>,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private attendanceCodeService:AttendanceCodeService,
     private fb: FormBuilder,
@@ -67,7 +68,7 @@ export class AttendanceCategoryComponent implements OnInit {
     this.attendanceCategoryModel.attendanceCodeCategories.academicYear=+sessionStorage.getItem("academicyear");
     this.attendanceCodeService.addAttendanceCodeCategories(this.attendanceCategoryModel).subscribe((res)=>{
       if (typeof (res) == 'undefined') {
-        this.snackbar.open('Attendance Category is Failed to Submit!. ' + sessionStorage.getItem("httpError"), '', {
+        this.snackbar.open( sessionStorage.getItem('httpError'), '', {
           duration: 10000
         });
       }else if (res._failure) {
@@ -75,7 +76,7 @@ export class AttendanceCategoryComponent implements OnInit {
           duration: 10000
         });
       } else {
-        this.snackbar.open('Attendance Category Submitted Successfully.', '', {
+        this.snackbar.open(res._message, '', {
           duration: 10000
         });
         this.dialogRef.close(true);
@@ -100,7 +101,7 @@ export class AttendanceCategoryComponent implements OnInit {
             duration: 10000
           });
         } else {
-          this.snackbar.open('Attendance Category Updated Successfully.', '', {
+          this.snackbar.open(res._message, '', {
             duration: 10000
           });
           this.dialogRef.close(true);

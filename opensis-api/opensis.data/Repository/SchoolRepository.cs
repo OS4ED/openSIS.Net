@@ -241,22 +241,53 @@ namespace opensis.data.Repository
 
                 if (schoolMaster != null)
                 {
-                    var schoolFieldCatagory = schoolMaster.FieldsCategory.Where(x => x.Module.Trim() == "School").OrderByDescending(x => x.IsSystemCategory).ThenBy(x => x.SortOrder).ToList();
-
-                    var schoolcustomFields = new List<CustomFields>();
-
-                    if (schoolFieldCatagory.Count() > 0)
-                    {
-                        schoolcustomFields = schoolFieldCatagory.FirstOrDefault().CustomFields.OrderByDescending(y => y.SystemField).ThenBy(y => y.SortOrder).ToList();
-                    }
+                    var customFields = schoolMaster.FieldsCategory.Where(x => x.TenantId == school.schoolMaster.TenantId && x.SchoolId == school.schoolMaster.SchoolId && x.Module == "School").OrderByDescending(x => x.IsSystemCategory).ThenBy(x => x.SortOrder)
+                                    .Select(y => new FieldsCategory
+                                    {
+                                        TenantId = y.TenantId,
+                                        SchoolId = y.SchoolId,
+                                        CategoryId = y.CategoryId,
+                                        IsSystemCategory = y.IsSystemCategory,
+                                        Search = y.Search,
+                                        Title = y.Title,
+                                        Module = y.Module,
+                                        SortOrder = y.SortOrder,
+                                        Required = y.Required,
+                                        Hide = y.Hide,
+                                        LastUpdate = y.LastUpdate,
+                                        UpdatedBy = y.UpdatedBy,
+                                        CustomFields = y.CustomFields.Where(x => x.SystemField != true).Select(z => new CustomFields
+                                        {
+                                            TenantId = z.TenantId,
+                                            SchoolId = z.SchoolId,
+                                            CategoryId = z.CategoryId,
+                                            FieldId = z.FieldId,
+                                            Module = z.Module,
+                                            Type = z.Type,
+                                            Search = z.Search,
+                                            Title = z.Title,
+                                            SortOrder = z.SortOrder,
+                                            SelectOptions = z.SelectOptions,
+                                            SystemField = z.SystemField,
+                                            Required = z.Required,
+                                            DefaultSelection = z.DefaultSelection,
+                                            LastUpdate = z.LastUpdate,
+                                            UpdatedBy = z.UpdatedBy,
+                                            CustomFieldsValue = z.CustomFieldsValue.Where(w => w.TargetId == school.schoolMaster.SchoolId).ToList()
+                                        }).OrderByDescending(x => x.SystemField).ThenBy(x => x.SortOrder).ToList()
+                                    }).ToList();
 
 
                     school.schoolMaster = schoolMaster;
-                    school.schoolMaster.FieldsCategory = schoolFieldCatagory;
-                    school.schoolMaster.FieldsCategory.FirstOrDefault().CustomFields = schoolcustomFields;
+                    school.schoolMaster.FieldsCategory = customFields;
+                    //school.schoolMaster.FieldsCategory.FirstOrDefault().CustomFields = schoolcustomFields;
                     if (school.schoolMaster.SchoolDetail.ToList().Count > 0)
                     {
                         school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
+                    }
+                    if (school.schoolMaster.CustomFields.ToList().Count > 0)
+                    {
+                        school.schoolMaster.CustomFields = null;
                     }
                     school._tenantName = school._tenantName;
                     return school;

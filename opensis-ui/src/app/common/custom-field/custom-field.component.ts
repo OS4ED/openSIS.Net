@@ -74,34 +74,36 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
     private cryptoService: CryptoService,
     private defaultService: DefaultValuesService
   ) {
- 
   }
 
   ngOnInit(): void {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
 
     this.module = this.commonService.getModuleName();
-
   // School Details Subscription
+
+
     this.schoolService.selectedCategoryTitle.subscribe((res)=>{
       if(res && this.module==='School'){
         this.categoryTitle = res;
       }
     });
     this.schoolService.categoryIdSelected.subscribe((res)=>{
-      if(res && this.module==='School'){
+      if(res>=0 && this.module==='School'){
         this.categoryId = res;
         this.checkCustomValue();
       }
     });
     this.schoolService.schoolCreatedMode.subscribe((res)=>{
-      if(res && this.module==='School'){
+      if(res>=0 && this.module==='School'){
         this.schoolCreateMode = res;
       }
     });
     this.schoolService.schoolDetailsForViewedAndEdited.subscribe((res)=>{
-      if(res && this.module==='School'){
+      if(res?.schoolMaster?.fieldsCategory && this.module==='School'){
         this.schoolDetailsForViewAndEdit = res;
+        this.schoolAddViewModel = res;
+        // this.checkCustomValue();
       }
     });
 
@@ -113,13 +115,13 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
       }
     })
     this.studentService.categoryIdSelected.subscribe((res)=>{
-      if(res && this.module==='Student'){
+      if(res>=0 && this.module==='Student'){
         this.categoryId = res;
       this.checkStudentCustomValue();
       }
     });
     this.studentService.studentCreatedMode.subscribe((res)=>{
-      if(res && this.module==='Student'){
+      if(res>=0 && this.module==='Student'){
         this.studentCreateMode = res;
       }
     })
@@ -148,23 +150,13 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
       }
     });
     this.staffService.staffCreatedMode.subscribe((res)=>{
-      if(res && this.module==='Staff'){
+      if(res>=0 && this.module==='Staff'){
         this.staffCreateMode = res;
       }
     })
    
 
-
-    if (this.module === 'School') {
-      this.schoolService.getSchoolDetailsForGeneral.pipe(takeUntil(this.destroySubject$)).subscribe((res: SchoolAddViewModel) => {
-        this.schoolAddViewModel = res;
-        this.checkCustomValue();
-      });
-    }
     if (this.module === 'Student') {
-      debugger;
-      console.log(this.categoryTitle);
-      console.log(this.categoryId)
       this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 3);
       let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 5);
       let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
@@ -173,7 +165,6 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
       this.checkStudentCustomValue();
     }
     else if (this.module === 'School') {
-      this.checkNgOnInitCustomValue();
       if(this.schoolAddViewModel.schoolMaster.schoolId===this.defaultService.getSchoolID()){
         this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
         let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
@@ -182,6 +173,7 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
       }else{
          this.editSchoolPermission=true;
       }
+      this.checkCustomValue();
     }
     else if (this.module === 'Staff') {
       this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 5);
@@ -208,38 +200,13 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
     }
   }
 
-  checkNgOnInitCustomValue() {
-
-    if (this.schoolDetailsForViewAndEdit !== undefined) {
-      let catId = this.categoryId;
-      if (this.schoolDetailsForViewAndEdit.schoolMaster.fieldsCategory !== undefined) {
-        this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
-        for (let customField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
-          if (customField.customFieldsValue.length == 0) {
-            customField.customFieldsValue.push(new CustomFieldsValueModel());
-          }
-          else {
-            if (customField.type === 'Multiple SelectBox') {
-              this.schoolMultiSelectValue = customField.customFieldsValue[0].customFieldValue.split('|');
-
-            }
-          }
-        }
-      }
-
-    }
-    
-  }
 
 
   checkStudentCustomValue() {
     if (this.studentAddViewModel !== undefined) {
-      let catId = this.categoryId;
       if (this.studentAddViewModel.fieldsCategoryList !== undefined) {
-
         for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
           if (studentCustomField?.customFieldsValue.length == 0) {
-
             studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
           }
           else {
@@ -258,7 +225,7 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
     if (this.staffAddViewModel !== undefined) {
       if (this.staffAddViewModel.fieldsCategoryList !== undefined) {
 
-        for (let staffCustomField of this.staffAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
+        for (let staffCustomField of this.staffAddViewModel?.fieldsCategoryList[this.categoryId]?.customFields) {
           if (staffCustomField?.customFieldsValue.length == 0) {
 
             staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
@@ -276,20 +243,20 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
   }
 
   checkCustomValue() {
-   this.categoryId=this.categoryId || 0;
-    if (this.schoolAddViewModel !== undefined) {
-      if (this.schoolAddViewModel.schoolMaster.fieldsCategory !== undefined) {
+    if(this.schoolAddViewModel?.schoolMaster?.fieldsCategory?.length>0 && this.categoryId>=0){
+      for (let customField of this.schoolAddViewModel?.schoolMaster?.fieldsCategory[this.categoryId]?.customFields) {
+        if (customField.customFieldsValue.length == 0) {
+          customField.customFieldsValue.push(new CustomFieldsValueModel());
+        }else {
+          if (customField.type === 'Multiple SelectBox') {
+            this.schoolMultiSelectValue = customField.customFieldsValue[0].customFieldValue.split('|');
 
-        for (let customField of this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields) {
-          if (customField.customFieldsValue.length == 0) {
-
-            customField.customFieldsValue.push(new CustomFieldsValueModel());
           }
         }
-
       }
     }
-
+       
+      
   }
   updateStudent() {
     this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
@@ -416,7 +383,6 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
-    console.log('123')
     this.destroySubject$.next();
     this.destroySubject$.complete();
   }

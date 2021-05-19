@@ -1,0 +1,68 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "createAssignment" | translate }}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 mb-4 text-border"></mat-divider>
+
+<mat-dialog-content class="mb-1">
+    <form [formGroup]="form">
+        <ul class="grid grid-cols-1">
+            <li>
+                <mat-form-field appearance="outline" color="primary" class="w-full mb-4">
+                    <mat-label>{{ 'assignmentTitle' | translate }}</mat-label>
+                    <input matInput required>
+                </mat-form-field>
+            </li>
+            <li>
+                <ul class="grid grid-cols-1 md:grid-cols-2 col-gap-6 row-gap-4">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary" class="w-full mb-4">
+                            <mat-label>{{ 'points' | translate }}</mat-label>
+                            <input matInput required>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary" class="w-full mb-4">
+                            <mat-label>{{ 'assignmentType' | translate }}</mat-label>
+                            <mat-select required>
+                                <mat-option value="homework">Homework</mat-option>
+                                <mat-option value="classwork">Classwork</mat-option>
+                            </mat-select>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </li>
+            <li>
+                <ul class="grid grid-cols-1 md:grid-cols-2 col-gap-6 row-gap-4">
+                    <li>
+                        <mat-form-field appearance="outline" color="primary" class="w-full mb-4">
+                            <mat-label>{{ 'assignedDate' | translate }}</mat-label>
+                            <input matInput [matDatepicker]="assignedDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="assignedDate"></mat-datepicker-toggle>
+                            <mat-datepicker #assignedDate></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field appearance="outline" color="primary" class="w-full mb-4">
+                            <mat-label>{{ 'dueDate' | translate }}</mat-label>
+                            <input matInput [matDatepicker]="dueDate" required>
+                            <mat-datepicker-toggle matSuffix [for]="dueDate"></mat-datepicker-toggle>
+                            <mat-datepicker #dueDate></mat-datepicker>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </li>
+        </ul>
+        <div class="mb-6 border rounded">
+            <quill-editor placeholder="{{ 'description' | translate }}" [styles]="{ height: '250px' }"></quill-editor>
+        </div>
+    </form>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="pt-0 pb-2">
+    <button mat-flat-button>{{ 'cancel' | translate }}</button>
+    <button color="primary" mat-flat-button type="submit" class="text-white ml-2">{{ 'submit' |translate }}</button>
+</mat-dialog-actions>

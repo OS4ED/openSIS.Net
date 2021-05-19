@@ -37,6 +37,9 @@
         </div>
     </div> 
 </div>
+<div class="text-center" *ngIf="!parentListArray?.length">
+    No Contacts Found!
+</div>
 
 <div class="text-center mt-6" *ngIf="contactType ==='Primary'; else secondary">
     <button *ngIf="addPermission" color="primary" mat-raised-button type="button" (click)='openAddNew("Primary")'>

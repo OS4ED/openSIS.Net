@@ -36,7 +36,7 @@ export class StudentService {
   private studentDetailsForViewAndEdit = new BehaviorSubject(false);
   studentDetailsForViewedAndEdited = this.studentDetailsForViewAndEdit.asObservable();
   
-  private categoryId = new Subject();
+  private categoryId = new BehaviorSubject(null);
   categoryIdSelected = this.categoryId.asObservable();
 
   private categoryTitle = new BehaviorSubject(null);

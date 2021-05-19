@@ -95,6 +95,24 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
   filterJsonParams;
   showLoadFilter=true;
   toggleValues: any = null;
+  categories=[
+    {
+      categoryId:12,
+      title:'General Info'
+    },
+    {
+      categoryId:13,
+      title:'School Info'
+    },
+    {
+      categoryId:14,
+      title:'Address & Contact'
+    },
+    {
+      categoryId:15,
+      title:'Certification Info'
+    }
+  ]
   constructor(private snackbar: MatSnackBar,
               private router: Router,
               private loaderService: LoaderService,
@@ -232,7 +250,42 @@ export class StaffinfoComponent implements OnInit, AfterViewInit{
   viewStaffDetails(id) {
     this.imageCropperService.enableUpload({module:this.moduleIdentifier.STAFF,upload:true,mode:this.createMode.VIEW});
     this.staffService.setStaffId(id);
-    this.router.navigate(['/school', 'staff', 'staff-generalinfo']); 
+    this.checkViewPermission();
+  }
+
+  checkViewPermission(){
+    let categoryId;
+    let categoryName;
+     for (const permission of this.permissionListViewModel.permissionList[4].permissionGroup.permissionCategory[0].permissionSubcategory){
+      if(permission.rolePermission[0].canView){
+       categoryName=permission.title;
+       let index;
+       index=this.categories.findIndex((item)=>item.title===permission.title);
+       categoryId=this.categories[index].categoryId;
+       break;
+      }
+    }
+    if(categoryId){
+      this.checkCurrentCategoryAndRoute(categoryId,categoryName);
+    }
+
+  }
+
+  checkCurrentCategoryAndRoute(categoryId,categoryName) {
+    this.staffService.setCategoryTitle(categoryName);
+    this.staffService.setCategoryId(0);
+    this.commonService.setModuleName('Staff');
+    if(categoryId === 12) {
+      this.router.navigate(['/school', 'staff', 'staff-generalinfo']);
+    } else if(categoryId === 13) {
+      this.router.navigate(['/school', 'staff', 'staff-schoolinfo']);
+    } else if(categoryId === 14 ) {
+      this.router.navigate(['/school', 'staff', 'staff-addressinfo']);
+    } else if(categoryId === 15 ) {
+        this.router.navigate(['/school', 'staff', 'staff-certificationinfo']);
+    }else if(categoryId>15){
+      this.router.navigate(['/school', 'staff', 'custom', categoryName.trim().toLowerCase().split(' ').join('-')]);
+    }
   }
 
   goToAdd() {

@@ -975,5 +975,17 @@
     "assignments": "Assignments",
     "youHaveMissingAttendance": "You have missing attendance",
     "missingAttendanceList": "Missing Attendance List",
-    "pleaseSelectCourseSectionAndMarkingPeriodForEffortGrade":"Please select course section and marking period for effort grade"
+    "pleaseSelectCourseSectionAndMarkingPeriodForEffortGrade":"Please select course section and marking period for effort grade",
+    "assignmentType": "Assignment Type",
+    "found": "found",
+    "addNewAssignmentType": "Add New Assignment Type",
+    "createAssignmentType": "Create Assignment Type",
+    "weightPercent": "Weight Percent",
+    "percentTotal": "Percent Total",
+    "createAssignment": "Create Assignment",
+    "points": "Points",
+    "assignedDate": "Assigned Date",
+    "dueDate": "Due Date",
+    "addNewAssigmentType": "Add New Assigment Type",
+    "assignmentTitle": "Assignment Title"
 }

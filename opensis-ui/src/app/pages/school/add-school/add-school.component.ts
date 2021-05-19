@@ -95,6 +95,9 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
     });
     this.schoolService.categoryToSend.pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
         this.currentCategory = this.currentCategory + 1;
+        if(this.schoolService.getSchoolDetails().schoolMaster?.schoolName){
+          this.schoolTitle = this.schoolService.getSchoolDetails().schoolMaster.schoolName;
+        }
     this.checkCurrentCategoryAndRoute();
 
     });
@@ -109,6 +112,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit() {
+    this.commonService.setModuleName(this.module);
     this.schoolCreateMode = this.schoolCreate.ADD;
     this.schoolService.setSchoolCreateMode(this.schoolCreateMode);
     this.schoolService.sendDetails(this.schoolAddViewModel);
@@ -159,7 +163,6 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
         });
       }
     });
-    // this.currentCategory;
   }
 
   changeCategory(categoryDetails, index) {
@@ -167,22 +170,14 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
     this.schoolService.setCategoryTitle(this.categoryTitle);
     this.commonService.setModuleName(this.module);
     const schoolDetails = this.schoolService.getSchoolDetails();
-    if (schoolDetails !== undefined && schoolDetails !== null) {
+    if (schoolDetails) {
       this.schoolCreateMode = this.schoolCreate.EDIT;
-      this.currentCategory = categoryDetails.categoryId;
-      this.indexOfCategory = index;
-      this.schoolService.setCategoryId(this.indexOfCategory);
-
       this.schoolAddViewModel = schoolDetails;
       this.schoolService.setSchoolDetailsForViewAndEdit(this.schoolAddViewModel);
     }
-
-    if (this.schoolCreateMode === this.schoolCreate.VIEW) {
-      this.currentCategory = categoryDetails.categoryId;
-      this.indexOfCategory = index;
-      this.schoolService.setCategoryId(this.indexOfCategory);
-
-    }
+    this.currentCategory = categoryDetails.categoryId;
+    this.indexOfCategory = index;
+    this.schoolService.setCategoryId(this.indexOfCategory);
     this.schoolService.setSchoolCreateMode(this.schoolCreateMode);
     this.checkCurrentCategoryAndRoute();
   }
@@ -223,17 +218,17 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   }
 
   checkViewPermission(category){
-    category = category.filter((item) => {
-     for (const permission of this.permissionListViewModel.permissionList[1].permissionGroup.permissionCategory[0].permissionSubcategory){
-      if ( item.title.toLowerCase() === permission.permissionSubcategoryName.toLowerCase()){
-        if (permission.rolePermission[0].canView === true){
-          return item;
+    let filteredCategory=[]
+   for(let item of category){
+      for(let permission of this.permissionListViewModel.permissionList[1].permissionGroup.permissionCategory[0].permissionSubcategory){
+        if ( item.title.toLowerCase() === permission.permissionSubcategoryName.toLowerCase() && permission.rolePermission[0].canView){
+          filteredCategory.push(item);
+          break;
         }
-     }
-    }
-    });
-    this.currentCategory = category[0]?.categoryId;
-    return category;
+      }
+    };
+    this.currentCategory = filteredCategory[0]?.categoryId;
+    return filteredCategory;
   }
 
   getSchoolGeneralandWashInfoDetails() {
@@ -243,7 +238,6 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
       this.schoolAddViewModel = data;
       this.responseImage = this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo;
       this.schoolAddViewModel.schoolMaster.schoolDetail[0].schoolLogo = null;
-      this.schoolService.sendDetails(this.schoolAddViewModel);
       if(data.schoolMaster.schoolId===+this.defaultValueService.getSchoolID()){
         this.fieldsCategory = this.checkViewPermission(data.schoolMaster.fieldsCategory);
         this.schoolAddViewModel.schoolMaster.fieldsCategory = this.fieldsCategory;
@@ -251,6 +245,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
         this.fieldsCategory=this.schoolAddViewModel.schoolMaster.fieldsCategory;
         this.currentCategory = this.fieldsCategory[0].categoryId;
       }
+      this.schoolService.sendDetails(this.schoolAddViewModel);
       this.schoolTitle = this.schoolAddViewModel.schoolMaster.schoolName;
       this.schoolService.setSchoolImage(this.responseImage);
       this.schoolService.setSchoolCloneImage(this.responseImage);

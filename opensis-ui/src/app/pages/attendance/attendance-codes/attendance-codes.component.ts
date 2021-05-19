@@ -73,7 +73,8 @@ export class AttendanceCodesComponent implements OnInit {
   permissionGroup: RolePermissionViewModel = new RolePermissionViewModel();
   attendanceCodeDragDropModel: AttendanceCodeDragDropModel = new AttendanceCodeDragDropModel();
 
-  constructor(private dialog: MatDialog,
+  constructor(
+    private dialog: MatDialog,
     public translateService: TranslateService,
     private loaderService: LoaderService,
     private attendanceCodeService: AttendanceCodeService,
@@ -145,7 +146,7 @@ export class AttendanceCodesComponent implements OnInit {
         let shiftIndex: number;
         if (index == 0) {
           if (this.attendanceCategories.length > 1) {
-            shiftIndex = index + 1
+            shiftIndex = index + 1;
           } else {
             shiftIndex = -1;
           }
@@ -184,7 +185,7 @@ export class AttendanceCodesComponent implements OnInit {
       if (res) {
         this.getAllAttendanceCode();
       }
-    });;
+    });
   }
 
   openDeleteAttendance(attendanceDetails) {
@@ -233,7 +234,7 @@ export class AttendanceCodesComponent implements OnInit {
         this.isCategoryUpdated = false;
         this.isCategoryDeleted = false;
       }
-    })
+    });
   }
 
   // Delete Attendance Category
@@ -250,6 +251,9 @@ export class AttendanceCodesComponent implements OnInit {
           if (indexNeedToBeSelectAfterDelete != -1) {
             this.selectedAttendanceCategory = this.attendanceCategories[indexNeedToBeSelectAfterDelete].attendanceCategoryId;
           }
+          this.snackbar.open(res._message, '', {
+            duration: 10000
+          });
           this.getAllAttendanceCategory();
         }
 
@@ -283,7 +287,7 @@ export class AttendanceCodesComponent implements OnInit {
         this.attendanceCodeList.sort = this.sort;
 
       }
-    })
+    });
   }
 
   drop(event: CdkDragDrop<string[]>) {
@@ -324,6 +328,9 @@ export class AttendanceCodesComponent implements OnInit {
             duration: 10000
           });
         } else {
+          this.snackbar.open(res._message, '', {
+            duration: 10000
+          });
           this.getAllAttendanceCode();
         }
       }
@@ -352,6 +359,6 @@ export class AttendanceCodesComponent implements OnInit {
     this.applyFilter();
   }
   applyFilter() {
-    this.attendanceCodeList.filter = this.searchKey.trim().toLowerCase()
+    this.attendanceCodeList.filter = this.searchKey.trim().toLowerCase();
   }
 }

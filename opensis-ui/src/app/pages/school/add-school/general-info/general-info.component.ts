@@ -488,8 +488,8 @@ export class GeneralInfoComponent implements OnInit, AfterViewInit, OnDestroy {
             const schoolIdToString = data.schoolMaster.schoolId.toString();
             sessionStorage.setItem('selectedSchoolId', schoolIdToString);
             this.schoolService.changeMessage(true);
-            this.schoolService.changeCategory(2);
             this.schoolService.setSchoolDetails(data);
+            this.schoolService.changeCategory(2);
           }
         }
         else{

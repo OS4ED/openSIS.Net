@@ -25,7 +25,7 @@ export class SchoolService {
   private schoolCreateMode = new BehaviorSubject(this.schoolCreate.ADD);
   schoolCreatedMode = this.schoolCreateMode.asObservable();
 
-  private schoolDetailsForViewAndEdit = new BehaviorSubject(false);
+  private schoolDetailsForViewAndEdit = new BehaviorSubject(null);
   schoolDetailsForViewedAndEdited = this.schoolDetailsForViewAndEdit.asObservable();
   
   private categoryId = new BehaviorSubject(0);
@@ -130,7 +130,7 @@ export class SchoolService {
   }
 
   // to Update school details in General Info in first view mode.
-  private schoolDetailsForGeneral = new Subject;
+  private schoolDetailsForGeneral = new Subject();
   getSchoolDetailsForGeneral = this.schoolDetailsForGeneral.asObservable();
 
   sendDetails(schoolDetailsForGeneral) {

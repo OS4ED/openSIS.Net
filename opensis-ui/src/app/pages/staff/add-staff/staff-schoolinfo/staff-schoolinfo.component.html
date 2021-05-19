@@ -147,9 +147,9 @@
 
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.VIEW">
 
-    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'schoolInformation' | translate}}</h3>
-        <button *ngIf="editPermission" (click)="editSchoolInfo()" mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button *ngIf="editPermission" (click)="editSchoolInfo()" mat-raised-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
     </div>
     <mat-card-content>
 

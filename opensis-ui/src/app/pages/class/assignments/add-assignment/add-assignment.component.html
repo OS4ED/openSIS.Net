@@ -1,0 +1,40 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0" fxFlex="auto">
+        {{ "addNewAssigmentType" | translate }}
+    </h2>
+    <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
+        <mat-icon [icIcon]="icClose"></mat-icon>
+    </button>
+</div>
+<mat-divider class="-mx-6 mb-4"></mat-divider>
+
+<mat-dialog-content class="mb-1">
+    <ul class="grid grid-cols-1">
+        <li>
+            <mat-form-field appearance="outline" color="primary" class="w-full mb-4">
+                <mat-label>{{ 'title' | translate }}</mat-label>
+                <input matInput required>
+            </mat-form-field>
+        </li>
+        <li>
+            <ul class="grid grid-cols-3 col-gap-6 row-gap-4">
+                <li class="col-span-2">
+                    <mat-form-field appearance="outline" color="primary" class="w-full mb-4">
+                        <mat-label>{{ 'weightPercent' | translate }}</mat-label>
+                        <input matInput>
+                    </mat-form-field>
+                </li>
+                <li class="col-span-1">
+                    <div class="bg-base rounded text-center py-1 border">
+                        <p>{{ 'percentTotal' | translate }}</p>
+                        <p class="text-primary text-lg font-medium">100%</p>
+                    </div>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="pb-4">
+    <button mat-flat-button>{{ 'cancel' | translate }}</button>
+    <button color="primary" mat-flat-button type="submit" class="text-white ml-2">{{ 'submit' |translate }}</button>
+</mat-dialog-actions>

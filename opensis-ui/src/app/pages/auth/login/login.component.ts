@@ -124,7 +124,7 @@ export class LoginComponent implements OnInit {
               duration: 10000
             });
           } else {
-             //sessionStorage.setItem("selectedSchoolId", data.schoolId.toString());
+             sessionStorage.setItem("selectedSchoolId", data.schoolId.toString());
             localStorage.setItem('permissions',this.cryptoService.dataEncrypt(JSON.stringify(data)));
             this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:false,dataFromUserLogin:true,academicYearChanged:false,academicYearLoaded:false});
             sessionStorage.setItem("token", data._token);

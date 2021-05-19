@@ -432,8 +432,8 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
     }
     if (this.currentForm.form.valid) {
       if (this.studentAddModel.fieldsCategoryList !== null && this.categoryId) {
-        this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId].categoryId;
-        for (const studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId].customFields) {
+        this.studentAddModel.selectedCategoryId = this.studentAddModel.fieldsCategoryList[this.categoryId]?.categoryId;
+        for (const studentCustomField of this.studentAddModel.fieldsCategoryList[this.categoryId]?.customFields) {
           if (studentCustomField.type === 'Multiple SelectBox' && this.studentService.getStudentMultiselectValue() !== undefined) {
             studentCustomField.customFieldsValue[0].customFieldValue = this.studentService.getStudentMultiselectValue().toString().replaceAll(',', '|');
           }
@@ -500,7 +500,7 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
           });
           this.studentService.setStudentId(data.studentMaster.studentId);
           this.studentService.setStudentCloneImage(data.studentMaster.studentPhoto);
-          this.studentService.changeCategory(4);
+          this.checkPermissionAndSwitchNextCategory()
           this.studentService.setStudentDetails(data);
           this.studentService.setDataAfterSavingGeneralInfo(data);
 
@@ -521,6 +521,24 @@ export class StudentGeneralinfoComponent implements OnInit, AfterViewInit, OnDes
       'input.ng-invalid'
     );
     firstInvalidControl.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+
+  checkPermissionAndSwitchNextCategory(){
+    let categoryTitle: string;
+    let count=0;   
+    let index=0; 
+     for (const [i,permission] of this.permissionListViewModel.permissionList[2].permissionGroup.permissionCategory[0].permissionSubcategory?.entries()){
+      if(permission.rolePermission[0].canView){
+        count++
+       categoryTitle = permission.permissionSubcategoryName;
+       index=i;
+       if(count==2) break;
+      }
+    }
+    if(categoryTitle){
+    this.studentService.setCategoryTitle(categoryTitle);
+    }
+
   }
 
   toggleVisibility() {

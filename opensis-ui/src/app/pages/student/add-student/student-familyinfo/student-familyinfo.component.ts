@@ -24,6 +24,7 @@ export class StudentFamilyinfoComponent implements OnInit {
   icEdit = icEdit;
   icDelete = icDelete;
   icAdd = icAdd;
+  currentTab: string;
   studentDetailsForViewAndEditData;
   constructor(public translateService: TranslateService,
     private studentService: StudentService) {
@@ -37,6 +38,10 @@ export class StudentFamilyinfoComponent implements OnInit {
       this.studentDetailsForViewAndEdit = res;
     });
     this.studentDetailsForViewAndEditData = this.studentDetailsForViewAndEdit;
+    this.currentTab = 'contacts';
+  }
+  changeTab(status){
+    this.currentTab = status;
   }
 
 

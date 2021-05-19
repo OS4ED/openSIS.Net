@@ -3,19 +3,9 @@
         <h3 class="flex-auto">{{'certificationInformation' | translate}}</h3>
         <button *ngIf="addPermission" mat-raised-button color="primary" (click)='openAddNew()'><mat-icon [icIcon]="icAdd"></mat-icon> {{'addNewCertification' |translate}}</button>
     </div>
+    <hr class="-mx-4 mt-4"/>
     <mat-card-content class="-mx-4">
-        <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
-            <div class="flex w-full justify-between">
-                <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
-                    fxLayoutAlign="start center">
-                   
-                </div>
-                <div class="pt-3">
-
-                </div> 
-              
-            </div>
-        </div>
+        <div class="overflow-x-scroll">
         <table @stagger mat-table [dataSource]="staffCertificateList" class="table-auto w-full" matSort>
                 
                 <ng-container matColumnDef="certificationName">
@@ -83,6 +73,7 @@
                 <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="staffCertificateList?.data.length!=0"></tr>
 
             </table>
+        </div>
     </mat-card-content>
 </mat-card>
 

@@ -94,6 +94,9 @@ export class SiblingsinfoComponent implements OnInit {
             this.studentViewSibling.studentMaster = [];
           }
           else{
+            this.snackbar.open( res._message, '', {
+              duration: 10000
+            });
             this.studentViewSibling.studentMaster = [];
           }
         }

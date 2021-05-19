@@ -210,7 +210,7 @@ namespace opensis.data.Repository
             this.context?.AttendanceCodeCategories.Add(attendanceCodeCategoriesAddViewModel.attendanceCodeCategories);
             this.context?.SaveChanges();
             attendanceCodeCategoriesAddViewModel._failure = false;
-            attendanceCodeCategoriesAddViewModel._message = "Attendance Code Category Added Successfully";
+            attendanceCodeCategoriesAddViewModel._message = "Attendance Category Added Successfully";
 
             return attendanceCodeCategoriesAddViewModel;
         }
@@ -259,7 +259,7 @@ namespace opensis.data.Repository
                 this.context.Entry(attendanceCodeCategoriesUpdate).CurrentValues.SetValues(attendanceCodeCategoriesAddViewModel.attendanceCodeCategories);
                 this.context?.SaveChanges();
                 attendanceCodeCategoriesAddViewModel._failure = false;
-                attendanceCodeCategoriesAddViewModel._message = "Attendance Code Category Updated Successfully";
+                attendanceCodeCategoriesAddViewModel._message = "Attendance Category Updated Successfully";
             }
             catch (Exception es)
             {
@@ -318,7 +318,7 @@ namespace opensis.data.Repository
                 if (AttendanceCodeExist != null)
                 {
                     attendanceCodeCategoriesAddViewModel.attendanceCodeCategories = null;
-                    attendanceCodeCategoriesAddViewModel._message = "AttendanceCodeCategory cannot be deleted because it has its association";
+                    attendanceCodeCategoriesAddViewModel._message = "Attendance Category cannot be deleted because it has its association";
                     attendanceCodeCategoriesAddViewModel._failure = true;
                 }
                 else
@@ -326,7 +326,7 @@ namespace opensis.data.Repository
                     this.context?.AttendanceCodeCategories.Remove(attendanceCodeCategoriesDelete);
                     this.context?.SaveChanges();
                     attendanceCodeCategoriesAddViewModel._failure = false;
-                    attendanceCodeCategoriesAddViewModel._message = "Attendance Code Category Deleted Successfully";
+                    attendanceCodeCategoriesAddViewModel._message = "Attendance Category Deleted Successfully";
                 }                
             }
             catch (Exception es)

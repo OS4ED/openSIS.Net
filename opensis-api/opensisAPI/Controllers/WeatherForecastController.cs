@@ -666,11 +666,11 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPost("InsertCopyStudent")]
-        public IActionResult InsertCopyStudent(int schoolId,int studentId)
+        public IActionResult InsertCopyStudent(int schoolId,int studentId,int loopCount)
         {
             Guid tenantId = new Guid("1e93c7bf-0fae-42bb-9e09-a1cedc8c0355");
 
-            for (int i = 1; i < 3; i++)
+            for (int i = 1; i < loopCount; i++)
             {
                 int? MasterStudentId = 1;
 
@@ -682,7 +682,15 @@ namespace opensisAPI.Controllers
                 }
 
                 var studentDataList = this.context?.StudentMaster.FirstOrDefault(n => n.TenantId == tenantId && n.SchoolId == schoolId && n.StudentId == studentId);
-
+                string stdConcat = null;
+                if (MasterStudentId.ToString().Length < 2)
+                {
+                    stdConcat = "0" + MasterStudentId;
+                }
+                else
+                {
+                    stdConcat = MasterStudentId.ToString();
+                }
                 Guid GuidId = Guid.NewGuid();
                 var student = new List<StudentMaster>()
                 {
@@ -691,12 +699,12 @@ namespace opensisAPI.Controllers
                         TenantId=tenantId,
                         SchoolId=schoolId,
                         StudentId=(int)MasterStudentId,
-                        AlternateId="STUDENT-0"+MasterStudentId,
-                        StudentInternalId="ST-00"+MasterStudentId,
+                        AlternateId="STUDENT-"+stdConcat,
+                        StudentInternalId="STD-"+stdConcat,
                         DistrictId=studentDataList.DistrictId,
                         StateId=studentDataList.StateId,
-                        AdmissionNumber="STD"+MasterStudentId,
-                        RollNumber="0"+MasterStudentId,
+                        AdmissionNumber="BRIS_STD-"+stdConcat,
+                        RollNumber=stdConcat,
                         Salutation="Mr.",
                         FirstGivenName=studentDataList.FirstGivenName+MasterStudentId,
                         MiddleName=studentDataList.MiddleName,
@@ -766,7 +774,7 @@ namespace opensisAPI.Controllers
                         IsActive=true,
                         StudentGuid=GuidId,
                         Ethnicity=studentDataList.Ethnicity,
-                        Associationship=studentDataList.Associationship,
+                        Associationship=null,
                         Race=studentDataList.Race,
                         SectionId=studentDataList.SectionId,                      
                     }
@@ -801,8 +809,8 @@ namespace opensisAPI.Controllers
                             TenantId= parentdata.pi.TenantId,
                             SchoolId=parentdata.pi.SchoolId,
                             ParentId = (int)ParentId,
-                            Firstname=parentdata.pi.Firstname+i,
-                            Lastname=parentdata.pi.Lastname+i,
+                            Firstname=parentdata.pi.Firstname+ (int)MasterStudentId,
+                            Lastname=parentdata.pi.Lastname+ (int)MasterStudentId,
                             HomePhone= parentdata.pi.HomePhone,
                             WorkPhone=parentdata.pi.WorkPhone,
                             BusDropoff= parentdata.pi.BusDropoff,
@@ -897,7 +905,7 @@ namespace opensisAPI.Controllers
         }
 
         [HttpPost("InsertCopyStaff")]
-        public IActionResult InsertCopyStaff(int schoolId, int staffId)
+        public IActionResult InsertCopyStaff(int schoolId, int staffId, int loopCount)
         {
             try
             {
@@ -912,18 +920,26 @@ namespace opensisAPI.Controllers
                 {
                     //List<StaffSchoolInfo> staffSchoolInfoList = new List<StaffSchoolInfo>();
                     
-                    for (int i = 1; i < 3; i++)
+                    for (int i = 1; i < loopCount; i++)
                     {
                         Guid GuidId = Guid.NewGuid();
-
+                        string stdConcat = null;
+                        if (staffID.ToString().Length < 2)
+                        {
+                            stdConcat = "0" + staffID;
+                        }
+                        else
+                        {
+                            stdConcat = staffID.ToString();
+                        }
                         var Staff = new StaffMaster()
                         {
                             TenantId = tenantId,
                             SchoolId = schoolId,
                             StaffId = (int)staffID,
                             Salutation = staffData.Salutation,
-                            AlternateId = "STAFF-0" + staffID,
-                            StaffInternalId = "STF-00" + staffID,
+                            AlternateId = "TEACHER/" + stdConcat,
+                            StaffInternalId = "TR-" + stdConcat,
                             BusDropoff = staffData.BusDropoff,
                             BusNo = staffData.BusNo,
                             BusPickup = staffData.BusPickup,

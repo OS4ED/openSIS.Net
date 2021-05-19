@@ -1,0 +1,103 @@
+<div class="card">
+    <!-- Start Add New Assignment Type -->
+    <!-- <div class="py-24 px-6 text-center">
+        <mat-icon class="text-4xl">info</mat-icon>
+        <h4 class="text-lg mb-4">{{ 'no' | translate }} <span class="font-semibold">{{ 'assignmentType' | translate }}</span> {{ 'found' | translate }}</h4>
+        <button mat-flat-button color="primary"><mat-icon class="mr-2">add</mat-icon>{{ 'addNewAssignmentType' | translate }}</button>
+    </div> -->
+    <!-- End Add New Assignment Type -->
+    <div class="mb-2 lg:flex lg:flex-wrap">
+        <div class="lg:w-3/12 assignment-left border-r">
+            <div class="mb-4 lg:mb-0">
+                <h4 class="font-medium  px-6 py-2">{{ 'assignmentType' | translate }}</h4>
+                <div class="flex items-center justify-between px-6 py-2 text-blue bg-base">
+                    <p class="text-base">Homework</p>
+                    <div class="cursor-pointer">
+                        <mat-icon class="align-middle">more_vert</mat-icon>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between px-6 py-2">
+                    <p class="text-base">Classwork</p>
+                    <div class="cursor-pointer text-gray">
+                        <mat-icon class="align-middle">more_vert</mat-icon>
+                    </div>
+                </div>
+                <div class="flex items-center justify-between px-6 py-2">
+                    <p class="text-base">Quiz</p>
+                    <div class="cursor-pointer text-gray">
+                        <mat-icon class="align-middle">more_vert</mat-icon>
+                    </div>
+                </div>
+                <div class="w-full px-6 py-2 mb-4">
+                    <button mat-flat-button color="primary" class="w-full" (click)="addAssignment()">
+                        <mat-icon class="mr-2">add</mat-icon>{{ 'createAssignmentType' | translate }}
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div class="lg:w-9/12 px-6 py-4 assigment-right">
+            <div class="flex items-center justify-between">
+                <div class="flex flex-col">
+                    <h3 class="text-blue text-xl mb-2">Homework</h3>
+                    <p class="flex items-center">{{ 'weightPercent' | translate }} : 40% <span class="mx-4 inline-block w-1 h-1 bg-gray rounded"></span> {{ 'percentTotal' | translate }} : 100% </p>
+                </div>
+                <div>
+                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                    <mat-icon [icIcon]="icDeleteForever"></mat-icon>
+                </div>
+            </div>
+            <mat-divider class="-mx-4 my-4"></mat-divider>
+            <div class="flex items-center justify-between mb-4">
+                <h4 class="text-green font-semibold">{{ 'assignments' | translate }}</h4>
+                <button mat-flat-button color="primary" (click)="createAssignment()">
+                    <mat-icon class="mr-2">add</mat-icon>{{ 'createAssignment' | translate }}
+                </button>
+            </div>
+            <div class="border border-b-0 overflow-x-auto overflow-y-hidden rounded mb-2">
+                <table class="w-full schedule-table">
+                    <thead>
+                        <tr>
+                            <th>{{ "title" | translate }}</th>
+                            <th>{{ "points" | translate }}</th>
+                            <th>{{ "assignedDate" | translate }}</th>
+                            <th>{{ "dueDate" | translate }}</th>
+                            <th>{{ "action" | translate }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Analysis Chemical Composition</td>
+                            <td>30</td>
+                            <td>Apr 30, 2021</td>
+                            <td>May 05, 2021</td>
+                            <td>
+                                <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>First order reaction (with calculus)</td>
+                            <td>20</td>
+                            <td>Apr 30, 2021</td>
+                            <td>May 05, 2021</td>
+                            <td>
+                                <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>Experimental determination of rate laws</td>
+                            <td>30</td>
+                            <td>Apr 30, 2021</td>
+                            <td>May 05, 2021</td>
+                            <td>
+                                <mat-icon [icIcon]="icEdit" class="mr-2"></mat-icon>
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
