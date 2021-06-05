@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnInit, OnDestroy, ChangeDetectionStrategy, ChangeDetectorRef, AfterViewInit } from '@angular/core';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
 import { ImageCropperService } from '../../../services/image-cropper.service';
@@ -56,7 +81,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
   schoolAddViewModel: SchoolAddViewModel = new SchoolAddViewModel();
   customFieldModel: [CustomFieldModel];
   currentCategory;
-
+  secondarySidebar = 0;
 
   loading: boolean;
   destroySubject$: Subject<void> = new Subject();
@@ -84,7 +109,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.layoutService.collapseSidenav();
     this.imageCropperService.getUncroppedEvent().pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
-      this.schoolService.setSchoolImage(btoa(res.target.result));
+      this.schoolService.setSchoolImage(res);
     });
     this.schoolService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
       if (res === this.schoolCreate.VIEW){
@@ -179,6 +204,7 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
     this.indexOfCategory = index;
     this.schoolService.setCategoryId(this.indexOfCategory);
     this.schoolService.setSchoolCreateMode(this.schoolCreateMode);
+    this.secondarySidebar = 0; // Close secondary sidenav in mobile view
     this.checkCurrentCategoryAndRoute();
   }
 
@@ -255,14 +281,32 @@ export class AddSchoolComponent implements OnInit, OnDestroy {
 
   addCopySchool() {
     this.dialog.open(AddCopySchoolComponent, {
-      width: '900px'
+      width: '800px',
+      data: { fromSchoolId: this.schoolId, fromSchoolName: this.schoolAddViewModel.schoolMaster.schoolName }
+    }).afterClosed().subscribe((data) => {
+      if (data) {
+        this.successCopySchool(data);
+      }
     });
   }
 
-  successCopySchool() {
+  successCopySchool(schoolData) {
     this.dialog.open(SuccessCopySchoolComponent, {
-      width: '500px'
+      width: '500px',
+      data: { newSchoolData: schoolData }
+    }).afterClosed().subscribe((data) => {
+      if (data) {
+        this.getSchoolGeneralandWashInfoDetails();
+      }
     });
+  }
+
+  toggleSecondarySidebar() {
+    if(this.secondarySidebar === 0){
+      this.secondarySidebar = 1;
+    } else {
+      this.secondarySidebar = 0;
+    }
   }
 
   ngOnDestroy() {

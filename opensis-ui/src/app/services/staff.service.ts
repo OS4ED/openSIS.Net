@@ -48,7 +48,7 @@ export class StaffService {
   private staffCreateMode = new BehaviorSubject(this.staffCreate.ADD);
   staffCreatedMode = this.staffCreateMode.asObservable();
 
-  private staffDetailsForViewAndEdit = new BehaviorSubject(false);
+  private staffDetailsForViewAndEdit = new BehaviorSubject(null);
   staffDetailsForViewedAndEdited = this.staffDetailsForViewAndEdit.asObservable();
   
   private categoryId = new BehaviorSubject(null);

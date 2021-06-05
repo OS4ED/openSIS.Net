@@ -1,6 +1,6 @@
 <vex-page-layout>
     <vex-page-layout-header class="" fxLayout="column" fxLayoutAlign="center start">
-        <vex-secondary-toolbar current="{{ 'CHEM0001' | translate }}" class="w-full">
+        <vex-secondary-toolbar current="{{ selectedCourseSection.courseSectionName | translate }}" class="w-full">
             <vex-breadcrumbs [crumbs]="['Class']" class="flex-auto"></vex-breadcrumbs>
         </vex-secondary-toolbar>
     </vex-page-layout-header>
@@ -27,7 +27,9 @@
                     <li class="px-4 py-2 cursor-pointer font-medium" (click)="changeTab('assignments')"
                     [class.active]="currentTab === 'assignments'"
                     [ngClass]="currentTab === 'assignments' ? 'text-primary border-b-2 border-primary' : ''">{{'assignments' | translate}}</li>
-                    <li class="px-4 py-2 cursor-pointer font-medium">{{'grades' | translate}}</li>
+                    <li class="px-4 py-2 cursor-pointer font-medium" (click)="changeTab('grades')"
+                    [class.active]="currentTab === 'grades'"
+                    [ngClass]="currentTab === 'grades' ? 'text-primary border-b-2 border-primary' : ''">{{'grades' | translate}}</li>
                 </ul>
             </div>
         </div>
@@ -36,6 +38,7 @@
             <vex-students *ngIf="currentTab === 'students'"></vex-students>
             <vex-attendance *ngIf="currentTab === 'attendance'"></vex-attendance>
             <vex-assignments *ngIf="currentTab === 'assignments'"></vex-assignments>
+            <vex-grades *ngIf="currentTab === 'grades'"></vex-grades>
         </div>
     </vex-page-layout-content>
 </vex-page-layout>

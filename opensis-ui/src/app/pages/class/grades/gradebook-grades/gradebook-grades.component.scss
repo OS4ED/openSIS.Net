@@ -1,0 +1,46 @@
+.schedule-table {
+  tr {
+    td,
+    th {
+      @apply border-b;
+      @apply border-l;
+      border-color: rgba(0, 0, 0, 0.1);
+      @apply px-4;
+      @apply py-2;
+      &:first-child {
+        border-left: none;
+      }
+    }
+    th {
+      text-align: left;
+      &:last-child {
+        text-align: right;
+      }
+    }
+    &:last-child td {
+      border-bottom: none;
+    }
+  }
+}
+
+.schedule-table.gradebook-table {
+  th:nth-child(2),
+  th:nth-child(3),
+  td:nth-child(2),
+  td:nth-child(3) {
+    border-left: none;
+  }
+  th {
+    &:first-child {
+      text-align: center !important;
+    }
+    &:last-child {
+      text-align: left !important;
+    }
+  }
+}
+
+.whitespace-nowrap {
+  white-space: nowrap;
+}
+

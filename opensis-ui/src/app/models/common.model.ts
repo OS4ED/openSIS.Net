@@ -25,7 +25,33 @@ export class EducationalStage extends CommonField{
     }
 }
 
+export class UserMasterModel {
+    public emailAddress: string;
+    public passwordHash: string;
+    public tenantId: string;
+    public schoolId: number;
+    public userId: number;
+
+    constructor() {
+    }
+}
+
+export class ResetPasswordModel extends CommonField {
+    public userMaster: UserMasterModel;
+    constructor() {
+        super();
+        this.userMaster = new UserMasterModel();
+    }
+}
+
 class EducationalStageList{
     iscedCode:number;
     educationalStage:string;
+}
+
+export class ExportExcel extends CommonField{
+    module: string;
+    constructor(){
+        super();
+    }
 }

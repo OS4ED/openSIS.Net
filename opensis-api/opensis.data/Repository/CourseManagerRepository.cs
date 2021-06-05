@@ -1,4 +1,29 @@
-﻿using System;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -123,6 +148,8 @@ namespace opensis.data.Repository
                                 {
                                     courseList.ForEach(x => x.CourseProgram = programLists.ProgramName);
                                 }
+
+                                programUpdateModel._message = "Program Updated Successfully";
                             }
                         }
                     }
@@ -147,11 +174,10 @@ namespace opensis.data.Repository
                         programLists.ProgramId = (int)ProgramId;
                         programLists.CreatedOn = DateTime.UtcNow;
                         this.context?.Programs.AddRange(programLists);
-
+                        programUpdateModel._message = "Program Added Successfully";
                     }
                 }
                 this.context?.SaveChanges();
-                programUpdateModel._message = "Program Updated Successfully";
                 programUpdateModel._failure = false;
             }
             catch (Exception es)
@@ -186,7 +212,7 @@ namespace opensis.data.Repository
                     this.context?.Programs.Remove(programDelete);
                     this.context?.SaveChanges();
                     programAddViewModel._failure = false;
-                    programAddViewModel._message = "Deleted";
+                    programAddViewModel._message = "Program Deleted Successfully";
                 }
             }
             catch (Exception es)
@@ -283,6 +309,7 @@ namespace opensis.data.Repository
                                 subject.UpdatedOn = DateTime.Now;
                                 this.context.Entry(SubjectUpdate).CurrentValues.SetValues(subject);
                                 this.context?.SaveChanges();
+                                subjectListViewModel._message = "Subject Updated Successfully";
                             }
                             else
                             {
@@ -322,12 +349,11 @@ namespace opensis.data.Repository
                             return subjectListViewModel;
                         }
 
-
+                        subjectListViewModel._message = "Subject Added Successfully";
                     }
                 }
                 this.context?.SaveChanges();
                 subjectListViewModel._failure = false;
-                subjectListViewModel._message = "Subject Updated Successfully";
             }
             catch (Exception es)
             {
@@ -396,7 +422,7 @@ namespace opensis.data.Repository
                         this.context?.Subject.Remove(subjectDelete);
                         this.context?.SaveChanges();
                         subjectAddViewModel._failure = false;
-                        subjectAddViewModel._message = "Deleted Successfully";
+                        subjectAddViewModel._message = "Subject Deleted Successfully";
                     }
                 }
             }
@@ -481,7 +507,7 @@ namespace opensis.data.Repository
                         courseAddViewModel.course.CourseStandard.ToList().ForEach(x => x.CreatedOn = DateTime.UtcNow);
                     }
 
-                    this.context?.Course.Add(courseAddViewModel.course);
+                    this.context?.Course.Add(courseAddViewModel.course);                    
                 }
                 else
                 {
@@ -491,6 +517,7 @@ namespace opensis.data.Repository
                 }
                 this.context.SaveChanges();
                 courseAddViewModel._failure = false;
+                courseAddViewModel._message = "Course Added Successfully";
             }
             catch (Exception es)
             {
@@ -860,7 +887,7 @@ namespace opensis.data.Repository
                     GradeScaleType=cs.GradeScaleType,
                     AllowStudentConflict=cs.AllowStudentConflict,
                     AllowTeacherConflict=cs.AllowTeacherConflict,
-                    Course = new Course { CourseTitle = cs.Course.CourseTitle },
+                    Course = new Course { CourseTitle = cs.Course.CourseTitle, CourseProgram = cs.Course.CourseProgram, CourseSubject = cs.Course.CourseSubject },
                     GradeScale = cs.GradeScale != null ? new GradeScale { GradeScaleName = cs.GradeScale.GradeScaleName } : null,
                     AttendanceCodeCategories =cs.AttendanceCodeCategories != null ? new AttendanceCodeCategories { Title = cs.AttendanceCodeCategories.Title } : null,
                     SchoolCalendars = cs.SchoolCalendars != null ? new SchoolCalendars { TenantId = cs.SchoolCalendars.TenantId, SchoolId = cs.SchoolCalendars.SchoolId, CalenderId = cs.SchoolCalendars.CalenderId, Title = cs.SchoolCalendars.Title, StartDate = cs.SchoolCalendars.StartDate, EndDate = cs.SchoolCalendars.EndDate, AcademicYear = cs.SchoolCalendars.AcademicYear, DefaultCalender = cs.SchoolCalendars.DefaultCalender, Days = cs.SchoolCalendars.Days, RolloverId = cs.SchoolCalendars.RolloverId, VisibleToMembershipId = cs.SchoolCalendars.VisibleToMembershipId, LastUpdated = cs.SchoolCalendars.LastUpdated, UpdatedBy = cs.SchoolCalendars.UpdatedBy } : null,
@@ -916,13 +943,13 @@ namespace opensis.data.Repository
 
                         //totalStaff = this.context.StaffCoursesectionSchedule.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.IsDropped != false).ToList().Count();
 
-                        totalStudent = this.context.StudentCoursesectionSchedule.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.IsDropped != false).ToList().Count();
+                        totalStudent = this.context.StudentCoursesectionSchedule.Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.IsDropped != true).ToList().Count;
 
-                        var staffData = this.context.StaffCoursesectionSchedule.Include(x=>x.StaffMaster).Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.IsDropped != false).ToList();
+                        var staffData = this.context.StaffCoursesectionSchedule.Include(x=>x.StaffMaster).Where(x => x.TenantId == courseSection.TenantId && x.SchoolId == courseSection.SchoolId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.IsDropped != true).ToList();
                         if (staffData.Count>0 )
                         {
                             staffFullName = staffData.FirstOrDefault().StaffMaster.FirstGivenName + " " + staffData.FirstOrDefault().StaffMaster.MiddleName + " " + staffData.FirstOrDefault().StaffMaster.LastFamilyName;
-                            totalStaff = staffData.Count();
+                            totalStaff = staffData.Count;
                         }
 
                         if (courseSection.ScheduleType.ToLower() == "Fixed Schedule (1)".ToLower())
@@ -1652,7 +1679,7 @@ namespace opensis.data.Repository
                         ((c.FixedPeriodId != null && (c.FixedRoomId == courseSectionAddViewModel.courseFixedSchedule.RoomId && c.FixedPeriodId == courseSectionAddViewModel.courseFixedSchedule.PeriodId && (Regex.IsMatch(courseSectionAddViewModel.courseSection.MeetingDays.ToLower(), c.FixedDays.ToLower(), RegexOptions.IgnoreCase)))) ||
                          (c.VarPeriodId != null && (c.VarRoomId == courseSectionAddViewModel.courseFixedSchedule.RoomId && c.VarPeriodId == courseSectionAddViewModel.courseFixedSchedule.PeriodId && courseSectionAddViewModel.courseSection.MeetingDays.ToLower().Contains(c.VarDay.ToLower()))) ||
                          (c.CalPeriodId != null && (c.CalRoomId == courseSectionAddViewModel.courseFixedSchedule.RoomId && c.CalPeriodId == courseSectionAddViewModel.courseFixedSchedule.PeriodId && courseSectionAddViewModel.courseSection.MeetingDays.ToLower().Contains(c.CalDay.ToLower()))))                      
-                        && c.AcademicYear == academicYear && c.DurationEndDate > courseSectionAddViewModel.courseSection.DurationStartDate).ToList();
+                        && c.AcademicYear == academicYear && ((courseSectionAddViewModel.courseSection.DurationStartDate >= c.DurationStartDate && courseSectionAddViewModel.courseSection.DurationStartDate <= c.DurationEndDate) || (courseSectionAddViewModel.courseSection.DurationEndDate >= c.DurationStartDate && courseSectionAddViewModel.courseSection.DurationEndDate <= c.DurationEndDate))).ToList();
 
                             if (courseSectionList.Count > 0)
                             {
@@ -1776,7 +1803,7 @@ namespace opensis.data.Repository
                             ((c.FixedPeriodId != null &&(c.FixedRoomId == courseVariableSchedules.RoomId && c.FixedPeriodId == courseVariableSchedules.PeriodId && c.FixedDays.Contains(courseVariableSchedules.Day))) || 
                             (c.VarPeriodId != null &&(c.VarRoomId == courseVariableSchedules.RoomId && c.VarPeriodId == courseVariableSchedules.PeriodId && c.VarDay == courseVariableSchedules.Day)) ||
                             (c.CalPeriodId != null && (c.CalRoomId == courseVariableSchedules.RoomId && c.CalPeriodId == courseVariableSchedules.PeriodId && c.CalDay == courseVariableSchedules.Day)))
-                            && c.AcademicYear == academicYear && c.DurationEndDate > courseSectionAddViewModel.courseSection.DurationStartDate).ToList();
+                            && c.AcademicYear == academicYear && ((courseSectionAddViewModel.courseSection.DurationStartDate >= c.DurationStartDate && courseSectionAddViewModel.courseSection.DurationStartDate <= c.DurationEndDate) || (courseSectionAddViewModel.courseSection.DurationEndDate >= c.DurationStartDate && courseSectionAddViewModel.courseSection.DurationEndDate <= c.DurationEndDate))).ToList();
 
                             if (courseSectionList.Count > 0)
                             {
@@ -1920,7 +1947,7 @@ namespace opensis.data.Repository
                         ((c.FixedRoomId!= null &&(c.FixedRoomId == courseCalendarSchedule.RoomId && c.FixedPeriodId == courseCalendarSchedule.PeriodId && c.FixedDays.Contains(calenderDay))) ||
                         (c.VarPeriodId != null && (c.VarRoomId == courseCalendarSchedule.RoomId && c.VarPeriodId == courseCalendarSchedule.PeriodId && c.VarDay == calenderDay)) ||
                         (c.CalPeriodId != null && (c.CalRoomId == courseCalendarSchedule.RoomId && c.CalPeriodId == courseCalendarSchedule.PeriodId && c.CalDay == calenderDay)))
-                        && c.AcademicYear == academicYear && c.DurationEndDate > courseSectionAddViewModel.courseSection.DurationStartDate).ToList();
+                        && c.AcademicYear == academicYear && ((courseSectionAddViewModel.courseSection.DurationStartDate >= c.DurationStartDate && courseSectionAddViewModel.courseSection.DurationStartDate <= c.DurationEndDate) || (courseSectionAddViewModel.courseSection.DurationEndDate >= c.DurationStartDate && courseSectionAddViewModel.courseSection.DurationEndDate <= c.DurationEndDate))).ToList();
 
                         if (courseSectionList.Count > 0)
                         {
@@ -2291,9 +2318,9 @@ namespace opensis.data.Repository
                         QtrmarkingPeriodId = Int32.Parse(markingPeriod.Last());
                     }
                 }
-                var todayDate = DateTime.UtcNow;
+                //var todayDate = DateTime.UtcNow;
 
-                var coursedata = this.context?.AllCourseSectionView.Where(x => x.TenantId == searchCourseSectionViewModel.TenantId && x.SchoolId == searchCourseSectionViewModel.SchoolId && x.DurationEndDate > todayDate &&(searchCourseSectionViewModel.CourseId == null || x.CourseId == searchCourseSectionViewModel.CourseId) && (searchCourseSectionViewModel.CourseSubject == null || x.CourseSubject == searchCourseSectionViewModel.CourseSubject) && (searchCourseSectionViewModel.CourseProgram == null || x.CourseProgram == searchCourseSectionViewModel.CourseProgram) && (searchCourseSectionViewModel.MarkingPeriodId == null || x.YrMarkingPeriodId == YrmarkingPeriodId || x.SmstrMarkingPeriodId == SmtrmarkingPeriodId || x.QtrMarkingPeriodId == QtrmarkingPeriodId));
+                var coursedata = this.context?.AllCourseSectionView.Where(x => x.TenantId == searchCourseSectionViewModel.TenantId && x.SchoolId == searchCourseSectionViewModel.SchoolId && (searchCourseSectionViewModel.MarkingPeriodStartDate == null || (x.DurationStartDate >= searchCourseSectionViewModel.MarkingPeriodStartDate || x.DurationEndDate >= searchCourseSectionViewModel.MarkingPeriodStartDate)) && (searchCourseSectionViewModel.CourseId == null || x.CourseId == searchCourseSectionViewModel.CourseId) && (searchCourseSectionViewModel.CourseSubject == null || x.CourseSubject == searchCourseSectionViewModel.CourseSubject) && (searchCourseSectionViewModel.CourseProgram == null || x.CourseProgram == searchCourseSectionViewModel.CourseProgram) && (searchCourseSectionViewModel.MarkingPeriodId == null || x.YrMarkingPeriodId == YrmarkingPeriodId || x.SmstrMarkingPeriodId == SmtrmarkingPeriodId || x.QtrMarkingPeriodId == QtrmarkingPeriodId));
 
                 if (coursedata != null)
                 {

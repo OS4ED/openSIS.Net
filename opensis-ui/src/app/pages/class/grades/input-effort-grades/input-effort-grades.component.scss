@@ -1,0 +1,105 @@
+.schedule-table {
+    tr {
+      td,
+      th {
+        @apply border-b;
+        @apply border-l;
+        border-color: rgba(0, 0, 0, 0.1);
+        @apply px-4;
+        @apply py-2;
+        &:first-child {
+          border-left: none;
+        }
+      }
+      th {
+        text-align: left;
+        &:last-child {
+          text-align: right;
+        }
+      }
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }
+  .schedule-table.effort-grade-table {
+    th {
+      &:last-child {
+        text-align: left !important;
+      }
+    }
+  }
+ 
+  
+  .effort-grade-left {
+    border-right: 1px solid #ececec;
+    ul {
+      height: 600px;
+      overflow: auto;
+  
+      li {
+        border-bottom: 1px solid #ececec;
+      }
+    }
+  }
+  
+  .effort-grade-right {
+    height: 600px;
+    overflow: auto;
+  }
+  
+  textarea {
+    resize: none;
+    &:focus {
+      outline: none;
+    }
+  }
+  input {
+    &:focus-visible {
+      outline: none;
+    }
+  }
+  
+  .select-dropdown,
+  .select-dropdown * {
+    position: relative;
+  }
+  .select-dropdown {
+    position: relative;
+    background-color: #fff;
+    border: 1px solid#ececec;
+    border-radius: 4px;
+    select {
+      font-size: 1rem;
+      font-weight: normal;
+      width: 100%;
+      padding: 6px 24px 6px 10px;
+      border: none;
+      background-color: transparent;
+      -webkit-appearance: none;
+      -moz-appearance: none;
+      appearance: none;
+      &:active,
+      &:focus {
+        outline: none;
+        box-shadow: none;
+      }
+    }
+    &:after {
+      content: "";
+      position: absolute;
+      top: 50%;
+      right: 8px;
+      width: 0;
+      height: 0;
+      margin-top: -2px;
+      border-top: 5px solid #aaa;
+      border-right: 5px solid transparent;
+      border-left: 5px solid transparent;
+    }
+  }
+  .whitespace-nowrap {
+    white-space: nowrap;
+  }
+ 
+  

@@ -70,12 +70,13 @@
         <li>
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'attendanceCategory' | translate}}</mat-label>
-                <mat-select formControlName="attendanceCategoryId" name="attendanceCategoryId"    name="attendanceCategoryId">
+                <mat-select formControlName="attendanceCategoryId" class="attendanceCategory" name="attendanceCategoryId"    name="attendanceCategoryId" [required]="isAttendanceCategoryRequired">
                     <mat-option></mat-option>
                     <mat-option *ngFor="let attendanceCategory of attendanceCategoryList" [value]='attendanceCategory.attendanceCategoryId'>
                         {{attendanceCategory.title}}
                     </mat-option>
                 </mat-select>
+                <mat-error *ngIf="form.get('attendanceCategoryId').hasError('required')">{{'attendanceCategoryIsRequired'|translate}}</mat-error>
             </mat-form-field>
         </li>
         <li class="col-span-2">

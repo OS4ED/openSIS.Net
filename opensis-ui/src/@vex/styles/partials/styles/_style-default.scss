@@ -98,7 +98,7 @@
 
   // Sidenav Item
   --sidenav-item-padding: var(--padding);
-  --sidenav-toolbar-background: #{darken($sidenav-background, 1.5)};
+  --sidenav-toolbar-background: #{$sidenav-toolbar};
   --sidenav-item-background-active: #{darken($sidenav-background, 3)};
   --sidenav-item-color: #ffffff;
   --sidenav-item-color-active: #{$light-primary-text};

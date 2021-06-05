@@ -1,6 +1,7 @@
-<div class="flex container-sidenav-secondary">
+<div class="flex container-sidenav-secondary" [ngClass]="secondarySidebar==0?'' : 'show-secondary-sidebar'">
     <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
     <div class="sidenav-secondary">
+        <button mat-icon-button class="close-secondary-sidebar" (click)="toggleSecondarySidebar()"><mat-icon>close</mat-icon></button>
         <vex-scrollbar class="flex-auto vex-scrollbar">
             <div class="h-45 text-center sm:px-0 pt-5 pb-2">
                 <vex-profile-image [enableCropTool]="enableCropTool" [customCss]="'rounded'"
@@ -8,12 +9,13 @@
             </div>
             <div class="text-center px-4">
                 <h5 class="text-primary font-semibold mb-0">{{schoolTitle}}</h5>
-                <div *ngIf="schoolTitle !== 'Add School Information'" class="rounded-full pt-1 pb-0 px-3 border border-gray inline-block mt-3 cursor-pointer" (click)="successCopySchool()"> <mat-icon class="mr-1 text-lg">file_copy</mat-icon><span class="align-top">{{ 'copySchool' | translate}}</span></div>
+                <div *ngIf="schoolTitle !== 'Add School Information'" class="rounded-full pt-1 pb-0 px-3 border border-gray inline-block mt-3 cursor-pointer" (click)="addCopySchool()"> <mat-icon class="mr-1 text-lg">file_copy</mat-icon><span class="align-top">{{ 'copySchool' | translate}}</span></div>
             </div>
+            <hr class="mt-4">
             <div class="px-gutter sm:px-0">
                 <p *ngFor="let field of fieldsCategory;let index=index">
                     <a @fadeInRight class="list-item mt-2 no-underline flex items-center w-full"
-                        [ngClass]="currentCategory == field?.categoryId?'text-blue' : ''"
+                        [ngClass]="currentCategory == field?.categoryId?'text-blue active' : ''"
                         (click)="changeCategory(field,index)" matRipple>
                         <span *ngIf="field?.categoryId==2" class="w-full"><mat-icon [icIcon]="icCleanHands" class="mr-2">clean_hands_outlined</mat-icon><span class="align-top inline-block mt-1">{{field?.title|translate}}</span></span>
                         <span *ngIf="field?.categoryId!=2" class="w-full"><mat-icon class="mr-2">info_outlined</mat-icon><span class="align-top inline-block mt-1">{{field?.title}}</span></span>
@@ -32,14 +34,23 @@
         <vex-page-layout>
 
             <vex-page-layout-header class="pb-14 pt-4" fxLayoutAlign="center start">
-                <vex-secondary-toolbar current={{schoolTitle}} class="w-full">
-                    <vex-breadcrumbs [crumbs]="['School Info',pageStatus]" class="flex-auto"></vex-breadcrumbs>
+                <vex-secondary-toolbar current="School Information" class="w-full">
+                    <vex-breadcrumbs [crumbs]="['School',pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
+            <div class="bg-primary px-4 py-2 rounded -mt-16 mx-4 persistent-bar">
+                <div class="flex items-center">
+                    <button mat-icon-button class="text-white mr-2" (click)="toggleSecondarySidebar()"><mat-icon>apps</mat-icon></button>
+                    <div class="h-45 text-center sm:px-0 relative">
+                        <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" style="width:50px" [customCss]="'rounded'"
+                            class="mx-auto inline-block rounded"></vex-profile-image>
+                    </div>
+                    <div class="text-left px-4">
+                        <h4 class="mb-0 text-white">{{schoolTitle}}</h4>
+                    </div>
+                </div>
+            </div>    
             <vex-page-layout-content class="-mt-4">
-                <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
-                    <mat-drawer-content class="flex-auto flex items-start">
-
                         <div class="w-full" fxFlex="auto">
                             <router-outlet></router-outlet>
                             <!-- <vex-general-info *ngIf="currentCategory==1" [schoolCreateMode]="schoolCreateMode"
@@ -58,9 +69,8 @@
                             </div> -->
 
                         </div>
-                    </mat-drawer-content>
-                </mat-drawer-container>
             </vex-page-layout-content>
         </vex-page-layout>
     </div>
+    <div class="sidebar-overlay"  (click)="toggleSecondarySidebar()"></div>
 </div>

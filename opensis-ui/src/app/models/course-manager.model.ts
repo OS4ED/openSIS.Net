@@ -184,11 +184,13 @@ export class SearchCourseSectionViewModel extends CommonField {
     public tenantId: string;
     public schoolId: number;
     public courseId: number;
+    public blockId: number;
     public courseSubject: string;
     public courseProgram: string;
     public markingPeriodId: string;
     public forStaff: boolean;
     public forStudent: boolean;
+    public markingPeriodStartDate: string;
 }
 
 export class AllCourseSectionView {
@@ -219,6 +221,7 @@ export class AllCourseSectionView {
     public calPeriodId: number;
     public calRoomId: number;
     public blockPeriodId: number;
+    public attendanceTaken:boolean;
     public blockRoomId: number;
     public isActive: boolean;
     public markingPeriodTitle: string; // This is only for Front End to extract the marking period title based on ID

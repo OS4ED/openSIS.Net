@@ -9,8 +9,8 @@
     <mat-dialog-content fxLayout="column">
       <div class="flex justify-around">
         <div>
-          <image-cropper (imageCropped)="imageCropped($event)" [imageChangedEvent]="imageChangedEvent"
-            [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageLoaded)="imageLoaded()"
+          <image-cropper (imageCropped)="imageCropped($event)" [imageChangedEvent]="imageChangedEvent" format="png"
+            [maintainAspectRatio]="true" [aspectRatio]="1/1" (imageLoaded)="imageLoaded()" [resizeToWidth]="256"
             (cropperReady)="cropperReady()" [onlyScaleDown]="false" (loadImageFailed)="loadImageFailed()">
           </image-cropper>
         </div>
@@ -54,7 +54,7 @@
   </div>
   <div @fadeInRight *ngIf="responseImage" [ngClass]="customCss"
     class="profile-photo-wrapper inline-block align-top relative overflow-hidden">
-    <img id="img3" [src]="'data:image/jpeg;base64,'+responseImage" class="" width="160" />
+    <img id="img3" @fadeInRight [src]="'data:image/jpeg;base64,'+responseImage" class="" width="160" />
     <span href="" *ngIf="inputType=='file'" class="absolute w-full pt-2 pb-4 upload-photo-link text-center">Upload
       Photo</span>
   </div>

@@ -34,7 +34,8 @@ const routes: Routes = [
     component: CustomFieldComponent
   },
 ]
-}];
+}
+];
 
 
 

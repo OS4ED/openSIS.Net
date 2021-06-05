@@ -1,4 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using Microsoft.EntityFrameworkCore;
 using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
@@ -99,12 +124,26 @@ namespace opensis.data.Repository
                                 parentInfoAddViewModel._message = "Parent Login Email Already Exist";
                                 return parentInfoAddViewModel;
                             }
+                        }                       
+
+
+                        if (parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().StudentAddressSame ==true)
+                        {
+                            var studentAddress = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().StudentId && x.SchoolId == parentInfoAddViewModel.parentInfo.SchoolId);
+
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineOne = studentAddress.HomeAddressLineOne;
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo = studentAddress.HomeAddressLineTwo;
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Country = studentAddress.HomeAddressCountry;
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().City = studentAddress.HomeAddressCity;
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().State = studentAddress.HomeAddressState;
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip = studentAddress.HomeAddressZip;
                         }
 
                         this.context?.ParentInfo.Add(parentInfoAddViewModel.parentInfo);
-                        var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentAssociationship.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship, ContactType = parentInfoAddViewModel.parentAssociationship.ContactType};
+                        
+                        var parentAssociationship = new ParentAssociationship { TenantId = parentInfoAddViewModel.parentInfo.TenantId, SchoolId = parentInfoAddViewModel.parentAssociationship.SchoolId, ParentId = parentInfoAddViewModel.parentInfo.ParentId, StudentId = parentInfoAddViewModel.parentAssociationship.StudentId, Associationship = true, LastUpdated = DateTime.UtcNow, UpdatedBy = parentInfoAddViewModel.parentInfo.UpdatedBy, IsCustodian = parentInfoAddViewModel.parentAssociationship.IsCustodian, Relationship = parentInfoAddViewModel.parentAssociationship.Relationship, ContactType = parentInfoAddViewModel.parentAssociationship.ContactType };
+                        
                         this.context?.ParentAssociationship.Add(parentAssociationship);
-
                     }
                     this.context?.SaveChanges();                
                     transaction.Commit();
@@ -312,6 +351,7 @@ namespace opensis.data.Repository
                             studentAddress.HomeAddressState = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().State;
                             studentAddress.HomeAddressCity = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().City;
                             studentAddress.HomeAddressZip = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip;
+                            
                             if (studentAddress.MailingAddressSameToHome == true)
                             {
                                 studentAddress.MailingAddressLineOne = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineOne;
@@ -322,18 +362,19 @@ namespace opensis.data.Repository
                                 studentAddress.MailingAddressZip = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip;
                             }
                             parentInfoUpdate.ParentAddress.FirstOrDefault().StudentAddressSame = true;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineOne = null;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineTwo = null;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().Country = null;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().City = null;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().State = null;
-                            parentInfoUpdate.ParentAddress.FirstOrDefault().Zip = null;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineOne = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineOne;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().AddressLineTwo = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().AddressLineTwo;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().Country = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Country;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().City = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().City;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().State = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().State;
+                            parentInfoUpdate.ParentAddress.FirstOrDefault().Zip = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().Zip;
                             parentInfoUpdate.ParentAddress.FirstOrDefault().UpdatedBy = parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().UpdatedBy;
                             parentInfoUpdate.ParentAddress.FirstOrDefault().LastUpdated = DateTime.UtcNow;
                             this.context?.SaveChanges();
                         }
                         else
-                        {                          
+                        {
+                            parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().StudentId = parentInfoUpdate.ParentAddress.FirstOrDefault().StudentId;
                             parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().StudentAddressSame = false;
                             parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault().LastUpdated = DateTime.UtcNow;
                             this.context.Entry(parentInfoUpdate.ParentAddress.FirstOrDefault()).CurrentValues.SetValues(parentInfoAddViewModel.parentInfo.ParentAddress.FirstOrDefault());
@@ -377,92 +418,365 @@ namespace opensis.data.Repository
             }
             return address;
         }
-        /// <summary>
-        /// Get All Parent Info
-        /// </summary>
-        /// <param name="pageResult"></param>
-        /// <returns></returns>
+
+        //public GetAllParentInfoListForView GetAllParentInfoList(PageResult pageResult)
+        //{
+        //    GetAllParentInfoListForView parentInfoListModel = new GetAllParentInfoListForView();
+        //    IQueryable<ParentListView> transactionIQ = null;
+
+        //    var ParentInfoList = this.context?.PaentListView.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.Associationship == true);
+
+        //    try
+        //    {
+        //        if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
+        //        {
+        //            transactionIQ = ParentInfoList;
+
+        //            transactionIQ = transactionIQ.Select(y => new ParentListView
+        //            {
+        //                SchoolId = y.SchoolId,
+        //                TenantId = y.TenantId,
+        //                ParentId = y.ParentId,
+        //                Firstname = y.Firstname,
+        //                Middlename = y.Middlename,
+        //                Lastname = y.Lastname,
+        //                Salutation = y.Salutation,
+        //                Suffix = y.Suffix,
+        //                WorkEmail = y.WorkEmail,
+        //                WorkPhone = y.WorkPhone,
+        //                HomePhone = y.HomePhone,
+        //                PersonalEmail = y.PersonalEmail,
+        //                Mobile = y.Mobile,
+        //                UserProfile = y.UserProfile
+        //            }).Distinct();
+        //        }
+        //        else
+        //        {
+        //            if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+        //            {
+        //                string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+        //                transactionIQ = ParentInfoList.Where(x => x.Firstname.ToLower().Contains(Columnvalue.ToLower()) || x.Lastname.ToLower().Contains(Columnvalue.ToLower()) || x.Middlename.ToLower().Contains(Columnvalue.ToLower()) || x.WorkEmail.ToLower().Contains(Columnvalue.ToLower()) || x.Mobile.ToLower().Contains(Columnvalue.ToLower()) || x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) || x.StudentMiddleName.ToLower().Contains(Columnvalue.ToLower()) || x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) || x.UserProfile.ToLower().Contains(Columnvalue.ToLower()));
+
+        //                transactionIQ = transactionIQ.Select(y => new ParentListView
+        //                {
+        //                    SchoolId = y.SchoolId,
+        //                    TenantId = y.TenantId,
+        //                    ParentId = y.ParentId,
+        //                    Firstname = y.Firstname,
+        //                    Middlename = y.Middlename,
+        //                    Lastname = y.Lastname,
+        //                    Salutation = y.Salutation,
+        //                    Suffix = y.Suffix,
+        //                    WorkEmail = y.WorkEmail,
+        //                    WorkPhone = y.WorkPhone,
+        //                    HomePhone = y.HomePhone,
+        //                    PersonalEmail = y.PersonalEmail,
+        //                    Mobile = y.Mobile,
+        //                    UserProfile = y.UserProfile
+        //                }).Distinct();
+        //            }
+        //            else
+        //            {
+        //                transactionIQ = Utility.FilteredData(pageResult.FilterParams, ParentInfoList).AsQueryable();
+
+        //                transactionIQ = transactionIQ.AsNoTracking().Select(y => new ParentListView
+        //                {
+        //                    SchoolId = y.SchoolId,
+        //                    TenantId = y.TenantId,
+        //                    ParentId = y.ParentId,
+        //                    Firstname = y.Firstname,
+        //                    Middlename = y.Middlename,
+        //                    Lastname = y.Lastname,
+        //                    Salutation = y.Salutation,
+        //                    Suffix = y.Suffix,
+        //                    WorkEmail = y.WorkEmail,
+        //                    WorkPhone = y.WorkPhone,
+        //                    HomePhone = y.HomePhone,
+        //                    PersonalEmail = y.PersonalEmail,
+        //                    Mobile = y.Mobile,
+        //                    UserProfile = y.UserProfile
+        //                }).GroupBy(x => x.ParentId).Select(g => g.First());
+        //            }
+        //        }
+
+
+        //        if (pageResult.SortingModel != null)
+        //        {
+        //            transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+        //        }
+
+        //        //transactionIQ = ParentInfoList.AsQueryable();
+        //        //int totalCount = transactionIQ.Count();
+
+        //        //int? ID = 0;
+
+        //        //foreach (var parent in transactionIQ.ToList())
+        //        //{
+        //        //    if (parent.StudentAddressSame == true && parent.ParentId != ID)
+        //        //    {
+        //        //        var studentAddress = this.context?.StudentMaster.Where(x => x.TenantId == parent.TenantId && x.SchoolId == parent.SchoolId && x.StudentId == parent.StudentId).FirstOrDefault();
+
+        //        //        if (studentAddress != null)
+        //        //        {
+        //        //            parent.AddressLineOne = studentAddress.HomeAddressLineOne;
+        //        //            parent.AddressLineTwo = studentAddress.HomeAddressLineTwo;
+        //        //            parent.City = studentAddress.HomeAddressCity;
+        //        //            parent.Country = studentAddress.HomeAddressCountry;
+        //        //            parent.State = studentAddress.HomeAddressState;
+        //        //            parent.Zip = studentAddress.HomeAddressZip;
+        //        //        }
+
+        //        //    }
+        //        //    ID = parent.ParentId;
+        //        //}
+        //        int totalCount = transactionIQ.Count();
+
+        //        if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
+        //        {
+        //            var parentInfo = transactionIQ.AsNoTracking().Select(y => new GetParentInfoForView
+        //            {
+        //                SchoolId = y.SchoolId,
+        //                TenantId = y.TenantId,
+        //                ParentId = y.ParentId,
+        //                Firstname = y.Firstname,
+        //                Middlename = y.Middlename,
+        //                Lastname = y.Lastname,
+        //                Salutation = y.Salutation,
+        //                Suffix = y.Suffix,
+        //                WorkEmail = y.WorkEmail,
+        //                WorkPhone = y.WorkPhone,
+        //                HomePhone = y.HomePhone,
+        //                PersonalEmail = y.PersonalEmail,
+        //                Mobile = y.Mobile,
+        //                UserProfile = y.UserProfile
+        //                //FullAddress = ToFullAddress(y.AddressLineOne, y.AddressLineTwo, y.City, y.State, y.Country, y.Zip),
+        //                //AddressLineOne = y.AddressLineOne,
+        //                //AddressLineTwo = y.AddressLineTwo,
+        //                //Country = y.Country,
+        //                //City = y.City,
+        //                //State = y.State,
+        //                //Zip = y.Zip,
+        //            }).Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
+
+        //            parentInfoListModel.parentInfoForView = parentInfo.ToList();
+        //        }
+        //        else
+        //        {
+        //            parentInfoListModel.parentInfoForView = transactionIQ.AsNoTracking().Select(y => new GetParentInfoForView
+        //            {
+        //                SchoolId = y.SchoolId,
+        //                TenantId = y.TenantId,
+        //                ParentId = y.ParentId,
+        //                Firstname = y.Firstname,
+        //                Middlename = y.Middlename,
+        //                Lastname = y.Lastname,
+        //                Salutation = y.Salutation,
+        //                Suffix = y.Suffix,
+        //                WorkEmail = y.WorkEmail,
+        //                WorkPhone = y.WorkPhone,
+        //                HomePhone = y.HomePhone,
+        //                PersonalEmail = y.PersonalEmail,
+        //                Mobile = y.Mobile,
+        //                UserProfile = y.UserProfile
+        //                //FullAddress = ToFullAddress(y.AddressLineOne, y.AddressLineTwo, y.City, y.State, y.Country, y.Zip),
+        //                //AddressLineOne = y.AddressLineOne,
+        //                //AddressLineTwo = y.AddressLineTwo,
+        //                //Country = y.Country,
+        //                //City = y.City,
+        //                //State = y.State,
+        //                //Zip = y.Zip,
+        //            }).ToList();
+        //        }
+        //        //int totalCount = parentInfoListModel.parentInfoForView.Count;
+
+        //        foreach (var ParentInfo in parentInfoListModel.parentInfoForView)
+        //        {
+        //            var studentAssociateWithParents = this.context?.ParentAssociationship.Where(x => x.ParentId == ParentInfo.ParentId && x.Associationship == true).ToList();
+        //            List<string> studentArray = new List<string>();
+        //            if (studentAssociateWithParents.Count() > 0)
+        //            {
+        //                foreach (var studentAssociateWithParent in studentAssociateWithParents)
+        //                {
+        //                    var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == studentAssociateWithParent.StudentId && x.SchoolId == studentAssociateWithParent.SchoolId && x.TenantId == studentAssociateWithParent.TenantId);
+        //                    if (student != null)
+        //                    {
+        //                        studentArray.Add(student.FirstGivenName + "|" + student.MiddleName + "|" + student.LastFamilyName + "|" + student.StudentId);
+        //                        ParentInfo.students = studentArray.ToArray();
+        //                    }
+        //                }
+        //            }
+        //        }
+        //        parentInfoListModel.TenantId = pageResult.TenantId;
+        //        parentInfoListModel.TotalCount = totalCount;
+        //        parentInfoListModel.PageNumber = pageResult.PageNumber;
+        //        parentInfoListModel._pageSize = pageResult.PageSize;
+        //        parentInfoListModel._tenantName = pageResult._tenantName;
+        //        parentInfoListModel._token = pageResult._token;
+        //        parentInfoListModel._failure = false;
+        //    }
+        //    catch (Exception es)
+        //    {
+        //        parentInfoListModel.parentInfoForView = null;
+        //        parentInfoListModel._message = es.Message;
+        //        parentInfoListModel._failure = true;
+        //        parentInfoListModel._tenantName = pageResult._tenantName;
+        //        parentInfoListModel._token = pageResult._token;
+        //    }
+        //    return parentInfoListModel;
+        //}
+
         public GetAllParentInfoListForView GetAllParentInfoList(PageResult pageResult)
         {
             GetAllParentInfoListForView parentInfoListModel = new GetAllParentInfoListForView();
-            IQueryable<ParentInfo> transactionIQ = null;
+            IQueryable<ParentListView> transactionIQ = null;
 
-            var containParentId = this.context?.ParentAssociationship.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId  && x.Associationship == true).Select(x => x.ParentId).Distinct().ToList();
-            
-            List<int> parentIDs = new List<int> { };
-            parentIDs = containParentId;
+            var ParentInfoList = this.context?.PaentListView.Where(x => x.TenantId == pageResult.TenantId && x.SchoolId == pageResult.SchoolId && x.Associationship == true);
 
-            var ParentInfoList = this.context?.ParentInfo.Include(x=>x.ParentAddress).ToList().Where(x => x.TenantId == pageResult.TenantId && x.SchoolId==pageResult.SchoolId &&(parentIDs == null || (parentIDs.Contains(x.ParentId))));
-            
             try
             {
-                transactionIQ = ParentInfoList.AsQueryable();
+                if (pageResult.FilterParams == null || pageResult.FilterParams.Count == 0)
+                {
+                    transactionIQ = ParentInfoList;
+
+                    transactionIQ = transactionIQ.Select(y => new ParentListView
+                    {
+                        SchoolId = y.SchoolId,
+                        TenantId = y.TenantId,
+                        ParentId = y.ParentId,
+                        Firstname = y.Firstname,
+                        Middlename = y.Middlename,
+                        Lastname = y.Lastname,
+                        Salutation = y.Salutation,
+                        Suffix = y.Suffix,
+                        WorkEmail = y.WorkEmail,
+                        WorkPhone = y.WorkPhone,
+                        HomePhone = y.HomePhone,
+                        PersonalEmail = y.PersonalEmail,
+                        Mobile = y.Mobile,
+                        UserProfile = y.UserProfile,
+                        Students = y.Students
+                    }).Distinct();
+                }
+                else
+                {
+                    if (pageResult.FilterParams != null && pageResult.FilterParams.ElementAt(0).ColumnName == null && pageResult.FilterParams.Count == 1)
+                    {
+                        string Columnvalue = pageResult.FilterParams.ElementAt(0).FilterValue;
+                        transactionIQ = ParentInfoList.Where(x => x.Firstname.ToLower().Contains(Columnvalue.ToLower()) || x.Lastname.ToLower().Contains(Columnvalue.ToLower()) || x.Middlename.ToLower().Contains(Columnvalue.ToLower()) || x.WorkEmail.ToLower().Contains(Columnvalue.ToLower()) || x.Mobile.ToLower().Contains(Columnvalue.ToLower()) || x.FirstGivenName.ToLower().Contains(Columnvalue.ToLower()) || x.StudentMiddleName.ToLower().Contains(Columnvalue.ToLower()) || x.LastFamilyName.ToLower().Contains(Columnvalue.ToLower()) || x.UserProfile.ToLower().Contains(Columnvalue.ToLower()));
+
+                        transactionIQ = transactionIQ.Select(y => new ParentListView
+                        {
+                            SchoolId = y.SchoolId,
+                            TenantId = y.TenantId,
+                            ParentId = y.ParentId,
+                            Firstname = y.Firstname,
+                            Middlename = y.Middlename,
+                            Lastname = y.Lastname,
+                            Salutation = y.Salutation,
+                            Suffix = y.Suffix,
+                            WorkEmail = y.WorkEmail,
+                            WorkPhone = y.WorkPhone,
+                            HomePhone = y.HomePhone,
+                            PersonalEmail = y.PersonalEmail,
+                            Mobile = y.Mobile,
+                            UserProfile = y.UserProfile,
+                            Students = y.Students
+                        }).Distinct();
+                    }
+                    else
+                    {
+                        transactionIQ = Utility.FilteredData(pageResult.FilterParams, ParentInfoList).AsQueryable();
+
+                        transactionIQ = transactionIQ.AsNoTracking().Select(y => new ParentListView
+                        {
+                            SchoolId = y.SchoolId,
+                            TenantId = y.TenantId,
+                            ParentId = y.ParentId,
+                            Firstname = y.Firstname,
+                            Middlename = y.Middlename,
+                            Lastname = y.Lastname,
+                            Salutation = y.Salutation,
+                            Suffix = y.Suffix,
+                            WorkEmail = y.WorkEmail,
+                            WorkPhone = y.WorkPhone,
+                            HomePhone = y.HomePhone,
+                            PersonalEmail = y.PersonalEmail,
+                            Mobile = y.Mobile,
+                            UserProfile = y.UserProfile,
+                            Students = y.Students
+                        }).GroupBy(x => x.ParentId).Select(g => g.First());
+                    }
+                }
+
+
+                if (pageResult.SortingModel != null)
+                {
+                    transactionIQ = Utility.Sort(transactionIQ, pageResult.SortingModel.SortColumn, pageResult.SortingModel.SortDirection.ToLower());
+                }
+
                 int totalCount = transactionIQ.Count();
 
-                foreach(var parent in ParentInfoList.ToList())
+                if (pageResult.PageNumber > 0 && pageResult.PageSize > 0)
                 {
-                    if(parent.ParentAddress.FirstOrDefault().StudentAddressSame==true)
+                    var parentInfo = transactionIQ.AsNoTracking().Select(y => new GetParentInfoForView
                     {
-                        var studentAddress = this.context?.StudentMaster.Where(x => x.TenantId == parent.ParentAddress.FirstOrDefault().TenantId && x.SchoolId == parent.ParentAddress.FirstOrDefault().SchoolId && x.StudentId==parent.ParentAddress.FirstOrDefault().StudentId).FirstOrDefault();
+                        SchoolId = y.SchoolId,
+                        TenantId = y.TenantId,
+                        ParentId = y.ParentId,
+                        Firstname = y.Firstname,
+                        Middlename = y.Middlename,
+                        Lastname = y.Lastname,
+                        Salutation = y.Salutation,
+                        Suffix = y.Suffix,
+                        WorkEmail = y.WorkEmail,
+                        WorkPhone = y.WorkPhone,
+                        HomePhone = y.HomePhone,
+                        PersonalEmail = y.PersonalEmail,
+                        Mobile = y.Mobile,
+                        UserProfile = y.UserProfile,
+                        StudentList = y.Students
+                    }).Skip((pageResult.PageNumber - 1) * pageResult.PageSize).Take(pageResult.PageSize);
 
-                        if(studentAddress != null)
-                        {
-                            parent.ParentAddress.FirstOrDefault().AddressLineOne = studentAddress.HomeAddressLineOne;
-                            parent.ParentAddress.FirstOrDefault().AddressLineTwo = studentAddress.HomeAddressLineTwo;
-                            parent.ParentAddress.FirstOrDefault().City = studentAddress.HomeAddressCity;
-                            parent.ParentAddress.FirstOrDefault().Country = studentAddress.HomeAddressCountry;
-                            parent.ParentAddress.FirstOrDefault().State = studentAddress.HomeAddressState;
-                            parent.ParentAddress.FirstOrDefault().Zip = studentAddress.HomeAddressZip;
-                        }
-                    }                  
+                    parentInfoListModel.parentInfoForView = parentInfo.ToList();
                 }
-                var parentInfo = transactionIQ.AsNoTracking().Select(y => new GetParentInfoForView
+                else
                 {
-                    SchoolId = y.SchoolId,
-                    TenantId = y.TenantId,
-                    ParentId=y.ParentId,
-                    Firstname = y.Firstname,
-                    Middlename=y.Middlename,
-                    Lastname = y.Lastname,
-                    Salutation=y.Salutation,
-                    Suffix=y.Suffix,
-                    WorkEmail=y.WorkEmail,
-                    WorkPhone=y.WorkPhone,
-                    HomePhone=y.HomePhone,
-                    PersonalEmail=y.PersonalEmail,
-                    Mobile=y.Mobile,
-                    UserProfile=y.UserProfile,
-                    FullAddress = ToFullAddress(y.ParentAddress.FirstOrDefault().AddressLineOne, y.ParentAddress.FirstOrDefault().AddressLineTwo, y.ParentAddress.FirstOrDefault().City,
-                    y.ParentAddress.FirstOrDefault().State, y.ParentAddress.FirstOrDefault().Country, y.ParentAddress.FirstOrDefault().Zip),
-                    AddressLineOne= y.ParentAddress.FirstOrDefault().AddressLineOne,
-                    AddressLineTwo = y.ParentAddress.FirstOrDefault().AddressLineTwo,
-                    Country = y.ParentAddress.FirstOrDefault().Country,
-                    City = y.ParentAddress.FirstOrDefault().City,
-                    State = y.ParentAddress.FirstOrDefault().State,
-                    Zip = y.ParentAddress.FirstOrDefault().Zip,
-                }).ToList();                
-                parentInfoListModel.parentInfoForView = parentInfo;
+                    parentInfoListModel.parentInfoForView = transactionIQ.AsNoTracking().Select(y => new GetParentInfoForView
+                    {
+                        SchoolId = y.SchoolId,
+                        TenantId = y.TenantId,
+                        ParentId = y.ParentId,
+                        Firstname = y.Firstname,
+                        Middlename = y.Middlename,
+                        Lastname = y.Lastname,
+                        Salutation = y.Salutation,
+                        Suffix = y.Suffix,
+                        WorkEmail = y.WorkEmail,
+                        WorkPhone = y.WorkPhone,
+                        HomePhone = y.HomePhone,
+                        PersonalEmail = y.PersonalEmail,
+                        Mobile = y.Mobile,
+                        UserProfile = y.UserProfile,
+                        StudentList = y.Students
+                    }).ToList();
+                }
+
                 foreach (var ParentInfo in parentInfoListModel.parentInfoForView)
                 {
-                    var studentAssociateWithParents = this.context?.ParentAssociationship.Where(x => x.ParentId == ParentInfo.ParentId && x.Associationship == true).ToList();
+
+                    string[] students = ParentInfo.StudentList.Split(",");
+
                     List<string> studentArray = new List<string>();
-                    if (studentAssociateWithParents.Count() > 0)
+                    foreach (string s in students)
                     {
-                        foreach (var studentAssociateWithParent in studentAssociateWithParents)
-                        {
-                            var student = this.context?.StudentMaster.FirstOrDefault(x => x.StudentId == studentAssociateWithParent.StudentId && x.SchoolId == studentAssociateWithParent.SchoolId && x.TenantId == studentAssociateWithParent.TenantId);
-                            if (student != null)
-                            {                               
-                                studentArray.Add(student.FirstGivenName + "|" + student.MiddleName + "|" + student.LastFamilyName + "|" + student.StudentId);
-                                ParentInfo.students = studentArray.ToArray();
-                            }
-                        }
+                        studentArray.Add(s);
+                        ParentInfo.students = studentArray.ToArray();
                     }
                 }
                 parentInfoListModel.TenantId = pageResult.TenantId;
                 parentInfoListModel.TotalCount = totalCount;
-                parentInfoListModel.PageNumber = 0;
-                parentInfoListModel._pageSize = 0;
+                parentInfoListModel.PageNumber = pageResult.PageNumber;
+                parentInfoListModel._pageSize = pageResult.PageSize;
                 parentInfoListModel._tenantName = pageResult._tenantName;
                 parentInfoListModel._token = pageResult._token;
                 parentInfoListModel._failure = false;
@@ -477,6 +791,7 @@ namespace opensis.data.Repository
             }
             return parentInfoListModel;
         }
+
         /// <summary>
         /// Delete Parent Info
         /// </summary>

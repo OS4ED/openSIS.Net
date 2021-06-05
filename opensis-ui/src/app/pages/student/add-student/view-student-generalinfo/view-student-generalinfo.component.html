@@ -1,12 +1,13 @@
 <mat-card-content>
 
     <div @stagger fxLayout="column">
-        <h3 class="text-blue pt-6 pb-2 px-2">{{'identificationInformation'|translate}}</h3>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
+        <h4 class="text-blue pt-6 pb-2">{{'identificationInformation'|translate}}</h4>
+        <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-10">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'studentName' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                    {{studentViewDetails?.studentMaster.firstGivenName}} {{studentViewDetails?.studentMaster.middleName}}
+                    {{studentViewDetails?.studentMaster.firstGivenName}}
+                    {{studentViewDetails?.studentMaster.middleName}}
                     {{studentViewDetails?.studentMaster.lastFamilyName}}</p>
             </li>
             <li>
@@ -39,7 +40,8 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'stateID' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails?.studentMaster.stateId | EmtyValueCheckPipe}}
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails?.studentMaster.stateId |
+                    EmtyValueCheckPipe}}
                 </p>
             </li>
             <li>
@@ -67,13 +69,18 @@
 
         <hr class="-mx-4 mt-6">
 
-        <h3 class="text-blue pt-6 pb-2 px-2">{{'demographicInformation'|translate}}</h3>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2">
+        <h4 class="text-blue pt-6 pb-2">{{'demographicInformation'|translate}}</h4>
+        <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-10">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'dateOfBirth' | translate}}</label>
-                <p *ngIf ="studentViewDetails?.studentMaster.dob !== null" class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails?.studentMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}}<span class="dot-separator"></span>{{'age' | translate}} : {{ getAge(studentViewDetails?.studentMaster.dob)}}</p>
-                <p *ngIf ="studentViewDetails?.studentMaster.dob === null" class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails?.studentMaster.dob | date:'mediumDate' | EmtyValueCheckPipe}}</p>
-                     
+                <p *ngIf="studentViewDetails?.studentMaster.dob !== null"
+                    class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails?.studentMaster.dob |
+                    date:'mediumDate' | EmtyValueCheckPipe}}<span class="dot-separator"></span>{{'age' | translate}} :
+                    {{ getAge(studentViewDetails?.studentMaster.dob)}}</p>
+                <p *ngIf="studentViewDetails?.studentMaster.dob === null"
+                    class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{studentViewDetails?.studentMaster.dob |
+                    date:'mediumDate' | EmtyValueCheckPipe}}</p>
+
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'gender' | translate}}</label>
@@ -200,8 +207,8 @@
             [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
         <hr class="-mx-4 mt-6">
 
-        <h3 class="text-blue pt-6 pb-2 px-2">{{'accessInformation'|translate}}</h3>
-        <ul class="grid grid-cols-3 col-gap-8 row-gap-10 my-2 mx-2">
+        <h4 class="text-blue pt-6 pb-2">{{'accessInformation'|translate}}</h4>
+        <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-10">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'loginEmailAddress' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
@@ -209,12 +216,18 @@
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'password' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a routerLink=""
+
+                <p *ngIf="(studentViewDetails.studentMaster.studentPortalId) && (studentViewDetails.portalAccess)"
+                    class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><a (click)="openResetPassword()"
                         class="text-blue cursor-pointer hover:underline">Reset Password</a></p>
+
+                <p *ngIf="(!studentViewDetails.studentMaster.studentPortalId) || (!studentViewDetails.portalAccess)"
+                    class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">-</p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'portalAccess' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 text-green">{{studentViewDetails?.portalAccess ? 'Yes' : 'No'}}
+                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 text-green">{{studentViewDetails?.portalAccess
+                    ? 'Yes' : 'No'}}
                 </p>
             </li>
         </ul>

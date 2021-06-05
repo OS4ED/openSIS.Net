@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { Router } from '@angular/router';
@@ -66,6 +91,7 @@ export class PeriodAttendanceComponent implements OnInit {
   }
 
   getScheduledStudentList(){
+    this.scheduleStudentListViewModel.sortingModel=null;
     this.scheduleStudentListViewModel.courseSectionId=this.staffDetails.courseSectionId;
     this.scheduleStudentListViewModel.pageNumber=0;
     this.scheduleStudentListViewModel.pageSize = 0;
@@ -170,7 +196,7 @@ export class PeriodAttendanceComponent implements OnInit {
   addComments(index){
     let studentName=this.scheduleStudentListViewModel.scheduleStudentForView[index].firstGivenName+' '+this.scheduleStudentListViewModel.scheduleStudentForView[index].lastFamilyName
     this.dialog.open(AddCommentsComponent, {
-      width: '500px',
+      width: '700px',
       data: {studentName,comments: this.addUpdateStudentAttendanceModel.studentAttendance[index].comments}
     }).afterClosed().subscribe((res)=>{
       if(!res?.submit){

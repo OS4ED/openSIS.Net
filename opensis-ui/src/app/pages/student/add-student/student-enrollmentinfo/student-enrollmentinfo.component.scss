@@ -19,24 +19,36 @@
             position: absolute;
             left: 122px;
             top: 21px;
+
+            @media only screen and (max-width: 850px) {
+                left: 77px;
+            }
         }
 
         > span {
             width: 125px;
             @apply p-4;
             @apply text-right text-gray text-lg;
+
+            @media only screen and (max-width: 850px) {
+                width: 80px;
+            }
         }
 
         > div {
             width: calc(100% - 125px);
             @apply border-l-2 border-dotted border-primary-light;
             @apply p-4;
+
+            @media only screen and (max-width: 850px) {
+                width: calc(100% - 80px);
+            }
         }
     }
 }
 
 .mat-expansion-panel-header.mat-expanded {
-    height: 48px;
+    height: auto;
 }
 
 .mat-expansion-panel:not([class*="mat-elevation-z"]) {
@@ -49,3 +61,8 @@
         right: 53px;
     }
 }
+.enrollment-table {
+    th,td {
+        white-space: nowrap;
+    }
+} 

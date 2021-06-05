@@ -1,0 +1,218 @@
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p {
+    margin: 0;
+}
+
+body {
+    -webkit-print-color-adjust: exact;
+}
+
+table {
+    border-collapse: collapse;
+    width: 100%;
+}
+
+
+.float-left {
+    float: left;
+}
+
+.float-right {
+    float: right;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-right {
+    text-align: right;
+}
+
+.ml-auto {
+    margin-left: auto;
+}
+
+.m-auto {
+    margin: auto;
+}
+
+.report-card {
+    width: 900px;
+    margin: auto;
+    font-family: "Roboto", "Helvetica Neue";
+}
+
+.logo {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    border: 2px solid #cacaca;
+    margin-right: 20px;
+    text-align: center;
+    line-height: 60px;
+    color: #cacaca;
+    text-transform: uppercase;
+    font-size: 12px;
+}
+
+.student-photo {
+    margin-right: 20px;
+    border: 1px solid #000;
+    border-radius: 3px;
+}
+
+.report-card-header {
+    border-bottom: 2px solid #000;
+}
+
+    .report-card-header td {
+        padding: 25px 30px 20px;
+    }
+
+.header-left h2 {
+    font-weight: 400;
+    font-size: 30px;
+}
+
+.header-left p {
+    margin: 5px 0;
+    font-size: 15px;
+}
+
+.header-right {
+    background: #000;
+    color: #fff;
+    text-align: center;
+    padding: 12px 10px;
+    border-radius: 3px;
+}
+
+.student-info-header {
+    padding: 20px 30px;
+}
+
+    .student-info-header td {
+        padding-bottom: 20px;
+    }
+
+    .student-info-header .info-left {
+        padding-top: 20px;
+    }
+
+        .student-info-header .info-left h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+            font-weight: 500;
+        }
+
+        .student-info-header .info-left p {
+            margin-bottom: 10px;
+            color: #333;
+        }
+
+    .student-info-header .info-right {
+        border: 2px solid #000;
+    }
+
+        .student-info-header .info-right td {
+            text-align: right;
+            padding: 12px 10px;
+            color: #333;
+        }
+
+            .student-info-header .info-right td:last-child {
+                background-color: #040404;
+                color: #e2e2e2;
+            }
+
+.semester-table {
+    padding: 0 30px 30px;
+}
+
+    .semester-table table {
+        border: 1px solid #000;
+    }
+
+    .semester-table th,
+    .semester-table td {
+        border-bottom: 1px solid #000;
+        padding: 8px 15px;
+    }
+
+    .semester-table th {
+        text-align: left;
+        background-color: #e5e5e5;
+    }
+
+    .semester-table caption {
+        margin-bottom: 10px;
+    }
+
+        .semester-table caption h2 {
+            font-weight: 400;
+            font-size: 24px;
+        }
+
+        .semester-table caption span {
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        .semester-table caption p {
+            margin-top: 8px;
+        }
+
+.gpa-table {
+    padding: 0 30px 30px;
+}
+
+    .gpa-table table {
+        border: 1px solid #000;
+    }
+
+    .gpa-table caption h4 {
+        text-align: left;
+        margin-bottom: 10px;
+        font-weight: 500;
+    }
+
+    .gpa-table th {
+        padding: 8px 15px;
+        background-color: #e5e5e5;
+        text-align: left;
+        border-bottom: 1px solid #000;
+    }
+
+    .gpa-table td {
+        padding: 8px 15px;
+        text-align: left;
+    }
+
+.signature-table {
+    padding: 20px 30px;
+}
+
+.sign {
+    padding-bottom: 20px;
+}
+
+.short-sign {
+    padding-top: 60px;
+}
+
+.long-line {
+    width: 90%;
+    margin-bottom: 10px;
+    border-top: 2px solid #000;
+}
+
+.name {
+    margin: 8px 0;
+}

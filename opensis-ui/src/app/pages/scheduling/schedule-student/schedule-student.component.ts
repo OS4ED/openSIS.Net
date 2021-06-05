@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { AddStudentComponent } from './add-student/add-student.component';
@@ -61,8 +86,16 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
         if (data.scheduleReport.length > 0) {
           this.showReportTable = true;
         }
-        this.displayedColumns = Object.keys(data.scheduleReport[0])
-
+        data.scheduleReport.map((item) => {
+          for (const key in item) {
+            if (item.hasOwnProperty(key)) {
+              if (key === 'studentId'){
+                delete item[key];
+              }
+          }
+          }
+        });
+        this.displayedColumns = Object.keys(data.scheduleReport[0]);
         this.scheduleReport = new MatTableDataSource(data.scheduleReport);
       }
 
@@ -162,7 +195,13 @@ export class ScheduleStudentComponent implements OnInit, OnDestroy {
         data.scheduleReport.map((item) => {
           let obj = {};
           for (const key in item) {
-            Object.assign(obj, { [this.translateKey(key)]: item[key] })
+            if (item.hasOwnProperty(key)) {
+              if (key === 'studentId'){
+                delete item[key];
+              }else{
+                Object.assign(obj, { [key==='studentInternalId'?'Student ID':this.translateKey(key)] : item[key] })
+              }
+          }
           }
           modifiedReportData.push(obj);
         })

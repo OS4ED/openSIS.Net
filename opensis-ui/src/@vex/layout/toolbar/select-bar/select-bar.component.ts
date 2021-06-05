@@ -25,6 +25,7 @@ export class SelectBarComponent implements OnInit {
   checkForAnyNewSchool: boolean = false;
   nullValueForDropdown="Please Select";
   schoolCtrl: FormControl;
+  schoolControl = 0;
   /** control for the selected Year */
   public academicYearsCtrl: FormControl = new FormControl();
   filteredSchoolsForDrop;
@@ -124,7 +125,12 @@ export class SelectBarComponent implements OnInit {
     sessionStorage.setItem("selectedSchoolId", details.schoolId);
     sessionStorage.setItem("schoolOpened", details.schoolDetail[0].dateSchoolOpened);
     this.callAcademicYearsOnSchoolSelect();
-    this.router.navigate(['/school/dashboards']);
+    if(sessionStorage.getItem('membershipName')=== 'Teacher'){
+      this.router.navigateByUrl("/school/teacher/dashboards");
+    }
+    else{
+      this.router.navigateByUrl("/school/dashboards");
+    }
     this.dasboardService.sendPageLoadEvent(true);
     this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:true,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:false});
 
@@ -138,22 +144,22 @@ export class SelectBarComponent implements OnInit {
       if (this.academicYears?.length > 0) {
         this.academicYearsCtrl.setValue(this.academicYears[this.academicYears.length - 1]);
         sessionStorage.setItem("academicyear", this.academicYearsCtrl.value.academyYear);
-        sessionStorage.setItem("markingPeriod",this.academicYearsCtrl.value.startDate);
+        sessionStorage.setItem("fullYearStartDate",this.academicYearsCtrl.value.startDate);
         
       } else {
        
         this.academicYearsCtrl.setValue(this.nullValueForDropdown);
         sessionStorage.setItem("academicyear","null");
-        sessionStorage.setItem("markingPeriod","null");
+        sessionStorage.setItem("fullYearStartDate","null");
       }
       if(this.academicYearsCtrl.value==this.nullValueForDropdown){
         sessionStorage.setItem("academicyear","null");
-        sessionStorage.setItem("markingPeriod","null");
+        sessionStorage.setItem("fullYearStartDate","null");
          this.periods=[]
         this.callMarkingPeriodTitleList();
         }else{         
           sessionStorage.setItem("academicyear", this.academicYearsCtrl.value.academyYear); 
-          sessionStorage.setItem("markingPeriod",this.academicYearsCtrl.value.startDate);
+          sessionStorage.setItem("fullYearStartDate",this.academicYearsCtrl.value.startDate);
           this.callMarkingPeriodTitleList();
         }
         this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:false,dataFromUserLogin:false,academicYearChanged:false,academicYearLoaded:true});
@@ -164,14 +170,19 @@ export class SelectBarComponent implements OnInit {
   changeYear(event) {
     if(event.value==this.nullValueForDropdown){
     sessionStorage.setItem("academicyear","null");
-    sessionStorage.setItem("markingPeriod", "null");
+    sessionStorage.setItem("fullYearStartDate", "null");
     this.callMarkingPeriodTitleList();
     }else{
       sessionStorage.setItem("academicyear", event.value.academyYear);
-      sessionStorage.setItem("markingPeriod", event.value.startDate);
+      sessionStorage.setItem("fullYearStartDate", event.value.startDate);
       this.callMarkingPeriodTitleList();
     }
-    this.router.navigate(['/school/dashboards']);
+    if(sessionStorage.getItem('membershipName')=== 'Teacher'){
+      this.router.navigateByUrl("/school/teacher/dashboards");
+    }
+    else{
+      this.router.navigateByUrl("/school/dashboards");
+    }
     this.schoolService.changeSchoolListStatus({schoolLoaded:false,schoolChanged:false,dataFromUserLogin:false,academicYearChanged:true,academicYearLoaded:false});
 
   }
@@ -188,27 +199,53 @@ export class SelectBarComponent implements OnInit {
             let startDate = new Date(this.periods[i]?.startDate).setHours(0, 0, 0, 0);
             let endDate = new Date(this.periods[i]?.endDate).setHours(0, 0, 0, 0);
             if (today <= endDate && today >= startDate) {
-              this.periodCtrl.setValue(this.periods[i].periodTitle);
+              this.periodCtrl.setValue(this.periods[i]);
               sessionStorage.setItem("markingPeriodId",this.periods[i].markingPeriodId);
+              this.defaultValuesService.setMarkingPeriodStartDate(this.periods[i].startDate);
               break;
             } else {
-              this.periodCtrl.setValue(this.periods[0].periodTitle);
-              sessionStorage.setItem("markingPeriodId",this.periods[i].markingPeriodId);
+              this.periodCtrl.setValue(this.periods[0]);
+              sessionStorage.setItem("markingPeriodId",this.periods[0].markingPeriodId);
+              this.defaultValuesService.setMarkingPeriodStartDate(this.periods[0].startDate);
             }
           }
         } else {
           this.periodCtrl.setValue(this.nullValueForDropdown);
           sessionStorage.setItem("markingPeriodId",null);
+          this.defaultValuesService.setMarkingPeriodStartDate(null);
         }
       })
     } else {
       this.periodCtrl.setValue(this.nullValueForDropdown);
       sessionStorage.setItem("markingPeriodId",null);
+      this.defaultValuesService.setMarkingPeriodStartDate(null);
+
+    }
+  }
+
+  toggleSchoolControl() {
+    if(this.schoolControl === 0){
+      this.schoolControl = 1;
+    } else {
+      this.schoolControl = 0;
     }
   }
 
   changePeriod(event) {
-    this.router.navigate(['/school/dashboards']);
+    if(event.value==this.nullValueForDropdown){
+      sessionStorage.setItem("markingPeriodId",null);
+      this.defaultValuesService.setMarkingPeriodStartDate(null);
+      }else{
+        sessionStorage.setItem("markingPeriodId", event.value.markingPeriodId);
+      this.defaultValuesService.setMarkingPeriodStartDate(event.value.startDate);
+      }
+
+    if(sessionStorage.getItem('membershipName')=== 'Teacher'){
+      this.router.navigateByUrl("/school/teacher/dashboards");
+    }
+    else{
+      this.router.navigateByUrl("/school/dashboards");
+    }
   }
 
   protected filterSchools() {

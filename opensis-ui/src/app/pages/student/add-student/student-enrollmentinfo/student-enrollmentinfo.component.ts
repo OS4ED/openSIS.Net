@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
@@ -107,9 +132,17 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.studentService.studentCreatedMode.subscribe((res)=>{
       this.studentCreateMode = res;
+ 
     });
     this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
       this.studentDetailsForViewAndEdit = res;
+      if(res?.fieldsCategoryList){
+       if(this.studentCreateMode === this.studentCreate.VIEW) {
+          // this.getAllSchoolListWithGradeLevels();
+          this.getAllStudentEnrollments();
+          this.studentService.changePageMode(this.studentCreateMode);
+        }
+      }
     });
 
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
@@ -120,7 +153,6 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
     this.deletePermission = permissionSubCategory.rolePermission[0].canDelete;
     this.addPermission = permissionSubCategory.rolePermission[0].canAdd;
 
-    // this.getAllSection();
     if (this.studentCreateMode === this.studentCreate.EDIT) {
       this.studentCreateMode = this.studentCreate.ADD;
     }
@@ -129,11 +161,8 @@ export class StudentEnrollmentinfoComponent implements OnInit, OnDestroy {
       this.getAllSchoolListWithGradeLevelsAndEnrollCodes();
       this.getAllStudentEnrollments();
       this.studentService.changePageMode(this.studentCreateMode);
-    } else if (this.studentCreateMode === this.studentCreate.VIEW) {
-      // this.getAllSchoolListWithGradeLevels();
-      this.getAllStudentEnrollments();
-      this.studentService.changePageMode(this.studentCreateMode);
     }
+    
   }
 
   cmpare(index) {

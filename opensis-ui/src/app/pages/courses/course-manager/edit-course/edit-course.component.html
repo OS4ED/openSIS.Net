@@ -182,7 +182,7 @@
                 
                     <mat-form-field  id="subject1" class="w-full mb-1 hidden" appearance="outline" color="primary">
                         <mat-label>{{'subject' | translate}}</mat-label>
-                        <input  #courseSubject="ngModel" id="subjectFocus" [(ngModel)]="addCourseModel.course.courseSubject"  name="courseSubject" cdkFocusInitial matInput required> 
+                        <input  #courseSubject="ngModel" id="subjectFocus" [(ngModel)]="addCourseModel.course.courseSubject"  name="courseSubject" matInput required> 
                         <mat-error *ngIf="courseSubject.errors?.required">
                             {{'courseSubjectIsRequired'|translate}}</mat-error>             
                     </mat-form-field>                 

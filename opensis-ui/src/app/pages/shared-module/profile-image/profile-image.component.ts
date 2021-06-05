@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnInit, ViewChild, TemplateRef, Input, OnDestroy, OnChanges } from '@angular/core';
 import { ImageCroppedEvent, base64ToFile } from 'ngx-image-cropper';
 import { MatDialog, MatDialogConfig } from '@angular/material/dialog';
@@ -20,6 +45,7 @@ import { LoaderService } from '../../../services/loader.service';
 import { SchoolAddViewModel } from '../../../models/school-master.model';
 import { ParentInfoService } from '../../../services/parent-info.service';
 import { AddParentInfoModel } from '../../../models/parent-info.model';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 @Component({
   selector: 'vex-profile-image',
@@ -65,7 +91,9 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     private staffService: StaffService,
     private parentService: ParentInfoService,
     private studentService: StudentService,
-    private loaderService: LoaderService) {
+    private loaderService: LoaderService,
+    private imageCompressService: NgxImageCompressService,
+    ) {
     this.loaderService.isLoading.pipe(takeUntil(this.destroySubject$)).subscribe((val) => {
       this.loading = val;
     });
@@ -103,12 +131,14 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
   }
 
   imageCropped(event: ImageCroppedEvent) {
-    this.croppedImage = event.base64;
-    let base64ImageSplit = this.croppedImage.split(',')
-    let sendCropImage = (croppedImage) => {
-      this.imageCropperService.sendCroppedEvent(croppedImage);
-    }
-    sendCropImage(base64ImageSplit);
+    this.imageCompressService.compressFile(event.base64, -1, 75, 50).then(result => {
+        this.croppedImage = result;
+        let base64ImageSplit = this.croppedImage.split(',')
+        let sendCropImage = (croppedImage) => {
+          this.imageCropperService.sendCroppedEvent(croppedImage);
+        }
+        sendCropImage(base64ImageSplit);
+      });
   }
 
   setImage() {
@@ -132,9 +162,10 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     this.fileUploader = fileUpload;
     this.responseImage = null;
     this.hideCropperToolButton = true;
-    if (event.target.files[0]?.size > 307200) {
-      this.snackbar.open('Warning: File must be less than 300kb', '', { duration: 10000 });
-    } else if ((event.target.files[0]?.type == "image/jpeg") ||
+    // if (event.target.files[0]?.size > 307200) {
+    //   this.snackbar.open('Warning: File must be less than 300kb', '', { duration: 10000 });
+    // } else
+     if ((event.target.files[0]?.type == "image/jpeg") ||
       (event.target.files[0]?.type == "image/jpg") ||
       (event.target.files[0]?.type == "image/png")) {
       this.originalFileName = event.target.files[0].name;
@@ -142,15 +173,17 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
       let files = event.target.files;
       let _URL = window.URL || window.webkitURL;
       for (let i = 0; i < files.length; i++) {
-        let img = new Image();
-        img.onload = () => {
+        // let img = new Image();
+        // img.onload = () => {
           if (this.enableCropTool) {
             this.callCropper(event);
           } else {
             this.callUncropper(event);
           }
-        }
-        img.src = _URL.createObjectURL(files[i]);
+        // }
+
+        // img.src = event.target.result;
+        // img.src = _URL.createObjectURL(files[i]);
       }
     } else {
       if (event.target.files[0]?.size > 0) {
@@ -170,14 +203,33 @@ export class ProfileImageComponent implements OnInit, OnDestroy {
     const file = (event.target as HTMLInputElement).files[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = this.handleReaderLoaded.bind(this);
-      reader.readAsBinaryString(file);
-    }
-    const reader = new FileReader();
     reader.onload = () => {
-      this.preview = reader.result as string;
+      this.resizeImage(reader.result, 256, 256).then(compressed => {
+        this.imageCompressService.compressFile(compressed as string, -1, 75, 50).then(result => {
+          this.preview = result ;
+          this.handleReaderLoaded(result.split(',')[1]);
+        });
+      })
     }
-    reader.readAsDataURL(file)
+      reader.readAsDataURL(file);
+    }
+  }
+
+  resizeImage(src, newX, newY) {
+    return new Promise((resolve, reject) => {
+      const img = new Image();
+      img.src = src;
+      img.onload = () => {
+        const elem = document.createElement('canvas');
+        elem.width = newX;
+        elem.height = newY;
+        const ctx = elem.getContext('2d');
+        ctx.drawImage(img, 0, 0, newX, newY);
+        const data = ctx.canvas.toDataURL();
+        resolve(data);
+      }
+      img.onerror = error => reject(error);
+    })
   }
 
   handleReaderLoaded(e) {

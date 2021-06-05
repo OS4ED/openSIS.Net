@@ -8,13 +8,51 @@
 </div>
 <mat-divider class="-mx-6 text-border"></mat-divider>
 
-<mat-dialog-content class="mb-1">
-    <mat-form-field appearance="outline" color="primary" class="w-full mt-4">
+<mat-dialog-content class="mb-1 pt-6">
+    <!-- <mat-form-field appearance="outline" color="primary" class="w-full mt-4">
         <mat-label>Enter Comment</mat-label>
         <textarea matInput [(ngModel)]="comments"></textarea>
-    </mat-form-field>
+    </mat-form-field> -->
+    <div class="timeline">
+        <div class="timeline-content">
+            <p class="text-primary"><span class="font-semibold">Grorge Smith</span> took attendance on <span
+                    class="font-semibold">April 10, 2021</span> @ <span class="font-semibold">10.45
+                    AM</span>
+                <span mat-raised-button matTooltip="Teacher"
+                    aria-label="Button that displays a tooltip when focused or hovered over"
+                    [matTooltipPosition]="'above'" class="cursor-pointer">
+                    <mat-icon class="text-black ml-2 align-middle">person</mat-icon>
+                </span>
+            </p>
+            <p>Arthur did not come to class today.</p>
+        </div>
+        <div class="timeline-content" *ngIf="administratorComment">
+            <p class="text-primary"><span class="font-semibold">John Carter</span> {{
+                'commentedOn' |
+                translate }} <span class="font-semibold">April 10, 2021</span> @ <span class="font-semibold">12.10
+                    PM</span>
+                <span mat-raised-button matTooltip="Administrator"
+                    aria-label="Button that displays a tooltip when focused or hovered over"
+                    [matTooltipPosition]="'above'" class="cursor-pointer">
+                    <mat-icon class="text-black ml-2 align-middle">manage_accounts</mat-icon>
+                </span>
+                <span class="cursor-pointer" (click)="openCommentBox()">
+                    <mat-icon class="text-black ml-2 align-middle">edit</mat-icon>
+                </span>
+            </p>
+            <p>Arthur's father emailed doctor's note</p>
+        </div>
+        <div class="timeline-content" *ngIf="commentBox">
+            <div class="w-full border border-gray-light rounded p-2">
+                <label class="text-gray block">{{ 'yourComment' | translate }}</label>
+                <input type="text" value="Arthur's father emailed doctor's note" class="w-full">
+            </div>
+        </div>
+    </div>
+
 </mat-dialog-content>
-<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="pt-0 pb-2">
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="pt-0 pb-4" *ngIf="commentBox">
     <button mat-button mat-dialog-close>Cancel</button>
-    <button color="primary" mat-flat-button type="submit" class="text-white ml-2" (click)="addOrUpdateComments()">{{actionButtonTitle|translate}}</button>
+    <button color="primary" mat-flat-button type="submit" class="text-white ml-2"
+        (click)="addOrUpdateComments()">{{actionButtonTitle|translate}}</button>
 </mat-dialog-actions>

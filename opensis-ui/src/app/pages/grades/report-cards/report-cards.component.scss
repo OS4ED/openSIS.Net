@@ -36,3 +36,28 @@
     border-left: 5px solid transparent;
   }
 }
+
+.hide {
+  display: none;
+}
+
+.table-search {
+  width: 70px;
+  transition: all 0.3s ease;
+
+  @media (max-width: 767.98px){
+      width: calc(100% - 92px);
+  }
+
+  &:focus {
+    width: 180px;
+
+    @media (max-width: 767.98px){
+        width: calc(100% - 92px);
+    }
+  }
+}
+a.disabled {
+  pointer-events: none;
+  cursor: default;
+}

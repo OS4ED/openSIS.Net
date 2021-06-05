@@ -1,6 +1,7 @@
-<div class="flex container-sidenav-secondary">
+<div class="flex container-sidenav-secondary" [ngClass]="secondarySidebar==0?'' : 'show-secondary-sidebar'">
     <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
     <div class="sidenav-secondary">
+        <button mat-icon-button class="close-secondary-sidebar" (click)="toggleSecondarySidebar()"><mat-icon>close</mat-icon></button>
         <vex-scrollbar class="flex-auto">
             <div class="h-45 text-center sm:px-0 pt-5 pb-2">
                 <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"
@@ -41,7 +42,7 @@
                 </mat-expansion-panel>
             </mat-accordion>
 
-            <div class="px-gutter sm:px-0">
+            <div>
                 <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple
                     (click)="changeTempCategory(100)">
                     <mat-icon [icIcon]="icCalendar" class="mr-3"></mat-icon> {{ 'courseSchedule' | translate }}
@@ -80,9 +81,25 @@
                     <vex-breadcrumbs [crumbs]="['Students',pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
+            <div class="bg-primary px-4 py-2 rounded -mt-16 mx-4 persistent-bar">
+                <div class="flex items-center">
+                    <button mat-icon-button class="text-white mr-2" (click)="toggleSecondarySidebar()"><mat-icon>apps</mat-icon></button>
+                    <div class="h-45 text-center sm:px-0 relative">
+                        <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" style="width:50px"
+                            class="mx-auto inline-block rounded"></vex-profile-image>
+                        <span class="critical-alert shadow-md" *ngIf="criticalAlert">
+                            <mat-icon [icIcon]="icHospital" class="mr-3"></mat-icon>
+                        </span>
+                    </div>
+                    <div class="text-left px-4">
+                        <h4 class="mb-0 text-white">{{studentTitle}}</h4>
+                        <div class="text-white opacity-50 inline-block" *ngIf="studentAddModel.currentGradeLevel">{{studentAddModel.currentGradeLevel}}</div>
+                    </div>
+                </div>
+            </div>
             <vex-page-layout-content class="-mt-4">
                 
-                <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
+                <mat-drawer-container class="bg-transparent flex-auto flex">
                     <mat-drawer-content class="flex-auto flex items-start">
                         <div class="w-full" fxFlex="auto">
                             <router-outlet></router-outlet>
@@ -143,4 +160,5 @@
             </vex-page-layout-content>
         </vex-page-layout>
     </div>
+    <div class="sidebar-overlay"  (click)="toggleSecondarySidebar()"></div>
 </div>

@@ -20,3 +20,14 @@ a {
   color: var(--toolbar-color);
   text-decoration: none;
 }
+
+.small-mobile-logo {
+  background: #eaeaea;
+  padding: 8px;
+  border-radius: 50%;
+  display: none;
+
+  @media (max-width: 1279.98px) {
+    display: block;
+  }
+}

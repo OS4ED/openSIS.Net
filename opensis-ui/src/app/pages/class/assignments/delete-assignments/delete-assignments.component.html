@@ -1,0 +1,13 @@
+<div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title>
+    <h2 class="headline m-0 text-warn" fxFlex="auto">
+        {{ "areYouSure" | translate }}
+    </h2>
+</div>
+
+<mat-dialog-content class="mb-1">
+    <p class="text-lg mb-6">{{ 'thisAssignment' | translate }} <span class="font-semibold mx-1">(Analysis Chemical Composition)</span> {{ 'isAlreadyGraded' | translate }} {{ 'deletingThisWillDeleteTheGradesAlso' | translate }} {{ 'doYouWantToContinue' | translate }}</p>
+</mat-dialog-content>
+<mat-dialog-actions fxLayout="row" fxLayoutAlign="end center" class="pb-4">
+    <button mat-flat-button>{{ 'no' | translate }}</button>
+    <button color="primary" mat-flat-button type="submit" class="text-white ml-2">{{ 'yes' |translate }}</button>
+</mat-dialog-actions>

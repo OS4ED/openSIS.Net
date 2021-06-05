@@ -17,7 +17,7 @@ import { MatExpansionModule } from '@angular/material/expansion';
 import { MatDividerModule } from '@angular/material/divider';
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-
+import { SharedModuleModule } from '../../shared-module/shared-module.module';
 
 @NgModule({
   declarations: [TeacherDashboardComponent],
@@ -39,7 +39,8 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     ContainerModule,
     TranslateModule,
     MatExpansionModule,
-    MatDividerModule
+    MatDividerModule,
+    SharedModuleModule
   ]
 })
 export class TeacherDashboardModule { }

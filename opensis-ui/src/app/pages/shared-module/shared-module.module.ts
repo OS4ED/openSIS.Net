@@ -30,11 +30,18 @@ import { NgForFilterPipe } from './user-define-pipe/course-section-ngFor-div-fil
 import { Transform24to12Pipe } from './user-define-pipe/transform-24to12.pipe';
 import { CourseNgForFilterPipe } from './user-define-pipe/course-ngFor-div-filter.pipe';
 import { SystemCategoryCheckPipe } from './user-define-pipe/system-category-check.pipe';
+import { ResetPasswordComponent } from './reset-password/reset-password.component';
+import { MatFormFieldModule } from '@angular/material/form-field';
+import { MatInputModule } from '@angular/material/input';
+import { MatTooltipModule } from '@angular/material/tooltip';
+import { FlexLayoutModule } from '@angular/flex-layout';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgxImageCompressService } from 'ngx-image-compress';
 
 @NgModule({
   declarations: [MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyBooleanCheckReversePipe,
     EmtyValueCheckPipe,EmtyNumberCheckPipe, ConfirmDialogComponent,InvalidControlScrollDirective,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,
-    PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe,CourseNgForFilterPipe,SystemCategoryCheckPipe],
+    PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe,CourseNgForFilterPipe,SystemCategoryCheckPipe, ResetPasswordComponent],
   imports: [
     CommonModule,
     MatProgressSpinnerModule,
@@ -46,9 +53,14 @@ import { SystemCategoryCheckPipe } from './user-define-pipe/system-category-chec
     IconModule,
     MatCardModule,
     TranslateModule,
-    
+    MatFormFieldModule,
+    MatInputModule,
+    FlexLayoutModule,
+    ReactiveFormsModule,
+    MatTooltipModule
   ],
   exports:[MatSpinnerOverlayComponent, ProfileImageComponent,PhoneMaskDirective,EmtyBooleanCheckPipe,EmtyValueCheckPipe,EmtyNumberCheckPipe,InvalidControlScrollDirective,
-    EmtyBooleanCheckReversePipe,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe,CourseNgForFilterPipe,SystemCategoryCheckPipe]
+    EmtyBooleanCheckReversePipe,TransformDateTimePipe,TransformTimePipe,EmailvalidatorDirective,PhonevalidatorDirective,SafePipe,AgePipe,EvenOddPipe,WeekDayPipe,NgForFilterPipe,Transform24to12Pipe,CourseNgForFilterPipe,SystemCategoryCheckPipe],
+    providers: [NgxImageCompressService]
 })
 export class SharedModuleModule { }

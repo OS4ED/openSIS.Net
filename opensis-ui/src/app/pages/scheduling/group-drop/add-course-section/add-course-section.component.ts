@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { SearchStudentCourseSection } from '../../../../models/search-student-course-section.model';
 import icClose from '@iconify/icons-ic/twotone-close';
@@ -15,6 +40,7 @@ import { LoaderService } from '../../../../services/loader.service';
 import { CourseSectionService } from '../../../../services/course-section.service';
 import { takeUntil } from 'rxjs/operators';
 import { NgForm } from '@angular/forms';
+import { DefaultValuesService } from 'src/app/common/default-values.service';
 
 @Component({
   selector: 'vex-add-course-section',
@@ -44,6 +70,7 @@ export class AddCourseSectionComponent implements OnInit {
   constructor(public translateService: TranslateService,
     private dialogRef: MatDialogRef<AddCourseSectionComponent>,
     private courseManagerService: CourseManagerService,
+    private defaultService:DefaultValuesService,
     private snackbar: MatSnackBar,
     private markingPeriodService: MarkingPeriodService,
     private loaderService: LoaderService,
@@ -99,6 +126,13 @@ export class AddCourseSectionComponent implements OnInit {
 
   searchCourseSection() {
     this.searchRecord = true;
+    if(this.courseSectionSearch.markingPeriodId){
+      this.courseSectionSearch.markingPeriodStartDate=null;
+    }else{
+      let mpStartDate = this.defaultService.getMarkingPeriodStartDate();
+      this.courseSectionSearch.markingPeriodStartDate=mpStartDate?mpStartDate.split('T')[0]:null;
+    }
+    this.courseSectionSearch.forStudent = true;
     this.courseSectionService.searchCourseSectionForSchedule(this.courseSectionSearch).subscribe((res) => {
       if (res._failure) {
         if (res.allCourseSectionViewList === null) {

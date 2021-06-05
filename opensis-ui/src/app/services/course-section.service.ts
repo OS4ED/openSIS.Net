@@ -4,7 +4,13 @@ import { Subject } from 'rxjs';
 import { environment } from '../../environments/environment';
 import { DefaultValuesService } from '../common/default-values.service';
 import { SearchCourseSectionViewModel } from '../models/course-manager.model';
-import { CourseSectionAddViewModel, DeleteCourseSectionSchedule, GetAllCourseSectionModel, GetAllCourseStandardForCourseSectionModel, ScheduledStaffForCourseSection } from '../models/course-section.model';
+import {
+  ClassRoomURLInCourseSectionModel,
+  CourseSectionAddViewModel,
+  DeleteCourseSectionSchedule,
+  GetAllCourseSectionModel,
+  GetAllCourseStandardForCourseSectionModel,
+  ScheduledStaffForCourseSection } from '../models/course-section.model';
 import { CryptoService } from './Crypto.service';
 
 @Injectable({
@@ -64,10 +70,16 @@ export class CourseSectionService {
   deleteSchedule(courseSection: DeleteCourseSectionSchedule) {
     courseSection = this.defaultValuesService.getAllMandatoryVariable(courseSection);
     let apiurl = this.apiUrl + courseSection._tenantName + "/CourseManager/deleteSchedule";
-    return this.http.post<DeleteCourseSectionSchedule>(apiurl, courseSection)
+    return this.http.post<DeleteCourseSectionSchedule>(apiurl, courseSection);
   }
 
-
+  updateOnlineClassRoomURLInCourseSection(obj: ClassRoomURLInCourseSectionModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.courseSection.tenantId = this.defaultValuesService.getTenantID();
+    obj.courseSection.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/StaffPortal/updateOnlineClassRoomURLInCourseSection';
+    return this.http.put<any>(apiurl, obj);
+  }
 
   private afterDeleted = new Subject;
   callCourseSection = this.afterDeleted.asObservable();

@@ -11,7 +11,7 @@
                     <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
 
                         <div class="py-6" @stagger fxLayout="column">
-                            <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
+                            <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                                 <li *ngFor="let customField of schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields; let index = index"
                                     [ngSwitch]="customField.type">
                                     <div class="mt-1" *ngSwitchCase="'Checkbox'">
@@ -104,10 +104,10 @@
     </div>
     <div *ngIf="schoolCreateMode == SchoolCreate.VIEW">
         <mat-card @fadeInUp class="w-full" fxFlex="auto">
-            <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+            <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
                 <h3 class="flex-auto">{{ categoryTitle }}</h3>
                 <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
-                <button *ngIf="editSchoolPermission" mat-button color="primary" (click)="editOtherInfo()">
+                <button *ngIf="editSchoolPermission" mat-raised-button color="primary" (click)="editOtherInfo()">
                     <mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}
                 </button>
                 </div>
@@ -115,9 +115,9 @@
 
             <mat-card-content>
                 <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
-                    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
-                        <div class="my-6">
-                            <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                    <div class="">
+                        <div class="pt-6">
+                            <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-10">
                                 <li
                                     *ngFor="let customField of schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields; let index = index">
                                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>

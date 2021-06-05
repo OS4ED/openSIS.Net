@@ -11,7 +11,7 @@
                 <ng-container matColumnDef="certificationName">
                     <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'certificationName'|translate}}</th>
                     <td mat-cell *matCellDef="let element">
-                        <a routerLink="" (click)='openViewDetails(element)' class="text-primary cursor-pointer">{{element.certificationName|EmtyValueCheckPipe}}</a>
+                        <a (click)='openViewDetails(element)' class="text-primary cursor-pointer">{{element.certificationName|EmtyValueCheckPipe}}</a>
                     </td>
                 </ng-container>
 

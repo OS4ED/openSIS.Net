@@ -1,5 +1,6 @@
-<div class="text-right" *ngIf="schoolCtrl">
-  <mat-form-field >
+<div class="border-t border-b md:border-0 shadow-md p-4 md:p-0 md:shadow-none md:text-right control-school" *ngIf="schoolCtrl" [ngClass]="schoolControl==0?'' : 'show-school'">
+  <mat-form-field class="w-full md:w-auto">
+    <label class="block md:hidden mb-2">School</label>
     <mat-select [formControl]="schoolCtrl" placeholder="School Name" (selectionChange)="changeSchool($event.value)">
       <mat-option>
         <ngx-mat-select-search  [formControl]="schoolFilterCtrl" ngxMatSelectSearchClear noEntriesFoundLabel="No matching school found" placeholderLabel="Find School..."></ngx-mat-select-search>
@@ -11,7 +12,8 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field class="w-full md:w-auto">
+    <label class="block md:hidden mb-2">School Session</label>
     <mat-select [formControl]="academicYearsCtrl" placeholder="Year" (selectionChange)="changeYear($event)">
       <mat-option *ngIf="this.academicYears?.length==0" [value]=nullValueForDropdown>{{nullValueForDropdown}}</mat-option>
       <mat-option *ngFor="let year of academicYears" [value]="year">
@@ -20,15 +22,19 @@
     </mat-select>
   </mat-form-field>
 
-  <mat-form-field>
+  <mat-form-field class="w-full md:w-auto">
+    <label class="block md:hidden mb-2">Marking Period</label>
     <mat-select [formControl]="periodCtrl" placeholder="Period Title" (selectionChange)="changePeriod($event)">
       <mat-option *ngIf="this.periods?.length==0" [value]=nullValueForDropdown>{{nullValueForDropdown}}</mat-option>
-      <mat-option *ngFor="let period of periods" [value]="period.periodTitle">
+      <mat-option *ngFor="let period of periods" [value]="period">
         {{period.periodTitle}}
       </mat-option>
     </mat-select>
   </mat-form-field>
 </div>
+<div class="control-school-overlay" [ngClass]="schoolControl==0?'hidden' : 'block'" (click)="toggleSchoolControl()"></div>
+<button class="toggle-school-control" color="primary" mat-icon-button (click)="toggleSchoolControl()"><mat-icon>tune</mat-icon></button>
+
 
 
   

@@ -41,9 +41,8 @@
     <!-- Start Upload your file -->
     <div class="upload_file" *ngSwitchCase="bulkDataImport.UPLOAD">
         <div class="card px-6 py-4">
-            <p class="text-center text-base"><a class="text-primary cursor-pointer" href="{{demoDownloadLink}}">Click here</a> to download the
-                sample
-                Excel sheet template.</p>
+            <p class="text-center text-base"><a class="text-primary cursor-pointer" (click)="generatePdf()">Click here</a> to generate and download the data import template in Excel. 
+            </p>
             <mat-divider class="mt-4 mb-6 -mx-6"></mat-divider>
             <ngx-dropzone (change)="onUpload($event)" class="mb-4" [accept]="acceptedFileTypes" [disableClick]="files.length==1" multiple="false">
                 <ngx-dropzone-label>
@@ -65,20 +64,20 @@
                 <button color="primary" (click)="uploadFile()" [disabled]="!files.length" mat-flat-button type="submit">{{ 'uploadFile' | translate }}</button>
             </div>
             <mat-divider class="mt-4 mb-6 -mx-8"></mat-divider>
-            <div class="text-center -mt-12">
+            <!-- <div class="text-center -mt-12">
                 <div class="w-12 h-12 bg-black rounded-full m-auto text-white font-medium align-middle pt-3 text-lg">
                     OR</div>
             </div>
             <div class="text-center mt-8 mb-6">
                 <img src="assets/img/icons/world-wide-web.svg" width="60px" class="inline-block mr-4 flex-shrink-0">
-                <div class="sm:w-9/12 lg:w-2/4 inline-block align-middle text-left">
+                <div class="sm:w-full xl:w-2/4 lg:w-3/4 inline-block align-middle lg:text-left">
                     <p class="text-lg font-medium mb-2 inline-block">Upload file via web link
                         <i class="icon icon-sphere ml-2"></i>
                         <i class="icon icon-google-drive ml-2"></i>
                         <i class="icon icon-dropbox ml-2"></i>
                     </p>
                     <div>
-                        <div class="sm:w-7/12 lg:w-2/3 inline-block px-2 py-1 border border-gray-light rounded mr-4">
+                        <div class="sm:w-6/12 lg:w-2/3 inline-block px-2 py-1 border border-gray-light rounded mr-4 mb-2">
                             <input name="web_link" type="text"  (keyup)="url=url.trim()" placeholder="Enter the web link URL of the sheet"
                                 class="w-full text-base" [(ngModel)]="url" />
                         </div>
@@ -99,7 +98,7 @@
                         </mat-dialog-actions>
                     </div>
                 </div>
-            </div>
+            </div> -->
         </div>
     </div>
     <!-- End Upload your file -->

@@ -19,36 +19,19 @@
                         </mat-button-toggle-group>
                     </div>
                     <button *ngIf="addPermission" (click)="openAddNew()" type="button" color="primary" mat-raised-button>
-                        <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true">
-                        </ic-icon>{{'addNotice' | translate}} 
+                        <mat-icon class="md:mr-2">add</mat-icon><span class="hidden md:inline-block">{{'addNotice' | translate}}</span>
                     </button>
                 </div>
             </mat-card>
 
-            <div class="flex w-full">
-                <div class="w-1/2" >
-                    <div class="sm:pr-4" *ngFor="let list of noticeList | evenOddPipe:'odd'">
+            <div *ngFor="let list of noticeList">
                         <vex-notice-cards [getAllMembersList]='getAllMembersList' [notice]='list' noticeId = {{list.noticeId}} title= {{list.title}}
                             visibleFrom="{{list.validFrom | date }} - {{list.validTo | date }}"
                             visibleTo={{list.targetMembershipIds}}>
-                            <div class="px-gutter pt-4 pb-6">
+                    <div class="p-3">
                                 <div class="ql-editor" [innerHTML]="list.body|safe:'html'"></div>
                             </div>
                         </vex-notice-cards>
-                    </div>
-                </div>
-                <div class="w-1/2" >
-                    <div class="sm:pr-4" *ngFor="let list of noticeList | evenOddPipe:'even'">
-                        <vex-notice-cards [getAllMembersList]='getAllMembersList' [notice]='list' noticeId = {{list.noticeId}} title= {{list.title}}
-                            visibleFrom="{{list.validFrom | date }} - {{list.validTo | date }}"
-                            visibleTo={{list.targetMembershipIds}}>
-                            <div class="px-gutter pt-4 pb-6">
-                                <div class="ql-editor" [innerHTML]="list.body|safe:'html'"></div>
-                            </div>
-                        </vex-notice-cards>
-                    </div>
-                </div>
-                
             </div>
             
         </mat-drawer-container>

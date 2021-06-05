@@ -1,51 +1,52 @@
 <form (ngSubmit)="submit()" #f="ngForm" appInvalidControlScroll
     *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
     <mat-card class="w-full">
-        <h3 class="mx-2 font-medium">{{'generalInformation'|translate}}</h3>
+        <h3 class="font-medium">{{'generalInformation'|translate}}</h3>
 
         <mat-card-content>
             <div @stagger fxLayout="column">
-                <h4 class="text-blue font-medium pt-6 pb-2 px-2">{{'identificationInformation'|translate}}</h4>
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <h4 class="text-blue pt-6 pb-2">{{'identificationInformation'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
+                    <li>
+                        <div class="md:flex w-full">
+                            <div class="w-full md:w-1/2 md:pr-4">
+                                <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                    <mat-label>{{'salutation'|translate}}</mat-label>
+                                    <mat-select [(ngModel)]="studentAddModel.studentMaster.salutation"
+                                        name="salutation">
+                                        <mat-option value=""></mat-option>
+                                        <mat-option *ngFor="let salutation of salutationList"
+                                            [value]="salutation.lovColumnValue">
+                                            {{salutation.lovColumnValue}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                            <div class="w-full md:w-1/2 md:pl-4">
+                                <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
+                                    <mat-label>{{'suffix'|translate}}</mat-label>
+                                    <mat-select [(ngModel)]="studentAddModel.studentMaster.suffix" name="suffix">
+                                        <mat-option value=""></mat-option>
+                                        <mat-option *ngFor="let suffix of suffixList" [value]="suffix.lovColumnValue">
+                                            {{suffix.lovColumnValue}}</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </div>
+                        </div>
+                    </li>
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'salutation'|translate}}</mat-label>
-                            <mat-select [(ngModel)]="studentAddModel.studentMaster.salutation" name="salutation">
-                                <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let salutation of salutationList" [value]="salutation.lovColumnValue">
-                                    {{salutation.lovColumnValue}}</mat-option>
-                            </mat-select>
+                            <mat-label>{{'firstGivenName'|translate}}</mat-label>
+                            <input #firstGivenName="ngModel" [(ngModel)]="studentAddModel.studentMaster.firstGivenName"
+                                name="firstGivenName" matInput required>
+                            <mat-error class="text-red" *ngIf="firstGivenName.errors?.required">
+                                {{'firstGivenNameIsRequired'|translate}}</mat-error>
                         </mat-form-field>
                     </li>
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                            <mat-label>{{'suffix'|translate}}</mat-label>
-                            <mat-select [(ngModel)]="studentAddModel.studentMaster.suffix" name="suffix">
-                                <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let suffix of suffixList" [value]="suffix.lovColumnValue">{{suffix.lovColumnValue}}</mat-option>
-                            </mat-select>
+                            <mat-label>{{'middleName'|translate}}</mat-label>
+                            <input [(ngModel)]="studentAddModel.studentMaster.middleName" name="middleName" matInput>
                         </mat-form-field>
-                    </li>
-                    <li>
-                        <div class="flex w-full">
-                            <div class="flex-1 mr-4">
-                            <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                                <mat-label>{{'firstGivenName'|translate}}</mat-label>
-                                <input #firstGivenName="ngModel"
-                                    [(ngModel)]="studentAddModel.studentMaster.firstGivenName" name="firstGivenName"
-                                    matInput required>
-                                <mat-error class="text-red" *ngIf="firstGivenName.errors?.required">
-                                    {{'firstGivenNameIsRequired'|translate}}</mat-error>
-                            </mat-form-field>
-                        </div>
-                            <div class="flex-1 ml-4">
-                            <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
-                                <mat-label>{{'middleName'|translate}}</mat-label>
-                                <input [(ngModel)]="studentAddModel.studentMaster.middleName" name="middleName"
-                                    matInput>
-                            </mat-form-field>
-                        </div>
-                    </div>
                     </li>
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
@@ -76,7 +77,8 @@
                             <input [formControl]="internalId"
                                 [(ngModel)]="studentAddModel.studentMaster.studentInternalId" name="studentInternalId"
                                 matInput required>
-                                <span matSuffix><img *ngIf="isStudentInternalId" src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
+                            <span matSuffix><img *ngIf="isStudentInternalId" src="assets/img/icons/loading-process.svg"
+                                    class="animate-spin w-5"></span>
                             <mat-error *ngIf="internalId.errors?.required">
                                 {{'studentInternalIdIsRequired'|translate}}</mat-error>
                             <mat-error *ngIf="internalId.errors?.nomatch">
@@ -134,9 +136,8 @@
 
                 <hr class="-mx-4 mt-6">
 
-
-                <h4 class="text-blue font-medium pt-6 pb-2 px-2">{{'demographicInformation'|translate}}</h4>
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <h4 class="text-blue pt-6 pb-2">{{'demographicInformation'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'dateOfBirth'|translate}}</mat-label>
@@ -151,7 +152,8 @@
                             <mat-label>{{'gender'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentAddModel.studentMaster.gender" name="gender">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let gender of genderList" [value]="gender.lovColumnValue">{{gender.lovColumnValue}}</mat-option>
+                                <mat-option *ngFor="let gender of genderList" [value]="gender.lovColumnValue">
+                                    {{gender.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -160,7 +162,8 @@
                             <mat-label>{{'race'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentAddModel.studentMaster.race" name="race">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let race of raceList" [value]="race.lovColumnValue">{{race.lovColumnValue}}</mat-option>
+                                <mat-option *ngFor="let race of raceList" [value]="race.lovColumnValue">
+                                    {{race.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
                     </li>
@@ -169,7 +172,8 @@
                             <mat-label>{{'ethnicity'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentAddModel.studentMaster.ethnicity" name="ethnicity">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let ethnicity of ethnicityList" [value]="ethnicity.lovColumnValue">{{ethnicity.lovColumnValue}}
+                                <mat-option *ngFor="let ethnicity of ethnicityList" [value]="ethnicity.lovColumnValue">
+                                    {{ethnicity.lovColumnValue}}
                                 </mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -179,7 +183,8 @@
                             <mat-label>{{'maritalStatus'|translate}}</mat-label>
                             <mat-select [(ngModel)]="studentAddModel.studentMaster.maritalStatus" name="maritalStatus">
                                 <mat-option value=""></mat-option>
-                                <mat-option *ngFor="let maritalStatus of maritalStatusList" [value]="maritalStatus.lovColumnValue">
+                                <mat-option *ngFor="let maritalStatus of maritalStatusList"
+                                    [value]="maritalStatus.lovColumnValue">
                                     {{maritalStatus.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
@@ -249,32 +254,34 @@
 
                 <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
                     [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
-                
+
                 <hr class="-mx-4 mt-4">
-                <div class="mt-6 mx-2">
+                <div class="mt-6">
                     <mat-slide-toggle color="primary" [checked]="studentAddModel.portalAccess"
                         (change)="isPortalAccess($event)" class="mb-4">
                         {{'portalAccess' | translate}}
                     </mat-slide-toggle>
                 </div>
                 <div *ngIf="hideAccess">
-                    <h4 class="text-blue font-medium pt-6 pb-2 px-2">{{'accessInformation'|translate}}</h4>
-                    <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                    <h4 class="text-blue pt-6 pb-2">{{'accessInformation'|translate}}</h4>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                         <li>
                             <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                 <mat-label>{{'loginEmailAddress'|translate}}</mat-label>
-                                <input [formControl]="loginEmail" name="loginEmail" [(ngModel)]="studentAddModel.loginEmail"
-                                 matInput [required]="hideAccess ? true : null ">
-                                <span matSuffix><img *ngIf="isUser" src="assets/img/icons/loading-process.svg" class="animate-spin w-5"></span>
+                                <input [formControl]="loginEmail" name="loginEmail"
+                                    [(ngModel)]="studentAddModel.loginEmail" matInput
+                                    [required]="hideAccess ? true : null ">
+                                <span matSuffix><img *ngIf="isUser" src="assets/img/icons/loading-process.svg"
+                                        class="animate-spin w-5"></span>
                                 <mat-error class="text-red" *ngIf="loginEmail.errors?.required && hideAccess">
                                     {{'loginEmailAddressIsRequired'|translate}}</mat-error>
-                                    <mat-error *ngIf="loginEmail.errors?.nomatch">
-                                        {{'loginEmailAddressAlreadyExist'|translate}}</mat-error>
+                                <mat-error *ngIf="loginEmail.errors?.nomatch">
+                                    {{'loginEmailAddressAlreadyExist'|translate}}</mat-error>
                             </mat-form-field>
                         </li>
                         <li>
-                            <mat-form-field *ngIf="hidePasswordAccess || !studentAddModel.loginEmail" class="flex-none w-full mb-0"
-                                appearance="outline" color="primary">
+                            <mat-form-field *ngIf="hidePasswordAccess || !studentAddModel.loginEmail"
+                                class="flex-none w-full mb-0" appearance="outline" color="primary">
                                 <mat-label>{{'password'|translate}}</mat-label>
                                 <input #passwordHash="ngModel" ngModel [type]="inputType" name="passwordHash" matInput
                                     [required]="hidePasswordAccess ? true : null " [readonly]="fieldDisabled">
@@ -294,7 +301,7 @@
             </div>
         </mat-card-content>
         <mat-card-actions>
-            <div class="px-4 mb-2 text-right">
+            <div class="mb-2 text-right">
                 <button mat-button type="button" *ngIf="studentCreateMode == studentCreate.EDIT"
                     (click)="cancelEdit()">{{'cancel'|translate}}</button>
                 <button color="primary" mat-raised-button>{{saveAndNext |translate}}</button>
@@ -305,16 +312,13 @@
 </form>
 
 <mat-card class="w-full" *ngIf="studentCreateMode == studentCreate.VIEW">
-    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation'|translate}}</h3>
-        <button *ngIf="editPermission" mat-button color="primary" (click)="editGeneralInfo()">
-            <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
+        <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()">
+            <mat-icon [icIcon]="icEdit" class="md:mt-1 md:mr-2"></mat-icon><span class="hidden md:inline-block">{{'editInformation' |translate}}</span> 
         </button>
     </div>
-    <vex-view-student-generalinfo
-     [studentCreateMode]="studentCreateMode"
-     [categoryId]="categoryId"
-     [studentViewDetails]="studentDetailsForViewAndEdit"
-     [nameOfMiscValues]="nameOfMiscValuesForView">
+    <vex-view-student-generalinfo [studentCreateMode]="studentCreateMode" [categoryId]="categoryId"
+        [studentViewDetails]="studentDetailsForViewAndEdit" [nameOfMiscValues]="nameOfMiscValuesForView">
     </vex-view-student-generalinfo>
 </mat-card>

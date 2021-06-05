@@ -82,3 +82,32 @@ export class CommentModel{
     sortOrder: number;
 }
 
+export class StudentDetails{
+    studentId: number
+}
+
+export class AddReportCardPdf extends CommonField{
+    academicYear: number;
+    markingPeriods: string;
+    teacherName: boolean;
+    teacherComments: boolean;
+    parcentage: boolean;
+    gpa: boolean;
+    yearToDateDailyAbsences: boolean;
+    dailyAbsencesThisMarkingPeriod: boolean;
+    otherAttendanceCodeYearToDate: boolean;
+    studentsReportCardViewModelList: StudentDetails[];
+
+    constructor() {
+        super();
+        this.studentsReportCardViewModelList = [];
+        this.teacherName = true;
+        this.teacherComments = true;
+        this.parcentage = true;
+        this.gpa = true;
+        this.yearToDateDailyAbsences = true;
+        this.dailyAbsencesThisMarkingPeriod = true;
+        this.otherAttendanceCodeYearToDate = true;
+    }
+}
+

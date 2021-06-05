@@ -43,6 +43,7 @@ import { CustomFieldWithoutFormModule } from '../../../../../src/app/common/cust
 import { ViewStaffGeneralinfoComponent } from './view-staff-generalinfo/view-staff-generalinfo.component';
 import { ViewStaffAddressinfoComponent } from './view-staff-addressinfo/view-staff-addressinfo.component';
 import { AddStaffRoutingModule } from './add-staff-routing-module';
+import { MatDialogModule } from '@angular/material/dialog';
 
 
 
@@ -96,7 +97,8 @@ import { AddStaffRoutingModule } from './add-staff-routing-module';
     MatTooltipModule,
     MatSlideToggleModule,
     CustomFieldModule,
-    CustomFieldWithoutFormModule
+    CustomFieldWithoutFormModule,
+    MatDialogModule
   ]
 })
 export class AddStaffModule { }

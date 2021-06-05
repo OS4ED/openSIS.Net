@@ -75,6 +75,7 @@ export class StudentAttendanceModel extends CommonField{
     }
 }
 
+
 export class AddUpdateStudentAttendanceModel extends CommonField{
     studentAttendance:StudentAttendanceModel[];
     courseSectionId: number;
@@ -87,5 +88,37 @@ export class AddUpdateStudentAttendanceModel extends CommonField{
     constructor(){
         super();
         this.studentAttendance = [new StudentAttendanceModel]
+    }
+}
+
+
+export class StudentAttendanceModelFor360{
+    studentId: number;
+    schoolId: number;
+    staffId: number;
+    courseId: number;
+    courseSectionId: number;
+    attendanceCategoryId: number;
+    attendanceCode: number | string;
+    attendanceDate: string;
+    blockId: number;
+    periodId: number;
+    updatedBy: string;
+}
+
+export class AddUpdateStudentAttendanceModelFor360 extends CommonField{
+    studentAttendance: StudentAttendanceModelFor360[];
+    courseSectionId: number;
+    attendanceDate: string;
+    studentId: number;
+    schoolId: number;
+    periodId: number;
+    staffId: number;
+    createdBy: string;
+    updatedBy: string;
+    courseId: number;
+    constructor(){
+        super();
+        this.studentAttendance = []
     }
 }

@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, EventEmitter, Input, OnDestroy, OnInit } from '@angular/core';
 import icArrowDropDown from '@iconify/icons-ic/arrow-drop-down';
 import icAdd from '@iconify/icons-ic/add';
@@ -36,10 +61,10 @@ export class NoticesComponent implements OnInit, OnDestroy {
   noticeList = [];
   icPreview = icArrowDropDown;
   icAdd = icAdd;
-  activateOpenAddNew:boolean=true;
+  activateOpenAddNew= true;
   recordFor: string;
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
-  loading:boolean;
+  loading: boolean;
   destroySubject$: Subject<void> = new Subject();
   editPermission = false;
   deletePermission = false;
@@ -97,19 +122,19 @@ export class NoticesComponent implements OnInit, OnDestroy {
   getMemberList(){
     this.membershipService.getAllMembers(this.getAllMembersList).subscribe(
       (res) => {
-        if(res){
-          if (res._failure) {     
+        if (res){
+          if (res._failure) {
             this.snackbar.open(res._message, '', {
               duration: 10000
             });
           }
-          else {       
-            this.getAllMembersList = res;   
+          else {
+            this.getAllMembersList = res;
           }
-          
+
         }
         else{
-          this.snackbar.open('No Member Found. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open('No Member Found. ' + sessionStorage.getItem('httpError'), '', {
             duration: 10000
           });
         }
@@ -121,95 +146,95 @@ export class NoticesComponent implements OnInit, OnDestroy {
       this.noticeList = res.noticeList;
       if (event != 'All') {
         this.recordFor = event.target.innerHTML;
-        let today = new Date();
-        if (this.recordFor.toLowerCase() == "today") {
-          this.noticeList =res.noticeList?.filter(
-            m=>{
-                let validFrom=moment(m.validFrom).format('DD-MM-YYYY').toString();
-                let validFromarr=validFrom.split("-");
-                let validFromDate=+validFromarr[0]
-                let validFromMonth=+validFromarr[1]
-                let validFromYear=+validFromarr[2]
-                let validTo=moment(m.validTo).format('DD-MM-YYYY').toString();
-                let validToarr=validTo.split('-');
-                let validToDate=+validToarr[0]
-                let validToMonth=+validToarr[1]
-                let validToYear=+validToarr[2]
-                let today=moment().format('DD-MM-YYYY').toString();
-                let todayarr=today.split('-');
-                let todayDate=+todayarr[0]
-                let todayMonth=+todayarr[1]
-                let todayYear=+todayarr[2]
+        const today = new Date();
+        if (this.recordFor.toLowerCase() == 'today') {
+          this.noticeList = res.noticeList?.filter(
+            m => {
+                const validFrom = moment(m.validFrom).format('DD-MM-YYYY').toString();
+                const validFromarr = validFrom.split('-');
+                const validFromDate = +validFromarr[0];
+                const validFromMonth = +validFromarr[1];
+                const validFromYear = +validFromarr[2];
+                const validTo = moment(m.validTo).format('DD-MM-YYYY').toString();
+                const validToarr = validTo.split('-');
+                const validToDate = +validToarr[0];
+                const validToMonth = +validToarr[1];
+                const validToYear = +validToarr[2];
+                const today = moment().format('DD-MM-YYYY').toString();
+                const todayarr = today.split('-');
+                const todayDate = +todayarr[0];
+                const todayMonth = +todayarr[1];
+                const todayYear = +todayarr[2];
 
-                if(validFromYear<=todayYear && validToYear>=todayYear){
-                  if(validFromMonth<=todayMonth && validToMonth>=todayMonth){
-                    if(validFromDate<=todayDate && validToDate>=todayDate){
+                if (validFromYear <= todayYear && validToYear >= todayYear){
+                  if (validFromMonth <= todayMonth && validToMonth >= todayMonth){
+                    if (validFromDate <= todayDate && validToDate >= todayDate){
                       return m;
                     }
                   }
                 }
             }
-          )
+          );
         }
-        else if (this.recordFor.toLowerCase() == "upcoming") {
+        else if (this.recordFor.toLowerCase() === 'upcoming') {
           this.noticeList =  res.noticeList?.filter(
-            m=>{
-              
-              let validFrom=moment(m.validFrom).format('DD-MM-YYYY').toString();
-              let validFromarr=validFrom.split("-");
-              let validFromDate=+validFromarr[0]
-              let validFromMonth=+validFromarr[1]
-              let validFromYear=+validFromarr[2]
-              let today=moment().format('DD-MM-YYYY').toString();
-              let todayarr=today.split('-');
-              let todayDate=+todayarr[0]
-              let todayMonth=+todayarr[1]
-              let todayYear=+todayarr[2]
-              if(validFromYear>todayYear){
+            m => {
+
+              const validFrom = moment(m.validFrom).format('DD-MM-YYYY').toString();
+              const validFromarr = validFrom.split('-');
+              const validFromDate = +validFromarr[0];
+              const validFromMonth = +validFromarr[1];
+              const validFromYear = +validFromarr[2];
+              const today = moment().format('DD-MM-YYYY').toString();
+              const todayarr = today.split('-');
+              const todayDate = +todayarr[0];
+              const todayMonth = +todayarr[1];
+              const todayYear = +todayarr[2];
+              if (validFromYear > todayYear){
                 return m;
               }
-              else if(validFromYear==todayYear){
-                if(validFromMonth>todayMonth){
+              else if (validFromYear == todayYear){
+                if (validFromMonth > todayMonth){
                   return m;
                 }
-                else if(validFromMonth==todayMonth){
-                  if(validFromDate>todayDate){
+                else if (validFromMonth == todayMonth){
+                  if (validFromDate > todayDate){
                     return m;
                   }
                 }
               }
             }
-          )
+          );
         }
-        else if (this.recordFor.toLowerCase() == "past") {
-          this.noticeList =res.noticeList?.filter(
-            m=>{
-              
-              let validTo=moment(m.validTo).format('DD-MM-YYYY').toString();
-              let validToarr=validTo.split('-');
-              let validToDate=+validToarr[0]
-              let validToMonth=+validToarr[1]
-              let validToYear=+validToarr[2]
-              let today=moment().format('DD-MM-YYYY').toString();
-              let todayarr=today.split('-');
-              let todayDate=+todayarr[0]
-              let todayMonth=+todayarr[1]
-              let todayYear=+todayarr[2]
-              if(validToYear<todayYear){
+        else if (this.recordFor.toLowerCase() == 'past') {
+          this.noticeList = res.noticeList?.filter(
+            m => {
+
+              const validTo = moment(m.validTo).format('DD-MM-YYYY').toString();
+              const validToarr = validTo.split('-');
+              const validToDate = +validToarr[0];
+              const validToMonth = +validToarr[1];
+              const validToYear = +validToarr[2];
+              const today = moment().format('DD-MM-YYYY').toString();
+              const todayarr = today.split('-');
+              const todayDate = +todayarr[0];
+              const todayMonth = +todayarr[1];
+              const todayYear = +todayarr[2];
+              if (validToYear < todayYear){
                 return m;
               }
-              else if(validToYear==todayYear){
-                if(validToMonth<todayMonth){
+              else if (validToYear == todayYear){
+                if (validToMonth < todayMonth){
                   return m;
                 }
-                else if(validToMonth==todayMonth){
-                  if(validToDate<todayDate){
+                else if (validToMonth == todayMonth){
+                  if (validToDate < todayDate){
                     return m;
                   }
                 }
               }
             }
-          )
+          );
         }
       }
     });
@@ -217,15 +242,15 @@ export class NoticesComponent implements OnInit, OnDestroy {
 
   openAddNew() {
       this.dialog.open(EditNoticeComponent, {
-        data: {allMembers:this.getAllMembersList,membercount:this.getAllMembersList.getAllMemberList.length},
+        data: {allMembers: this.getAllMembersList, membercount: this.getAllMembersList.getAllMemberList.length},
         width: '800px'
       }).afterClosed().subscribe(
-        res=>{
-          if(res){
+        res => {
+          if (res){
             this.showRecords('All');
           }
         }
-      )
+      );
   }
 
   ngOnDestroy() {

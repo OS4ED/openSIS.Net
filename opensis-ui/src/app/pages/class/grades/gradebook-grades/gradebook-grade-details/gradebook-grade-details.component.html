@@ -1,0 +1,51 @@
+<div class="overflow-x-auto overflow-y-hidden border">
+    <table class="w-full schedule-table gradebook-table">
+        <thead>
+            <tr>
+                <th>{{ "assignment" | translate }}</th>
+                <th>{{ "category" | translate }}</th>
+                <th>{{ "points" | translate }}</th>
+                <th>{{ "grade" | translate }}</th>
+                <th>{{ "comment" | translate }}</th>
+                <th>{{ "action" | translate }}</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Rock Music Design Project</td>
+                <td class="text-blue">Homework</td>
+                <td>15/20</td>
+                <td>75% [B]</td>
+                <td>Not upto the mark</td>
+                <td class="cursor-pointer"><mat-icon [icIcon]="icEdiit"></mat-icon></td>
+            </tr>
+            <tr>
+                <td>Practice Vocals</td>
+                <td class="text-blue">Homework</td>
+                <td>18/20</td>
+                <td>90% [A]</td>
+                <td>Progressing</td>
+                <td class="cursor-pointer"><mat-icon [icIcon]="icEdiit"></mat-icon></td>
+            </tr>
+            <tr>
+                <td>African Music Design Project</td>
+                <td class="text-blue">Homework</td>
+                <td>10/20</td>
+                <td>50% [F]</td>
+                <td>Homeworkk</td>
+                <td class="cursor-pointer"><mat-icon [icIcon]="icEdiit"></mat-icon></td>
+            </tr>
+            <tr>
+                <td>Play Guiter</td>
+                <td class="text-blue">Homework</td>
+                <td>16/20</td>
+                <td>80% [B]</td>
+                <td>Homework</td>
+                <td class="cursor-pointer"><mat-icon [icIcon]="icEdiit"></mat-icon></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<div class="text-right p-4">
+    <button color="primary" mat-flat-button type="submit" class="text-white ml-2">{{ 'submit' |translate }}</button>
+</div>

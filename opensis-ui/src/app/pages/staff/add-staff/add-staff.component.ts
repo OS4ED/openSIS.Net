@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { Subject, Subscription } from 'rxjs';
 import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
@@ -52,6 +77,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
   staffTitle = "Add Staff Information";
   pageStatus = "Add Staff";
   module = 'Staff';
+  secondarySidebar = 0;
   responseImage: string;
   enableCropTool = true;
   icGeneralInfo = icGeneralInfo;
@@ -85,14 +111,16 @@ export class AddStaffComponent implements OnInit, OnDestroy {
       if(res && res!==this.categoryTitle){
         this.categoryTitle=res;
         let index=0;
-        this.fieldsCategory.map((item,i)=>{
-          if(item.title===this.categoryTitle){
-            this.currentCategory=item.categoryId;
-            index=i;
-          }
-        });
-      this.staffService.setCategoryId(index);
-      this.checkCurrentCategoryAndRoute();
+        if(this.fieldsCategory.length>0){
+          this.fieldsCategory.map((item,i)=>{
+            if(item.title===this.categoryTitle){
+              this.currentCategory=item.categoryId;
+              index=i;
+            }
+          });
+        this.staffService.setCategoryId(index);
+        this.checkCurrentCategoryAndRoute();
+        }
       }
     });
     this.staffService.modeToUpdate.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
@@ -182,6 +210,7 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     }
     this.staffService.setStaffCreateMode(this.staffCreateMode);
     this.staffService.setCategoryId(this.indexOfCategory);
+    this.secondarySidebar = 0; // Close secondary sidenav in mobile view
     this.checkCurrentCategoryAndRoute();
   }
 
@@ -199,6 +228,14 @@ export class AddStaffComponent implements OnInit, OnDestroy {
     }
   }
 
+  toggleSecondarySidebar() {
+    if(this.secondarySidebar === 0){
+      this.secondarySidebar = 1;
+    } else {
+      this.secondarySidebar = 0;
+    }
+  }
+
   showPage(pageId) {
     localStorage.setItem("pageId", pageId);
     //this.disableSection();
@@ -210,6 +247,11 @@ export class AddStaffComponent implements OnInit, OnDestroy {
       this.staffAddModel = data;
       this.staffAddModel.fieldsCategoryList = this.checkViewPermission(data.fieldsCategoryList);
       this.fieldsCategory = this.staffAddModel.fieldsCategoryList;
+      this.fieldsCategory.map((item)=>{
+        if(item.title===this.categoryTitle){
+          this.currentCategory=item.categoryId;
+        }
+      });
       this.profileFromSchoolInfo(data.staffMaster.profile)
       this.responseImage = this.staffAddModel.staffMaster.staffPhoto;
       this.staffService.setStaffCloneImage(this.staffAddModel.staffMaster.staffPhoto);

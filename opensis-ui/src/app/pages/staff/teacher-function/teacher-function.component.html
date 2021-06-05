@@ -1,7 +1,8 @@
-<div class="flex container-sidenav-secondary">
+<div class="flex container-sidenav-secondary" [ngClass]="secondarySidebar==0?'' : 'show-secondary-sidebar'">
     <div class="sidenav-secondary">
+        <button mat-icon-button class="close-secondary-sidebar" (click)="toggleSecondarySidebar()"><mat-icon>close</mat-icon></button>
         <vex-scrollbar class="flex-auto">
-            <div class="px-gutter sm:px-0">
+            <div class="px-gutter sm:px-0 pt-10 md:pt-0">
                 <a @fadeInRight class="list-item mt-2 no-underline flex items-center" matRipple *ngIf="checkViewEnableOrNot(50)"
                      routerLinkActive="text-primary" matRipple [routerLink]="['/school/staff/teacher-functions/input-final-grade']">
                     <img src="assets/img/icons/top-grades.svg" width="24" class="mr-3"> {{ "inputFinalGrade" | translate }}
@@ -34,10 +35,21 @@
                     <vex-breadcrumbs [crumbs]="parentPageStatus" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
-        
-            <vex-page-layout-content class="-mt-6">
+
+            <div class="bg-primary px-4 py-2 rounded -mt-16 mx-4 persistent-bar">
+                <div class="flex items-center h-16">
+                    <button mat-icon-button class="text-white mr-2 mt-1" (click)="toggleSecondarySidebar()">
+                        <mat-icon>apps</mat-icon>
+                    </button>
+                    <div class="text-left px-4">
+                        <h2 class="mb-0 text-white">{{activeMenu | translate}}</h2>
+                    </div>
+                </div>
+            </div>        
+            <vex-page-layout-content>
                <router-outlet></router-outlet>
             </vex-page-layout-content>
         </vex-page-layout>
     </div>
+    <div class="sidebar-overlay"  (click)="toggleSecondarySidebar()"></div>
 </div>

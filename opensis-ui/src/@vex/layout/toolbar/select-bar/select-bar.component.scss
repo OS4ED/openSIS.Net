@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url("https://fonts.googleapis.com/icon?family=Material+Icons");
 
 ::ng-deep .mat-form-field-underline {
   display: none;
@@ -6,4 +6,65 @@
 
 ::ng-deep .mat-form-field-appearance-fill .mat-form-field-flex{
     background-color: white !important;
+}
+.toggle-school-control {
+  display: none;
+}
+
+@media (max-width: 767.98px) {
+
+  ::ng-deep .mat-form-field-appearance-fill {
+    .mat-form-field-flex {
+      padding: 0 !important;
+
+      .mat-form-field-infix {
+        padding: 0 !important;
+      }
+    }
+  }
+  ::ng-deep .control-school {
+    display: none;
+
+    .mat-form-field {
+      display: block;
+
+      .mat-select {
+        border: 1px solid rgba(0, 0, 0, 0.1);
+        border-radius: 4px;
+
+        .mat-select-trigger {
+          display: flex;
+          width: 100%;
+          justify-content: space-between;
+          padding: 0 12px;
+          height: 45px;
+          align-items: center;
+        }
+      }
+    }
+
+    &.show-school {
+      display: block;
+      position: absolute;
+      top: 64px;
+      left: 0;
+      width: 100%;
+      background: var(--background-card);
+      z-index: 8;
+    }
+  }
+
+  .toggle-school-control {
+    display: block;
+  }
+}
+
+.control-school-overlay {
+  position: fixed;
+  width: 100%;
+  height: 100vh;
+  background: rgba(0,0,0, 0.5);
+  z-index: 7;
+  top: 64px;
+  left: 0;
 }

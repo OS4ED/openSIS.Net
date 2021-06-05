@@ -41,13 +41,12 @@
             </div>
         </div>
         
-        <mat-checkbox color="primary">Visible to All School</mat-checkbox>
-        
-        <h6 class="text-primary mb-3" [hidden]="membercount==0">{{'visibleToProfile' |translate }}</h6>
+        <mat-checkbox [checked]="schoolVisibility" (change)="schoolVisibilityCheck($event) " color="primary">Visible to All School</mat-checkbox>
+        <h6 class="text-primary mt-4 mb-1" [hidden]="membercount==0">{{'visibleToProfile' |translate }}</h6>
 
-        <div class="mb-3" [hidden]="membercount==0">
+        <div class="md:mb-3" [hidden]="membercount==0">
             <mat-checkbox #checkBox [checked]="checkAll" (click)="updateCheck($event)" class="example-margin">
-                Select All
+                <b>Select All</b>
             </mat-checkbox>
         </div>
 

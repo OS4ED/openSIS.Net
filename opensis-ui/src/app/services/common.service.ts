@@ -8,8 +8,9 @@ import { environment } from '../../environments/environment';
 import { LanguageModel,LanguageAddModel } from '../models/language.model';
 import { ReleaseNumberAddViewModel } from '../models/release-number-model';
 import { SearchFilterAddViewModel, SearchFilterListViewModel } from '../models/search-filter.model';
-import { AgeRangeList, EducationalStage } from '../models/common.model';
+import { AgeRangeList, EducationalStage, ResetPasswordModel, ExportExcel } from '../models/common.model';
 import { DefaultValuesService } from '../common/default-values.service';
+import { CryptoService } from './Crypto.service';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,7 +19,9 @@ export class CommonService {
   private searchResult;
   private moduleName: string;
 
-  constructor(private http: HttpClient,private defaultValuesService: DefaultValuesService) { }
+  constructor(private http: HttpClient, private defaultValuesService: DefaultValuesService,
+    private cryptoService: CryptoService
+  ) { }
   GetAllCountry(obj: CountryModel){  
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllCountries"; 
@@ -142,6 +145,20 @@ export class CommonService {
     let apiurl = this.apiUrl + obj._tenantName+ "/Common/getAllGradeEducationalStage";
     return this.http.post<EducationalStage>(apiurl,obj)
   }
+
+  resetPassword(obj: ResetPasswordModel) {
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.userMaster.tenantId = this.defaultValuesService.getTenantID();
+    obj.userMaster.schoolId = this.defaultValuesService.getSchoolID();
+    obj.userMaster.passwordHash = this.cryptoService.encrypt(obj.userMaster.passwordHash);
+    let apiurl = this.apiUrl + obj._tenantName + "/Common/resetPassword";
+    return this.http.post<ResetPasswordModel>(apiurl, obj)
+  }
+  getExportExcelHeader(obj: ExportExcel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+      let apiurl = this.apiUrl + obj._tenantName+ "/Common/getExcelHeader";
+      return this.http.post<ExportExcel>(apiurl,obj)
+    }
 
   setSearchResult(result) {
     this.searchResult = result;

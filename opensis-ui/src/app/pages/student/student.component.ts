@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
 import { fadeInUp400ms } from 'src/@vex/animations/fade-in-up.animation';
@@ -33,6 +58,7 @@ import { StudentListModel } from 'src/app/models/student.model';
 import { StudentService } from 'src/app/services/student.service';
 import { ConfirmDialogComponent } from '../shared-module/confirm-dialog/confirm-dialog.component';
 import { SaveFilterComponent } from './save-filter/save-filter.component';
+import { DefaultValuesService } from 'src/app/common/default-values.service';
 
 @Component({
   selector: 'vex-student',
@@ -47,7 +73,7 @@ import { SaveFilterComponent } from './save-filter/save-filter.component';
 export class StudentComponent implements OnInit, OnDestroy {
   columns = [
     { label: 'Name', property: 'firstGivenName', type: 'text', visible: true },
-    { label: 'Student ID', property: 'studentId', type: 'text', visible: true },
+    { label: 'Student ID', property: 'studentInternalId', type: 'text', visible: true },
     { label: 'Alternate ID', property: 'alternateId', type: 'text', visible: true },
     { label: 'Grade Level', property: 'gradeLevelTitle', type: 'text', visible: true },
     { label: 'Email', property: 'schoolEmail', type: 'text', visible: true },
@@ -92,6 +118,32 @@ export class StudentComponent implements OnInit, OnDestroy {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator; 
   @ViewChild(MatSort) sort: MatSort;
   showLoadFilter = true;
+  categories=[
+    {
+      categoryId:3,
+      title:'General Info'
+    },
+    {
+      categoryId:4,
+      title:'Enrollment Info'
+    },
+    {
+      categoryId:5,
+      title:'Address & Contact'
+    },
+    {
+      categoryId:6,
+      title:'Family Info'
+    },
+    {
+      categoryId:7,
+      title:'Medical Info'
+    },
+    {
+      categoryId:8,
+      title:'Documents'
+    }
+  ]
   constructor(
               private studentService: StudentService,
               private snackbar: MatSnackBar,
@@ -104,8 +156,10 @@ export class StudentComponent implements OnInit, OnDestroy {
               public translateService: TranslateService,
               public rollBasedAccessService: RollBasedAccessService,
               private dialog: MatDialog,
-              private commonService: CommonService
+              private commonService: CommonService,
+              private defaultValuesService: DefaultValuesService
   ) {
+    this.getAllStudent.pageSize = this.defaultValuesService.getPageSize() ? this.defaultValuesService.getPageSize() : 10;
     translateService.use('en');
     this.getAllStudent.filterParams=null;
     if(localStorage.getItem("collapseValue") !== null){
@@ -124,6 +178,7 @@ export class StudentComponent implements OnInit, OnDestroy {
     }
 
   ngOnInit(): void {
+    this.searchCtrl = new FormControl();
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 3);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 5);
@@ -135,7 +190,6 @@ export class StudentComponent implements OnInit, OnDestroy {
     if(!viewPermission){
       this.router.navigate(['/']);
      }
-    this.searchCtrl = new FormControl();
     this.getAllSearchFilter();
   }
 
@@ -150,7 +204,7 @@ export class StudentComponent implements OnInit, OnDestroy {
     }
     this.showSaveFilter = true;
     this.pageNumber = res.pageNumber;
-    this.pageSize = res.pageSize;
+    this.pageSize = res._pageSize;
     this.StudentModelList = new MatTableDataSource(res.studentMaster); 
     this.getAllStudent = new StudentListModel();
   }
@@ -178,6 +232,7 @@ export class StudentComponent implements OnInit, OnDestroy {
     this.sort.sortChange.subscribe((res) => {
       this.getAllStudent.pageNumber=this.pageNumber
       this.getAllStudent.pageSize=this.pageSize;
+
       this.getAllStudent.sortingModel.sortColumn=res.active;
       if(this.searchCtrl.value!=null && this.searchCtrl.value!=""){
         let filterParams=[
@@ -371,18 +426,20 @@ export class StudentComponent implements OnInit, OnDestroy {
   checkViewPermission(){
     let categoryId;
     let categoryName;
-    
      for (const permission of this.permissionListViewModel.permissionList[2].permissionGroup.permissionCategory[0].permissionSubcategory){
       if(permission.rolePermission[0].canView){
-       categoryId=permission.permissionSubcategoryId;
-       categoryName=permission.title;
+       categoryName=permission.permissionSubcategoryName;       
+       let index;
+       index=this.categories.findIndex((item)=>item.title.toLowerCase()===categoryName.toLowerCase());
+       if(index!=-1){
+        categoryId=this.categories[index].categoryId;
+       }
        break;
       }
     }
     if(categoryId){
       this.checkCurrentCategoryAndRoute(categoryId,categoryName);
     }
-
   }
 
   checkCurrentCategoryAndRoute(categoryId,categoryName) {
@@ -436,6 +493,7 @@ export class StudentComponent implements OnInit, OnDestroy {
     }
     this.getAllStudent.pageNumber=event.pageIndex+1;
     this.getAllStudent.pageSize=event.pageSize;
+    this.defaultValuesService.setPageSize(event.pageSize);
     this.callAllStudent();
   }
 

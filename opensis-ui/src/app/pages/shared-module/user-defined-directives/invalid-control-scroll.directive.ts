@@ -23,7 +23,7 @@ import {
 
     scrollToFirstInvalidControl() {
     const firstInvalidControl: HTMLElement = this.el.nativeElement.querySelector(
-      'mat-select.ng-invalid, textarea.ng-invalid, input.ng-invalid'
+      'mat-select.ng-invalid, textarea.ng-invalid, input.ng-invalid .custom-scroll'
     );
       firstInvalidControl.scrollIntoView({ behavior: 'smooth',block: 'center' });
   }

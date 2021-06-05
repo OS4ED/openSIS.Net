@@ -4,22 +4,33 @@
     }
     
     .tree-node {
-        @apply border-primary-light rounded;
+        @apply rounded;
+        @apply border-primary-light;
 
+        @media (min-width: 767.99px) {
         &.active {
+                @apply text-white;
             @apply bg-blue;
-            @apply text-white;
 
             a {
                 font-weight: bold;
                 @apply text-white;
             }
+            }
+        }
+
+        @media (max-width: 767.98px) {
+            background: #ffffff !important;
+            color: inherit !important;
+            font-weight: normal !important;
         }
     }
 
     ul {
         margin-left: 15px;
-        @apply border-l-2 border-dotted border-primary-light ;
+        @apply border-l-2;
+        @apply border-dotted;
+        @apply border-primary-light;
 
         li {
             padding-left: 30px;
@@ -32,11 +43,36 @@
                     width: 30px;
                     height: 1px;
                     position: absolute;
-                    @apply border-t-2 border-dotted border-primary-light;
+                    @apply border-t-2;
+                    @apply border-dotted;
+                    @apply border-primary-light;
                     top: 40px;
                     left: 0;
                 }
             }
+        }
+    }
+}
+
+.marking-period-details {
+    @media (max-width: 767.98px) {
+        display: none;
+    }
+}
+
+.showing-details {
+    @media (max-width: 767.98px) {
+        .marking-period-details {
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 9;
+            display: block;
+            background: rgba(0, 0, 0, 0.2);
+            padding: 25px;
+            height: 100%;
+            overflow: auto;
         }
     }
 }

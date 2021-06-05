@@ -7,29 +7,31 @@
 
     <vex-page-layout-content class="-mt-6">
 
-        <div class="card overflow-auto -mt-16">
-            <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+        <div class="card -mt-16">
+            <div class="bg-white px-6 md:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+
                 <div class="flex w-full justify-between">
-                    <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
-                    fxLayoutAlign="start center">
+                    <div class="py-3 w-4/6 md:w-10/12">
+
                         <div class="flex items-center">
-                            <input [(ngModel)]="searchKey" (keyup)="applyFilter()"
-                                class="py-3 border-0 outline-none w-full bg-transparent table-search" appearance="outline"
-                                color="primary" placeholder="Search..." type="search" (search)="onSearchClear()">
-                                <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
-                            <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                            <input
+                            [formControl]="searchCtrl"
+                            class="py-3 border-0 outline-none w-full bg-transparent table-search" placeholder="Search..."
+                            type="search">
+                            <img *ngIf="loading" src="assets/img/icons/loading-process.svg" class="animate-spin w-5">
+                            <button *ngIf="!loading" class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button
+                                type="button">
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
-                            <a (click)="showAdvanceSearch()" [class.disabled] = "getTotalCount() == null" [class.text-gray-light]="totalCount == null" 
-                            [class.text-primary]="totalCount != null" class="cursor-pointer ml-3">
-                                <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
-                                | translate}}
+                            <a (click)="showAdvanceSearch()" [ngClass]="totalCount===0 && !getAllParentModel.filterParams?'text-gray disabled':'text-primary'" class="cursor-pointer ml-3">
+                                <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon><span class="hidden md:inline-block">{{'advanceSearch'
+                                | translate}}</span>
                             </a>
                         </div>
                     </div>
 
 
-                    <div fxFlex="200px" class="pt-3">
+                    <div class="pt-3 w-2/6 md:w-2/12 text-right">
                         <a (click)="exportParentListToExcel()" class="cursor-pointer p-1 mt-1 inline-block align-middle"
                             matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
                         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button
@@ -39,86 +41,90 @@
                     </div>
                 </div>
             </div>
+            <div class="overflow-auto">
+                <table @stagger mat-table [dataSource]="parentFieldsModelList"
+                    class="mat-elevation-z8 table-auto w-full" matSort>
 
-            <table @stagger mat-table [dataSource]="parentFieldsModelList" class="mat-elevation-z8 table-auto w-full"
-                matSort>
+                    <ng-container matColumnDef="firstname">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'parentsName'|translate}}</th>
+                        <td mat-cell *matCellDef="let element">
+                            <a (click)="viewGeneralInfo(element)" class="text-primary cursor-pointer">
+                                {{element.firstname+' '+element.lastname}}</a>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="name">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'parentsName'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
-                        <a (click)="viewGeneralInfo(element)" class="text-primary cursor-pointer">
-                            {{element.name}}</a>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="userProfile">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'profile'|translate}}</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.userProfile}}
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="userProfile">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'profile'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
-                        {{element.userProfile}}
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="workEmail">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'emailAddress'|translate}}</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.workEmail | EmtyValueCheckPipe}}
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="workEmail">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'emailAddress'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
-                        {{element.workEmail | EmtyValueCheckPipe}}
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="mobile">
+                        <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'mobilePhone'|translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            {{element.mobile | EmtyValueCheckPipe}}
+                        </td>
+                    </ng-container>
 
-                <!-- Body -->
-                <ng-container matColumnDef="mobile">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header>{{'mobilePhone'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                        {{element.mobile | EmtyValueCheckPipe}}
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="students">
+                        <th mat-header-cell *matHeaderCellDef>{{'associatedStudents'|translate}}
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <ng-container *ngIf="element.students?.length>0">
+                                <span *ngFor="let student of element.students" class="students-list">
+                                    <a (click)="goToStudentInformation(student.split('|')[3])"
+                                        class="text-primary hover:underline cursor-pointer">{{student.split('|')[0]+'
+                                        '+student.split('|')[2]}}</a>
+                                </span>
+                            </ng-container>
+                            <ng-container *ngIf="!element.students?.length">
+                                {{'-'}}
+                            </ng-container>
 
-                <ng-container matColumnDef="students">
-                    <th mat-header-cell *matHeaderCellDef mat-sort-header >{{'associatedStudents'|translate}}
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                        <span *ngFor="let student of element.students" class="students-list">
-                            <a (click)="goToStudentInformation(student.split('|')[3])"
-                                class="text-primary hover:underline cursor-pointer">{{student.split('|')[0]+' '+student.split('|')[2]}}</a>
-                        </span>
-                    </td>
-                </ng-container>
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="action">
-                    <th mat-header-cell *matHeaderCellDef>{{'actions'|translate}}</th>
-                    <td mat-cell *matCellDef="let element">
-                        <a matTooltip="Impersonate as Parent" class="mr-3 cursor-pointer">
-                            <mat-icon [icIcon]="icImpersonate"></mat-icon>
-                        </a>
-                    </td>
-                </ng-container>
+                    <ng-container matColumnDef="action">
+                        <th mat-header-cell *matHeaderCellDef>{{'actions'|translate}}</th>
+                        <td mat-cell *matCellDef="let element">
+                            <a matTooltip="Impersonate as Parent" class="mr-3 cursor-pointer">
+                                <mat-icon [icIcon]="icImpersonate"></mat-icon>
+                            </a>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="invalidsearch">
+                        <td mat-footer-cell *matFooterCellDef colspan="7">
+                            No record found as per your search criteria. Please <a
+                                class="cursor-pointer text-blue underline" (click)="resetParentList()">click here</a> to
+                            reset
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="noData">
+                        <td mat-footer-cell *matFooterCellDef colspan="6">
+                            {{loading?'Fetching Data...':'No Data'}}
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="loading">
-                    <mat-footer-cell *matFooterCellDef colspan="6">
-                        <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
-                    </mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="invalidsearct">
-                    <td mat-footer-cell *matFooterCellDef colspan="7">
-                        No record found as per your search criteria. Please <a class="cursor-pointer text-blue underline" (click)="resetParentList()">click here</a> to reset 
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="noData">
-                    <td mat-footer-cell *matFooterCellDef colspan="6">
-                        {{loading?'Fetching Data...':'No Data'}}
-                    </td>
-                </ng-container>
+                    <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
 
-                <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+                    <tr mat-footer-row *matFooterRowDef="['invalidsearch']" [class.hidden]="searchCount!=0"></tr>
+                    <tr mat-footer-row *matFooterRowDef="['noData']" [class.hidden]="totalCount>0 || searchCount===0">
+                    </tr>
 
-                <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
-                <tr mat-footer-row *matFooterRowDef="['invalidsearct']" [class.hide]="(searchCount !== 0)|| searchCount == null"></tr>
-                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="getTotalCount() != null"></tr>
-
-            </table>
-            <mat-paginator [class.hide]="parentFieldsModelList?.data.length==0" [pageSize]="10" [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons>
+                </table>
+            </div>
+            <mat-paginator [class.hidden]="totalCount<11" [length]="totalCount" [pageSize]="pageSize"
+                [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'>
             </mat-paginator>
         </div>
 
@@ -135,8 +141,8 @@
 </mat-menu>
 <div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
     <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20" @fadeInRight>
-        <vex-search-parent (searchList)="getSearchResult($event)" [incomingSearchValue]="searchValue"
-        (showHideAdvanceSearch)="hideAdvanceSearch($event)" (searchValue)="getSearchInput($event)"></vex-search-parent>
+        <vex-search-parent (searchList)="getSearchResult($event)" (showHideAdvanceSearch)="hideAdvanceSearch($event)"
+            (searchValue)="getSearchInput($event)"></vex-search-parent>
     </div>
     <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
 </div>

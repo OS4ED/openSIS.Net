@@ -1,8 +1,35 @@
-﻿using opensis.core.Common.Interfaces;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using Microsoft.AspNetCore.Mvc;
+using opensis.core.Common.Interfaces;
 using opensis.core.helper;
 using opensis.data.Interface;
 using opensis.data.ViewModels.CommonModel;
 using opensis.data.ViewModels.School;
+using opensis.data.ViewModels.StaffSchedule;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -581,6 +608,137 @@ namespace opensis.core.Common.Services
             }
 
             return gradeEducationalStagelListModel;
+        }
+
+        /// <summary>
+        /// Get Dashboard View For Staff
+        /// </summary>
+        /// <param name="scheduledCourseSectionViewModel"></param>
+        /// <returns></returns>
+        public ScheduledCourseSectionViewModel GetDashboardViewForStaff(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel scheduledCourseSectionView = new ScheduledCourseSectionViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(scheduledCourseSectionViewModel._tenantName + scheduledCourseSectionViewModel._userName, scheduledCourseSectionViewModel._token))
+                {
+                    scheduledCourseSectionView = this.commonRepository.GetDashboardViewForStaff(scheduledCourseSectionViewModel);
+                }
+                else
+                {
+                    scheduledCourseSectionView._failure = true;
+                    scheduledCourseSectionView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                scheduledCourseSectionView._failure = true;
+                scheduledCourseSectionView._message = es.Message;
+            }
+            return scheduledCourseSectionView;
+        }
+
+        /// <summary>
+        /// Get Dashboard View For CalendarView
+        /// </summary>
+        /// <param name="dashboardViewModel"></param>
+        /// <returns></returns>
+        public DashboardViewModel GetDashboardViewForCalendarView(DashboardViewModel dashboardViewModel)
+        {
+            DashboardViewModel dashboardView = new DashboardViewModel();
+            if (TokenManager.CheckToken(dashboardViewModel._tenantName + dashboardViewModel._userName, dashboardViewModel._token))
+            {
+                dashboardView = this.commonRepository.GetDashboardViewForCalendarView(dashboardViewModel);
+            }
+            else
+            {
+                dashboardView._failure = true;
+                dashboardView._message = TOKENINVALID;
+            }
+            return dashboardView;
+        }
+
+        /// <summary>
+        /// Reset Password For User
+        /// </summary>
+        /// <param name="ResetPasswordModel"></param>
+        /// <returns></returns>
+        public ResetPasswordModel ResetPasswordForUser(ResetPasswordModel resetPasswordModel)
+        {
+            ResetPasswordModel resetPassword = new ResetPasswordModel();
+            if (TokenManager.CheckToken(resetPasswordModel._tenantName + resetPasswordModel._userName, resetPasswordModel._token))
+            {
+                resetPassword = this.commonRepository.ResetPasswordForUser(resetPasswordModel);
+            }
+            else
+            {
+                resetPassword._failure = true;
+                resetPassword._message = TOKENINVALID;
+            }
+            return resetPassword;
+        }
+
+        /// <summary>
+        /// Export Excel
+        /// </summary>
+        /// <param name="exportExcelModel"></param>
+        /// <returns></returns>
+        public ExcelHeaderModel GetExcelHeader(ExcelHeaderModel excelHeaderModel)
+        {
+            ExcelHeaderModel excelHeader = new ExcelHeaderModel();
+            
+            if (TokenManager.CheckToken(excelHeaderModel._tenantName + excelHeaderModel._userName, excelHeaderModel._token))
+            {
+                excelHeader = this.commonRepository.GetExcelHeader(excelHeaderModel);
+            }
+            else
+            {
+                excelHeader._failure = true;
+                excelHeader._message = TOKENINVALID;
+            }
+            return excelHeader;
+        }
+
+        /// <summary>
+        /// Add Update School Preference
+        /// </summary>
+        /// <param name="schoolPreferenceAddViewModel"></param>
+        /// <returns></returns>
+        public SchoolPreferenceAddViewModel AddUpdateSchoolPreference(SchoolPreferenceAddViewModel schoolPreferenceAddViewModel)
+        {
+            SchoolPreferenceAddViewModel schoolPreferenceAddModel = new SchoolPreferenceAddViewModel();
+
+            if (TokenManager.CheckToken(schoolPreferenceAddViewModel._tenantName + schoolPreferenceAddViewModel._userName, schoolPreferenceAddViewModel._token))
+            {
+                schoolPreferenceAddModel = this.commonRepository.AddUpdateSchoolPreference(schoolPreferenceAddViewModel);
+            }
+            else
+            {
+                schoolPreferenceAddModel._failure = true;
+                schoolPreferenceAddModel._message = TOKENINVALID;
+            }
+            return schoolPreferenceAddModel;
+        }
+
+        /// <summary>
+        /// View School Preference
+        /// </summary>
+        /// <param name="schoolPreferenceAddViewModel"></param>
+        /// <returns></returns>
+        public SchoolPreferenceAddViewModel ViewSchoolPreference(SchoolPreferenceAddViewModel schoolPreferenceAddViewModel)
+        {
+            SchoolPreferenceAddViewModel schoolPreferenceAddModel = new SchoolPreferenceAddViewModel();
+
+            if (TokenManager.CheckToken(schoolPreferenceAddViewModel._tenantName + schoolPreferenceAddViewModel._userName, schoolPreferenceAddViewModel._token))
+            {
+                schoolPreferenceAddModel = this.commonRepository.ViewSchoolPreference(schoolPreferenceAddViewModel);
+            }
+            else
+            {
+                schoolPreferenceAddModel._failure = true;
+                schoolPreferenceAddModel._message = TOKENINVALID;
+            }
+            return schoolPreferenceAddModel;
         }
     }
 }

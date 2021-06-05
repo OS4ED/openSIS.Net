@@ -1,4 +1,29 @@
-﻿using System;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,6 +39,13 @@ namespace opensis.data.Models
             StudentEnrollment = new HashSet<StudentEnrollment>();
             StudentCoursesectionSchedule = new HashSet<StudentCoursesectionSchedule>();
             StudentFinalGrade = new HashSet<StudentFinalGrade>();
+            StudentMedicalAlert = new HashSet<StudentMedicalAlert>();
+            StudentMedicalImmunization = new HashSet<StudentMedicalImmunization>();
+            StudentMedicalNote = new HashSet<StudentMedicalNote>();
+            StudentMedicalNurseVisit = new HashSet<StudentMedicalNurseVisit>();
+            StudentMedicalProvider = new HashSet<StudentMedicalProvider>();
+            StudentReportCardMaster = new HashSet<StudentReportCardMaster>();
+            StudentTranscriptMaster = new HashSet<StudentTranscriptMaster>();
         }
         public Guid TenantId { get; set; }
         public int SchoolId { get; set; }
@@ -103,12 +135,19 @@ namespace opensis.data.Models
         public virtual Language SecondLanguage { get; set; }
         public virtual Language ThirdLanguage { get; set; }
         public virtual Sections Sections { get; set; }
-       
+
         //public virtual ICollection<ParentAddress> ParentAddress { get; set; }
         public virtual ICollection<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
         public virtual ICollection<StudentComments> StudentComments { get; set; }
         public virtual ICollection<StudentDocuments> StudentDocuments { get; set; }
         public virtual ICollection<StudentEnrollment> StudentEnrollment { get; set; }
         public virtual ICollection<StudentFinalGrade> StudentFinalGrade { get; set; }
+        public virtual ICollection<StudentMedicalAlert> StudentMedicalAlert { get; set; }
+        public virtual ICollection<StudentMedicalImmunization> StudentMedicalImmunization { get; set; }
+        public virtual ICollection<StudentMedicalNote> StudentMedicalNote { get; set; }
+        public virtual ICollection<StudentMedicalNurseVisit> StudentMedicalNurseVisit { get; set; }
+        public virtual ICollection<StudentMedicalProvider> StudentMedicalProvider { get; set; }
+        public virtual ICollection<StudentReportCardMaster> StudentReportCardMaster { get; set; }
+        public virtual ICollection<StudentTranscriptMaster> StudentTranscriptMaster { get; set; }
     }
 }

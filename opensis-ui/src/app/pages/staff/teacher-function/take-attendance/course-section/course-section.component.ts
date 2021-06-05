@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnInit, ViewEncapsulation } from "@angular/core";
 import {
   CalendarEvent,
@@ -67,13 +92,15 @@ export class CourseSectionComponent implements OnInit {
   ngOnInit(): void {}
 
   eventClicked(event: CalendarEvent, index: number): void {
-    Object.assign(this.staffDetails, event.meta);
-    this.studentAttendanceService.setStaffDetails(this.staffDetails);
-  // console.log(this.studentAttendanceService.getStaffDetails());
-  // return;
-  // console.log(moment(event.meta.attendanceDate).isBefore(new Date()))
-
-  moment(event.meta.attendanceDate).isBefore(new Date()) ? this.router.navigate(['/school', 'staff', 'teacher-functions', 'take-attendance', 'period-attendance']) : '';
+      if(moment(event.meta.attendanceDate).isBefore(new Date())){
+        Object.assign(this.staffDetails, event.meta);
+        this.studentAttendanceService.setStaffDetails(this.staffDetails);
+        this.router.navigate(['/school', 'staff', 'teacher-functions', 'take-attendance', 'period-attendance']);
+      }else{
+        this.snackbar.open('Future attendance is not allowed.', 'Ok', {
+          duration: 1000
+        });
+      }
   }
 
   getAllScheduledCource() {
@@ -103,6 +130,7 @@ export class CourseSectionComponent implements OnInit {
         });        
       }
     });
+
   }
 
   filterWithSectionName(courseSectionName, event) {
@@ -162,6 +190,7 @@ export class CourseSectionComponent implements OnInit {
                     periodId: item.courseFixedSchedule.blockPeriod.periodId,
                     courseSectionId: item.courseSectionId,
                     attendanceDate: new Date(dt),
+                    takeAttendance: item.attendanceTaken,
                     courseId: item.courseId,
                     courseSectionName: item.courseSectionName,
                     periodTitle: item.courseFixedSchedule.blockPeriod.periodTitle,
@@ -184,6 +213,7 @@ export class CourseSectionComponent implements OnInit {
                     periodId: subItem.blockPeriod.periodId,
                     courseSectionId: item.courseSectionId,
                     attendanceDate: new Date(dt),
+                    takeAttendance: subItem.takeAttendance,
                     courseId: item.courseId,
                     courseSectionName: item.courseSectionName,
                     periodTitle: subItem.blockPeriod.periodTitle,
@@ -206,6 +236,7 @@ export class CourseSectionComponent implements OnInit {
               periodId: subItem.blockPeriod.periodId,
               courseSectionId: item.courseSectionId,
               attendanceDate: new Date(subItem.date),
+              takeAttendance: subItem.takeAttendance,
               courseId: item.courseId,
               courseSectionName: item.courseSectionName,
               periodTitle: subItem.blockPeriod.periodTitle,
@@ -218,7 +249,7 @@ export class CourseSectionComponent implements OnInit {
     });
 
     this.events.forEach((item)=>{
-      if(this.courseSectionList.findIndex(x => x.courseSectionId === item.meta.courseSectionId) === -1){
+      if(item.meta.takeAttendance && this.courseSectionList.findIndex(x => x.courseSectionId === item.meta.courseSectionId) === -1){
         this.courseSectionList.push(item.meta);
       }
     });

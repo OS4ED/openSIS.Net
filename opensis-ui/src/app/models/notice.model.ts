@@ -9,7 +9,11 @@ export class NoticeModel {
     public body: string;
     public validFrom: string;
     public validTo: string;
+    public visibleToAllSchool: boolean;
     public createdBy: string;
+    constructor(){
+        this.visibleToAllSchool = false;
+    }
 }
 
 export class NoticeAddViewModel extends CommonField {

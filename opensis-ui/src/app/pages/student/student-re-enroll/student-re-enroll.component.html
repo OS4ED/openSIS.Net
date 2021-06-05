@@ -8,84 +8,92 @@
 
     <vex-page-layout-content class="-mt-6">
         <form #f="ngForm" appInvalidControlScroll>
-        <div *ngIf="submitReenroll" class="card -mt-16 px-6 pt-4 pb-2">
-            <ul class="grid grid-cols-1 md:grid-cols-4 col-gap-4 row-gap-2">
-                <li>
-                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                        <mat-label>{{ "schoolName" | translate }}</mat-label>
-                        <mat-select name="reenrollSchoolId" #reenroll_school="ngModel" (selectionChange)="changeSchool($event.value)" [(ngModel)]="reenrollSchoolId" required>
-                            <mat-option *ngFor="let school of schoolListWithGradeLevelsAndEnrollCodes"
-                                [value]="school?.schoolId">
-                                {{school.schoolName}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="reenroll_school.errors?.required">
-                            {{'schoolNameIsRequired'|translate}}
-                        </mat-error>
-                    </mat-form-field>
-                </li>
-                <li>
-                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                        <mat-label>{{'reenrollmentDate'|translate}}</mat-label>
-                        <input #reenroll_Date="ngModel" name="reenrollmentDate" [min]="startDate" [max]="endDate" [matDatepicker]="reenrollmentDate" matInput [(ngModel)]="enrollmentDate" required>
-                        <mat-datepicker-toggle [for]="reenrollmentDate" matSuffix></mat-datepicker-toggle>
-                        <mat-datepicker #reenrollmentDate></mat-datepicker>
-                        <mat-error *ngIf="reenroll_Date.errors?.required">
-                            {{'reenrollmentDateIsRequired'|translate}}
-                        </mat-error>
-                    </mat-form-field>
-                </li>
-                <li>
-                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                        <mat-label>{{ "enrollmentCode" | translate }}</mat-label>
-                        <mat-select #reenroll_Type="ngModel" name="enrollmentCode" [(ngModel)]="enrollmentCode" required>
-                            <mat-option *ngFor="let enrollmentCode of enrollmentCodelist"
-                                value="{{enrollmentCode.enrollmentCode}}">{{enrollmentCode.title}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="reenroll_Type.errors?.required">
-                            {{'enrollmentCodeIsRequired'|translate}}
-                        </mat-error>
-                    </mat-form-field>
-                </li>
-                <li>
-                    <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
-                        <mat-label>{{ "gradeLevel" | translate }}</mat-label>
-                        <mat-select #reenroll_gradeLevel="ngModel" (selectionChange)="changeGrade($event.value)" name="gradeId" [(ngModel)]="gradeId" required>
-                            <mat-option *ngFor="let gradeLevel of gradeLavelList" value="{{gradeLevel.gradeId}}">
-                                {{gradeLevel.title}}</mat-option>
-                        </mat-select>
-                        <mat-error *ngIf="reenroll_gradeLevel.errors?.required">
-                            {{'gradeLevelIsRequired'|translate}}
-                        </mat-error>
-                    </mat-form-field>
-                </li>
-            </ul>
-        </div>
-    </form>
-        <div [ngClass]="{'hidden': !submitReenroll}" class="card overflow-auto mt-6">
-            <div class="flex justify-between px-6 py-4">
-                <h5 class="font-medium">{{'showingListOfInactiveStudentsSelectStudentsToReenroll' | translate}}</h5>
-                <mat-slide-toggle color="primary" [(ngModel)]="showAllSchools" (change)="searchAllSchools($event)">{{'searchAllSchools' | translate}}</mat-slide-toggle>
+            <div *ngIf="submitReenroll" class="card -mt-16 px-5 pt-4 pb-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-2">
+                    <li>
+                        <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                            <mat-label>{{ "schoolName" | translate }}</mat-label>
+                            <mat-select name="reenrollSchoolId" #reenroll_school="ngModel"
+                                (selectionChange)="changeSchool($event.value)" [(ngModel)]="reenrollSchoolId" required>
+                                <mat-option *ngFor="let school of schoolListWithGradeLevelsAndEnrollCodes"
+                                    [value]="school?.schoolId">
+                                    {{school.schoolName}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="reenroll_school.errors?.required">
+                                {{'schoolNameIsRequired'|translate}}
+                            </mat-error>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                            <mat-label>{{'reenrollmentDate'|translate}}</mat-label>
+                            <input #reenroll_Date="ngModel" name="reenrollmentDate" [min]="startDate" [max]="endDate"
+                                [matDatepicker]="reenrollmentDate" matInput [(ngModel)]="enrollmentDate" required>
+                            <mat-datepicker-toggle [for]="reenrollmentDate" matSuffix></mat-datepicker-toggle>
+                            <mat-datepicker #reenrollmentDate></mat-datepicker>
+                            <mat-error *ngIf="reenroll_Date.errors?.required">
+                                {{'reenrollmentDateIsRequired'|translate}}
+                            </mat-error>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                            <mat-label>{{ "enrollmentCode" | translate }}</mat-label>
+                            <mat-select #reenroll_Type="ngModel" name="enrollmentCode" [(ngModel)]="enrollmentCode"
+                                required>
+                                <mat-option *ngFor="let enrollmentCode of enrollmentCodelist"
+                                    value="{{enrollmentCode.enrollmentCode}}">{{enrollmentCode.title}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="reenroll_Type.errors?.required">
+                                {{'enrollmentCodeIsRequired'|translate}}
+                            </mat-error>
+                        </mat-form-field>
+                    </li>
+                    <li>
+                        <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
+                            <mat-label>{{ "gradeLevel" | translate }}</mat-label>
+                            <mat-select #reenroll_gradeLevel="ngModel" (selectionChange)="changeGrade($event.value)"
+                                name="gradeId" [(ngModel)]="gradeId" required>
+                                <mat-option *ngFor="let gradeLevel of gradeLavelList" value="{{gradeLevel.gradeId}}">
+                                    {{gradeLevel.title}}</mat-option>
+                            </mat-select>
+                            <mat-error *ngIf="reenroll_gradeLevel.errors?.required">
+                                {{'gradeLevelIsRequired'|translate}}
+                            </mat-error>
+                        </mat-form-field>
+                    </li>
+                </ul>
+            </div>
+        </form>
+        <div [ngClass]="{'hidden': !submitReenroll}" class="card mt-6">
+            <div class="flex justify-between px-5 py-4 flex-wrap">
+                <h5 class="font-medium pr-6 pb-2 sm:pb-0">{{'showingListOfInactiveStudentsSelectStudentsToReenroll' | translate}}
+                </h5>
+                <mat-slide-toggle color="primary" [(ngModel)]="showAllSchools" (change)="searchAllSchools($event)">
+                    {{'searchAllSchools' | translate}}</mat-slide-toggle>
             </div>
             <mat-divider></mat-divider>
-            <div class="bg-white px-6 md:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
-                <div class="md:flex w-full justify-between">
-                    <div class="py-3" fxLayout="row" fxLayoutAlign="start center">
+            <div class="bg-white px-5 lg:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="lg:flex w-full justify-between pb-4 lg:pb-0">
+                    <div class="py-2 md:py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
+                    fxLayoutAlign="start center">
                         <div class="flex items-center">
                             <input [formControl]="searchCtrl"
-                                class="border-0 outline-none w-full bg-transparent table-search" placeholder="Search..."
+                                class="pr-4 py-3 border-0 outline-none w-full bg-transparent" placeholder="Search..."
                                 type="search">
                             <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
                                 <mat-icon>search</mat-icon>
                             </button>
-                            <a class="text-primary cursor-pointer ml-3 w-full" (click)="showAdvanceSearch()">
-                                <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
-                                | translate}}
+                            <a class="text-primary cursor-pointer ml-3 lg:w-full" (click)="showAdvanceSearch()">
+                                <mat-icon aria-hidden="false" class="align-middle">tune</mat-icon><span
+                                    class="ml-2 hidden lg:inline-block">{{'advanceSearch' | translate}}</span>
                             </a>
                         </div>
                     </div>
+                    <hr class="lg:hidden -mx-6">
                     <div class="pt-3">
-                        <a class="cursor-pointer p-1 mt-1 inline-block align-middle" (click)="exportToExcelReenroll()" matTooltip="Export to Excel"><i
-                                class="icon icon-file-excel text-lg"></i></a>
+                        <a class="cursor-pointer p-1 mt-1 inline-block align-middle" (click)="exportToExcelReenroll()"
+                            matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
                         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-2 inline-block align-middle"
                             fxFlex="none" mat-icon-button matTooltip="Filter Columns" type="button">
                             <mat-icon>filter_list</mat-icon>
@@ -93,7 +101,8 @@
                         <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
                             <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
                                 class="checkbox-item mat-menu-item">
-                                <mat-checkbox [disabled]="column.property ==='studentCheck'" (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
+                                <mat-checkbox [disabled]="column.property ==='studentCheck'"
+                                    (click)="$event.stopPropagation()" [(ngModel)]="column.visible" color="primary">
                                     {{column.label}}
                                 </mat-checkbox>
                             </button>
@@ -101,74 +110,75 @@
                     </div>
                 </div>
             </div>
+            <div class="overflow-x-auto overflow-y-hidden">
+                <table mat-table [dataSource]="studentReenrollList" class="mat-elevation-z8 shadow-none">
+                    <ng-container matColumnDef="studentCheck">
+                        <th [class.hide]="totalCount==0" mat-header-cell *matHeaderCellDef>
+                            <mat-checkbox color="primary" #masterCheckBox [indeterminate]="someComplete()"
+                                (change)="setAll($event.checked)"></mat-checkbox>
+                        </th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-checkbox color="primary" [checked]="element.checked"
+                                (change)="onChangeSelection($event.checked,element.studentId)">
+                            </mat-checkbox>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="studentName">
+                        <th mat-header-cell *matHeaderCellDef>{{ "studentName" | translate }}</th>
+                        <td mat-cell *matCellDef="let element">
+                            <a class="text-blue cursor-pointer">{{ element.firstGivenName }} {{ element.lastFamilyName
+                                }}</a>
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="studentId">
+                        <th mat-header-cell *matHeaderCellDef>{{ "studentId" | translate }}</th>
+                        <td mat-cell *matCellDef="let element">
+                            {{ element.studentInternalId }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="lastGradeLevel">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'lastGradeLevel' | translate }}</th>
+                        <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.gradeLevelTitle }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="mobilePhone">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'mobilePhone' | translate }}</th>
+                        <td mat-cell *matCellDef="let element">{{ element.mobilePhone }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="personalEmail">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'personalEmail' | translate }}</th>
+                        <td mat-cell *matCellDef="let element">{{ element.personalEmail }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="enrollmentDate">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'enrollmentDate' | translate }}</th>
+                        <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.enrollmentDate | date }}
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="exitDate">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'exitDate' | translate }}</th>
+                        <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.exitDate | date}}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="exitCode">
+                        <th mat-header-cell *matHeaderCellDef>{{ 'exitCode' | translate }}</th>
+                        <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.exitCode }}</td>
+                    </ng-container>
 
-            <table mat-table [dataSource]="studentReenrollList" class="mat-elevation-z8 shadow-none">
-                <ng-container matColumnDef="studentCheck">
-                    <th [class.hide]="totalCount==0" mat-header-cell *matHeaderCellDef>
-                        <mat-checkbox color="primary" #masterCheckBox [indeterminate]="someComplete()"
-                            (change)="setAll($event.checked)"></mat-checkbox>
-                    </th>
-                    <td mat-cell *matCellDef="let element">
-                        <mat-checkbox color="primary" [checked]="element.checked"
-                            (change)="onChangeSelection($event.checked,element.studentId)">
-                        </mat-checkbox>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="studentName">
-                    <th mat-header-cell *matHeaderCellDef>{{ "studentName" | translate }}</th>
-                    <td mat-cell *matCellDef="let element">
-                        <a class="text-blue cursor-pointer">{{ element.firstGivenName }} {{ element.lastFamilyName
-                            }}</a>
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="studentId">
-                    <th mat-header-cell *matHeaderCellDef>{{ "studentId" | translate }}</th>
-                    <td mat-cell *matCellDef="let element">
-                        {{ element.studentInternalId }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="lastGradeLevel">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'lastGradeLevel' | translate }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.gradeLevelTitle }}</td>
-                </ng-container>
-                <ng-container matColumnDef="mobilePhone">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'mobilePhone' | translate }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.mobilePhone }}</td>
-                </ng-container>
-                <ng-container matColumnDef="personalEmail">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'personalEmail' | translate }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.personalEmail }}</td>
-                </ng-container>
-                <ng-container matColumnDef="enrollmentDate">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'enrollmentDate' | translate }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.enrollmentDate | date }}
-                    </td>
-                </ng-container>
-                <ng-container matColumnDef="exitDate">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'exitDate' | translate }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.exitDate | date}}</td>
-                </ng-container>
-                <ng-container matColumnDef="exitCode">
-                    <th mat-header-cell *matHeaderCellDef>{{ 'exitCode' | translate }}</th>
-                    <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.exitCode }}</td>
-                </ng-container>
+                    <ng-container matColumnDef="loading">
+                        <mat-footer-cell *matFooterCellDef colspan="9">
+                            <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
+                        </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="noData">
+                        <td mat-footer-cell *matFooterCellDef colspan="9">
+                            {{loading?('fetchingData' | translate):('noData' | translate) }}
+                        </td>
+                    </ng-container>
 
-                <ng-container matColumnDef="loading">
-                    <mat-footer-cell *matFooterCellDef colspan="9">
-                        <!-- <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay> -->
-                    </mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="noData">
-                    <td mat-footer-cell *matFooterCellDef colspan="9">
-                        {{loading?('fetchingData' | translate):('noData' | translate) }}
-                    </td>
-                </ng-container>
-    
-                <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-                <tr mat-row *matRowDef="let row; columns: visibleColumns"></tr>
-                <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
-                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
-            </table>
+                    <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+                    <tr mat-row *matRowDef="let row; columns: visibleColumns"></tr>
+                    <tr mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></tr>
+                    <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=0"></tr>
+                </table>
+            </div>
             <mat-paginator [length]="totalCount" [class.hide]="totalCount==0" [pageSize]="pageSize"
                 [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
 
@@ -188,16 +198,20 @@
                 </span>
             </div>
             <h5 class="font-semibold text-green text-xl mb-2">{{'success' | translate}}</h5>
-            <p class="mb-6"><span class="font-semibold">{{studentsNameList}}</span> {{'successfullyReenrolledTo' | translate}} <span class="font-semibold">{{selectedSchoollName}}</span>
+            <p class="mb-6"><span class="font-semibold">{{studentsNameList}}</span> {{'successfullyReenrolledTo' |
+                translate}} <span class="font-semibold">{{selectedSchoollName}}</span>
             </p>
-            <button type="submit" (click)="reenrollAnotherStudents()" class="border border-primary text-blue p-2 rounded font-medium">{{'reenrollAnotherStudent' | translate}}</button>
+            <button type="submit" (click)="reenrollAnotherStudents()"
+                class="border border-primary text-blue p-2 rounded font-medium">{{'reenrollAnotherStudent' |
+                translate}}</button>
         </div>
         <!-- End After complete student re-enrollment below succes msg is shown  -->
     </vex-page-layout-content>
 </vex-page-layout>
 <div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
     <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20" @fadeInRight>
-        <vex-search-student (searchList)="getSearchResult($event)" (showHideAdvanceSearch)="hideAdvanceSearch($event)"></vex-search-student>
+        <vex-search-student (searchList)="getSearchResult($event)" (showHideAdvanceSearch)="hideAdvanceSearch($event)">
+        </vex-search-student>
     </div>
     <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
 </div>

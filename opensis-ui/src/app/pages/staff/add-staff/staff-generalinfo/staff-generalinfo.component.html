@@ -1,12 +1,14 @@
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.EDIT || staffCreateMode == staffCreate.ADD">
     <form (ngSubmit)="submitStaff()" #f="ngForm" novalidate appInvalidControlScroll>
-        <h3 class="mx-2 mb-6">{{'generalInformation'|translate}}</h3>
+        <h3 class="mb-6">{{'generalInformation'|translate}}</h3>
         <mat-card-content>
 
             <div @stagger fxLayout="column">
-                <h4 class="text-primary px-2">{{'identificationInformation'|translate}}</h4>
-                <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-2">
+                <h4 class="text-primary">{{'identificationInformation'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
+                        <div class="md:flex w-full">
+                            <div class="w-full md:w-1/2 md:pr-4">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'salutation'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.salutation" name="salutation">
@@ -15,8 +17,8 @@
                                     {{salutation.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
-                    </li>
-                    <li>
+                            </div>
+                            <div class="w-full md:w-1/2 md:pl-4">
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'suffix'|translate}}</mat-label>
                             <mat-select [(ngModel)]="staffAddModel.staffMaster.suffix" name="suffix">
@@ -24,10 +26,10 @@
                                 <mat-option *ngFor="let suffix of suffixList" [value]="suffix.lovColumnValue">{{suffix.lovColumnValue}}</mat-option>
                             </mat-select>
                         </mat-form-field>
+                            </div>
+                        </div>
                     </li>
                     <li>
-                        <div class="flex">
-                            <div class="flex flex-1 mr-4 w-1/4 md:w-1/4">
                                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                     <mat-label>{{'firstGivenName'|translate}}</mat-label>
                                     <input #firstGivenName="ngModel"
@@ -36,15 +38,13 @@
                                     <mat-error class="text-red" *ngIf="firstGivenName.errors?.required">
                                         {{'firstGivenNameIsRequired'|translate}}</mat-error>
                                 </mat-form-field>
-                            </div>
-                            <div class="flex flex-1 ml-4 w-1/4 md:w-1/4">
+                    </li>
+                    <li>
                                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                     <mat-label>{{'middleName'|translate}}</mat-label>
                                     <input [(ngModel)]="staffAddModel.staffMaster.middleName" name="middleName"
                                         matInput>
                                 </mat-form-field>
-                            </div>
-                        </div>
                     </li>
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
@@ -119,8 +119,8 @@
 
 
                 <hr class="-mx-4">
-                <h4 class="text-primary pt-6 px-2">{{'demographicInformation'|translate}}</h4>
-                <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-2">
+                <h4 class="text-primary pt-6">{{'demographicInformation'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'gender'|translate}}</mat-label>
@@ -243,7 +243,7 @@
                 </ul>
 
                 <hr class="-mx-4 my-4">
-                <div class="mx-2">
+                <div>
                     <mat-slide-toggle color="primary" [checked]="staffAddModel.staffMaster.portalAccess"
                         (change)="isPortalAccess($event)" class="mb-4">
                         {{'portalAccess' | translate}}
@@ -251,8 +251,8 @@
                 </div>
                 
                 <div *ngIf="hideAccess">
-                    <h4 class="text-primary pt-3 px-2">{{'accessInformation'|translate}}</h4>
-                    <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-2">
+                    <h4 class="text-primary pt-3">{{'accessInformation'|translate}}</h4>
+                    <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                         <li>
                             <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                 <mat-label>{{'loginEmailAddress'|translate}}</mat-label>
@@ -287,7 +287,7 @@
                         </div>
                     </div>
         </mat-card-content>
-        <div class="px-2 pb-2 flex w-full justify-end">
+        <div class="pb-2 flex w-full justify-end">
                     <button mat-button type="button" *ngIf="staffCreateMode == staffCreate.EDIT"
                     (click)="cancelEdit()">{{'cancel'|translate}}</button>
                 <button color="primary" class="ml-2" mat-raised-button>{{saveAndNext |translate}}</button>
@@ -299,10 +299,11 @@
 
 <!--View-->
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.VIEW">
-    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'generalInformation' | translate}}</h3>
         <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()">
-            <mat-icon [icIcon]="icEdit" style="font-size: 18px;" class="mt-1"></mat-icon> {{'editInformation' |translate}}
+            <mat-icon [icIcon]="icEdit" class="md:mt-1 md:mr-2"></mat-icon><span
+                class="hidden md:inline-block">{{'editInformation' |translate}}</span>
         </button>
     </div>
     <vex-view-staff-generalinfo

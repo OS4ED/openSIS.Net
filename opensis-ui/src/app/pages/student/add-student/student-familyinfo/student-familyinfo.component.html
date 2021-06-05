@@ -1,35 +1,33 @@
 <mat-card class="w-full">
 
-    <mat-card-header>
-        <mat-card-title>{{'familyInformation'|translate}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content>
-      <div class="-mx-4">
-        <ul class="flex flex-row text-gray font-semibold">
-          
-            <li class="px-8 py-2 cursor-pointer" (click)="changeTab('contacts')"
-            [class.active]="currentTab === 'contacts'"
-            [ngClass]="currentTab === 'contacts' ? 'text-black border-b-2 border-primary' : ''">
-            {{'contacts' | translate}}</li>
-            <li class="px-8 py-2 cursor-pointer" (click)="changeTab('siblingInfo')"
-            [class.active]="currentTab === 'siblingInfo'"
-            [ngClass]="currentTab === 'siblingInfo' ? 'text-black border-b-2 border-primary' : ''">
-            {{'siblingInfo' | translate}}</li>
-        </ul>
-      
-        <hr class=""/>
-        <div [ngSwitch]="currentTab">
-          <div *ngSwitchCase="'contacts'" class="px-4">
-            <div class="px-gutter pt-6">
-              <vex-student-contacts [studentDetailsForViewAndEditData]="studentDetailsForViewAndEditData"></vex-student-contacts>
-            </div>
+  <h3 class="font-medium pb-2">{{'familyInformation'|translate}}</h3>
+  <mat-card-content>
+    <div class="-mx-4">
+      <ul class="flex flex-row text-gray font-semibold">
+
+        <li class="px-4 py-2 cursor-pointer" (click)="changeTab('contacts')" [class.active]="currentTab === 'contacts'"
+          [ngClass]="currentTab === 'contacts' ? 'text-black border-b-2 border-primary' : ''">
+          {{'contacts' | translate}}</li>
+        <li class="px-4 py-2 cursor-pointer" (click)="changeTab('siblingInfo')"
+          [class.active]="currentTab === 'siblingInfo'"
+          [ngClass]="currentTab === 'siblingInfo' ? 'text-black border-b-2 border-primary' : ''">
+          {{'siblingInfo' | translate}}</li>
+      </ul>
+
+      <hr class="" />
+      <div [ngSwitch]="currentTab">
+        <div *ngSwitchCase="'contacts'" class="px-4">
+          <div class="pt-6">
+            <vex-student-contacts [studentDetailsForViewAndEditData]="studentDetailsForViewAndEditData">
+            </vex-student-contacts>
           </div>
-          <div *ngSwitchCase="'siblingInfo'" class="px-4">
-            <div class="px-gutter pt-6">
-              <vex-siblingsinfo></vex-siblingsinfo>
-            </div>
+        </div>
+        <div *ngSwitchCase="'siblingInfo'" class="px-4">
+          <div class="pt-6">
+            <vex-siblingsinfo></vex-siblingsinfo>
           </div>
         </div>
       </div>
-    </mat-card-content>
+    </div>
+  </mat-card-content>
 </mat-card>

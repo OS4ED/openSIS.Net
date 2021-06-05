@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { DefaultValuesService } from '../common/default-values.service';
-import { AddCourseCommentCategoryModel, DeleteCourseCommentCategoryModel, GetAllCourseCommentCategoryModel, UpdateSortOrderForCourseCommentCategoryModel } from '../models/report-card.model';
+import { AddCourseCommentCategoryModel, AddReportCardPdf, DeleteCourseCommentCategoryModel, GetAllCourseCommentCategoryModel, UpdateSortOrderForCourseCommentCategoryModel } from '../models/report-card.model';
 
 @Injectable({
   providedIn: 'root'
@@ -36,6 +36,18 @@ export class ReportCardService {
     reportCardComment = this.defaultValuesService.getAllMandatoryVariable(reportCardComment);
     let apiurl = this.apiUrl + reportCardComment._tenantName+"/ReportCard/getAllCourseCommentCategory";
     return this.http.post<GetAllCourseCommentCategoryModel>(apiurl,reportCardComment)
+  }
+
+  addReportCard(reportCard:AddReportCardPdf){
+    reportCard = this.defaultValuesService.getAllMandatoryVariable(reportCard);
+    let apiurl = this.apiUrl + reportCard._tenantName+"/ReportCard/addReportCard";
+    return this.http.post<GetAllCourseCommentCategoryModel>(apiurl,reportCard)
+  }
+
+  generateReportCard(reportCard:AddReportCardPdf){
+    reportCard = this.defaultValuesService.getAllMandatoryVariable(reportCard);
+    let apiurl = this.apiUrl + reportCard._tenantName+"/ReportCard/generateReportCard";
+    return this.http.post<GetAllCourseCommentCategoryModel>(apiurl,reportCard)
   }
 
 }

@@ -1,17 +1,29 @@
-<mat-card class="w-full mb-8 p-0 pt-2">
-    <div class="flex justify-between">
-        <div class="flex items-center px-4">
-            <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
-                <mat-icon>west</mat-icon>
-            </button>
+<mat-card class="w-full mb-8">
+    <div class="flex justify-between flex-col lg:flex-row">
+        <div class="flex justify-center items-center">
+            <button (click)="confirmWeekChange('prev')" *ngIf="view==='weekView';else monthPrevBtn">
+                <mat-icon class="mt-2">west</mat-icon>
+              </button>
+              <ng-template #monthPrevBtn>
+                <button [(viewDate)]="viewDate" (viewDateChange)="changeMonthView('prev')" [view]="view" mat-icon-button mwlCalendarPreviousView>
+                    <mat-icon>west</mat-icon>
+                </button>
+              </ng-template>
             <h3 class="text-center mx-4 text-base" *ngIf="view !== 'weekView'"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
-            <h3 class="text-base mx-4" *ngIf="view == 'weekView'"> Monday, Mar 29, 2021 - Friday, Apr 2, 2021
+   
+            <h3 class="text-base mx-4" *ngIf="view == 'weekView'"> {{'sunday'|translate}}, {{currentWeek[0]|date:'mediumDate'}} - {{'saturday'|translate}}, {{currentWeek[6]|date:'mediumDate'}}
             </h3>
-            <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarNextView>
-                <mat-icon>east</mat-icon>
+            <button (click)="confirmWeekChange('next')" *ngIf="view==='weekView';else monthNextBtn">
+                <mat-icon class="mt-2">east</mat-icon>
             </button>
+            <ng-template #monthNextBtn>
+                <button *ngIf="view!=='weekView'" (viewDateChange)="changeMonthView('next')" [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarNextView>
+                    <mat-icon>east</mat-icon>
+                </button>
+            </ng-template>
         </div>
-        <div class="flex">
+        <hr class="my-2 block lg:hidden"/>
+        <div class="flex justify-center lg:justify-end w-full lg:w-auto">
             <button (click)="changeCalendarView('weekView')" [class.active]="view === 'weekView'"
                 [ngClass]="view === 'weekView' ? 'text-blue border-b-2 border-primary' : ''" class="px-4">
                 <mat-icon class="mr-2">date_range</mat-icon><span class="inline-block align-top mt-1">{{ 'weekView' |
@@ -27,10 +39,9 @@
     <mat-divider></mat-divider>
     <div>
         <div [ngSwitch]="view" class="">
-            <!-- <mwl-calendar-week-view *ngSwitchCase="'week'" [viewDate]="viewDate" [events]="events">
-            </mwl-calendar-week-view> -->
             <ng-container *ngSwitchCase="'weekView'" [ngTemplateOutlet]="weekviewContent"></ng-container>
-            <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events">
+            <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events" [cellTemplate]="customCellTemplate"
+             [refresh]="refresh">
             </mwl-calendar-month-view>
         </div>
     </div>
@@ -40,165 +51,60 @@
                 <thead>
                     <tr>
                         <th></th>
-                        <th class="bg-red-light">{{ "sunday" | translate }}
-                            <p class="text-primary">Mar 28, 2021</p>
-                        </th>
-                        <th>{{ "monday" | translate }}
-                            <p class="text-primary">Mar 29, 2021</p>
-                        </th>
-                        <th>{{ "tuesday" | translate }}
-                            <p class="text-primary">Mar 30, 2021</p>
-                        </th>
-                        <th>{{ "wednesday" | translate }}
-                            <p class="text-primary">Mar 31, 2021</p>
-                        </th>
-                        <th>{{ "thursday" | translate }}
-                            <p class="text-primary">Apr 1, 2021</p>
-                        </th>
-                        <th>{{ "friday" | translate }}
-                            <p class="text-primary">Apr 2, 2021</p>
-                        </th>
-                        <th>{{ "saturday" | translate }}
-                            <p class="text-primary">Apr 3, 2021</p>
-                        </th>
+                        <ng-container *ngFor="let day of currentWeek;let i=index">
+                            <th>
+                              {{ days[i]}}
+                              <p class="text-primary">{{day|date:'mediumDate'}}</p>
+                            </th>
+                        </ng-container>
                     </tr>
                 </thead>
                 <tbody>
-                    <tr>
-                        <td>Period 1</td>
-                        <td class="bg-red-light"></td>
+                    <tr *ngFor="let period of weeklyAttendanceView.attendanceWeekView">
                         <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
+                            {{period.periodTitle}}
                         </td>
+                        <ng-container *ngFor="let day of [0,1,2,3,4,5,6]">
                         <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
+                            <ng-container *ngIf="period.days.includes(day)">
+
+                                    <div class="select-dropdown" *ngIf="period.takenAttendanceDays?.includes(day);else showNoAttendance">
+                                        <select (change)="onAttendanceChange($event.target.value,period,day)" [(ngModel)]="period.cloneTakenAttendanceDays[day]">
+                                            <option *ngFor="let attendance of period?.attendanceList.attendanceCode" [value]="attendance.attendanceCode1" >{{attendance.title}}</option>
+                                        </select>
+                                    </div>
+
+                                    <ng-template #showNoAttendance>
+                                        <p class="text-red">Attendance Not Taken</p>
+                                    </ng-template>
+                                
+                            </ng-container>
                         </td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td class="bg-red-light"></td>
-                    </tr>
-                    <tr>
-                        <td>Period 2</td>
-                        <td class="bg-red-light"></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="bg-red-light"></td>
-                    </tr>
-                    <tr>
-                        <td>Period 3</td>
-                        <td class="bg-red-light"></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="bg-red-light"></td>
-                    </tr>
-                    <tr>
-                        <td>Period 4</td>
-                        <td class="bg-red-light"></td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td class="bg-red-light"></td>
-                    </tr>
-                    <tr>
-                        <td>Period 5</td>
-                        <td class="bg-red-light"></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td></td>
-                        <td>
-                            <div class="select-dropdown">
-                                <select>
-                                    <option value="present" selected>{{ "present" | translate }}</option>
-                                </select>
-                            </div>
-                        </td>
-                        <td class="bg-red-light"></td>
-                    </tr>
-                    <tr>
-                        <td>Period 6</td>
-                        <td class="bg-red-light"></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="bg-red-light"></td>
-                    </tr>
-                    <tr>
-                        <td>Period 7</td>
-                        <td class="bg-red-light"></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td class="bg-red-light"></td>
+                    </ng-container>
+
                     </tr>
                 </tbody>
             </table>
         </div>
     </ng-template>
-    <div class="text-right p-4">
-        <button color="primary" mat-flat-button type="submit">{{'submit' | translate}}</button>
+
+    <ng-template #customCellTemplate let-day="day" let-locale="locale">
+        <div class="cal-cell-top">
+          <span class="cal-day-number">{{
+            day.date | calendarDate: "monthViewDayNumber":locale
+            }}</span>
+        </div>
+        <div class="cal-events px-2 pb-2 justify-center" *ngIf="day.events.length > 0">
+         <ng-container>
+            <div [ngClass]="day.inMonth?'':'opacity-60'" class="text-xs px-2 py-2 rounded-full text-white cursor-pointer mb-1" [class]="event.meta.bgColor"
+            *ngFor="let event of day.events; let i = index">
+            <span class="align-middle"></span>
+          </div>
+         </ng-container>
+   
+        </div>
+      </ng-template>
+    <div class="text-right pt-4" *ngIf="view!=CalendarView.Month">
+        <button color="primary" mat-flat-button type="submit" (click)="onAttendanceUpdate()">{{'update' | translate}}</button>
     </div>
 </mat-card>

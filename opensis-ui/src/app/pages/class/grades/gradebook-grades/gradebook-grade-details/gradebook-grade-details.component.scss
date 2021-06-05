@@ -1,0 +1,23 @@
+.schedule-table {
+    tr {
+      td,
+      th {
+        @apply border-b;
+        border-color: rgba(0, 0, 0, 0.1);
+        @apply px-4;
+        @apply py-2;
+        &:first-child {
+          border-left: none;
+        }
+      }
+      th, td {
+        text-align: left;
+        &:last-child {
+          text-align: center;
+        }
+      }
+      &:last-child td {
+        border-bottom: none;
+      }
+    }
+  }

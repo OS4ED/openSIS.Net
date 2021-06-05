@@ -49,6 +49,8 @@ export class CourseSectionList {
     scheduledStaff: string;
     takeAttendanceForFixedSchedule: boolean;
     weekDays: string;
+    gradeScaleType: string;
+    usedStandard:boolean;
 
     dayOfWeek: string; // This key is used for student 360
     createdBy: string; // This key is used for student 360

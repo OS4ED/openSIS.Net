@@ -1,4 +1,4 @@
-<div class="card overflow-auto -mt-16">
+<div class="card">
     <div>
         <h4 class="font-medium px-6 py-4">{{ "selectATeacher" | translate }}</h4>
     </div>
@@ -19,6 +19,7 @@
         </div>
     </div>
 
+    <div class="overflow-auto">
     <table mat-table matSort [dataSource]="staffList" class="mat-elevation-z8 shadow-none">
         <ng-container matColumnDef="lastFamilyName">
             <th mat-header-cell *matHeaderCellDef mat-sort-header>{{ "name" | translate }}</th>
@@ -58,6 +59,7 @@
         <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
         <tr mat-footer-row *matFooterRowDef="['noData']" [class.hidden]="totalCount>0"></tr>
     </table>
+</div>
     <mat-paginator [length]="totalCount" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 30, 40]"
         showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
 </div>

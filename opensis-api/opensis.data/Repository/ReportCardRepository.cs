@@ -1,4 +1,29 @@
-﻿using opensis.data.Interface;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.ReportCard;
 using System;
@@ -8,6 +33,9 @@ using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using opensis.data.ViewModels.CourseManager;
 using System.Text.RegularExpressions;
+using System.IO;
+using System.Threading.Tasks;
+using JSReport;
 
 namespace opensis.data.Repository
 {
@@ -390,48 +418,64 @@ namespace opensis.data.Repository
             return courseCommentCategoryList;
         }
 
-        public ReportCardViewModel ViewReportCard(ReportCardViewModel reportCardViewModel)
+        /// <summary>
+        /// Add Report Card
+        /// </summary>
+        /// <param name="reportCardViewModel"></param>
+        /// <returns></returns>
+        public ReportCardViewModel AddReportCard(ReportCardViewModel reportCardViewModel)
         {
-            ReportCardViewModel reportCardView = new ReportCardViewModel();
             try
             {
-                var teacherComments =new List<String>();
-                var reportCardData = new List<StudentFinalGrade>();
-                DateTime? startDate=null;
-                DateTime? endDate=null;
-                int? absencesInDays = 0;
+                List<string> teacherComments = new List<string>();
+
+                int i = 0;
+                long? ide = 1;
+                int teacherCommentsNo = 1;
                 if (reportCardViewModel.studentsReportCardViewModelList.Count > 0)
                 {
-                    var schoolData = this.context?.SchoolMaster.Include(x=>x.SchoolCalendars).FirstOrDefault(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId);
-
-                    reportCardView.SchoolName = schoolData.SchoolName;
-                    reportCardView.StreetAddress1 = schoolData.StreetAddress1;
-                    reportCardView.StreetAddress2 = schoolData.StreetAddress2;
-                    reportCardView.State = schoolData.State;
-                    reportCardView.City = schoolData.City;
-                    reportCardView.District = schoolData.District;
-                    reportCardView.Zip = schoolData.Zip;
-
                     foreach (var student in reportCardViewModel.studentsReportCardViewModelList)
                     {
-                        var StudentsReportCard = new StudentsReportCardViewModel();
+                        List<StudentReportCardMaster> studentReportCardMasterList = new List<StudentReportCardMaster>();
+                        List<StudentReportCardDetail> studentReportCardDetailList = new List<StudentReportCardDetail>();
+
+                        var existingStudentReportCardData = this.context?.StudentReportCardMaster.Where(x => x.SchoolId == reportCardViewModel.SchoolId && x.TenantId == reportCardViewModel.TenantId && x.StudentId == student.StudentId && x.SchoolYear == reportCardViewModel.AcademicYear.ToString()).ToList();
+
+                        if (existingStudentReportCardData != null)
+                        {
+                            var existingStudentReportCardDetailsData = this.context?.StudentReportCardDetail.Where(x => x.SchoolId == reportCardViewModel.SchoolId && x.TenantId == reportCardViewModel.TenantId && x.StudentId == student.StudentId && x.SchoolYear == reportCardViewModel.AcademicYear.ToString()).ToList();
+                            if (existingStudentReportCardDetailsData.Count > 0)
+                            {
+                                this.context?.StudentReportCardDetail.RemoveRange(existingStudentReportCardDetailsData);
+                            }
+                            this.context?.StudentReportCardMaster.RemoveRange(existingStudentReportCardData);
+                            this.context.SaveChanges();
+                        }
+                        if (i == 0)
+                        {
+                            var idData = this.context?.StudentReportCardDetail.Where(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId).OrderByDescending(x => x.Id).FirstOrDefault();
+
+                            if (idData != null)
+                            {
+                                ide = idData.Id + 1;
+                            }
+                        }
+
+                        int absencesInDays = 0;
 
                         var studentData = this.context?.StudentMaster.Include(x => x.StudentEnrollment).FirstOrDefault(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.StudentId == student.StudentId);
 
-                        StudentsReportCard.StudentId = studentData.StudentId;
-                        StudentsReportCard.StudentInternalId = studentData.StudentInternalId;
-                        StudentsReportCard.FirstGivenName = studentData.FirstGivenName;
-                        StudentsReportCard.MiddleName = studentData.MiddleName;
-                        StudentsReportCard.LastFamilyName = studentData.LastFamilyName;
-                        StudentsReportCard.AlternateId = studentData.AlternateId;
-                        StudentsReportCard.GradeTitle = studentData.StudentEnrollment.Where(x => x.IsActive == true).Select(s => s.GradeLevelTitle).FirstOrDefault();
+                        var GradeLevelTitle = studentData.StudentEnrollment.Where(x => x.IsActive == true).Select(s => s.GradeLevelTitle).FirstOrDefault();
 
                         var markingPeriodsData = reportCardViewModel.MarkingPeriods.Split(",");
+                        DateTime? startDate = null;
+                        DateTime? endDate = null;
+                        string MarkingPeriodTitle = null;
 
                         foreach (var markingPeriod in markingPeriodsData)
                         {
-                            var ReportCardMarkingPeriod = new ReportCardMarkingPeriodsDetails();
-
+                            int Absences = 0;
+                            int ExcusedAbsences = 0;
                             int? QtrMarkingPeriodId = null;
                             int? SmstrMarkingPeriodId = null;
                             int? YrMarkingPeriodId = null;
@@ -446,7 +490,7 @@ namespace opensis.data.Repository
 
                                     var qtrData = this.context?.Quarters.FirstOrDefault(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.MarkingPeriodId == QtrMarkingPeriodId && x.AcademicYear == reportCardViewModel.AcademicYear);
 
-                                    ReportCardMarkingPeriod.MarkingPeriod = qtrData.Title;
+                                    MarkingPeriodTitle = qtrData.Title;
                                     startDate = qtrData.StartDate;
                                     endDate = qtrData.EndDate;
                                 }
@@ -457,7 +501,7 @@ namespace opensis.data.Repository
 
                                     var smstrData = this.context?.Semesters.FirstOrDefault(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.MarkingPeriodId == SmstrMarkingPeriodId && x.AcademicYear == reportCardViewModel.AcademicYear);
 
-                                    ReportCardMarkingPeriod.MarkingPeriod = smstrData.Title;
+                                    MarkingPeriodTitle = smstrData.Title;
                                     startDate = smstrData.StartDate;
                                     endDate = smstrData.EndDate;
                                 }
@@ -468,7 +512,7 @@ namespace opensis.data.Repository
 
                                     var yrData = this.context?.SchoolYears.FirstOrDefault(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.MarkingPeriodId == YrMarkingPeriodId && x.AcademicYear == reportCardViewModel.AcademicYear);
 
-                                    ReportCardMarkingPeriod.MarkingPeriod = yrData.Title;
+                                    MarkingPeriodTitle = yrData.Title;
                                     startDate = yrData.StartDate;
                                     endDate = yrData.EndDate;
                                 }
@@ -477,133 +521,257 @@ namespace opensis.data.Repository
 
                                 if (studentAttendanceData.Count > 0)
                                 {
-                                    int? absentData = studentAttendanceData.Where(x => x.AttendanceCodeNavigation.StateCode.ToLower() == "absent").Count();
-                                    int? excusedabsentData = studentAttendanceData.Where(x => x.AttendanceCodeNavigation.StateCode.ToLower() == "excusedabsent").Count();
+                                    Absences = studentAttendanceData.Where(x => x.AttendanceCodeNavigation.StateCode.ToLower() == "absent").Count();
+                                    ExcusedAbsences = studentAttendanceData.Where(x => x.AttendanceCodeNavigation.StateCode.ToLower() == "excusedabsent").Count();
                                     var prasentData = studentAttendanceData.Where(x => x.AttendanceCodeNavigation.StateCode.ToLower() == "prasent");
 
-                                    ReportCardMarkingPeriod.Absences = reportCardViewModel.DailyAbsencesThisMarkingPeriod == true ? absentData : null;
-                                    ReportCardMarkingPeriod.ExcusedAbsences = excusedabsentData;
-                                    absencesInDays += absentData + ReportCardMarkingPeriod.ExcusedAbsences;
+                                    absencesInDays += Absences + ExcusedAbsences;
                                 }
 
-                                reportCardData = this.context?.StudentFinalGrade.Include(x => x.StudentFinalGradeComments).Include(x=>x.StudentFinalGradeStandard).Where(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.StudentId == student.StudentId && x.AcademicYear == reportCardViewModel.AcademicYear && ((x.YrMarkingPeriodId != null && x.YrMarkingPeriodId == YrMarkingPeriodId) || (x.SmstrMarkingPeriodId != null && x.SmstrMarkingPeriodId == SmstrMarkingPeriodId) || (x.QtrMarkingPeriodId != null && x.QtrMarkingPeriodId == QtrMarkingPeriodId))).ToList();
+                                var reportCardData = this.context?.StudentFinalGrade.Include(x => x.StudentFinalGradeComments).Include(x => x.StudentFinalGradeStandard).Where(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.StudentId == student.StudentId && x.AcademicYear == reportCardViewModel.AcademicYear && ((x.YrMarkingPeriodId != null && x.YrMarkingPeriodId == YrMarkingPeriodId) || (x.SmstrMarkingPeriodId != null && x.SmstrMarkingPeriodId == SmstrMarkingPeriodId) || (x.QtrMarkingPeriodId != null && x.QtrMarkingPeriodId == QtrMarkingPeriodId))).ToList();
 
                                 decimal? gPaValue = 0.0m;
                                 decimal? CreditEarned = 0.0m;
                                 decimal? CreditHours = 0.0m;
-     
+
+
                                 if (reportCardData.Count > 0)
                                 {
                                     foreach (var reportCard in reportCardData)
                                     {
-                                        var ReportCard = new ReportCardDetails();
-
                                         var CourseSectionData = this.context?.CourseSection.Include(x => x.StaffCoursesectionSchedule).ThenInclude(x => x.StaffMaster).FirstOrDefault(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.CourseSectionId == reportCard.CourseSectionId && x.CourseId == reportCard.CourseId);
 
-                                        ReportCard.CourseSectionName = CourseSectionData.CourseSectionName;
-
-                                        ReportCard.StaffName = reportCardViewModel.TeacherName == true ? CourseSectionData.StaffCoursesectionSchedule.FirstOrDefault().StaffMaster.FirstGivenName + CourseSectionData.StaffCoursesectionSchedule.FirstOrDefault().StaffMaster.MiddleName + CourseSectionData.StaffCoursesectionSchedule.FirstOrDefault().StaffMaster.LastFamilyName : null;
-                                        ReportCard.PercentMarks = reportCardViewModel.Parcentage == true ? reportCard.PercentMarks : null;
-                                        ReportCard.GradeObtained = reportCard.GradeObtained;
-
-                                        var gradeData = this.context?.Grade.FirstOrDefault(x => x.TenantId == reportCard.TenantId && x.SchoolId == reportCard.SchoolId && x.GradeId == reportCard.StudentFinalGradeStandard.FirstOrDefault().GradeObtained);
+                                        var gradeData = this.context?.Grade.FirstOrDefault(x => x.TenantId == reportCard.TenantId && x.SchoolId == reportCard.SchoolId && x.Title.ToLower() == reportCard.GradeObtained.ToLower() && x.GradeScaleId==reportCard.GradeScaleId);
 
                                         if (gradeData != null)
                                         {
-                                            if (gradeData.Title == "F" || gradeData.Title == "Inc")
-                                            {
-                                                gPaValue = 0;
-                                            }
-                                            else
-                                            {
-                                                CreditHours = CourseSectionData.CreditHours;
-                                                CreditEarned = CourseSectionData.CreditHours;
-                                                gPaValue = CourseSectionData.IsWeightedCourse != true ? gradeData.UnweightedGpValue * (CreditHours / CreditEarned) : gradeData.WeightedGpValue * (CreditHours / CreditEarned);
-                                            }
-                                        }
+                                            CreditHours = CourseSectionData.CreditHours;
+                                            CreditEarned = CourseSectionData.CreditHours;
+                                            gPaValue = CourseSectionData.IsWeightedCourse != true ? gradeData.UnweightedGpValue * (CreditHours / CreditEarned) : gradeData.WeightedGpValue * (CreditHours / CreditEarned);
 
-                                        ReportCard.GPA = gPaValue; //(WeightedGpValue or UnweightedGpValue) of Grade * (CreditEarned/CreditHours)
+                                        }
 
                                         var comments = reportCard.StudentFinalGradeComments.Select(x => x.CourseCommentId).ToList();
-                                        ReportCard.Comments= string.Join(",", comments.Select(x => x.ToString()).ToArray());
-                                        if(reportCard.TeacherComment!=null)
+                                        var Comments = string.Join(",", comments.Select(x => x.ToString()).ToArray());
+
+                                        var studentReportCardDetail = new StudentReportCardDetail()
                                         {
-                                            teacherComments.Add(reportCard.TeacherComment);
-                                            int? index = teacherComments.ToList().Count();
-                                            ReportCard.TeacherComments = index.ToString();
-                                        }
+                                            Id = (long)ide,
+                                            TenantId = reportCardViewModel.TenantId,
+                                            SchoolId = reportCardViewModel.SchoolId,
+                                            StudentId = student.StudentId,
+                                            SchoolYear = reportCardViewModel.AcademicYear.ToString(),
+                                            GradeTitle = GradeLevelTitle,
+                                            MarkingPeriodTitle = MarkingPeriodTitle,
+                                            CourseName = CourseSectionData.CourseSectionName,
+                                            Teacher = reportCardViewModel.TeacherName == true ? CourseSectionData.StaffCoursesectionSchedule.Count > 0 ? CourseSectionData.StaffCoursesectionSchedule.FirstOrDefault().StaffMaster.FirstGivenName + " " + CourseSectionData.StaffCoursesectionSchedule.FirstOrDefault().StaffMaster.MiddleName + " " + CourseSectionData.StaffCoursesectionSchedule.FirstOrDefault().StaffMaster.LastFamilyName : null : null,
+                                            Grade = reportCardViewModel.Parcentage != true ? reportCard.GradeObtained : reportCard.GradeObtained + "(" + reportCard.PercentMarks + ")",
+                                            Gpa = reportCardViewModel.GPA == true ? gPaValue : null,
+                                            Comments = Comments,
+                                            TeacherComments = reportCardViewModel.TeacherComments == true ? reportCard.TeacherComment != null ? (teacherCommentsNo++).ToString() : null:null,
+                                            OverallTeacherComments = reportCard.TeacherComment,
 
-                                        ReportCardMarkingPeriod.reportCardDetails.Add(ReportCard);
+                                            CreatedBy = reportCardViewModel.CreatedBy,
+                                            CreatedOn = DateTime.UtcNow
+
+                                        };
+                                        studentReportCardDetailList.Add(studentReportCardDetail);
+                                        ide++;
+
                                     }
+                                    this.context?.StudentReportCardDetail.AddRange(studentReportCardDetailList);
                                 }
-                                StudentsReportCard.reportCardMarkingPeriodsDetails.Add(ReportCardMarkingPeriod);
-                            }                                                        
-                        }
-                        decimal attendencePercent = 0.0m;
-                        int prasentDay = 0;
 
-                        var calenderData = schoolData.SchoolCalendars.FirstOrDefault(x => x.DefaultCalender == true && x.AcademicYear == reportCardViewModel.AcademicYear);
+                                double attendencePercent = 0;
+                                int prasentDay = 0;
 
-                        if (calenderData != null)
-                        {
-                            DateTime schoolYearStartDate = (DateTime)calenderData.StartDate;
-                            DateTime schoolYearEndDate = (DateTime)calenderData.EndDate;
-                            var daysValue = "0123456";
-                            var weekdays = calenderData.Days;
-                            var WeekOffDays = Regex.Split(daysValue, weekdays);
-                            var WeekOfflist = new List<string>();
-                            foreach (var WeekOffDay in WeekOffDays)
-                            {
-                                Days days = new Days();
-                                var Day = Enum.GetName(days.GetType(), Convert.ToInt32(WeekOffDay));
-                                WeekOfflist.Add(Day);
-                            }
+                                var calenderData = this.context?.SchoolCalendars.FirstOrDefault(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.DefaultCalender == true && x.AcademicYear == reportCardViewModel.AcademicYear);
 
-                            int workDays = 0;
-                            while (schoolYearStartDate != schoolYearEndDate)
-                            {     
-                                if (!WeekOfflist.Contains(schoolYearStartDate.DayOfWeek.ToString()))
+                                if (calenderData != null)
                                 {
-                                    workDays++;
+                                    DateTime schoolYearStartDate = (DateTime)calenderData.StartDate;
+                                    DateTime schoolYearEndDate = (DateTime)calenderData.EndDate;
+                                    var daysValue = "0123456";
+                                    var weekdays = calenderData.Days;
+                                    var WeekOffDays = Regex.Split(daysValue, weekdays);
+                                    var WeekOfflist = new List<string>();
+                                    foreach (var WeekOffDay in WeekOffDays)
+                                    {
+                                        Days days = new Days();
+                                        var Day = Enum.GetName(days.GetType(), Convert.ToInt32(WeekOffDay));
+                                        WeekOfflist.Add(Day);
+                                    }
+
+                                    int workDays = 0;
+                                    while (schoolYearStartDate != schoolYearEndDate)
+                                    {
+                                        if (!WeekOfflist.Contains(schoolYearStartDate.DayOfWeek.ToString()))
+                                        {
+                                            workDays++;
+                                        }
+                                        schoolYearStartDate = schoolYearStartDate.AddDays(1);
+                                    }
+
+                                    var studentPrasentAttendanceData = this.context?.StudentAttendance.Include(x => x.AttendanceCodeNavigation).Where(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.StudentId == student.StudentId && x.AttendanceDate >= calenderData.StartDate && x.AttendanceDate <= calenderData.EndDate).ToList();
+
+                                    if (studentPrasentAttendanceData.Count > 0)
+                                    {
+                                        prasentDay = studentPrasentAttendanceData.Where(x => x.AttendanceCodeNavigation.StateCode.ToLower() == "prasent").Count();
+                                    }
+                                    var df = workDays - absencesInDays;
+                                    attendencePercent = df * 100 / workDays;
+                                    //attendencePercent = ((df / workDays) * 100);
                                 }
-                                schoolYearStartDate = schoolYearStartDate.AddDays(1);
+
+                                var studentReportCardMaster = new StudentReportCardMaster
+                                {
+                                    TenantId = reportCardViewModel.TenantId,
+                                    SchoolId = reportCardViewModel.SchoolId,
+                                    StudentId = student.StudentId,
+                                    SchoolYear = reportCardViewModel.AcademicYear.ToString(),
+                                    GradeTitle = GradeLevelTitle,
+                                    StudentInternalId = studentData.StudentInternalId,
+                                    YodAbsence = absencesInDays,
+                                    YodAttendance = Math.Round(attendencePercent, 2).ToString() + "%",
+                                    ReportGenerationDate = DateTime.UtcNow,
+                                    Absences = Absences,
+                                    ExcusedAbsences = ExcusedAbsences,
+                                    MarkingPeriodTitle = MarkingPeriodTitle,
+                                    CreatedBy = reportCardViewModel.CreatedBy,
+                                    CreatedOn = DateTime.UtcNow
+                                };
+                                studentReportCardMasterList.Add(studentReportCardMaster);
                             }
-
-                            var studentAttendanceData = this.context?.StudentAttendance.Include(x => x.AttendanceCodeNavigation).Where(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId && x.StudentId == student.StudentId && x.AttendanceDate >= calenderData.StartDate && x.AttendanceDate <= calenderData.EndDate).ToList();
-
-                            if (studentAttendanceData.Count > 0)
-                            {
-                                prasentDay = studentAttendanceData.Where(x => x.AttendanceCodeNavigation.StateCode.ToLower() == "prasent").Count();
-                            }
-
-                            attendencePercent = (prasentDay / workDays) * 100;
                         }
-
-                        StudentsReportCard.YearToDateAttendencePercent = attendencePercent;
-                        StudentsReportCard.YearToDateAbsencesInDays = reportCardViewModel.YearToDateDailyAbsences == true ? absencesInDays : null;
-                        reportCardView.studentsReportCardViewModelList.Add(StudentsReportCard);
+                        this.context?.StudentReportCardMaster.AddRange(studentReportCardMasterList);
+                        i++;
                     }
-                    reportCardView.teacherCommentList = teacherComments;
-                    var courseCommentCategoryData = this.context?.CourseCommentCategory.Where(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId).ToList();
-                    if (courseCommentCategoryData.Count > 0)
-                    {
-                        courseCommentCategoryData.ToList().ForEach(x => x.StudentFinalGradeComments = null);
-                        reportCardView.courseCommentCategories = courseCommentCategoryData;
-                    }
+                    this.context?.SaveChanges();
+                    reportCardViewModel._message = "Added Successfully";
                 }
                 else
                 {
-                    reportCardView._failure = true;
-                    reportCardView._message = "Select Student Please";
+                    reportCardViewModel._failure = true;
+                    reportCardViewModel._message = "Select Student Please";
                 }
             }
             catch (Exception es)
             {
-                reportCardView._failure = true;
+                reportCardViewModel._failure = true;
+                reportCardViewModel._message = es.Message;
+            }
+            return reportCardViewModel;
+        }
+
+
+        /// <summary>
+        /// Generate Report Card
+        /// </summary>
+        /// <param name="reportCardViewModel"></param>
+        /// <returns></returns>
+        public async Task<ReportCardViewModel> GenerateReportCard(ReportCardViewModel reportCardViewModel)
+        {
+            ReportCardViewModel reportCardView = new ReportCardViewModel();
+            try
+            {
+                reportCardView.TenantId = reportCardViewModel.TenantId;
+                reportCardView.SchoolId = reportCardViewModel.SchoolId;
+                reportCardView._tenantName = reportCardViewModel._tenantName;
+                reportCardView._userName = reportCardViewModel._userName;
+                string base64 = null;
+                object data = new object();
+
+                List<object> reportCardList = new List<object>();
+                List<object> teacherCommentList = new List<object>();
+             
+                foreach (var student in reportCardViewModel.studentsReportCardViewModelList)
+                {
+                    var studentNameData = this.context?.StudentMaster.FirstOrDefault(x => x.SchoolId == reportCardViewModel.SchoolId && x.TenantId == reportCardViewModel.TenantId && x.StudentId == student.StudentId);
+
+                    var schoolData = this.context?.SchoolMaster.FirstOrDefault(x => x.SchoolId == reportCardViewModel.SchoolId && x.TenantId == reportCardViewModel.TenantId);
+
+                    var studentReportCardData = this.context?.StudentReportCardMaster.Include(x => x.StudentReportCardDetail).Where(x => x.SchoolId == reportCardViewModel.SchoolId && x.TenantId == reportCardViewModel.TenantId && x.SchoolYear == reportCardViewModel.AcademicYear.ToString() && x.StudentId == student.StudentId).ToList();
+
+                    if (studentNameData != null && schoolData != null && studentReportCardData != null)
+                    {
+                        List<object> reportDetailsList = new List<object>();
+                        foreach (var studentReportCard in studentReportCardData)
+                        {                            
+                            var studentReportCardDetailsData = studentReportCard.StudentReportCardDetail.Where(x => x.MarkingPeriodTitle == studentReportCard.MarkingPeriodTitle).ToList();
+
+                            var teacherCommentsData = studentReportCardDetailsData.Where(x => x.OverallTeacherComments != null && x.TeacherComments != null).Select(x => new { x.TeacherComments, x.OverallTeacherComments }).ToList();
+                            
+                            teacherCommentList.AddRange(teacherCommentsData);
+                            object markingPeriodWiseData = new
+                            {
+                                studentReportCard.MarkingPeriodTitle,
+                                studentReportCard.ExcusedAbsences,
+                                studentReportCard.Absences,        
+                                Details = studentReportCardDetailsData,
+                               
+                            };
+                            reportDetailsList.Add(markingPeriodWiseData);
+                        }
+
+                        object reportCard = new
+                        {
+                            SchoolData = schoolData,
+                            studentInternalId = studentReportCardData.FirstOrDefault().StudentInternalId,
+                            gradeTitle = studentReportCardData.FirstOrDefault().GradeTitle,
+                            yodAttendance = studentReportCardData.FirstOrDefault().YodAttendance,
+                            yodAbsence = studentReportCardData.FirstOrDefault().YodAbsence,
+                            ReportdetailsData = reportDetailsList,
+                            StudentName = studentNameData,
+
+                        };
+                        reportCardList.Add(reportCard);
+                    }
+                }
+
+                if (reportCardList != null)
+                {
+                    var courseCommentCategoryData = this.context?.CourseCommentCategory.Where(x => x.TenantId == reportCardViewModel.TenantId && x.SchoolId == reportCardViewModel.SchoolId).ToList();
+
+                    data = new
+                    {
+                        TotalData = reportCardList,
+                        CourseCommentCategoryData = courseCommentCategoryData,
+                        TeacherCommentList = reportCardViewModel.TeacherComments == true ? teacherCommentList : null
+                    };
+                }
+     
+                GenerateReportCard _report = new GenerateReportCard();
+                var message = await _report.Generate(data);
+
+                if(message == "success")
+                {
+                    using (var fileStream = new FileStream(@"ReportCard\\StudentReport.pdf", FileMode.Open))
+                    {
+
+                        using (var memoryStream = new MemoryStream())
+                        {
+                            fileStream.CopyTo(memoryStream);
+                            byte[] bytes = memoryStream.ToArray();
+                            base64 = Convert.ToBase64String(bytes);
+                            fileStream.Close();
+                        }
+                    }
+                    reportCardView.ReportCardPdf = base64;
+                }
+                else
+                {
+                    reportCardView._message = "Problem occur!!! Prlease Try Again";
+                    reportCardView._failure = true;
+                }
+   
+            }
+            catch (Exception es)
+            {
                 reportCardView._message = es.Message;
+                reportCardView._failure = true;
+
             }
             return reportCardView;
         }
-
     }
 }

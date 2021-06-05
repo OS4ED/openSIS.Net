@@ -1,4 +1,4 @@
-<mat-error *ngIf="weekArray.length==0;else fixedSchedule">
+<mat-error *ngIf="weekArray.length==0 && !detailsFromParentModal.editMode;else fixedSchedule">
 Please Select a Calendar.
 </mat-error>
 <ng-template #fixedSchedule>

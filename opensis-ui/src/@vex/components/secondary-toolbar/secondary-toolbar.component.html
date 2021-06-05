@@ -5,8 +5,8 @@
       fxFlex.xs="auto">{{ current }}</h1>
       <h1 *ngIf="schoolSettings" class="flex items-center subheading-2 font-medium m-0 ltr:pr-3 rtl:pl-3 ltr:border-r rtl:border-l ltr:mr-3 rtl:ml-3 cursor-pointer" [matMenuTriggerFor]="menu">{{selectedValue}}<mat-icon class="ml-2" [icIcon]="icDropdown"></mat-icon></h1>
     <ng-content></ng-content>
-    <button class="flex" color="primary" type="button"><mat-icon [icIcon]="icSearch"></mat-icon> <span class="ml-1">Search</span></button>
-    <a class="ml-6 flex" href="https://support.os4ed.com/" target="_blank"><mat-icon [icIcon]="icHelp"></mat-icon> <span class="ml-1">Help</span></a>
+    <button class="flex" color="primary" type="button"><mat-icon [icIcon]="icSearch"></mat-icon> <span class="hidden md:inline-block ml-1">Search</span></button>
+    <a class="ml-6 flex" href="https://support.os4ed.com/" target="_blank"><mat-icon [icIcon]="icHelp"></mat-icon> <span class="hidden md:inline-block ml-1">Help</span></a>
   </div>
 </div>
 

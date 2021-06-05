@@ -1,15 +1,15 @@
 <mat-card class="w-full"  *ngIf="staffCreateMode == staffCreate.EDIT || staffCreateMode == staffCreate.ADD">
     <form #f="ngForm" novalidate appInvalidControlScroll>
 
-    <mat-card-header>
-        <mat-card-title>{{'schoolInformation'|translate}}</mat-card-title>
-    </mat-card-header>
-    <mat-card-content #schoolInfo>
+        <div>
+            <h3 class="mb-6">{{'schoolInformation'|translate}}</h3>
+        </div>
+        <mat-card-content #schoolInfo class="mb-0">
 
         <div @stagger fxLayout="column">
-            <h4 class="text-primary px-4 pb-2">{{'officialInformation'|translate}}</h4>
-                <ul class="grid sm:grid-cols-2 md:grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-2">
-                    <li>
+                <h4 class="text-primary pb-2">{{'officialInformation'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
+                    <li class="md:col-span-2">
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'jobTitle'|translate}}</mat-label>
                         <input #jobTitle="ngModel" name="jobTitle" matInput required [(ngModel)]="staffSchoolInfoModel.jobTitle">
@@ -17,7 +17,6 @@
                         </mat-error>
                     </mat-form-field>
                     </li>
-                    <li></li>
                     <li>
                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                         <mat-label>{{'joiningDate'|translate}}</mat-label>
@@ -68,7 +67,7 @@
                     </li>
                 </ul>
 
-            <div class="flex w-full justify-between items-center px-4 pb-2 pt-10">
+                <div class="flex w-full justify-between items-center pb-2 pt-10">
                 <h4 class="text-primary">{{'schoolInformation'|translate}}</h4>
                 <div class="text-right">
                     <a mat-raised-button color="primary" (click)="addMoreSchoolInfo()">
@@ -78,10 +77,10 @@
             </div>
             <div *ngFor="let info of divCount;let i=index;">
             <div [ngClass]="staffSchoolInfoModel?.staffSchoolInfoList[i]?.hide?'hide':''"
-                class="bg-white shadow-md border border-primary-light hover:border-primary rounded px-4 pt-3 mb-4 mx-4">
+                        class="bg-white shadow-md border border-primary-light hover:border-primary rounded px-4 pt-3 mb-4">
                 <div class="flex flex-wrap w-full justify-between">
-                    <div class="w-11/12 -mx-4">
-                                <ul class="grid sm:grid-cols-2 md:grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-2">
+                            <div class="w-11/12">
+                                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                                     <li>
                                     <mat-form-field class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'school'|translate}}</mat-label>
@@ -135,27 +134,30 @@
             </div>
         </div>
         </div>
-    </mat-card-content>
-        <mat-card-footer class="text-right mx-4 mb-2">
+            <div class="text-right">
             <button mat-button *ngIf="staffCreateMode == staffCreate.EDIT"
                 (click)="cancelEdit()">{{'cancel'|translate}}</button>
-            <button color="primary" class="ml-2" mat-raised-button (click)="submitSchoolInfo()">{{'update'|translate}}</button>
-        </mat-card-footer>
+            <button color="primary" class="ml-2" mat-raised-button
+                (click)="submitSchoolInfo()">{{'update'|translate}}</button>
+            </div>
+        </mat-card-content>
     </form>
 </mat-card>
 
 
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.VIEW">
 
-    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'schoolInformation' | translate}}</h3>
-        <button *ngIf="editPermission" (click)="editSchoolInfo()" mat-raised-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button *ngIf="editPermission" (click)="editSchoolInfo()" mat-raised-button color="primary">
+            <mat-icon [icIcon]="icEdit"></mat-icon> <span class="hidden md:inline-block">{{'editInformation' |translate}}</span>
+        </button>
     </div>
     <mat-card-content>
 
         <div @stagger fxLayout="column">
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'officialInformation'|translate}}</h4>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4">
+            <h4 class="text-primary pt-6 pb-2">{{'officialInformation'|translate}}</h4>
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-6 md:row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'jobTitle' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{staffSchoolInfoModel.jobTitle | EmtyValueCheckPipe}}</p>
@@ -187,8 +189,8 @@
             </ul>
 
             <hr class="-mx-4 mt-6">
-            <h4 class="text-primary pt-6 pb-2 px-4">{{'schoolInformation'|translate}}</h4>
-            <div class="mx-4 mb-3">
+            <h4 class="text-primary pt-6 pb-2">{{'schoolInformation'|translate}}</h4>
+            <div class="mb-3">
                 <table class="w-full table-auto border-collapse border">
                     <thead>
                         <tr>

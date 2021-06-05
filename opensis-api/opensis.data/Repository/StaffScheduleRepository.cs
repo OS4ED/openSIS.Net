@@ -1,4 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using Microsoft.EntityFrameworkCore;
 using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.CourseManager;
@@ -215,20 +240,20 @@ namespace opensis.data.Repository
                                 this.context?.StaffCoursesectionSchedule.Add(staffCoursesectionSchedule);
                             }
                             this.context?.SaveChanges();
-                            staffScheduleViewModel._message = "Staff CourseSection Schedule Added Successfully";
+                            staffScheduleViewModel._message = "Teacher scheduled successfully";
                             staffScheduleViewModel._failure = false;
                         }
                         else
                         {
                             staffScheduleViewModel._failure = true;
-                            staffScheduleViewModel._message = "Select CourseSection For CourseSection Schedule";
+                            staffScheduleViewModel._message = "Select CourseSection For Teacher scheduled ";
                         }
                     }
                 }
                 else
                 {
                     staffScheduleViewModel._failure = true;
-                    staffScheduleViewModel._message = "Select Staff For CourseSection Schedule";
+                    staffScheduleViewModel._message = "Select Staff For Teacher scheduled ";
                 }               
             }
             catch (Exception es)
@@ -263,7 +288,7 @@ namespace opensis.data.Repository
                             var courseSectionCheckData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && c.CourseSectionId == courseSectionCheck.CourseSectionId).ToList();
 
                             var courseSectionIds = courseSectionListCheck.Where(x => x.CourseSectionId != courseSectionCheck.CourseSectionId).Select(s => s.CourseSectionId);
-                            if (courseSectionIds != null)
+                            if (courseSectionIds.Count() > 0)
                             {
                                 var courseSectionInputData = this.context?.AllCourseSectionView.Where(c => c.SchoolId == staffScheduleViewModel.SchoolId && c.TenantId == staffScheduleViewModel.TenantId && courseSectionIds.Contains(c.CourseSectionId)).ToList();
 
@@ -304,8 +329,8 @@ namespace opensis.data.Repository
                                     courseSection.ConflictCourseSection = true;
                                 }
                                 else
-                                { 
-                                    var checkStaffInCourseSection = this.context.StaffCoursesectionSchedule.Where(x => x.TenantId == staffScheduleViewModel.TenantId && x.SchoolId == staffScheduleViewModel.SchoolId && x.StaffId == staff.StaffId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).ToList();
+                                {
+                                    var checkStaffInCourseSection = this.context.StaffCoursesectionSchedule.Where(x => x.TenantId == staffScheduleViewModel.TenantId && x.SchoolId == staffScheduleViewModel.SchoolId && x.StaffId == staff.StaffId && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.IsAssigned == true && x.IsDropped != true).ToList();
 
                                     if (checkStaffInCourseSection.Count() > 0)
                                     {
@@ -352,7 +377,7 @@ namespace opensis.data.Repository
                         else
                         {
                             staffScheduleViewModel._failure = true;
-                            staffScheduleViewModel._message = "Select CourseSection For CourseSection Schedule";
+                            staffScheduleViewModel._message = "Select CourseSection For Teacher scheduled";
                             return staffScheduleViewModel;
                         }
                     }
@@ -360,7 +385,7 @@ namespace opensis.data.Repository
                 else
                 {
                     staffScheduleViewModel._failure = true;
-                    staffScheduleViewModel._message = "Select Staff For CourseSection Schedule";
+                    staffScheduleViewModel._message = "Select Staff For Teacher scheduled";
                     return staffScheduleViewModel;
                 }
             }
@@ -441,7 +466,9 @@ namespace opensis.data.Repository
                         CourseSections.DurationStartDate = scheduledCourseSection.DurationStartDate;
                         CourseSections.DurationEndDate = scheduledCourseSection.DurationEndDate;
                         CourseSections.MeetingDays = scheduledCourseSection.MeetingDays;
-                        
+                        CourseSections.GradeScaleType = scheduledCourseSection.CourseSection.GradeScaleType;
+                        CourseSections.UsedStandard = scheduledCourseSection.CourseSection.UseStandards;
+
                         scheduledCourseSectionView.courseSectionViewList.Add(CourseSections);
                     }
                 }
@@ -554,7 +581,7 @@ namespace opensis.data.Repository
                         if(courseSection.StaffCoursesectionSchedule.Count() > 0)
                         {
                             var checkStaffInCourseSection = this.context.StaffCoursesectionSchedule.Where(x => x.TenantId == staffListViewModel.TenantId && x.SchoolId == staffListViewModel.SchoolId && x.StaffId == staffListViewModel.ReScheduleStaffId
-                                                    && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId).ToList();
+                                                    && x.CourseId == courseSection.CourseId && x.CourseSectionId == courseSection.CourseSectionId && x.IsAssigned == true && x.IsDropped != true).ToList();
 
                             if (checkStaffInCourseSection.Count() > 0)
                             {

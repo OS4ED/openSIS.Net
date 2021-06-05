@@ -1,14 +1,19 @@
-<mat-card class="w-full p-0" fxFlex="auto">
-    <div class="flex items-center mx-6 py-4" fxLayout="row" fxLayoutAlign="center center">
+<mat-card class="w-full" fxFlex="auto">
+    <div class="flex items-center pb-4" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'documents' | translate}}</h3>
-        <button *ngIf="addPermission" mat-raised-button color="primary" (click)="toggleDisplayDiv()"><mat-icon [icIcon]="icUpload" class="mr-1"></mat-icon> {{'uploadDocument' |translate}}</button>
+        <button *ngIf="addPermission" mat-raised-button color="primary" (click)="toggleDisplayDiv()">
+            <mat-icon [icIcon]="icUpload" class="mr-1"></mat-icon><span
+                class="ml-2 hidden md:inline-block">{{'uploadDocument' |translate}}</span>
+        </button>
     </div>
 
-    
-    <div class="mx-6 mb-6" [hidden]="isShowDiv">
-        <ngx-dropzone (change)="onSelect($event)" [accept]="'image/*,application/pdf,.txt,.docx,.doc,.psd,.xls,.xlsx'" class="custom-dropzone">
+
+    <div class="mb-6" [hidden]="isShowDiv">
+        <ngx-dropzone (change)="onSelect($event)" [accept]="'image/*,application/pdf,.txt,.docx,.doc,.psd,.xls,.xlsx'"
+            class="custom-dropzone">
             <ngx-dropzone-label>
-                <p class="text-lg mt-12"><span class="text-primary">{{'clickHere' | translate}}</span> {{ 'toBrowseFiles' | translate}}(20 MB max)</p>
+                <p class="text-lg mt-12"><span class="text-primary">{{'clickHere' | translate}}</span> {{
+                    'toBrowseFiles' | translate}}(20 MB max)</p>
                 <p class="my-2">or</p>
                 <p class="text-lg">{{ 'dropFilesHereToUpload' | translate}}(20 MB max)</p>
             </ngx-dropzone-label>
@@ -17,62 +22,67 @@
             </ngx-dropzone-preview>
         </ngx-dropzone>
         <div class="text-center mt-4" *ngIf="uploadSuccessfull === false">
-            <button mat-raised-button color="primary" (click)="uploadFile()"><mat-icon [icIcon]="icUpload" class="mr-1"></mat-icon> {{'uploadSelectedFiles' |translate}}</button>
+            <button mat-raised-button color="primary" (click)="uploadFile()">
+                <mat-icon [icIcon]="icUpload" class="mr-1"></mat-icon> {{'uploadSelectedFiles' |translate}}
+            </button>
         </div>
     </div>
+    <div class="overflow-auto border -mx-4">
+        <table @stagger mat-table [dataSource]="StudentDocumentModelList" class="mat-elevation-z8 table-auto w-full"
+            matSort>
+            <ng-container matColumnDef="fileUploaded">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'file'|translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    <a (click)="downloadFile(element.filename,element.filetype,element.fileUploaded)"
+                        class="text-primary cursor-pointer"> {{element.filename}}</a>
+                </td>
+            </ng-container>
 
-    <table @stagger mat-table [dataSource]="StudentDocumentModelList" class="mat-elevation-z8 table-auto w-full" matSort>
-        <ng-container matColumnDef="fileUploaded">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'file'|translate}}</th>
-            <td mat-cell *matCellDef="let element">
-                <a (click)="downloadFile(element.filename,element.filetype,element.fileUploaded)" class="text-primary cursor-pointer"> {{element.filename}}</a>
-            </td>
-        </ng-container>
+            <!-- Body -->
+            <ng-container matColumnDef="uploadedBy">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'uploadedBy'|translate}}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.uploadedBy}}
+                </td>
+            </ng-container>
 
-        <!-- Body -->
-        <ng-container matColumnDef="uploadedBy">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'uploadedBy'|translate}}
-            </th>
-            <td mat-cell *matCellDef="let element">
-                {{element.uploadedBy}}
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="uploadedOn">
+                <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'uploadedOn'|translate}}
+                </th>
+                <td mat-cell *matCellDef="let element">
+                    {{element.uploadedOn|transformDateTimePipe}}
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="uploadedOn">
-            <th mat-header-cell *matHeaderCellDef mat-sort-header class="uppercase">{{'uploadedOn'|translate}}
-            </th>
-            <td mat-cell *matCellDef="let element">
-                {{element.uploadedOn|transformDateTimePipe}}
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="action">
+                <th mat-header-cell *matHeaderCellDef class="uppercase">{{'action'|translate}}</th>
+                <td mat-cell *matCellDef="let element">
+                    <a (click)='confirmDelete(element)' class="cursor-pointer">
+                        <mat-icon [icIcon]="icDelete"></mat-icon>
+                    </a>
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="action">
-            <th mat-header-cell *matHeaderCellDef class="uppercase">{{'action'|translate}}</th>
-            <td mat-cell *matCellDef="let element">                
-                <a (click)= 'confirmDelete(element)' class="cursor-pointer">
-                    <mat-icon [icIcon]="icDelete"></mat-icon>
-                </a>
-            </td>
-        </ng-container>
+            <ng-container matColumnDef="loading">
+                <mat-footer-cell *matFooterCellDef colspan="3">
+                    <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                </mat-footer-cell>
+            </ng-container>
+            <ng-container matColumnDef="noData">
+                <td mat-footer-cell *matFooterCellDef colspan="3">
+                    No Data
+                </td>
+            </ng-container>
 
-        <ng-container matColumnDef="loading">
-            <mat-footer-cell *matFooterCellDef colspan="3">
-              <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
-            </mat-footer-cell>
-          </ng-container>
-          <ng-container matColumnDef="noData">
-            <td mat-footer-cell *matFooterCellDef colspan="3">
-              No Data
-            </td>
-          </ng-container>
+            <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
+            <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
+            <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
+            <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="StudentDocumentModelList?.data.length!=0">
+            </tr>
 
-          <tr mat-header-row *matHeaderRowDef="visibleColumns"></tr>
-          <tr mat-row *matRowDef="let row; columns: visibleColumns" @fadeInUp></tr>
-          <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
-          <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="StudentDocumentModelList?.data.length!=0"></tr>
-
-    </table>
-    
+        </table>
+    </div>
 
 </mat-card>
 

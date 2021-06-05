@@ -1,4 +1,29 @@
-﻿using opensis.data.Interface;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.User;
 using System;
@@ -45,7 +70,7 @@ namespace opensis.data.Repository
                 ReturnModel._tenantName = objModel._tenantName;
                 //var encryptedPassword = EncodePassword(objModel.Password);
                 var user = this.context?.UserMaster.Include(x => x.Membership).Where(x => x.EmailAddress == objModel.Email && x.TenantId == objModel.TenantId
-                  && x.PasswordHash == passwordHash && (x.MembershipId==1 || x.MembershipId == 2 || x.MembershipId == 3)).FirstOrDefault();
+                  && x.PasswordHash == passwordHash && (x.MembershipId==1 || x.MembershipId == 2 || x.MembershipId == 3 || x.MembershipId == 4)).FirstOrDefault();
                 var correctEmailList = this.context?.UserMaster.Where(x => x.EmailAddress.Contains(objModel.Email)).ToList();
                 var correctPasswordList = this.context?.UserMaster.Where(x => x.PasswordHash == passwordHash).ToList();
                 if (user == null && correctEmailList.Count > 0 && correctPasswordList.Count == 0)
@@ -119,7 +144,7 @@ namespace opensis.data.Repository
                     RolePermissionListViewModel rolePermissionListView = new RolePermissionListViewModel();
                     rolePermissionListView.PermissionList = new List<RolePermissionViewModel>();
 
-                    var permissionGroup = this.context?.PermissionGroup.Select(pg => new PermissionGroup
+                    var permissionGroup = this.context?.PermissionGroup.Where(x => x.IsActive==true).Select(pg => new PermissionGroup
                     {
                         PermissionGroupId = pg.PermissionGroupId,
                         TenantId = pg.TenantId,

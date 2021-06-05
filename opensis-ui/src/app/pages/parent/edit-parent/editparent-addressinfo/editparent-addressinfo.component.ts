@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, Input, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import { FormBuilder, FormControl, FormGroup, NgForm, Validators } from '@angular/forms';
 import { fadeInUp400ms } from '../../../../../@vex/animations/fade-in-up.animation';
@@ -33,11 +58,11 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
   icAdd = icAdd;
   icClear = icClear;
   icEdit = icEdit;
-  @Input() parentDetailsForViewAndEdit;
+  parentDetailsForViewAndEdit;
   @ViewChild('f') currentForm: NgForm;
   f: NgForm;
   parentCreate = SchoolCreate;
-  @Input() parentCreateMode: SchoolCreate;
+  parentCreateMode: SchoolCreate;
   addParentInfoModel: AddParentInfoModel = new AddParentInfoModel();
   countryModel: CountryModel = new CountryModel();
   countryListArr = [];
@@ -60,10 +85,17 @@ export class EditparentAddressinfoComponent implements OnInit,OnDestroy {
               private imageCropperService: ImageCropperService,
               private cryptoService: CryptoService) {
     translateService.use('en');
-
   }
 
   ngOnInit(): void {   
+    this.parentInfoService.parentDetailsForViewedAndEdited.subscribe((res)=>{
+      this.parentDetailsForViewAndEdit = res;
+    });
+
+    this.parentInfoService.parentCreatedMode.subscribe((res)=>{
+      this.parentCreateMode = res;
+    });
+
     this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
     this.permissionGroup = this.permissionListViewModel?.permissionList.find(x => x.permissionGroup.permissionGroupId === 4);
     const permissionCategory = this.permissionGroup.permissionGroup.permissionCategory.find(x => x.permissionCategoryId === 9);

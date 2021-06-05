@@ -1,71 +1,115 @@
-<div class="overview-content w-9/12 m-auto card px-6 py-4">
+<div class="overview-content w-9/12 m-auto card px-4 py-4">
     <ul class="grid lg:grid-cols-3 md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
         <li>
             <label class="text-sm leading-5 text-gray">{{'courseSectionName' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">CHEM0001</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseSection.courseSectionName}}</p>
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'course' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Chemistry</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{selectedCourseSection.courseTitle}}</p>
+            <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Chemistry</p> -->
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'subject' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Science</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                {{singleCourseSection?.courseSection?.course?.courseSubject}}</p>
+            <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Science</p> -->
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'calendar' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Academic Calendar</p>
-        </li>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{singleCourseSection?.courseSection?.schoolCalendars?.title}}</p>
+            <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Academic Calendar</p> -->
+            
+        </li><!-- 
         <li>
             <label class="text-sm leading-5 text-gray">{{'calendar' | translate}}</label>
             <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Main</p>
-        </li>
+        </li> -->
         <li>
             <label class="text-sm leading-5 text-gray">{{'creditHours' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">3.00</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                {{singleCourseSection?.courseSection?.creditHours}}</p>
+            <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">3.00</p> -->
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'seats' | translate}}</label>
             <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><span
-                    class="pr-2 border-r border-gray">20</span><span class="pl-2 text-green font-semibold">10 {{
+                    class="pr-2 border-r border-gray">{{singleCourseSection?.courseSection?.seats}}</span><span class="pl-2 text-green font-semibold">
+                        {{singleCourseSection?.availableSeat}} {{
                     'available' | translate }}</span></p>
+            <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><span
+                class="pr-2 border-r border-gray">20</span><span class="pl-2 text-green font-semibold">10 {{
+                'available' | translate }}</span></p> -->
         </li>
         <li>
             <label class="text-sm leading-5 text-gray">{{'attendanceCategory' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">School Default</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                {{singleCourseSection?.courseSection?.attendanceCodeCategories?.title| EmtyValueCheckPipe}}</p>
+            <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">School Default</p> -->
         </li>
     </ul>
     <div class="flex items-center flex-wrap">
         <p class="pr-4 mb-2">
-            <mat-icon class="mr-1 align-middle">check_box</mat-icon> {{ 'courseIsWeighted' | translate }}
+            <span *ngIf="singleCourseSection?.courseSection?.isWeightedCourse">
+                <mat-icon class="mr-1 align-middle">check_box</mat-icon>
+            </span>
+            <span *ngIf="singleCourseSection?.courseSection?.isWeightedCourse ==false">
+                <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon>
+            </span> {{ 'courseIsWeighted' | translate }}
         </p>
         <p class="pr-4 mb-2">
-            <mat-icon class="mr-1 align-middle">check_box</mat-icon> {{ 'useStandards' | translate }}
+            <span *ngIf="singleCourseSection?.courseSection?.useStandards">
+                <mat-icon class="mr-1 align-middle">check_box</mat-icon>
+            </span>
+            <span *ngIf="singleCourseSection?.courseSection?.useStandards ==false">
+                <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon>
+            </span> 
+            {{ 'useStandards' | translate }}
         </p>
         <p class="pr-4 mb-2">
-            <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon> {{ 'affectsClassRank' |
-            translate }}
+            <span *ngIf="singleCourseSection?.courseSection?.affectsClassRank">
+                <mat-icon class="mr-1 align-middle">check_box</mat-icon>
+            </span>
+            <span *ngIf="singleCourseSection?.courseSection?.affectsClassRank ==false">
+                <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon>
+            </span>
+             {{ 'affectsClassRank' | translate }}
         </p>
         <p class="pr-4 mb-2">
-            <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon> {{ 'affectsHonorRoll' |
-            translate }}
+            <span *ngIf="singleCourseSection?.courseSection?.affectsHonorRoll">
+                <mat-icon class="mr-1 align-middle">check_box</mat-icon>
+            </span>
+            <span *ngIf="singleCourseSection?.courseSection?.affectsHonorRoll ==false">
+                <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon>
+            </span>
+             {{ 'affectsHonorRoll' | translate }}
         </p>
         <p class="pr-4 mb-2">
-            <mat-icon class="mr-1 align-middle">check_box</mat-icon> {{ 'onlineClassRoom' | translate }}
+            <span *ngIf="singleCourseSection?.courseSection?.onlineClassRoom">
+                <mat-icon class="mr-1 align-middle">check_box</mat-icon>
+            </span>
+            <span *ngIf="singleCourseSection?.courseSection?.onlineClassRoom ==false">
+                <mat-icon class="mr-1 align-middle">check_box_outline_blank</mat-icon>
+            </span> {{ 'onlineClassRoom' | translate }}
         </p>
     </div>
-    <mat-divider class="-mx-6 my-4"></mat-divider>
+    <mat-divider *ngIf="singleCourseSection?.courseSection?.useStandards || singleCourseSection?.courseSection?.onlineClassRoom" class="-mx-6 my-4"></mat-divider>
     <ul class="grid lg:grid-cols-3 md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
-        <li>
+        <li *ngIf="singleCourseSection?.courseSection?.useStandards">
             <label class="text-sm leading-5 text-gray">{{'standardGradeScale' | translate}}</label>
-            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Main Standard Grade Scale</p>
+            <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">{{singleCourseSection?.standardGradeScaleName|EmtyValueCheckPipe}}</p>
+            <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Main Standard Grade Scale</p> -->
         </li>
-        <li>
+        <li *ngIf="singleCourseSection?.courseSection?.onlineClassRoom">
             <div (click)="addUrl()" *ngIf="hideUrl">
                 <label class="text-sm leading-5 text-gray">{{'onlineClassroomUrl' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 flex">
                     <span
-                        class="truncate w-60 inline-block text-blue mr-4">https://us04web.zoom.us/j/783452aj567890543</span>
+                        class="truncate w-60 inline-block text-blue mr-4">
+                        {{singleCourseSection?.courseSection?.onlineClassroomUrl|EmtyValueCheckPipe}}
+                    </span>
+                    <!-- <span
+                        class="truncate w-60 inline-block text-blue mr-4">https://us04web.zoom.us/j/783452aj567890543</span> -->
                     <span class="cursor-pointer">
                         <mat-icon [icIcon]="icEdit"></mat-icon>
                     </span>
@@ -74,15 +118,17 @@
             <div *ngIf="showUrlInput">
                 <mat-form-field class="w-full" appearance="outline" color="primary">
                     <mat-label>{{ "onlineClassroomUrl" | translate }}</mat-label>
-                    <input matInput value="https://us04web.zoom.us/j/783452aj567890543">
+                    <input matInput  [(ngModel)]="singleCourseSection.courseSection.onlineClassroomUrl">
                 </mat-form-field>
             </div>
         </li>
-        <li>
-            <div (click)="addPassword()" *ngIf="hidePassword">
+        <li *ngIf="singleCourseSection?.courseSection?.onlineClassRoom">
+            <div [cdkCopyToClipboard]="singleCourseSection?.courseSection?.onlineClassroomPassword" *ngIf="hidePassword">
                 <label class="text-sm leading-5 text-gray">{{'onlineClassroomPassword' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2 flex">
-                    <span>UJX12345</span>
+                    <!-- <span>UJX12345</span>  -->
+                    <span
+                    >{{singleCourseSection?.courseSection?.onlineClassroomPassword|EmtyValueCheckPipe}}</span>
                     <span class="cursor-pointer">
                         <mat-icon class="pl-2 text-blue">content_copy</mat-icon>
                     </span>
@@ -92,9 +138,10 @@
                 <div class="grid grid-cols-3 col-gap-4">
                     <mat-form-field class="col-span-2 w-full mb-0 mr-4" appearance="outline" color="primary">
                         <mat-label>{{ "onlineClassroomPassword" | translate }}</mat-label>
-                        <input matInput value="UJX12345">
+                        <input matInput [(ngModel)]="singleCourseSection.courseSection.onlineClassroomPassword">
                     </mat-form-field>
-                    <button mat-flat-button color="primary" class="col-span-1">{{ "save" | translate
+                    <button mat-flat-button color="primary" class="col-span-1"
+                    (click)="updateClassroomUrlandPassword()">{{ "save" | translate
                         }}</button>
                 </div>
             </div>
@@ -105,28 +152,119 @@
         <h4 class="text-green font-semibold mb-2 text-lg">{{ 'duration' | translate }}</h4>
         <ul class="grid md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
             <li>
-                <label class="text-sm leading-5 text-gray">{{'markingPeriod' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"><span class="font-semibold">Quarter
-                        3</span> - Mar 10, 2021 to Jun 09, 2021</p>
+                <div *ngIf="singleCourseSection?.courseSection?.durationBasedOnPeriod; else anoter" >
+                    <label class="text-sm leading-5 text-gray">{{'markingPeriod' | translate}}</label>
+                    <p *ngIf="singleCourseSection?.courseSection?.quarters != null; else second" 
+                    class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                        <span class="font-semibold">{{singleCourseSection?.courseSection?.quarters?.title}}</span>
+                        - {{singleCourseSection?.courseSection?.quarters?.startDate|date}} to {{singleCourseSection?.courseSection?.quarters?.endDate|date}} 
+                        </p>
+                        <ng-template #second>
+                            <p *ngIf="singleCourseSection?.courseSection?.semesters != null; else third" 
+                            class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                <span class="font-semibold">{{singleCourseSection?.courseSection?.semesters?.title}}</span> 
+                                - {{singleCourseSection?.courseSection?.semesters?.startDate|date}} to {{singleCourseSection?.courseSection?.semesters?.endDate|date}} 
+                                </p>
+                        </ng-template>
+                        <ng-template #third>
+                            <p *ngIf="singleCourseSection?.courseSection?.schoolYears != null" 
+                            class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                                <span class="font-semibold">{{singleCourseSection?.courseSection?.schoolYears?.title}}</span> 
+                                - {{singleCourseSection?.courseSection?.schoolYears?.startDate|date}} to {{singleCourseSection?.courseSection?.schoolYears?.endDate|date}} 
+                                </p>
+                        </ng-template>
+                        <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            <span class="font-semibold">Quarter 3</span> 
+                            - Mar 10, 2021 to Jun 09, 2021
+                        </p> -->
+                        
+                </div>
+                <ng-template #anoter>
+                    <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                            - {{singleCourseSection?.courseSection?.durationStartDate|date}} to {{singleCourseSection?.courseSection?.durationStartDate|date}}
+                        </p> 
+                </ng-template>
+                
             </li>
         </ul>
     </div>
     <mat-divider class="-mx-6 my-4"></mat-divider>
     <div>
         <h4 class="font-semibold mb-2 text-lg">
-            <span class="text-green">{{ 'scheduleType' | translate }}</span> : {{ 'fixedSchedule' | translate }}</h4>
+            <!-- <span class="text-green">{{ 'scheduleType' | translate }}</span> : {{ 'fixedSchedule' | translate }} -->
+            <span class="text-green">{{ 'scheduleType' | translate }}</span> : {{ selectedCourseSection?.scheduleType | translate }}
+        </h4>
+            
         <ul class="grid lg:grid-cols-3 md:grid-cols-2 col-gap-6 row-gap-6 mb-6">
             <li>
                 <label class="text-sm leading-5 text-gray">{{'room' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Room 101</p>
+                <p *ngIf="singleCourseSection?.courseFixedSchedule!=null" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseFixedSchedule?.rooms?.title}}
+                </p>
+                <p *ngIf="singleCourseSection?.courseCalendarSchedule.length!=0" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseCalendarSchedule[0]?.rooms?.title}}
+                    <!-- <span *ngFor="let CalendarSchedule of singleCourseSection?.courseCalendarSchedule">
+                        {{CalendarSchedule?.rooms?.title}}
+                    </span> -->
+                </p>
+                <p *ngIf="singleCourseSection?.courseBlockSchedule.length!=0" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseBlockSchedule[0]?.rooms?.title}}
+                    <!-- <span *ngFor="let BlockSchedule of singleCourseSection?.courseBlockSchedule">
+                        {{BlockSchedule?.rooms?.title}}
+                    </span> -->
+                </p>
+                <p *ngIf="singleCourseSection?.courseVariableSchedule.length!=0" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseVariableSchedule[0]?.rooms?.title}}
+                    <!-- <span *ngFor="let VariableSchedule of singleCourseSection?.courseVariableSchedule">
+                        {{VariableSchedule?.rooms?.title}}
+                    </span> -->
+                </p>
+                <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{getRoomTitle(selectedCourseSection)}}</p> -->
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'period' | translate}}</label>
-                <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">Perod 1</p>
+                <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2"> {{getPeriodTitle(selectedCourseSection)}}</p> -->
+                <p *ngIf="singleCourseSection?.courseFixedSchedule!=null" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseFixedSchedule?.blockPeriod?.periodTitle}}
+                </p>
+                <p *ngIf="singleCourseSection?.courseCalendarSchedule.length!=0" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseCalendarSchedule[0]?.blockPeriod?.periodTitle}}
+                </p>
+                <p *ngIf="singleCourseSection?.courseBlockSchedule.length!=0" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseBlockSchedule[0]?.blockPeriod?.periodTitle}}
+                </p>
+                <p *ngIf="singleCourseSection?.courseVariableSchedule.length!=0" 
+                class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    {{singleCourseSection?.courseVariableSchedule[0]?.blockPeriod?.periodTitle}}
+                </p>
             </li>
             <li>
                 <label class="text-sm leading-5 text-gray">{{'meetingDays' | translate}}</label>
                 <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
+                    <span *ngIf="singleCourseSection?.courseFixedSchedule!=null; else otherSchedule">
+                        <span
+                        class="w-5 h-5 text-center text-xs rounded
+                        inline-block text-white mr-1 font-medium"
+                        [class.bg-primary]="meatingDays.includes(i+1)"
+                        [class.bg-gray-light]="meatingDays.includes(i+1)==false" 
+                        *ngFor="let day of weekArray, index as i">
+                            {{day}}
+                        </span>
+                    </span>
+                    <ng-template #otherSchedule>
+                        {{selectedCourseSection?.scheduleType}}
+                    </ng-template>
+                </p>
+              
+                <!-- <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
                     <span
                         class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">S</span>
                     <span
@@ -141,10 +279,10 @@
                         class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">F</span>
                     <span
                         class="w-5 h-5 text-center text-xs bg-gray-light rounded inline-block text-white mr-1 font-medium">S</span>
-                </p>
+                </p> -->
             </li>
         </ul>
-        <div class="mb-4">
+        <div class="mb-4" *ngIf="singleCourseSection?.courseFixedSchedule?.attendanceTaken">
             <span class="mr-2 bg-black rounded inline-block text-white w-6 h-6 p-1 align-middle">
                 <mat-icon [icIcon]="icHowtoReg" class="text-base align-middle"></mat-icon>
             </span>{{ 'attendanceEnabled' | translate }}

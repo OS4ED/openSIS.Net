@@ -1,12 +1,12 @@
 <form (ngSubmit)="f.form.valid && submit()" #f="ngForm" novalidate *ngIf="parentCreateMode == parentCreate.EDIT">
     <mat-card class="w-full">
 
-        <h3 class="mx-2 pt-1">{{'addressInformation'|translate}}</h3>
+        <h3 class="pt-1">{{'addressInformation'|translate}}</h3>
         <mat-card-content>
 
             <div @stagger fxLayout="column">
-                <h4 class="text-blue px-2 pt-6">{{'homeAddress'|translate}}</h4>
-                <ul class="grid grid-cols-2 col-gap-8 row-gap-0 mt-2 mx-2">
+                <h4 class="text-blue pt-6 pb-2">{{'homeAddress'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress1'|translate}}</mat-label>
@@ -64,7 +64,7 @@
                 </ul>
 
 
-                <div class="px-2 pt-3 mb-4 text-right">
+                <div class="pt-3 mb-4 text-right">
                     <button color="primary" mat-raised-button>{{'update'|translate}}</button>
                 </div>
             </div>
@@ -77,19 +77,19 @@
     <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressInformation' | translate}}</h3>
         <button *ngIf="editPermission" mat-raised-button (click)="editAddressContactInfo()" color="primary">
-            <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
+            <mat-icon class="md:mr-2">edit</mat-icon> <span class="hidden md:inline-block">{{'editInformation' |translate}}</span>
         </button>
     </div>
     <mat-card-content>
 
         <div @stagger fxLayout="column">
-            <div class="flex w-full items-center pt-4 pb-2 mx-2">
+            <div class="flex w-full items-center pt-4 pb-2">
                 <h4 class="text-blue mr-4">{{'homeAddress'|translate}} &nbsp; <span class="text-gray-light">|</span></h4>
                 <a (click)="showOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
             </div>
             <p *ngIf="addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame" class="mb-6"><span class="same-as-home-address">Same as Student's Home Address</span></p>
             <p *ngIf="!addParentInfoModel.parentInfo.parentAddress[0].studentAddressSame" class="mb-6"><span class="different-from-home-address">Different from Student's Home Address</span></p>
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-2 mb-6">
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">

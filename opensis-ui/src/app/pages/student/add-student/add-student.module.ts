@@ -55,7 +55,6 @@ import { AddAssignCourseComponent } from './student-course-schedule/add-assign-c
 import { MatDividerModule } from '@angular/material/divider';
 import { CalendarModule as AngularCalendarModule, DateAdapter } from 'angular-calendar';
 import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
-import { ScheduleDetailsComponent } from './student-course-schedule/schedule-details/schedule-details.component';
 import { StudentTranscriptComponent } from './student-transcript/student-transcript.component';
 import { StudentAttendanceComponent } from './student-attendance/student-attendance.component';
 import { StudentReportCardComponent } from './student-report-card/student-report-card.component';
@@ -68,6 +67,8 @@ import { AddNurseVisitComponent } from './student-medicalinfo/add-nurse-visit/ad
 import { MatDialogModule } from '@angular/material/dialog';
 import { AddDaysScheduleModule } from '../../scheduling/schedule-teacher/add-days-schedule/add-days-schedule.module';
 import { AddStudentRoutingModule } from './add-student-routing';
+import { OwlDateTimeModule, OwlNativeDateTimeModule } from 'ng-pick-datetime';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
 // import { TruncatePipe } from '../../../pipe/truncate.pipe';
 
 @NgModule({
@@ -88,7 +89,6 @@ import { AddStudentRoutingModule } from './add-student-routing';
     ViewStudentAddressandcontactsComponent,
     StudentCourseScheduleComponent,
     AddAssignCourseComponent,
-    ScheduleDetailsComponent,
     StudentTranscriptComponent,
     StudentAttendanceComponent,
     StudentReportCardComponent,
@@ -143,9 +143,12 @@ import { AddStudentRoutingModule } from './add-student-routing';
     CustomFieldModule,
     CustomFieldWithoutFormModule,
     MatTabsModule,
+    OwlDateTimeModule, 
+    OwlNativeDateTimeModule,
     MatDividerModule,
     MatDialogModule,
-    AddDaysScheduleModule
+    AddDaysScheduleModule,
+    NgxDocViewerModule
   ],
   providers: [
     // DatePipe

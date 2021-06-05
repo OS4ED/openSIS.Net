@@ -96,10 +96,10 @@
     </div>
 </div>
 <hr />
-<mat-error class="mx-8" *ngIf="showError">
+<mat-error class="mx-8" *ngIf="showError && !detailsFromParentModal.editMode">
     Please Select a Calendar.
 </mat-error>
-<mat-error class="mx-8" *ngIf="showMarkingPeriodError">
+<mat-error class="mx-8" *ngIf="showMarkingPeriodError && !detailsFromParentModal.editMode">
     Please select valid duration.
 </mat-error>
 <div class="flex justify-between items-center" *ngIf="!showError && !showMarkingPeriodError">

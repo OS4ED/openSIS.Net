@@ -1,10 +1,41 @@
-﻿using opensis.data.Helper;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using Newtonsoft.Json;
+using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.CommonModel;
 using opensis.data.ViewModels.Membership;
+using opensis.data.ViewModels.StaffSchedule;
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -891,32 +922,19 @@ namespace opensis.data.Repository
 
                 dashboardView.SchoolName = this.context?.SchoolMaster.FirstOrDefault(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId)?.SchoolName;
 
-                dashboardView.TotalStudent= this.context?.StudentMaster.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.IsActive == true).ToList().Count();
+                dashboardView.TotalStudent= this.context?.StudentMaster.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.IsActive == true).Count();
 
                 //dashboardView.TotalParent = this.context?.ParentAssociationship.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Associationship == true).Select(s => new { s.TenantId, s.SchoolId, s.ParentId }).Distinct().ToList().Count();
 
-                dashboardView.TotalStaff= this.context?.StaffMaster.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId).ToList().Count();
+                dashboardView.TotalStaff= this.context?.StaffMaster.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId).Count();
 
-                dashboardView.TotalParent = this.context?.ParentAssociationship.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Associationship == true).Select(x => x.ParentId).ToList().Distinct().Count();
+                dashboardView.TotalParent = this.context?.ParentAssociationship.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Associationship == true).Select(x => x.ParentId).Distinct().Count();
 
                 var notice = this.context?.Notice.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.Isactive == true && (x.ValidFrom <= todayDate && todayDate <= x.ValidTo)).OrderByDescending(x => x.ValidFrom).FirstOrDefault();
                 if (notice != null)
                 {
                     dashboardView.NoticeTitle = notice.Title;
                     dashboardView.NoticeBody = notice.Body;
-                }
-
-                var defaultCalender = this.context?.SchoolCalendars.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && x.DefaultCalender == true).FirstOrDefault();
-                if (defaultCalender != null)
-                {
-                    dashboardView.schoolCalendar = defaultCalender;
-                    dashboardView.schoolCalendar.SchoolMaster = null;
-
-                    var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalender.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true) /*&&(x.StartDate >= todayDate || (x.StartDate <= todayDate && todayDate <= x.EndDate))*/).ToList();
-                    if (Events.Count > 0)
-                    {
-                        dashboardView.calendarEventList = Events;
-                    }
                 }
 
                 dashboardView._tenantName = dashboardViewModel._tenantName;
@@ -1196,6 +1214,386 @@ namespace opensis.data.Repository
                 gradeEducationalStageListModel._token = gradeEducationalStageListViewModel._token;
             }
             return gradeEducationalStageListModel;
+        }
+
+        /// <summary>
+        /// Get Dashboard View For Staff
+        /// </summary>
+        /// <param name="scheduledCourseSectionViewModel"></param>
+        /// <returns></returns>
+        public ScheduledCourseSectionViewModel GetDashboardViewForStaff(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel scheduledCourseSectionView = new ScheduledCourseSectionViewModel();
+            List<StaffCoursesectionSchedule> staffCoursesectionScheduleList = new List<StaffCoursesectionSchedule>();
+            try
+            {
+                var todayDate = DateTime.Today;
+
+                scheduledCourseSectionView.TenantId = scheduledCourseSectionViewModel.TenantId;
+                scheduledCourseSectionView._tenantName = scheduledCourseSectionViewModel._tenantName;
+                scheduledCourseSectionView.SchoolId = scheduledCourseSectionViewModel.SchoolId;
+                scheduledCourseSectionView.StaffId = scheduledCourseSectionViewModel.StaffId;
+                scheduledCourseSectionView._token = scheduledCourseSectionViewModel._token;
+                scheduledCourseSectionView._userName = scheduledCourseSectionViewModel._userName;
+                scheduledCourseSectionView.AllCourse = scheduledCourseSectionViewModel.AllCourse;
+
+                var scheduledCourseSectionData = this.context?.StaffCoursesectionSchedule.Include(x => x.CourseSection).Include(x => x.CourseSection.Course).Include(x => x.CourseSection.SchoolCalendars).Where(x => x.TenantId == scheduledCourseSectionViewModel.TenantId && x.SchoolId == scheduledCourseSectionViewModel.SchoolId && x.StaffId == scheduledCourseSectionViewModel.StaffId && x.IsDropped != true).ToList();
+
+                if (scheduledCourseSectionData.Count>0)
+                {
+
+                    if (scheduledCourseSectionViewModel.AllCourse!=true)
+                    {
+                        staffCoursesectionScheduleList= scheduledCourseSectionData.Where(x=> x.MeetingDays.ToLower().Contains(todayDate.DayOfWeek.ToString().ToLower())).ToList();
+                    }
+                    else
+                    {
+                        staffCoursesectionScheduleList = scheduledCourseSectionData;
+                    }
+                }
+                else
+                {
+                    scheduledCourseSectionView._failure = true;
+                    scheduledCourseSectionView._message = NORECORDFOUND;
+                    return scheduledCourseSectionView;
+                }
+
+
+                if (staffCoursesectionScheduleList.Count>0)
+                {
+                    foreach (var scheduledCourseSection in staffCoursesectionScheduleList)
+                    {
+                        CourseSectionViewList CourseSections = new CourseSectionViewList();
+
+                        CourseSections.CourseTitle = scheduledCourseSection.CourseSection.Course.CourseTitle;
+
+                        if (scheduledCourseSection.CourseSection.ScheduleType == "Fixed Schedule (1)")
+                        {
+                            CourseSections.ScheduleType = "Fixed Schedule";
+
+                            var fixedData = this.context?.CourseFixedSchedule.Include(v => v.BlockPeriod).Include(f => f.Rooms).FirstOrDefault(c => c.SchoolId == scheduledCourseSection.SchoolId && c.TenantId == scheduledCourseSection.TenantId && c.CourseSectionId == scheduledCourseSection.CourseSectionId);
+
+                            if (fixedData != null)
+                            {
+                                fixedData.BlockPeriod.CourseFixedSchedule = null;
+                                fixedData.BlockPeriod.CourseVariableSchedule = null;
+                                fixedData.BlockPeriod.CourseCalendarSchedule = null;
+                                fixedData.BlockPeriod.CourseBlockSchedule = null;
+                                fixedData.BlockPeriod.StudentAttendance = null;
+                                fixedData.Rooms.CourseFixedSchedule = null;
+                                fixedData.Rooms.CourseVariableSchedule = null;
+                                fixedData.Rooms.CourseCalendarSchedule = null;
+                                fixedData.Rooms.CourseBlockSchedule = null;
+                                CourseSections.courseFixedSchedule = fixedData;
+                            }
+                        }
+                        if (scheduledCourseSection.CourseSection.ScheduleType == "Variable Schedule (2)")
+                        {
+                            CourseSections.ScheduleType = "Variable Schedule";
+
+                            var variableData = this.context?.CourseVariableSchedule.Include(v => v.BlockPeriod).Include(f => f.Rooms).Where(c => c.SchoolId == scheduledCourseSection.SchoolId && c.TenantId == scheduledCourseSection.TenantId && c.CourseSectionId == scheduledCourseSection.CourseSectionId).ToList();
+
+                            if (variableData.Count > 0)
+                            {
+                                variableData.ForEach(x => { x.BlockPeriod.CourseFixedSchedule = null; x.BlockPeriod.CourseVariableSchedule = null; x.BlockPeriod.CourseCalendarSchedule = null; x.BlockPeriod.CourseBlockSchedule = null; x.BlockPeriod.StudentAttendance = null; x.Rooms.CourseFixedSchedule = null; x.Rooms.CourseVariableSchedule = null; x.Rooms.CourseCalendarSchedule = null; x.Rooms.CourseBlockSchedule = null; });
+
+                                CourseSections.courseVariableSchedule = variableData;
+                            }
+                        }
+                        if (scheduledCourseSection.CourseSection.ScheduleType == "Calendar Schedule (3)")
+                        {
+                            CourseSections.ScheduleType = "Calendar Schedule";
+
+                            var calenderData = this.context?.CourseCalendarSchedule.Include(v => v.BlockPeriod).Include(f => f.Rooms).Where(c => c.SchoolId == scheduledCourseSection.SchoolId && c.TenantId == scheduledCourseSection.TenantId && c.CourseSectionId == scheduledCourseSection.CourseSectionId).ToList();
+
+                            if (calenderData.Count > 0)
+                            {
+                                calenderData.ForEach(x => { x.BlockPeriod.CourseFixedSchedule = null; x.BlockPeriod.CourseVariableSchedule = null; x.BlockPeriod.CourseCalendarSchedule = null; x.BlockPeriod.CourseBlockSchedule = null; x.BlockPeriod.StudentAttendance = null; x.Rooms.CourseFixedSchedule = null; x.Rooms.CourseVariableSchedule = null; x.Rooms.CourseCalendarSchedule = null; x.Rooms.CourseBlockSchedule = null; });
+
+                                CourseSections.courseCalendarSchedule = calenderData;
+                            }
+                        }
+                        if (scheduledCourseSection.CourseSection.ScheduleType == "Block Schedule (4)")
+                        {
+                            CourseSections.ScheduleType = "Block Schedule";
+
+                            var blockData = this.context?.CourseBlockSchedule.Include(v => v.BlockPeriod).Include(f => f.Rooms).Where(c => c.SchoolId == scheduledCourseSection.SchoolId && c.TenantId == scheduledCourseSection.TenantId && c.CourseSectionId == scheduledCourseSection.CourseSectionId).ToList();
+
+                            if (blockData.Count > 0)
+                            {
+                                blockData.ForEach(x => { x.BlockPeriod.CourseFixedSchedule = null; x.BlockPeriod.CourseVariableSchedule = null; x.BlockPeriod.CourseCalendarSchedule = null; x.BlockPeriod.CourseBlockSchedule = null; x.BlockPeriod.StudentAttendance = null; x.Rooms.CourseFixedSchedule = null; x.Rooms.CourseVariableSchedule = null; x.Rooms.CourseCalendarSchedule = null; x.Rooms.CourseBlockSchedule = null; });
+
+                                CourseSections.courseBlockSchedule = blockData;
+                            }
+                        }
+                        CourseSections.CalendarId = scheduledCourseSection.CourseSection.CalendarId;
+                        CourseSections.CourseId = scheduledCourseSection.CourseId;
+                        CourseSections.CourseGradeLevel = scheduledCourseSection.CourseSection.Course.CourseGradeLevel;
+                        CourseSections.CourseSectionId = scheduledCourseSection.CourseSectionId;
+                        CourseSections.AttendanceCategoryId = scheduledCourseSection.CourseSection.AttendanceCategoryId;
+                        CourseSections.GradeScaleId = scheduledCourseSection.CourseSection.GradeScaleId;
+                        CourseSections.StandardGradeScaleId = scheduledCourseSection.CourseSection.StandardGradeScaleId;
+                        CourseSections.CourseSectionName = scheduledCourseSection.CourseSectionName;
+                        CourseSections.YrMarkingPeriodId = scheduledCourseSection.YrMarkingPeriodId;
+                        CourseSections.SmstrMarkingPeriodId = scheduledCourseSection.SmstrMarkingPeriodId;
+                        CourseSections.QtrMarkingPeriodId = scheduledCourseSection.QtrMarkingPeriodId;
+                        CourseSections.DurationStartDate = scheduledCourseSection.DurationStartDate;
+                        CourseSections.DurationEndDate = scheduledCourseSection.DurationEndDate;
+                        CourseSections.MeetingDays = scheduledCourseSection.MeetingDays;
+                        CourseSections.AttendanceTaken = scheduledCourseSection.CourseSection.AttendanceTaken;
+                        CourseSections.WeekDays = scheduledCourseSection.CourseSection.SchoolCalendars.Days;
+
+                        scheduledCourseSectionView.courseSectionViewList.Add(CourseSections);
+                    }
+                }
+                else
+                {
+                    scheduledCourseSectionView._failure = true;
+                    scheduledCourseSectionView._message = NORECORDFOUND;
+                    return scheduledCourseSectionView;
+                }                
+
+                int count = 0;
+
+                if (scheduledCourseSectionData.Count > 0)
+                {
+                    foreach (var StaffScheduleData in scheduledCourseSectionData)
+                    {
+                        DateTime start = (DateTime)StaffScheduleData.DurationStartDate;
+                        DateTime end = (DateTime)StaffScheduleData.DurationEndDate;
+
+                        string[] meetingDays = StaffScheduleData.MeetingDays.Split("|");
+
+                        bool allDays = meetingDays == null || !meetingDays.Any();
+
+                        var dateList = Enumerable.Range(0, 1 + end.Subtract(start).Days)
+                                              .Select(offset => start.AddDays(offset))
+                                              .Where(d => allDays || meetingDays.Contains(d.DayOfWeek.ToString()))
+                                              .ToList();
+
+                        foreach (var date in dateList)
+                        {
+                            var staffScheduleData = this.context?.StudentAttendance.Where(b => b.SchoolId == scheduledCourseSectionViewModel.SchoolId && b.TenantId == scheduledCourseSectionViewModel.TenantId && b.StaffId == scheduledCourseSectionViewModel.StaffId && b.AttendanceDate == date && b.CourseSectionId == StaffScheduleData.CourseSectionId);
+
+                            if (staffScheduleData.Count() == 0)
+                            {
+                                count = count + 1;
+                            }
+                        }
+                    }
+                    scheduledCourseSectionView.MissingAttendanceCount = count;
+                }
+
+                var membership = this.context?.Membership.FirstOrDefault(x => x.TenantId == scheduledCourseSectionViewModel.TenantId && x.SchoolId == scheduledCourseSectionViewModel.SchoolId && x.Profile == "Teacher");
+
+                if (membership!=null)
+                {
+                    var noticeList = this.context?.Notice.Where(x => x.TenantId == scheduledCourseSectionViewModel.TenantId && x.SchoolId == scheduledCourseSectionViewModel.SchoolId && x.Isactive == true && x.TargetMembershipIds.Contains(membership.MembershipId.ToString()) && (x.ValidFrom <= todayDate && todayDate <= x.ValidTo)).OrderByDescending(x => x.ValidFrom).ToList();
+                    
+                    if (noticeList.Count>0)
+                    {
+                        scheduledCourseSectionView.NoticeList = noticeList;
+                    }
+                }
+            }
+            catch (Exception es)
+            {
+                scheduledCourseSectionView.courseSectionViewList = null;
+                scheduledCourseSectionView._failure = true;
+                scheduledCourseSectionView._message = es.Message;
+            }
+            return scheduledCourseSectionView;
+        }
+
+        /// <summary>
+        /// Get Dashboard View For CalendarView
+        /// </summary>
+        /// <param name="dashboardViewModel"></param>
+        /// <returns></returns>
+        public DashboardViewModel GetDashboardViewForCalendarView(DashboardViewModel dashboardViewModel)
+        {
+            DashboardViewModel dashboardView = new DashboardViewModel();
+            try
+            {
+                var defaultCalendar = this.context?.SchoolCalendars.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && x.DefaultCalender == true).FirstOrDefault();
+                if (defaultCalendar != null)
+                {
+                    dashboardView.schoolCalendar = defaultCalendar;
+                    dashboardView.schoolCalendar.SchoolMaster = null;
+
+                    var Events = this.context?.CalendarEvents.Where(x => x.TenantId == dashboardViewModel.TenantId && x.SchoolId == dashboardViewModel.SchoolId && x.AcademicYear == dashboardViewModel.AcademicYear && ((x.CalendarId == defaultCalendar.CalenderId && x.SystemWideEvent == false) || x.SystemWideEvent == true) /*&&(x.StartDate >= todayDate || (x.StartDate <= todayDate && todayDate <= x.EndDate))*/).ToList();
+                    if (Events.Count > 0)
+                    {
+                        dashboardView.calendarEventList = Events;
+                    }
+                }
+                dashboardView.TenantId = dashboardViewModel.TenantId;
+                dashboardView.SchoolId = dashboardViewModel.SchoolId;
+                dashboardView.AcademicYear = dashboardViewModel.AcademicYear;
+                dashboardView._tenantName = dashboardViewModel._tenantName;
+                dashboardView._userName=dashboardViewModel._userName;
+                dashboardView._token = dashboardViewModel._token;
+                dashboardView._failure = false;
+            }
+            catch (Exception es)
+            {
+                dashboardView._failure = true;
+                dashboardView._message = es.Message;
+            }
+            return dashboardView;
+        }
+
+        /// <summary>
+        /// Reset Password For User
+        /// </summary>
+        /// <param name="ResetPasswordModel"></param>
+        /// <returns></returns>
+        public ResetPasswordModel ResetPasswordForUser(ResetPasswordModel resetPasswordModel)
+        {
+            ResetPasswordModel resetPassword = new ResetPasswordModel();
+            try
+            {
+                var userMasterData = this.context?.UserMaster.Where(x => x.TenantId == resetPasswordModel.userMaster.TenantId && x.SchoolId == resetPasswordModel.userMaster.SchoolId && x.UserId == resetPasswordModel.userMaster.UserId && x.EmailAddress == resetPasswordModel.userMaster.EmailAddress).FirstOrDefault();
+                if (userMasterData != null)
+                {
+                    var decrypted = Utility.Decrypt(resetPasswordModel.userMaster.PasswordHash);
+                    string passwordHash = Utility.GetHashedPassword(decrypted);
+
+                    userMasterData.PasswordHash = passwordHash;
+                    userMasterData.LastUpdated = DateTime.UtcNow;
+
+                    this.context?.SaveChanges();
+                    resetPassword._failure = false;
+                    resetPassword._message = "Password Updated Successfully";
+                }
+                else
+                {
+                    resetPassword.userMaster = null;
+                    resetPassword._failure = true;
+                    resetPassword._message = "Invalid Email Address";
+                }
+            }
+            catch (Exception es)
+            {
+                resetPassword._failure = true;
+                resetPassword._message = es.Message;
+            }
+            return resetPassword;
+        }
+
+        /// <summary>
+        /// Export Excel
+        /// </summary>
+        /// <param name="exportExcelModel"></param>
+        /// <returns></returns>      
+        public ExcelHeaderModel GetExcelHeader(ExcelHeaderModel excelHeaderModel)
+        {
+            ExcelHeaderModel excelHeader = new ExcelHeaderModel();
+            try
+            {
+                List<int> Cid = new List<int>() { 4, 6, 7, 8, 9 };
+
+                var customFieldTitleList = this.context?.CustomFields.Where(c => c.SchoolId == excelHeaderModel.SchoolId && c.TenantId == excelHeaderModel.TenantId && (Cid == null || (!Cid.Contains(c.CategoryId)) && c.Module.ToLower() == excelHeaderModel.Module.ToLower())).Select(c => c.Title).ToArray();
+
+                if (customFieldTitleList.Length > 0)
+                {
+                    excelHeader.CustomfieldTitle = customFieldTitleList;
+                    excelHeader.SchoolId = excelHeaderModel.SchoolId;
+                    excelHeader.TenantId = excelHeaderModel.TenantId;
+                    excelHeader.Module = excelHeaderModel.Module;
+                    excelHeader._tenantName = excelHeaderModel._tenantName;
+                    excelHeader._token = excelHeaderModel._token;
+                    excelHeader._userName = excelHeaderModel._userName;
+                    excelHeader._failure = false;
+                }
+            }
+            catch (Exception es)
+            {
+                excelHeader._failure = true;
+                excelHeader._message = es.Message;
+            }
+            return excelHeader;
+        }
+
+        /// <summary>
+        /// Add Update School Preference
+        /// </summary>
+        /// <param name="schoolPreferenceAddViewModel"></param>
+        /// <returns></returns>
+        public SchoolPreferenceAddViewModel AddUpdateSchoolPreference(SchoolPreferenceAddViewModel schoolPreferenceAddViewModel)
+        {
+            try
+            {
+                if (schoolPreferenceAddViewModel.schoolPreference.SchoolPreferenceId > 0)
+                {
+                    var schoolPreferenceUpdate = this.context?.SchoolPreference.FirstOrDefault(x => x.TenantId == schoolPreferenceAddViewModel.schoolPreference.TenantId && x.SchoolId == schoolPreferenceAddViewModel.schoolPreference.SchoolId && x.SchoolPreferenceId == schoolPreferenceAddViewModel.schoolPreference.SchoolPreferenceId);
+
+                    if (schoolPreferenceUpdate != null)
+                    {
+                        schoolPreferenceAddViewModel.schoolPreference.UpdatedOn = DateTime.UtcNow;
+                        schoolPreferenceAddViewModel.schoolPreference.CreatedOn = schoolPreferenceUpdate.CreatedOn;
+                        schoolPreferenceAddViewModel.schoolPreference.CreatedBy = schoolPreferenceUpdate.CreatedBy;
+                        this.context.Entry(schoolPreferenceUpdate).CurrentValues.SetValues(schoolPreferenceAddViewModel.schoolPreference);
+                        this.context?.SaveChanges();
+                        schoolPreferenceAddViewModel._failure = false;
+                        schoolPreferenceAddViewModel._message = "School Preference Updated Successfully";
+                    }
+                    else
+                    {
+                        schoolPreferenceAddViewModel._failure = true;
+                        schoolPreferenceAddViewModel._message = NORECORDFOUND;
+                    }
+                }
+                else
+                {
+                    long? schoolPreferenceId = Utility.GetMaxLongPK(this.context, new Func<SchoolPreference, long>(x => x.SchoolPreferenceId));
+                    schoolPreferenceAddViewModel.schoolPreference.SchoolPreferenceId = (long)schoolPreferenceId;
+                    schoolPreferenceAddViewModel.schoolPreference.CreatedOn = DateTime.UtcNow;
+                    this.context.SchoolPreference.Add(schoolPreferenceAddViewModel.schoolPreference);
+                    this.context?.SaveChanges();
+                    schoolPreferenceAddViewModel._failure = false;
+                    schoolPreferenceAddViewModel._message = "School Preference Added Successfully";
+                }
+            }
+            catch (Exception es)
+            {
+                schoolPreferenceAddViewModel._failure = true;
+                schoolPreferenceAddViewModel._message = es.Message;
+            }
+            return schoolPreferenceAddViewModel;
+        }
+
+        /// <summary>
+        /// View School Preference
+        /// </summary>
+        /// <param name="schoolPreferenceAddViewModel"></param>
+        /// <returns></returns>
+        public SchoolPreferenceAddViewModel ViewSchoolPreference(SchoolPreferenceAddViewModel schoolPreferenceAddViewModel)
+        {
+            SchoolPreferenceAddViewModel schoolPreferenceViewModel = new SchoolPreferenceAddViewModel();
+            try
+            {
+                var schoolPreferenceView = this.context?.SchoolPreference.FirstOrDefault(x => x.TenantId == schoolPreferenceAddViewModel.schoolPreference.TenantId && x.SchoolId == schoolPreferenceAddViewModel.schoolPreference.SchoolId && x.SchoolPreferenceId == schoolPreferenceAddViewModel.schoolPreference.SchoolPreferenceId);
+
+                if (schoolPreferenceView!=null)
+                {
+                    schoolPreferenceViewModel.schoolPreference = schoolPreferenceView;
+                    schoolPreferenceViewModel._tenantName = schoolPreferenceAddViewModel._tenantName;
+                    schoolPreferenceViewModel._failure = false;
+                }
+                else
+                {
+                    schoolPreferenceViewModel.schoolPreference = schoolPreferenceView;
+                    schoolPreferenceViewModel._failure = true;
+                    schoolPreferenceViewModel._message = NORECORDFOUND;
+                }
+            }
+            catch (Exception es)
+            {
+                schoolPreferenceViewModel._failure=true;
+                schoolPreferenceViewModel._message = es.Message;
+            }
+            return schoolPreferenceViewModel;
         }
     }
 }

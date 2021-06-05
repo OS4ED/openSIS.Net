@@ -1,10 +1,36 @@
-﻿using opensis.core.helper;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using opensis.core.helper;
 using opensis.core.ReportCard.Interfaces;
 using opensis.data.Interface;
 using opensis.data.ViewModels.ReportCard;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace opensis.core.ReportCard.Services
 {
@@ -172,14 +198,19 @@ namespace opensis.core.ReportCard.Services
             return courseCommentCategoryList;
         }
 
-        public ReportCardViewModel ViewReportCard(ReportCardViewModel reportCardViewModel)
+        /// <summary>
+        /// Add Report Card
+        /// </summary>
+        /// <param name="reportCardViewModel"></param>
+        /// <returns></returns>
+        public ReportCardViewModel AddReportCard(ReportCardViewModel reportCardViewModel)
         {
             ReportCardViewModel reportCardView = new ReportCardViewModel();
             try
             {
                 if (TokenManager.CheckToken(reportCardViewModel._tenantName + reportCardViewModel._userName, reportCardViewModel._token))
                 {
-                    reportCardView = this.reportCardRepository.ViewReportCard(reportCardViewModel);
+                    reportCardView = this.reportCardRepository.AddReportCard(reportCardViewModel);
                 }
                 else
                 {
@@ -194,6 +225,35 @@ namespace opensis.core.ReportCard.Services
             }
             return reportCardView;
         }
+
+        /// <summary>
+        /// Generate Report Card
+        /// </summary>
+        /// <param name="reportCardViewModel"></param>
+        /// <returns></returns>
+        public async Task<ReportCardViewModel> GenerateReportCard(ReportCardViewModel reportCardViewModel)
+        {
+            ReportCardViewModel reportCardView = new ReportCardViewModel();
+            try
+            {
+                if (TokenManager.CheckToken(reportCardViewModel._tenantName + reportCardViewModel._userName, reportCardViewModel._token))
+                {
+                    reportCardView = await this.reportCardRepository.GenerateReportCard(reportCardViewModel);
+                }
+                else
+                {
+                    reportCardView._failure = true;
+                    reportCardView._message = TOKENINVALID;
+                }
+            }
+            catch (Exception es)
+            {
+                reportCardView._failure = true;
+                reportCardView._message = es.Message;
+            }
+            return reportCardView;
+        }
+
 
     }
 }

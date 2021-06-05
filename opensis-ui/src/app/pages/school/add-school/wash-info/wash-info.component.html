@@ -1,11 +1,11 @@
 <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll
     *ngIf="schoolCreateMode==schoolCreate.EDIT || schoolCreateMode==schoolCreate.ADD">
     <mat-card @fadeInUp class="w-full" fxFlex="auto">
-        <h3 class="mx-2 font-medium">{{'washInformation'|translate}}</h3>
+        <h3 class="font-medium">{{'washInformation'|translate}}</h3>
 
         <mat-card-content>
             <div class="pt-6" @stagger fxLayout="column">
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'runningWater'|translate}}</mat-label>
@@ -62,13 +62,13 @@
                     </li>
                 </ul>
            </div>
-           <hr class="-mx-4 mt-4 mb-6">
+           <hr class="-mx-5 mt-4 mb-6">
             <div @stagger fxLayout="column">
-                <div class="px-4 pb-3">
+                <div class="pb-3">
                     <h4 class="text-primary">{{'femaleToiletInformation'|translate}}</h4>
                 </div>
 
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'femaleToiletType'|translate}}</mat-label>
@@ -107,13 +107,13 @@
                     </li>
                 </ul>
             </div>
-            <hr class="-mx-4 mt-4 mb-6">
+            <hr class="-mx-5 mt-4 mb-6">
             <div @stagger fxLayout="column">
-                <div class="px-4 pb-3">
+                <div class="pb-3">
                     <h4 class="text-primary">{{'maleToiletInformation'|translate}}</h4>
                 </div>
 
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'maleToiletType'|translate}}</mat-label>
@@ -152,12 +152,12 @@
                     </li>
                 </ul>
             </div>
-            <hr class="-mx-4 mt-4 mb-6">
+            <hr class="-mx-5 mt-4 mb-6">
             <div @stagger fxLayout="column">
-                <div class="px-4 pb-3">
+                <div class="pb-3">
                     <h4 class="text-primary">{{'commonToiletInformation'|translate}}</h4>
                 </div>
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'commonToiletType'|translate}}</mat-label>
@@ -199,7 +199,7 @@
             </div>
         </mat-card-content>
         <mat-card-actions>
-            <div class="px-2 pb-4 text-right">
+            <div class="pb-4 text-right">
                 <button mat-button type="button" *ngIf="schoolCreateMode == schoolCreate.EDIT"
                     (click)="cancelEdit()">{{'cancel'|translate}}</button>
                 <button color="primary" mat-raised-button type="submit">{{formActionButtonTitle|translate}}</button>
@@ -212,10 +212,10 @@
 
 
 <mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == schoolCreate.VIEW">
-    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'washInformation'|translate}}</h3>
         <button  *ngIf="editPermission" mat-raised-button color="primary" (click)="editWashInfo()">
-            <mat-icon [icIcon]="icEdit" style="font-size: 20px;" class="mr-1"></mat-icon> {{'editInformation'|translate}}
+            <mat-icon [icIcon]="icEdit" style="font-size: 20px;" class="mr-1"></mat-icon> <span class="hidden md:inline-block">{{'editInformation'|translate}}</span>
         </button>
     </div>
     <vex-view-wash-info [schoolCreateMode]="schoolCreateMode"

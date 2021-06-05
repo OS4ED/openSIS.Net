@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -41,7 +66,7 @@ export class EditNoticeComponent implements OnInit {
   @ViewChild('checkBox' ) checkBox:MatCheckbox;
   checkAll:boolean;
   AddOrEditNotice: string;
-  noticeModalActionTitle="submit";
+  noticeModalActionTitle='submit';
   @Output() afterClosed = new EventEmitter<boolean>();
   getAllMembersList: GetAllMembersList = new GetAllMembersList();
   icClose = icClose;
@@ -49,57 +74,58 @@ export class EditNoticeComponent implements OnInit {
   noticeAddViewModel = new NoticeAddViewModel();
   memberArray: number[] = [];
   form: FormGroup;
-  membercount:number;
-  loading:boolean=false;
-  constructor(private dialogRef: MatDialogRef<EditNoticeComponent>, 
-    @Inject(MAT_DIALOG_DATA) public data:any,
-    private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder,
-     private noticeService: NoticeService,private membershipService: MembershipService,
-      public translateService: TranslateService, private snackbar: MatSnackBar,
-      private commonFunction:SharedFunction,
-      private loaderService: LoaderService,
-      private defaultValuesService: DefaultValuesService) {
+  membercount: number;
+  loading: boolean = false;
+  schoolVisibility = false;
+  constructor(private dialogRef: MatDialogRef<EditNoticeComponent>,
+              @Inject(MAT_DIALOG_DATA) public data: any,
+              private router: Router, private Activeroute: ActivatedRoute, private fb: FormBuilder,
+              private noticeService: NoticeService, private membershipService: MembershipService,
+              public translateService: TranslateService, private snackbar: MatSnackBar,
+              private commonFunction: SharedFunction,
+              private loaderService: LoaderService,
+              private defaultValuesService: DefaultValuesService) {
     translateService.use('en');
     this.loaderService.isLoading.subscribe((v) => {
       this.loading = v;
-    });  
+    });
   }
 
-  
 
-  ngOnInit(): void {   
+
+  ngOnInit(): void {
     if(this.data==null){
-      this.snackbar.open('Null vallue occur. ','', {
+      this.snackbar.open('Null vallue occur. ', '', {
         duration: 10000
       });
     }
     else{
-      this.membercount=this.data.membercount
-      this.getAllMembersList=this.data.allMembers
+      this.membercount = this.data.membercount;
+      this.getAllMembersList=this.data.allMembers;
       if(this.data.notice==null){
-        this.AddOrEditNotice = "Add Notice";
+        this.AddOrEditNotice = 'Add Notice';
       }
       else{
-        this.AddOrEditNotice = "editNotice";
-        this.noticeModalActionTitle="update";
-        this.noticeAddViewModel.notice=this.data.notice
-        
+        this.AddOrEditNotice = 'editNotice';
+        this.noticeModalActionTitle='update';
+        this.noticeAddViewModel.notice = this.data.notice;
+        this.schoolVisibility = this.data.notice.visibleToAllSchool;
         this.noticeService.viewNotice(this.noticeAddViewModel).subscribe(
           (res)=>{
-            
+
             this.noticeAddViewModel.notice = res.notice;
-            if(this.noticeAddViewModel.notice.targetMembershipIds!=null && this.noticeAddViewModel.notice.targetMembershipIds!=''){
-              let membershipIds:string[] = this.noticeAddViewModel.notice.targetMembershipIds.split(',');
-          this.memberArray = membershipIds.map(Number);
-          if(this.memberArray.length === this.getAllMembersList.getAllMemberList.length){
+            if(this.noticeAddViewModel.notice.targetMembershipIds !== null && this.noticeAddViewModel.notice.targetMembershipIds!=''){
+              let membershipIds: string[] = this.noticeAddViewModel.notice.targetMembershipIds.split(',');
+              this.memberArray = membershipIds.map(Number);
+              if(this.memberArray.length === this.getAllMembersList.getAllMemberList.length){
             this.checkAll=true;
           }
 
             }
           }
-        )
+        );
       }
-      
+
     }
     this.form = this.fb.group({
       Title: ['', Validators.required],
@@ -112,16 +138,25 @@ export class EditNoticeComponent implements OnInit {
   get f() {
     return this.form.controls;
   }
+  schoolVisibilityCheck(event){
+    if (event.checked){
+      this.schoolVisibility = true;
+    }
+    else{
+      this.schoolVisibility = false;
+    }
+  }
   submitNotice() {
     this.noticeAddViewModel.notice.body = this.form.value.Body;
     this.noticeAddViewModel.notice.title = this.form.value.Title;
     this.noticeAddViewModel.notice.validFrom = this.commonFunction.formatDateSaveWithoutTime(this.form.value.validFrom);
     this.noticeAddViewModel.notice.validTo = this.commonFunction.formatDateSaveWithoutTime(this.form.value.validTo);
+    this.noticeAddViewModel.notice.visibleToAllSchool = this.schoolVisibility;
     this.noticeAddViewModel.notice.targetMembershipIds = this.memberArray.toString();
-  
+
     if (this.form.valid) {
       if (this.noticeAddViewModel.notice.noticeId > 0) {
-        
+
           this.noticeService.updateNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
               this.snackbar.open( data._message,'', {
@@ -134,15 +169,15 @@ export class EditNoticeComponent implements OnInit {
               this.noticeService.changeNotice(true)
               this.dialogRef.close();
             }
-  
+
           });
       }
       else {
-      
+
         this.noticeAddViewModel.notice.validFrom=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validFrom);
         this.noticeAddViewModel.notice.validTo=this.commonFunction.formatDateSaveWithoutTime(this.noticeAddViewModel.notice.validTo);
         this.noticeAddViewModel.notice.createdBy= this.defaultValuesService.getUserName();
-          this.noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
+        this.noticeService.addNotice(this.noticeAddViewModel).subscribe(data => {
             if (data._failure) {
               this.snackbar.open(data._message, '', {
                 duration: 10000
@@ -151,7 +186,7 @@ export class EditNoticeComponent implements OnInit {
               this.snackbar.open(data._message,'', {
                 duration: 10000
               });
-      this.dialogRef.close(true);
+              this.dialogRef.close(true);
             }
           });
       }
@@ -160,7 +195,7 @@ export class EditNoticeComponent implements OnInit {
 
   changedEditor(event: EditorChangeContent | EditorChangeSelection) {
     if (event.source == 'user') {
-      this.body = document.querySelector(".ql-editor").innerHTML;
+      this.body = document.querySelector('.ql-editor').innerHTML;
     }
   }
 
@@ -198,7 +233,7 @@ export class EditNoticeComponent implements OnInit {
         }
       }
     }
-   
+
 
   }
   selectChildren(event, id) {
@@ -220,13 +255,13 @@ export class EditNoticeComponent implements OnInit {
   }
 
   dateCompare() {
-   
+
     const openingDate = this.form.controls.validFrom.value
     const closingDate = this.form.controls.validTo.value
-   
+
     if (ValidationService.compareValidation(openingDate, closingDate) === false) {
       this.form.controls.validTo.setErrors({ compareError: true });
-      
+
     }
 
   }

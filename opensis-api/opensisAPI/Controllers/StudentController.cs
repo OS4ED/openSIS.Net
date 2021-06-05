@@ -1,4 +1,29 @@
-﻿using System;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -596,13 +621,13 @@ namespace opensisAPI.Controllers
             return studentListAdd;
         }
 
-        [HttpPost("generateTranscriptForStudent")]
-        public ActionResult<TranscriptViewModel> GenerateTranscriptForStudent(TranscriptViewModel transcriptViewModel)
+        [HttpPost("transcriptViewForStudent")]
+        public ActionResult<TranscriptViewModel> TranscriptViewForStudent(TranscriptViewModel transcriptViewModel)
         {
             TranscriptViewModel transcriptView = new TranscriptViewModel();
             try
             {
-                transcriptView = _studentService.GenerateTranscriptForStudent(transcriptViewModel);
+                transcriptView = _studentService.TranscriptViewForStudent(transcriptViewModel);
             }
             catch (Exception es)
             {
@@ -610,6 +635,295 @@ namespace opensisAPI.Controllers
                 transcriptView._message = es.Message;
             }
             return transcriptView;
+        }
+
+        [HttpPost("addTranscriptForStudent")]
+        public ActionResult<TranscriptAddViewModel> AddTranscriptForStudent(TranscriptAddViewModel transcriptAddViewModel)
+        {
+            TranscriptAddViewModel transcriptAdd = new TranscriptAddViewModel();
+            try
+            {
+                transcriptAdd = _studentService.AddTranscriptForStudent(transcriptAddViewModel);
+            }
+            catch (Exception es)
+            {
+                transcriptAdd._failure = true;
+                transcriptAdd._message = es.Message;
+            }
+            return transcriptAdd;
+        }
+
+        [HttpPost("generateTranscriptForStudent")]
+        public async Task<TranscriptAddViewModel> GenerateTranscriptForStudent(TranscriptAddViewModel transcriptAddViewModel)
+        {
+            TranscriptAddViewModel transcriptAdd = new TranscriptAddViewModel();
+            try
+            {
+                transcriptAdd =await _studentService.GenerateTranscriptForStudent(transcriptAddViewModel);
+            }
+            catch (Exception es)
+            {
+                transcriptAdd._failure = true;
+                transcriptAdd._message = es.Message;
+            }
+            return transcriptAdd;
+        }
+
+        [HttpPost("addStudentMedicalAlert")]
+        public ActionResult<StudentMedicalAlertAddViewModel> AddStudentMedicalAlert(StudentMedicalAlertAddViewModel studentMedicalAlertAddViewModel)
+        {
+            StudentMedicalAlertAddViewModel studentMedicalAlertAdd = new StudentMedicalAlertAddViewModel();
+            try
+            {
+                studentMedicalAlertAdd =  _studentService.AddStudentMedicalAlert(studentMedicalAlertAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalAlertAdd._failure = true;
+                studentMedicalAlertAdd._message = es.Message;
+            }
+            return studentMedicalAlertAdd;
+        }
+
+        [HttpPut("updateStudentMedicalAlert")]
+        public ActionResult<StudentMedicalAlertAddViewModel> UpdateStudentMedicalAlert(StudentMedicalAlertAddViewModel studentMedicalAlertAddViewModel)
+        {
+            StudentMedicalAlertAddViewModel studentMedicalAlertUpdate = new StudentMedicalAlertAddViewModel();
+            try
+            {
+                studentMedicalAlertUpdate = _studentService.UpdateStudentMedicalAlert(studentMedicalAlertAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalAlertUpdate._failure = true;
+                studentMedicalAlertUpdate._message = es.Message;
+            }
+            return studentMedicalAlertUpdate;
+        }
+
+        [HttpPost("deleteStudentMedicalAlert")]
+        public ActionResult<StudentMedicalAlertAddViewModel> DeleteStudentMedicalAlert(StudentMedicalAlertAddViewModel studentMedicalAlertAddViewModel)
+        {
+            StudentMedicalAlertAddViewModel studentMedicalAlertdelete = new StudentMedicalAlertAddViewModel();
+            try
+            {
+                studentMedicalAlertdelete = _studentService.DeleteStudentMedicalAlert(studentMedicalAlertAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalAlertdelete._failure = true;
+                studentMedicalAlertdelete._message = es.Message;
+            }
+            return studentMedicalAlertdelete;
+        }
+
+        [HttpPost("addStudentMedicalNote")]
+        public ActionResult<StudentMedicalNoteAddViewModel> AddStudentMedicalNote(StudentMedicalNoteAddViewModel studentMedicalNoteAddViewModel)
+        {
+            StudentMedicalNoteAddViewModel studentMedicalNoteAdd = new StudentMedicalNoteAddViewModel();
+            try
+            {
+                studentMedicalNoteAdd = _studentService.AddStudentMedicalNote(studentMedicalNoteAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalNoteAdd._failure = true;
+                studentMedicalNoteAdd._message = es.Message;
+            }
+            return studentMedicalNoteAdd;
+        }
+
+        [HttpPut("updateStudentMedicalNote")]
+        public ActionResult<StudentMedicalNoteAddViewModel> UpdateStudentMedicalNote(StudentMedicalNoteAddViewModel studentMedicalNoteAddViewModel)
+        {
+            StudentMedicalNoteAddViewModel studentMedicalNoteUpdate = new StudentMedicalNoteAddViewModel();
+            try
+            {
+                studentMedicalNoteUpdate = _studentService.UpdateStudentMedicalNote(studentMedicalNoteAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalNoteUpdate._failure = true;
+                studentMedicalNoteUpdate._message = es.Message;
+            }
+            return studentMedicalNoteUpdate;
+        }
+
+        [HttpPost("deleteStudentMedicalNote")]
+        public ActionResult<StudentMedicalNoteAddViewModel> DeleteStudentMedicalNote(StudentMedicalNoteAddViewModel studentMedicalNoteAddViewModel)
+        {
+            StudentMedicalNoteAddViewModel studentMedicalNoteDelete = new StudentMedicalNoteAddViewModel();
+            try
+            {
+                studentMedicalNoteDelete = _studentService.DeleteStudentMedicalNote(studentMedicalNoteAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalNoteDelete._failure = true;
+                studentMedicalNoteDelete._message = es.Message;
+            }
+            return studentMedicalNoteDelete;
+        }
+
+        [HttpPost("addStudentMedicalImmunization")]
+        public ActionResult<StudentMedicalImmunizationAddViewModel> AddStudentMedicalImmunization(StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAddViewModel)
+        {
+            StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAdd = new StudentMedicalImmunizationAddViewModel();
+            try
+            {
+                studentMedicalImmunizationAdd = _studentService.AddStudentMedicalImmunization(studentMedicalImmunizationAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalImmunizationAdd._failure = true;
+                studentMedicalImmunizationAdd._message = es.Message;
+            }
+            return studentMedicalImmunizationAdd;
+        }
+
+        [HttpPut("updateStudentMedicalImmunization")]
+        public ActionResult<StudentMedicalImmunizationAddViewModel> UpdateStudentMedicalImmunization(StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAddViewModel)
+        {
+            StudentMedicalImmunizationAddViewModel studentMedicalImmunizationUpdate = new StudentMedicalImmunizationAddViewModel();
+            try
+            {
+                studentMedicalImmunizationUpdate = _studentService.UpdateStudentMedicalImmunization(studentMedicalImmunizationAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalImmunizationUpdate._failure = true;
+                studentMedicalImmunizationUpdate._message = es.Message;
+            }
+            return studentMedicalImmunizationUpdate;
+        }
+
+        [HttpPost("deleteStudentMedicalImmunization")]
+        public ActionResult<StudentMedicalImmunizationAddViewModel> DeleteStudentMedicalImmunization(StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAddViewModel)
+        {
+            StudentMedicalImmunizationAddViewModel studentMedicalImmunizationDelete = new StudentMedicalImmunizationAddViewModel();
+            try
+            {
+                studentMedicalImmunizationDelete = _studentService.DeleteStudentMedicalImmunization(studentMedicalImmunizationAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalImmunizationDelete._failure = true;
+                studentMedicalImmunizationDelete._message = es.Message;
+            }
+            return studentMedicalImmunizationDelete;
+        }
+
+        [HttpPost("addStudentMedicalNurseVisit")]
+        public ActionResult<StudentMedicalNurseVisitAddViewModel> AddStudentMedicalNurseVisit(StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAddViewModel)
+        {
+            StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAdd = new StudentMedicalNurseVisitAddViewModel();
+            try
+            {
+                studentMedicalNurseVisitAdd = _studentService.AddStudentMedicalNurseVisit(studentMedicalNurseVisitAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalNurseVisitAdd._failure = true;
+                studentMedicalNurseVisitAdd._message = es.Message;
+            }
+            return studentMedicalNurseVisitAdd;
+        }
+
+        [HttpPut("updateStudentMedicalNurseVisit")]
+        public ActionResult<StudentMedicalNurseVisitAddViewModel> UpdateStudentMedicalNurseVisit(StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAddViewModel)
+        {
+            StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitUpdate = new StudentMedicalNurseVisitAddViewModel();
+            try
+            {
+                studentMedicalNurseVisitUpdate = _studentService.UpdateStudentMedicalNurseVisit(studentMedicalNurseVisitAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalNurseVisitUpdate._failure = true;
+                studentMedicalNurseVisitUpdate._message = es.Message;
+            }
+            return studentMedicalNurseVisitUpdate;
+
+        }
+
+        [HttpPost("deleteStudentMedicalNurseVisit")]
+        public ActionResult<StudentMedicalNurseVisitAddViewModel> DeleteStudentMedicalNurseVisit(StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAddViewModel)
+        {
+            StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitDelete = new StudentMedicalNurseVisitAddViewModel();
+            try
+            {
+                studentMedicalNurseVisitDelete = _studentService.DeleteStudentMedicalNurseVisit(studentMedicalNurseVisitAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalNurseVisitDelete._failure = true;
+                studentMedicalNurseVisitDelete._message = es.Message;
+            }
+            return studentMedicalNurseVisitDelete;
+        }
+
+        [HttpPost("addStudentMedicalProvider")]
+        public ActionResult<StudentMedicalProviderAddViewModel> AddStudentMedicalProvider(StudentMedicalProviderAddViewModel studentMedicalProviderAddViewModel)
+        {
+            StudentMedicalProviderAddViewModel studentMedicalProviderAdd = new StudentMedicalProviderAddViewModel();
+            try
+            {
+                studentMedicalProviderAdd = _studentService.AddStudentMedicalProvider(studentMedicalProviderAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalProviderAdd._failure = true;
+                studentMedicalProviderAdd._message = es.Message;
+            }
+            return studentMedicalProviderAdd;
+        }
+
+        [HttpPut("updateStudentMedicalProvider")]
+        public ActionResult<StudentMedicalProviderAddViewModel> UpdateStudentMedicalProvider(StudentMedicalProviderAddViewModel studentMedicalProviderAddViewModel)
+        {
+            StudentMedicalProviderAddViewModel studentMedicalProviderUpdate = new StudentMedicalProviderAddViewModel();
+            try
+            {
+                studentMedicalProviderUpdate = _studentService.UpdateStudentMedicalProvider(studentMedicalProviderAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalProviderUpdate._failure = true;
+                studentMedicalProviderUpdate._message = es.Message;
+            }
+            return studentMedicalProviderUpdate;
+        }
+
+        [HttpPost("deleteStudentMedicalProvider")]
+        public ActionResult<StudentMedicalProviderAddViewModel> DeleteStudentMedicalProvider(StudentMedicalProviderAddViewModel studentMedicalProviderAddViewModel)
+        {
+            StudentMedicalProviderAddViewModel studentMedicalProviderDelete = new StudentMedicalProviderAddViewModel();
+            try
+            {
+                studentMedicalProviderDelete = _studentService.DeleteStudentMedicalProvider(studentMedicalProviderAddViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalProviderDelete._failure = true;
+                studentMedicalProviderDelete._message = es.Message;
+            }
+            return studentMedicalProviderDelete;
+        }
+
+        [HttpPost("getAllStudentMedicalInfo")]
+        public ActionResult<StudentMedicalInfoViewModel> GetAllStudentMedicalInfo(StudentMedicalInfoViewModel studentMedicalInfoViewModel)
+        {
+            StudentMedicalInfoViewModel studentMedicalInfoList = new StudentMedicalInfoViewModel();
+            try
+            {
+                studentMedicalInfoList = _studentService.GetAllStudentMedicalInfo(studentMedicalInfoViewModel);
+            }
+            catch (Exception es)
+            {
+                studentMedicalInfoList._failure = true;
+                studentMedicalInfoList._message = es.Message;
+            }
+            return studentMedicalInfoList;
         }
     }
 }

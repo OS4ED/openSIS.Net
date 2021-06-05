@@ -72,6 +72,8 @@ using opensis.core.ReportCard.Services;
 using opensis.core.ReportCard.Interfaces;
 using opensis.core.StudentEffortGrade.Services;
 using opensis.core.StudentEffortGrade.Interfaces;
+using opensis.core.StaffPortal.Services;
+using opensis.core.StaffPortal.Interfaces;
 
 namespace opensisAPI
 {
@@ -153,6 +155,9 @@ namespace opensisAPI
 
             services.AddScoped<IStudentEffortGradeRepository, StudentEffortGradeRepository>();
             services.AddScoped<IStudentEffortGradeService, StudentEffortGradeService>();
+
+            services.AddScoped<IStaffPortalRepository, StaffPortalRepository>();
+            services.AddScoped<IStaffPortalService, StaffPortalService>();
 
 
 

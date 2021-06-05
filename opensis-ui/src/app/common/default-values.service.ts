@@ -14,6 +14,7 @@ export class DefaultValuesService {
   TenantId: string = '';
   schoolID: number ;
   academicYear: number;
+  markingPeriodStartDate: string;
   constructor(private http: HttpClient,public translateService: TranslateService) {
   }
 
@@ -189,4 +190,24 @@ export class DefaultValuesService {
     return trnaslateKey;
   }
 
+  setPageSize(data: number) {
+    sessionStorage.setItem('pageSize', JSON.stringify(data));
+  }
+
+  getPageSize(): number {
+   return JSON.parse(sessionStorage.getItem('pageSize'));
+  }
+
+  setMarkingPeriodStartDate(mpStartDate?: string) {
+      sessionStorage.setItem("markingPeriodStartDate", mpStartDate);
+      this.markingPeriodStartDate = mpStartDate;
+  }
+
+  getMarkingPeriodStartDate(){
+    return this.markingPeriodStartDate;
+  }
+
+
+
 }
+ 

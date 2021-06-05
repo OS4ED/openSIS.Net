@@ -56,6 +56,76 @@ export class SchoolAddViewModel extends CommonField {
   }
 }
 
+export class CopySchoolModel extends CommonField {
+  public schoolMaster: SchoolMasterModel;
+  public fromSchoolId: number;
+  public periods: boolean;
+  public markingPeriods: boolean;
+  public calendar: boolean;
+  public sections: boolean;
+  public rooms: boolean;
+  public gradeLevels: boolean;
+  public schoolFields: boolean;
+  public studentFields: boolean;
+  public enrollmentCodes: boolean;
+  public staffFields: boolean;
+  public subjets: boolean;
+  public programs: boolean;
+  public course: boolean;
+  public attendanceCode: boolean;
+  public reportCardGrades: boolean;
+  public reportCardComments: boolean;
+  public standardGrades: boolean;
+  public honorRollSetup: boolean;
+  public effortGrades: boolean;
+  public profilePermission: boolean;
+  public schoolLevel: boolean;
+  public schoolClassification: boolean;
+  public femaleToiletType: boolean;
+  public femaleToiletAccessibility: boolean;
+  public maleToiletType: boolean;
+  public maleToiletAccessibility: boolean;
+  public commonToiletType: boolean;
+  public commonToiletAccessibility: boolean;
+  public race: boolean;
+  public ethnicity: boolean;
+
+  constructor() {
+    super();
+    this.schoolMaster = new SchoolMasterModel();
+    this.periods = null;
+    this.markingPeriods = null;
+    this.calendar = null;
+    this.sections = null;
+    this.rooms = null;
+    this.gradeLevels = null;
+    this.schoolFields = null;
+    this.studentFields = null;
+    this.enrollmentCodes = null;
+    this.staffFields = null;
+    this.subjets = null;
+    this.programs = null;
+    this.course = null;
+    this.attendanceCode = null;
+    this.reportCardGrades = null;
+    this.reportCardComments = null;
+    this.standardGrades = null;
+    this.honorRollSetup = null;
+    this.effortGrades = null;
+    this.profilePermission = null;
+    this.schoolLevel = null;
+    this.schoolClassification = null;
+    this.femaleToiletType = null;
+    this.femaleToiletAccessibility = null;
+    this.maleToiletType = null;
+    this.maleToiletAccessibility = null;
+    this.commonToiletType = null;
+    this.commonToiletAccessibility = null;
+    this.race = null;
+    this.ethnicity = null;
+  }
+}
+
 export class CheckSchoolInternalIdViewModel extends CommonField {
   public tenantId: string;
   public schoolInternalId: string;

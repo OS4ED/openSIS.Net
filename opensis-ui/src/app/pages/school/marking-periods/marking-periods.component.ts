@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnInit } from '@angular/core';
 import icArrowDropDown from '@iconify/icons-ic/arrow-drop-down';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -47,6 +72,7 @@ export class MarkingPeriodsComponent implements OnInit {
   icClose = icClose;
   icDelete = icDelete;
   menuOpen = false;
+  viewDetailsModal = 0;
   markingPeriodListModel: MarkingPeriodListModel = new MarkingPeriodListModel();
   markingPeriodAddModel: MarkingPeriodAddModel = new MarkingPeriodAddModel();
   semesterAddModel: SemesterAddModel = new SemesterAddModel();
@@ -119,6 +145,11 @@ export class MarkingPeriodsComponent implements OnInit {
     this.viewFirstChild.endDate = this.commonFunction.formatDate(this.viewFirstChild.endDate);
     this.viewFirstChild.postStartDate = this.commonFunction.formatDate(this.viewFirstChild.postStartDate);
     this.viewFirstChild.postEndDate = this.commonFunction.formatDate(this.viewFirstChild.postEndDate);
+    if (this.viewDetailsModal === 0) {
+      this.viewDetailsModal = 1;
+    } else {
+      this.viewDetailsModal = 0;
+    }
     if (this.viewFirstChild.doesGrades) {
       this.doesGrades = true;
     } else {
@@ -135,6 +166,12 @@ export class MarkingPeriodsComponent implements OnInit {
       this.doesComments = false;
     }
   }
+
+  closeDetailsModal() {
+    this.viewDetailsModal = 0;
+  }
+
+
   getMarkingPeriod() {
 
     this.markingPeriodService.GetMarkingPeriod(this.markingPeriodListModel).subscribe(data => {

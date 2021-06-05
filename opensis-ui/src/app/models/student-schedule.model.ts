@@ -33,6 +33,7 @@ export class ScheduleStudentListViewModel extends CommonField {
   public filterParams: filterParams;
   public pageSize: number;
   public pageNumber: number;
+  public sortingModel: Sorting;
   public totalCount: number;
   public profilePhoto: boolean;
   public _pageSize: number; // this is from response.
@@ -40,6 +41,8 @@ export class ScheduleStudentListViewModel extends CommonField {
     super();
     this.pageNumber = 1;
     this._pageSize = 10;
+    this.sortingModel = new Sorting();
+    this.filterParams = null;
   }
 }
 
@@ -129,6 +132,14 @@ export class ScheduleCoursesForStudent360Model extends CommonField {
     super();
   }
 }
+class Sorting {
+  sortColumn: string;
+  sortDirection: string;
+  constructor() {
+      this.sortColumn = '';
+      this.sortDirection = '';
+  }
+}
 
 export class ScheduleCourseSectionForViewModel extends CommonField {
   tenantId: string;
@@ -185,4 +196,44 @@ export class RoutineViewEvent {
   courseSectionName: string;
   staffName: string;
   color: string;
+}
+
+export class ScheduledCourseSectionListForStudent360Model extends CommonField{
+  scheduleCourseSectionForView:[];
+  studentId: number;
+  isDropped: boolean;
+  durationStartDate: string;
+  durationEndDate: string;
+  
+  constructor(){
+    super();
+  }
+}
+
+export class WeekEventsModel{
+  takeAttendance: boolean;
+  blockId:number;
+  periodTitle:string;
+  periodId:number;
+  courseId:number;
+  courseSectionId:number;
+  day:number;
+  attendanceList:{};
+  takenAttendanceList:[]
+}
+export class AttendanceWeekViewModel {
+  attendanceWeekView: WeeklyAttendanceList[];
+}
+export class WeeklyAttendanceList {
+  periodId: number;
+  attendanceTaken: boolean;
+  courseId:number;
+  courseSectionId:number;
+  blockId: number;
+  periodTitle: string;
+  days:string;
+  attendanceList: {};
+  takenAttendanceDays: string;
+  cloneTakenAttendanceDays: number[];
+  takenAttendanceList:[]
 }

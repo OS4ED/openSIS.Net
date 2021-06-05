@@ -137,6 +137,7 @@ export class StudentAddModel extends CommonField {
     public portalAccess: boolean;
     public currentGradeLevel: string;
     public studentEnrollment: {};
+    public academicYear:string;
     constructor() {
         super();
         this.studentMaster = new StudentMasterModel();
@@ -501,8 +502,104 @@ export class StudentName {
     public middleName: string;
     public lastFamilyName: string;
 }
+export class StudentMedicalModel{
+    tenantId: string;
+    schoolId: number;
+    studentId: number;
+    id: number;
+    alertType: string;
+    noteDate: string;
+    medicalNote: string;
+    alertDescription: string;
+    immunizationType: string;
+    immunizationDate: string;
+    nurseVisitDate: string;
+    timeIn: string;
+    timeOut: string;
+    reason: string;
+    result: string;
+    comment: string;
+    primaryCarePhysician: string;
+    primaryCarePhysicianPhone: string;
+    preferredMedicalFacility: string;
+    preferredMedicalFacilityPhone: string;
+    insuranceCompany: string;
+    insuranceCompanyPhone: string;
+    policyNumber: string;
+    policyHolderName: string;
+    dentistName: string;
+    dentistPhone: string;
+    visionName: string;
+    visionProviderPhone: string;
+    createdBy: string;
+    createdOn: string;
+    updatedBy: string;
+    updatedOn: string;
+    constructor(){
+        this.id = 0;
+        this.primaryCarePhysician = null;
+        this.primaryCarePhysicianPhone = null;
+        this.preferredMedicalFacility = null;
+        this.preferredMedicalFacilityPhone = null;
+        this.insuranceCompany = null;
+        this.insuranceCompanyPhone = null;
+        this.policyHolderName = null;
+        this.policyNumber = null;
+        this.dentistName = null;
+        this.dentistPhone = null;
+        this.visionName = null;
+        this.visionProviderPhone = null;
+    }
+}
+export class AddEditStudentMedicalAlertModel extends CommonField {
+    studentMedicalAlert: StudentMedicalModel;
+    constructor(){
+        super();
+        this.studentMedicalAlert = new StudentMedicalModel();
+    }
+}
+export class AddEditStudentMedicalNoteModel extends CommonField{
+    studentMedicalNote: StudentMedicalModel;
+    constructor(){
+        super();
+        this.studentMedicalNote = new StudentMedicalModel();
+    }
+}
+export class AddEditStudentMedicalImmunizationModel extends CommonField {
+    studentMedicalImmunization: StudentMedicalModel;
+    constructor(){
+        super();
+        this.studentMedicalImmunization = new StudentMedicalModel();
+    }
+}
 
+export class AddEditStudentMedicalNurseVisitModel extends CommonField{
+    studentMedicalNurseVisit: StudentMedicalModel;
+    constructor(){
+        super();
+        this.studentMedicalNurseVisit = new StudentMedicalModel();
+    }
+}
 
-
-
-
+export class AddEditStudentMedicalProviderModel extends CommonField{
+    studentMedicalProvider: StudentMedicalModel;
+    public fieldsCategoryList: [FieldsCategoryModel];
+    selectedCategoryId: number;
+    constructor(){
+        super();
+        this.studentMedicalProvider = new StudentMedicalModel();
+        this.studentMedicalProvider.id = 0;
+    }
+}
+export class StudentMedicalInfoListModel extends CommonField{
+    public studentMedicalAlertList: [StudentMedicalModel];
+    public studentMedicalImmunizationList: [StudentMedicalModel];
+    public studentMedicalNoteList: [StudentMedicalModel];
+    public studentMedicalNurseVisitList: [StudentMedicalModel];
+    public studentMedicalProviderList: [StudentMedicalModel];
+    public fieldsCategoryList: [FieldsCategoryModel];
+    studentId: number;
+    constructor(){
+        super();
+    }
+}

@@ -1,4 +1,4 @@
-        <div class="card -mt-16">
+        <div class="card">
             <div class="flex justify-between items-center px-4">
                 <div class="py-4">
                     <a [routerLink]="['/school', 'staff', 'teacher-functions', 'input-final-grade']"
@@ -56,13 +56,23 @@
                                         <th width="50%">{{ "studentDetails" | translate }}</th>
                                         <th width="25%">{{ "percent" | translate }}</th>
                                         <th width="25%" class="relative whitespace-nowrap">
-                                            <span class="switch-wrap -ml-8 pr-2">
+                                            <ng-container *ngIf="courseSectionDetails.length>0">
+                                                
+                                            <span *ngIf="courseSectionDetails[0].gradeScaleType === 'Numeric' || courseSectionDetails[0].gradeScaleType === 'Teacher_Scale'" class="switch-wrap -ml-8 pr-2">
                                                 <label class="switch">
                                                     <input value="isPercentChecked" (change)="onCheckboxChange($event)"
-                                                        type="checkbox">
+                                                        type="checkbox" disabled>
                                                     <span class="slider"></span>
                                                 </label>
                                             </span>
+                                            <span *ngIf="courseSectionDetails[0].gradeScaleType !== 'Numeric' && courseSectionDetails[0].gradeScaleType !== 'Teacher_Scale'" class="switch-wrap -ml-8 pr-2">
+                                                <label class="switch">
+                                                    <input checked (change)="onCheckboxChange($event)"
+                                                        type="checkbox" disabled>
+                                                    <span class="slider"></span>
+                                                </label>
+                                            </span>
+                                        </ng-container>
                                             {{ "letterGrade" | translate }}
                                         </th>
                                     </tr>
@@ -90,19 +100,32 @@
                                                 </div>
                                             </div>
                                         </td>
-                                        <td *ngIf="addUpdateStudentFinalGradeModel.isPercent"><input
+                                        <ng-container *ngIf="this.courseSectionDetails[0].gradeScaleType === 'Numeric' || this.courseSectionDetails[0].gradeScaleType === 'Teacher_Scale'">
+                                            <td *ngIf="addUpdateStudentFinalGradeModel.isPercent"><input
                                                 class="shadow appearance-none border rounded py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" min="0" max="100"
-                                                (keyup)="percentToGrade(i)" name="percentMarks" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[i].percentMarks" type="number" [disabled]="!addUpdateStudentFinalGradeModel.isPercent"></td>
-                                        <td *ngIf="!addUpdateStudentFinalGradeModel.isPercent">{{addUpdateStudentFinalGradeModel.studentFinalGradeList[i].percentMarks? addUpdateStudentFinalGradeModel.studentFinalGradeList[i].percentMarks + "%" : ""}}</td>
+                                                (keyup)="percentToGrade(i)" name="percentMarks" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[i].percentMarks" type="number"></td>
                                         <td>
                                             <mat-form-field class="w-50" appearance="outline" color="primary">
                                                 <mat-label>{{'selectGrade'|translate}}</mat-label>
-                                                <mat-select (selectionChange)="selectedGrade($event.value ,i)" name="gradeObtained" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[i].gradeObtained" [disabled]="addUpdateStudentFinalGradeModel.isPercent">
+                                                <mat-select (selectionChange)="selectedGrade($event.value ,i)" name="gradeObtained" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[i].gradeObtained" disabled>
                                                     <mat-option *ngFor="let report of reportCardGrade" value={{report.value}}>
                                                         {{report.value}}</mat-option>
                                                 </mat-select>
                                             </mat-form-field>
                                         </td>
+                                        </ng-container>
+                                    <ng-container *ngIf="this.courseSectionDetails[0].gradeScaleType !== 'Numeric' && this.courseSectionDetails[0].gradeScaleType !== 'Teacher_Scale'">
+                                        <td>{{addUpdateStudentFinalGradeModel?.studentFinalGradeList[i]?.percentMarks? addUpdateStudentFinalGradeModel?.studentFinalGradeList[i]?.percentMarks + "%" : ""}}</td>
+                                        <td>
+                                            <mat-form-field class="w-50" appearance="outline" color="primary">
+                                                <mat-label>{{'selectGrade'|translate}}</mat-label>
+                                                <mat-select (selectionChange)="selectedGrade($event.value ,i)" name="gradeObtained" [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[i].gradeObtained">
+                                                    <mat-option *ngFor="let report of gradeScaleList" value={{report.title}}>
+                                                        {{report.title}}</mat-option>
+                                                </mat-select>
+                                            </mat-form-field>
+                                        </td>
+                                    </ng-container>
                                     </tr>
 
                                 </tbody>
@@ -113,7 +136,40 @@
                 <div *ngIf="showComment" class="lg:w-2/4 lg:pr-4 pl-4 content-right">
                     <h4 class="text-base font-medium text-green py-2">{{ "addPredefinedComments" | translate }}</h4>
                     <div class="w-full border rounded mb-2 p-2 pb-0">
-                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                        <mat-form-field class="w-full">
+                            <mat-chip-list  #chipList aria-label="Fruit selection">
+                              <mat-chip
+                                *ngFor="let report of addUpdateStudentFinalGradeModel.studentFinalGradeList[selectedStudent].studentFinalGradeComments"
+                                [selectable]="selectable"
+                                [removable]="removable"
+                                (removed)="removeComment(report.courseCommentId)">
+                                {{report.comments}}
+                                <mat-icon matChipRemove *ngIf="removable">cancel</mat-icon>
+                              </mat-chip>
+                              <input
+                                placeholder="Add Comments..."
+                                #fruitInput
+                                [(ngModel)]="studentFinalGradeComments"
+                                [matAutocomplete]="auto"
+                                [matChipInputFor]="chipList"
+                                [matChipInputSeparatorKeyCodes]="separatorKeysCodes">
+                            </mat-chip-list>
+                            <mat-autocomplete #auto="matAutocomplete" (optionSelected)="selected($event)">
+                              <mat-option *ngFor="let report of reportCardComments" [value]="report">
+                                {{report.comments}}
+                              </mat-option>
+                            </mat-autocomplete>
+                          </mat-form-field>
+                        <!-- <div class="w-full p-0">
+                            <mat-chip-list #chipList aria-label="Choose a date" (click)="picker.open()">
+                                <mat-chip *ngFor="let report of reportCardComments" [selectable]="false" [removable]="true"
+                                    (removed)="removeComment(removeComment(report.courseCommentId))">
+                                    {{report.comments}}
+                                    <mat-icon matChipRemove *ngIf="true">cancel</mat-icon>
+                                </mat-chip>
+                            </mat-chip-list>
+                        </div> -->
+                        <!-- <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'addPredefinedComments'|translate}}</mat-label>
                             <mat-select (selectionChange)="selectedReportComment($event.value)"  [compareWith]="compareObjects"  [(ngModel)]="addUpdateStudentFinalGradeModel.studentFinalGradeList[selectedStudent].studentFinalGradeComments" multiple>
                                 <mat-option *ngFor="let report of reportCardComments" [value]="report">
@@ -126,7 +182,7 @@
                                 <i (click)="removeComment(report.courseCommentId)" class="icon icon-minus-circle2 ml-2 text-gray text-base align-middle cursor-pointer"></i>
                             </span>
                             
-                        </div>
+                        </div> -->
                     </div>
                     <h4 class="text-base font-medium text-green py-2">{{ "teacherComments" | translate }}</h4>
                     <div class="w-full border rounded mb-2 p-2">
@@ -138,7 +194,7 @@
                             <h4 class="text-base font-medium">{{standard.gradeUsStandard.standardRefNo}}</h4>
                             <p class="text-gray">{{standard.gradeUsStandard.standardDetails}}</p>
                         </div>
-                        <div class="lg:w-1/4">
+                        <div class="lg:w-1/4" *ngIf="gradeScaleStandardList">
                             <mat-form-field class="w-full mb-0" appearance="outline" color="primary">
                                 <mat-label>{{ "assignGrade" | translate }}</mat-label>
                                 <mat-select [(value)]="addUpdateStudentFinalGradeModel?.studentFinalGradeList[selectedStudent]?.studentFinalGradeStandard[i].gradeObtained" (selectionChange)="setValue(standard.gradeUsStandard.gradeStandardId, $event.value,i)" name="gradeObtained">

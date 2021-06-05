@@ -1,4 +1,29 @@
-﻿using opensis.data.Helper;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using opensis.data.Helper;
 using opensis.data.Interface;
 using opensis.data.Models;
 using opensis.data.ViewModels.MarkingPeriods;
@@ -759,7 +784,8 @@ namespace opensis.data.Repository
                             Value = "0" + "_" + markingPeriod.MarkingPeriodId,
                             Text = markingPeriod.ShortName,
                             StartDate = markingPeriod.StartDate,
-                            EndDate = markingPeriod.EndDate
+                            EndDate = markingPeriod.EndDate,
+                            FullName=markingPeriod.Title
                     };
                         markingPeriodList.getMarkingPeriodView.Add(schoolYear);
                     }
@@ -772,7 +798,8 @@ namespace opensis.data.Repository
                             Value = "1" + "_" + semester.MarkingPeriodId,
                             Text = semester.ShortName,
                             StartDate = semester.StartDate,
-                            EndDate = semester.EndDate
+                            EndDate = semester.EndDate,
+                            FullName = semester.Title
                         };
                         markingPeriodList.getMarkingPeriodView.Add(sem);
                     }
@@ -784,7 +811,8 @@ namespace opensis.data.Repository
                             Value = "2" + "_" + quater.MarkingPeriodId,
                             Text = quater.ShortName,
                             StartDate = quater.StartDate,
-                            EndDate = quater.EndDate
+                            EndDate = quater.EndDate,
+                            FullName = quater.Title
                         };
                         markingPeriodList.getMarkingPeriodView.Add(qtr);
                     }                      

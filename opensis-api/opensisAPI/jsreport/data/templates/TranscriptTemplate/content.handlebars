@@ -1,0 +1,682 @@
+<!--
+Invoice dynamically rendered into html using handlebars and converted into pdf
+using chrome-pdf recipe. The styles are extracted into separate asset for
+better readability and later reuse.
+
+Data to this sample are mocked at the design time and should be filled on the
+incoming API request.
+!-->
+
+<html>
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p {
+            margin: 0;
+        }
+
+        body {
+            -webkit-print-color-adjust: exact;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+
+        .float-left {
+            float: left;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .ml-auto {
+            margin-left: auto;
+        }
+
+        .m-auto {
+            margin: auto;
+        }
+
+        .report-card {
+            width: 900px;
+            margin: auto;
+            font-family: "Roboto", "Helvetica Neue";
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid #cacaca;
+            margin-right: 20px;
+            text-align: center;
+            line-height: 60px;
+            color: #cacaca;
+            text-transform: uppercase;
+            font-size: 12px;
+        }
+
+        .student-photo {
+            margin-right: 20px;
+            border: 1px solid #000;
+            border-radius: 3px;
+        }
+
+        .report-card-header {
+            border-bottom: 2px solid #000;
+        }
+
+            .report-card-header td {
+                padding: 25px 30px 20px;
+            }
+
+        .header-left h2 {
+            font-weight: 400;
+            font-size: 30px;
+        }
+
+        .header-left p {
+            margin: 5px 0;
+            font-size: 15px;
+        }
+
+        .header-right {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 12px 10px;
+            border-radius: 3px;
+        }
+
+        .student-info-header {
+            padding: 20px 30px;
+        }
+
+            .student-info-header td {
+                padding-bottom: 20px;
+            }
+
+            .student-info-header .info-left {
+                padding-top: 20px;
+            }
+
+                .student-info-header .info-left h2 {
+                    font-size: 20px;
+                    margin-bottom: 15px;
+                    font-weight: 500;
+                }
+
+                .student-info-header .info-left p {
+                    margin-bottom: 10px;
+                    color: #333;
+                }
+
+            .student-info-header .info-right {
+                border: 2px solid #000;
+            }
+
+                .student-info-header .info-right td {
+                    text-align: right;
+                    padding: 12px 10px;
+                    color: #333;
+                }
+
+                    .student-info-header .info-right td:last-child {
+                        background-color: #040404;
+                        color: #e2e2e2;
+                    }
+
+        .semester-table {
+            padding: 0 30px 30px;
+        }
+
+            .semester-table table {
+                border: 1px solid #000;
+            }
+
+            .semester-table th,
+            .semester-table td {
+                border-bottom: 1px solid #000;
+                padding: 8px 15px;
+            }
+
+            .semester-table th {
+                text-align: left;
+                background-color: #e5e5e5;
+            }
+
+            .semester-table caption {
+                margin-bottom: 10px;
+            }
+
+                .semester-table caption h2 {
+                    font-weight: 400;
+                    font-size: 24px;
+                }
+
+                .semester-table caption span {
+                    font-size: 16px;
+                    margin-left: 10px;
+                }
+
+                .semester-table caption p {
+                    margin-top: 8px;
+                }
+
+        .gpa-table {
+            padding: 0 30px 30px;
+        }
+
+            .gpa-table table {
+                border: 1px solid #000;
+            }
+
+            .gpa-table caption h4 {
+                text-align: left;
+                margin-bottom: 10px;
+                font-weight: 500;
+            }
+
+            .gpa-table th {
+                padding: 8px 15px;
+                background-color: #e5e5e5;
+                text-align: left;
+                border-bottom: 1px solid #000;
+            }
+
+            .gpa-table td {
+                padding: 8px 15px;
+                text-align: left;
+            }
+
+        .signature-table {
+            padding: 20px 30px;
+        }
+
+        .sign {
+            padding-bottom: 20px;
+        }
+
+        .short-sign {
+            padding-top: 60px;
+        }
+
+        .long-line {
+            width: 90%;
+            margin-bottom: 10px;
+            border-top: 2px solid #000;
+        }
+
+        .name {
+            margin: 8px 0;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="report-card">
+        {{#each TotalData}}
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <td>
+                    <table class="report-card-header" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>
+                                <div class="logo float-left">
+                                    Logo
+                                </div>
+                                <div class="header-left float-left">
+                                    <h2>{{SchoolData.SchoolName}}</h2>
+                                   
+                                    <p>{{SchoolData.StreetAddress1}},{{#if SchoolData.StreetAddress2}} {{SchoolData.StreetAddress2}},{{/if}} {{SchoolData.City}},{{#if SchoolData.District}} {{SchoolData.District}},{{/if}} {{#if SchoolData.State}}{{SchoolData.State}},{{/if}} {{SchoolData.Country}}, {{SchoolData.Zip}}</p>
+                                   
+                                </div>
+                            </td>
+                            <td>
+                                <div class="header-right">
+                                    <h3>Transcript</h3>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="student-info-header">
+                    <table cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="65%">
+                                <div class="student-photo float-left">
+                                    {{!-- <img src="img/photo.jpeg"> --}}
+                                    {{#if StudentData.StudentPhoto}}<img src=data:image/png;base64,{{StudentData.StudentPhoto}} style="width:100%; max-width:300px;" />{{/if}}
+                                </div>
+                                <div class="info-left float-left">
+                                    <h2>{{StudentData.FirstGivenName}}  {{#if StudentData.MiddleName}}{{StudentData.MiddleName}} {{/if}} {{StudentData.LastFamilyName}}</h2>
+                                    <p> {{#if StudentData.HomeAddressLineOne}}{{StudentData.HomeAddressLineOne}}, {{/if}}  {{#if StudentData.HomeAddressLineTwo}}{{StudentData.HomeAddressLineTwo}},{{/if}} {{#if StudentData.HomeAddressCity}}{{StudentData.HomeAddressCity}}, {{StudentData.HomeAddressState}},{{/if}} {{#if StudentData.HomeAddressCountry}} {{StudentData.HomeAddressCountry}},{{/if}} {{#if StudentData.HomeAddressZip}} {{StudentData.HomeAddressZip}} {{/if}}</p>
+                                    <p>Date of Birth : {{StudentDob}}</p>
+                                    <p>Student ID : {{StudentData.StudentInternalId}}</p>
+                                </div>
+                            </td>
+                            <td width="35%">
+                                <div class="info-right">
+                                    <table class="text-right" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td>Cumulative GPA</td>
+                                            <td>{{cumulativeGpa}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Credit Attempted</td>
+                                            <td>{{totalCreditAttempted}}</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Total Credit Earned</td>
+                                            <td>{{totalCreditEarned}}</td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            {{#each TasnscriptdetailsData}}
+            <tr>
+                <td class="semester-table">
+                    <table>
+                        <caption>
+                            <h2 class="float-left"><b>{{GradeTitle}}</b><span>({{SchoolName}})</span></h2>
+                            <p class="float-right">School Year: {{SchoolYear}}</p>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th>Course Code</th>
+                                <th>Course</th>
+                                <th>Credit Hours</th>
+                                <th>Credits Earned</th>
+                                <th>Grade</th>
+                                <th>GP Value</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each Details}}
+                            <tr>
+                                <td>{{CourseCode}}</td>
+                                <td>{{CourseName}}</td>
+                                <td>{{CreditHours}}</td>
+                                <td>{{CreditEarned}}</td>
+                                <td>{{Grade}}</td>
+                                <td>{{GpValue}}</td>
+                            </tr>
+                            {{/each}}
+                            <!--<tr>
+        <td>PRECAL2</td>
+        <td>Calculus</td>
+        <td>3.00</td>
+        <td>3.00</td>
+        <td>B</td>
+        <td>9.00</td>
+    </tr>
+    <tr>
+        <td>SS-AH201</td>
+        <td>American History</td>
+        <td>3.00</td>
+        <td>3.00</td>
+        <td>A</td>
+        <td>12.00</td>
+    </tr>
+    <tr>
+        <td>SC-CHEM1</td>
+        <td>Chemistry w/lab</td>
+        <td>3.00</td>
+        <td>3.00</td>
+        <td>B</td>
+        <td>9.00</td>
+    </tr>
+    <tr>
+        <td>ART-DRW</td>
+        <td>Drawing</td>
+        <td>3.00</td>
+        <td>3.00</td>
+        <td>D</td>
+        <td>6.00</td>
+    </tr>
+    <tr>
+        <td>MUSIC</td>
+        <td>Piano</td>
+        <td>3.00</td>
+        <td>3.00</td>
+        <td>A</td>
+        <td>12.00</td>
+    </tr>-->
+                            <tr>
+                                <td colspan="6"><b>Credit Attempted: {{CreditAttempted}} / Credit Earned: {{TotalGradeCreditEarned}} / GPA: {{Gpa}}</b></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {{/each}}
+            <!--<tr>
+        <td class="semester-table">
+            <table>
+                <caption>
+                    <h2 class="float-left"><b>10th Grade</b><span>(Pathbhaban High school)</span></h2>
+                    <p class="float-right">School Year: 2017-2018</p>
+                </caption>
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course</th>
+                        <th>Credit Hours</th>
+                        <th>Credits Earned</th>
+                        <th>Grade</th>
+                        <th>GP Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ELA101</td>
+                        <td>English 10</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>PRECAL2</td>
+                        <td>Calculus</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>SS-AH201</td>
+                        <td>American History</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>A</td>
+                        <td>12.00</td>
+                    </tr>
+                    <tr>
+                        <td>SC-CHEM1</td>
+                        <td>Chemistry w/lab</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>ART-DRW</td>
+                        <td>Drawing</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>D</td>
+                        <td>6.00</td>
+                    </tr>
+                    <tr>
+                        <td>MUSIC</td>
+                        <td>Piano</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>A</td>
+                        <td>12.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><b>Credit Attempted: 18.00 / Credit Earned: 18.00 / GPA: 3.17</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="semester-table">
+            <table>
+                <caption>
+                    <h2 class="float-left"><b>11th Grade</b><span>(Southpoint High school)</span></h2>
+                    <p class="float-right">School Year: 2018-2019</p>
+                </caption>
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course</th>
+                        <th>Credit Hours</th>
+                        <th>Credits Earned</th>
+                        <th>Grade</th>
+                        <th>GP Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ELA101</td>
+                        <td>English 10</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>PRECAL2</td>
+                        <td>Calculus</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>SS-AH201</td>
+                        <td>American History</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>A</td>
+                        <td>12.00</td>
+                    </tr>
+                    <tr>
+                        <td>SC-CHEM1</td>
+                        <td>Chemistry w/lab</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>ART-DRW</td>
+                        <td>Drawing</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>D</td>
+                        <td>6.00</td>
+                    </tr>
+                    <tr>
+                        <td>MUSIC</td>
+                        <td>Piano</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>A</td>
+                        <td>12.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><b>Credit Attempted: 18.00 / Credit Earned: 18.00 / GPA: 3.17</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>
+    <tr>
+        <td class="semester-table">
+            <table>
+                <caption>
+                    <h2 class="float-left"><b>12th Grade</b><span>(Southpoint High school)</span></h2>
+                    <p class="float-right">School Year: 2019-2020</p>
+                </caption>
+                <thead>
+                    <tr>
+                        <th>Course Code</th>
+                        <th>Course</th>
+                        <th>Credit Hours</th>
+                        <th>Credits Earned</th>
+                        <th>Grade</th>
+                        <th>GP Value</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>ELA101</td>
+                        <td>English 10</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>PRECAL2</td>
+                        <td>Calculus</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>SS-AH201</td>
+                        <td>American History</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>A</td>
+                        <td>12.00</td>
+                    </tr>
+                    <tr>
+                        <td>SC-CHEM1</td>
+                        <td>Chemistry w/lab</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>B</td>
+                        <td>9.00</td>
+                    </tr>
+                    <tr>
+                        <td>ART-DRW</td>
+                        <td>Drawing</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>D</td>
+                        <td>6.00</td>
+                    </tr>
+                    <tr>
+                        <td>MUSIC</td>
+                        <td>Piano</td>
+                        <td>3.00</td>
+                        <td>3.00</td>
+                        <td>A</td>
+                        <td>12.00</td>
+                    </tr>
+                    <tr>
+                        <td colspan="6"><b>Credit Attempted: 18.00 / Credit Earned: 18.00 / GPA: 3.17</b></td>
+                    </tr>
+                </tbody>
+            </table>
+        </td>
+    </tr>-->
+            <tr>
+                <td class="gpa-table">
+                    {{#if GradeDetails}}
+                    <table>
+                        <caption>
+                            <h4><b>GPA & CGPA based on a 4.00 point scale as follows:</b></h4>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th>Grade Letter</th>
+                                <th>Weighted Grade Points</th>
+                                <th>Unweighted Grade Points</th>
+                                <th>Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each GradeDetails}}
+                            <tr>
+                                <td>{{Title}}</td>
+                                <td>{{WeightedGpValue}}</td>
+                                <td>{{UnweightedGpValue}}</td>
+                                <td>{{Comment}}</td>
+                            </tr>
+                            {{/each}}
+                            <!--<tr>
+                <td>B</td>
+                <td>0.00</td>
+                <td>3.00</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>C</td>
+                <td>0.00</td>
+                <td>2.00</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>D</td>
+                <td>0.00</td>
+                <td>1.00</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>F</td>
+                <td>0.00</td>
+                <td>0.00</td>
+                <td></td>
+            </tr>
+            <tr>
+                <td>Inc</td>
+                <td>0.00</td>
+                <td>0.00</td>
+                <td></td>
+            </tr>-->
+                        </tbody>
+                    </table>
+                    {{/if}}
+                </td>
+            </tr>
+            <tr>
+                <td class="signature-table">
+                    <table cell-padding="10">
+                        <tr>
+                            <td width="60%" style="vertical-align: top;">
+                                <i>Not official unless signed.</i>
+                            </td>
+                            <td width="40%">
+                                <p class="short-sign"></p>
+                                <p class="long-line ml-auto"></p>
+                                <p class="text-center sign">Signature</p>
+                                <p class="text-center name">{{nameOfPrincipal}}, Principal</p>
+                                <p class="long-line ml-auto"></p>
+                                <p class="text-center sign">Name & Title</p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        {{/each}}
+    </div>
+</body>
+</html>
+
+
+

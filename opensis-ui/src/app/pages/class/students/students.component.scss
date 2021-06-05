@@ -4,7 +4,7 @@
     th {
       @apply border-b;
       border-color: rgba(0, 0, 0, 0.1);
-      @apply px-6;
+      @apply px-4;
       @apply py-2;
     }
     th {
@@ -15,4 +15,7 @@
       text-align: center;
     }
   }
+}
+.hide{
+  display:none;
 }

@@ -47,7 +47,6 @@ import { adapterFactory } from 'angular-calendar/date-adapters/date-fns';
     MatDatepickerModule,
     MatCheckboxModule,
     MatSnackBarModule,
-     
     OwlDateTimeModule, 
     OwlNativeDateTimeModule,
     // Vex

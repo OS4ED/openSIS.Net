@@ -10,6 +10,7 @@ import { IconModule } from '@visurel/iconify-angular';
 import {MatButtonModule} from '@angular/material/button';
 import { MatInputModule } from '@angular/material/input';
 import { FormsModule } from '@angular/forms';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 
@@ -25,7 +26,8 @@ import { FormsModule } from '@angular/forms';
     IconModule,
     MatButtonModule,
     MatInputModule,
-    FormsModule
+    FormsModule,
+    MatTooltipModule
   ]
 })
 export class AddCommentsModule { }

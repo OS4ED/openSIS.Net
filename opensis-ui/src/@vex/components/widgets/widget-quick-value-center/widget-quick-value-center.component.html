@@ -4,7 +4,7 @@
     <mat-icon [icIcon]="icon"></mat-icon>
   </div>
 
-  <h6 class="display-1 font-bold mt-4 mb-2">{{ value }}</h6>
+  <h6 class="display-1 font-bold mt-4 mb-2">{{ value | number }}</h6>
   <h3 class="subheading-2 font-medium text-secondary m-0">{{ label }}</h3>
 
   <h4 [class.text-green]="change > 0" [class.text-red]="change <= 0" class="subheading-1 font-medium mt-4 mb-0">

@@ -38,6 +38,7 @@ import { ViewparentSchoolaccessComponent } from './viewparent-schoolaccess/viewp
 import { EditparentGeneralinfoComponent } from './editparent-generalinfo/editparent-generalinfo.component';
 import { EditparentAddressinfoComponent } from './editparent-addressinfo/editparent-addressinfo.component';
 import { EditparentSchoolaccessComponent } from './editparent-schoolaccess/editparent-schoolaccess.component';
+import { EditParentRoutingModule } from './edit-parent-routing-module';
 
 
 
@@ -54,6 +55,7 @@ import { EditparentSchoolaccessComponent } from './editparent-schoolaccess/editp
   imports: [
     CommonModule,
     MatIconModule,
+    EditParentRoutingModule,
     MatButtonModule,
     MatFormFieldModule,
     MatDatepickerModule,
@@ -70,7 +72,6 @@ import { EditparentSchoolaccessComponent } from './editparent-schoolaccess/editp
     MatInputModule,
     MatSelectModule,
     TranslateModule,
-    BrowserAnimationsModule,
     FormsModule,
     ReactiveFormsModule,
     SharedModuleModule,

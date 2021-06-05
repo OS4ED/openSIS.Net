@@ -1,0 +1,478 @@
+<!--
+Invoice dynamically rendered into html using handlebars and converted into pdf
+using phantom-pdf recipe. The styles are extracted into separate asset for
+better readability and later reuse.
+
+Data to this sample are mocked at the design time and should be filled on the
+incoming API request.
+!-->
+<!--<style>
+{#asset Invoice styles.css @encoding=utf8}
+</style-->
+
+
+<html>
+
+<head>
+    <meta content="text/html; charset=utf-8" http-equiv="Content-Type">
+    <link href="style.css" rel="stylesheet">
+</head>
+
+<body>
+    <style>
+        body,
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p {
+            margin: 0;
+        }
+
+        body {
+            -webkit-print-color-adjust: exact;
+        }
+
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .float-left {
+            float: left;
+        }
+
+        .float-right {
+            float: right;
+        }
+
+        .text-center {
+            text-align: center;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        .ml-auto {
+            margin-left: auto;
+        }
+
+        .m-auto {
+            margin: auto;
+        }
+
+        .report-card {
+            width: 900px;
+            margin: auto;
+            font-family: "Roboto", "Helvetica Neue";
+        }
+
+        .report-card-header {
+            border-bottom: 2px solid #000;
+        }
+
+            .report-card-header td {
+                padding: 25px 30px 20px;
+            }
+
+        .header-left h2 {
+            font-weight: 400;
+            font-size: 30px;
+        }
+
+        .header-left p {
+            margin: 5px 0;
+            font-size: 15px;
+        }
+
+        .header-right {
+            background: #000;
+            color: #fff;
+            text-align: center;
+            padding: 6px 10px;
+            border-radius: 3px;
+        }
+
+        .student-info-header {
+            padding: 20px 30px;
+        }
+
+            .student-info-header td {
+                border-bottom: 1px solid #000;
+                padding-bottom: 20px;
+            }
+
+            .student-info-header .info-left h1 {
+                font-size: 28px;
+                margin-bottom: 10px;
+            }
+
+        .striped-table td {
+            border: 1px solid #000;
+            padding: 8px;
+        }
+
+            .striped-table td:last-child {
+                background-color: #E4E4E4;
+            }
+
+        .info-left span {
+            padding: 5px 15px;
+            margin-right: 15px;
+            border-radius: 15px;
+            background: #484747;
+            color: #fff;
+        }
+
+        .semester-table {
+            padding: 0 30px 30px;
+        }
+
+            .semester-table table {
+                border: 1px solid #000;
+            }
+
+            .semester-table th,
+            .semester-table td {
+                border-bottom: 1px solid #000;
+                padding: 8px 15px;
+            }
+
+            .semester-table th {
+                text-align: left;
+                font-weight: normal;
+                background-color: #e5e5e5;
+            }
+
+            .semester-table caption {
+                margin-bottom: 7px;
+            }
+
+                .semester-table caption h2 {
+                    font-weight: 400;
+                }
+
+                .semester-table caption p {
+                    margin-top: 8px;
+                }
+
+        .signature-table {
+            padding: 30px;
+        }
+
+        .sign {
+            padding-bottom: 20px;
+        }
+
+        .long-line {
+            width: 90%;
+            border-top: #000;
+            margin-bottom: 10px;
+            border-top: 2px solid #000;
+        }
+
+        .small-line {
+            display: inline-block;
+            width: 150px;
+            border-top: 2px solid #000;
+        }
+
+        .comments {
+            padding: 20px 30px 10px;
+        }
+
+            .comments h4 {
+                margin-bottom: 10px;
+            }
+
+            .comments p {
+                margin-bottom: 3px;
+                padding-right: 20px;
+            }
+    </style>
+    <div class="report-card">
+        {{#each TotalData}}
+        <table cellpadding="0" cellspacing="0">
+            <tr>
+                <td colspan="2">
+                    <table class="report-card-header" cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td>
+                                <div class="header-left">
+                                    <h2>{{SchoolData.SchoolName}}</h2>
+                                    <p>{{SchoolData.StreetAddress1}},{{#if SchoolData.StreetAddress2}} {{SchoolData.StreetAddress2}},{{/if}} {{SchoolData.City}},{{#if SchoolData.District}} {{SchoolData.District}},{{/if}} {{#if SchoolData.State}}{{SchoolData.State}},{{/if}} {{SchoolData.Country}}, {{SchoolData.Zip}}</p>
+                                </div>
+                            </td>
+                            <td>
+                                <div class="header-right">
+                                    <h3>Report Card</h3>
+                                    <p>School Year: 2020-2021</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            <tr>
+                <td class="student-info-header">
+                    <table cellpadding="0" cellspacing="0">
+                        <tr>
+                            <td width="60%">
+                                <div class="info-left">
+                                    <h1>{{StudentName.FirstGivenName}} {{#if StudentName.MiddleName}}{{StudentName.MiddleName}}{{/if}} {{StudentName.LastFamilyName}}</h1>
+                                    <p><span>{{gradeTitle}}</span>Student ID :{{studentInternalId}}</p>
+                                </div>
+                            </td>
+                            <td width="40%">
+                                <div class="info-right">
+                                    <table class="striped-table text-center" cellpadding="0" cellspacing="0">
+                                        <tr>
+                                            <td>Year to date attendance %</td>
+                                            <td><b>{{yodAttendance}}</b></td>
+                                        </tr>
+                                        <tr>
+                                            <td>Year-to-date absences (in days)</td>
+                                            <td><b>{{yodAbsence}}</b></td>
+                                        </tr>
+                                    </table>
+                                </div>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+            {{#each ReportdetailsData}}
+            <tr>                
+                <td class="semester-table">
+                    <table>
+                        <caption>
+                            <h2 class="float-left">{{MarkingPeriodTitle}}</h2>
+                            <p class="float-right">Absences: {{Absences}} <span>|</span>Excused Absences: {{ExcusedAbsences}}</p>
+                        </caption>
+                        <thead>
+                            <tr>
+                                <th>Course</th>
+                                <th>Teacher</th>
+                                <th>Grade</th>
+                                <th>GPA</th>
+                                <th>Comments</th>
+                                <th>Teacher Comments</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {{#each Details}}
+                            <tr>
+                                <td>{{CourseName}}</td>
+                                <td>{{Teacher}}</td>
+                                <td>{{Grade}}</td>
+                                <td>{{Gpa}}</td>
+                                <td>{{Comments}}</td>
+                                <td>{{TeacherComments}}</td>
+                            </tr>
+                            {{/each}}
+                            <!--<tr>
+                    <td>Calculus</td>
+                    <td>Ekon Williams</td>
+                    <td>B (82.78%)</td>
+                    <td>4.50</td>
+                    <td>2, 5</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Ameriacan History</td>
+                    <td>Charlotte Davis</td>
+                    <td>A (92.15%)</td>
+                    <td>6.00</td>
+                    <td>1, 5, 8</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Chemistry w/lab</td>
+                    <td>Robert Miller</td>
+                    <td>A (95.6%)</td>
+                    <td>4.50</td>
+                    <td>5, 8</td>
+                    <td>2</td>
+                </tr>
+                <tr>
+                    <td>Drawing</td>
+                    <td>Andrew Brown</td>
+                    <td>B (78.2%)</td>
+                    <td>4.50</td>
+                    <td>1, 2</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>Piano</td>
+                    <td>Danielle Boucher</td>
+                    <td>C (59.1%)</td>
+                    <td>6.00</td>
+                    <td>5</td>
+                    <td>3</td>
+                </tr>-->
+                        </tbody>
+                    </table>
+                </td>
+            </tr>
+            {{/each}}
+            <!--<tr>
+            <td class="semester-table">
+                <table>
+                    <caption>
+                        <h2 class="float-left">Semester 1</h2>
+                        <p class="float-right">Absences: 2 <span>|</span> Excused Absences: 0</p>
+                    </caption>
+                    <thead>
+                        <tr>
+                            <th>Course</th>
+                            <th>Teacher</th>
+                            <th>Grade</th>
+                            <th>GPA</th>
+                            <th>Comments</th>
+                            <th>Teacher Comments</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>English 10</td>
+                            <td>Adriana Martin</td>
+                            <td>A (97.78%)</td>
+                            <td>4.50</td>
+                            <td>1, 4, 5, 7</td>
+                            <td>4</td>
+                        </tr>
+                        <tr>
+                            <td>Calculus</td>
+                            <td>Ekon Williams</td>
+                            <td>B (82.78%)</td>
+                            <td>4.50</td>
+                            <td>2, 5</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Ameriacan History</td>
+                            <td>Charlotte Davis</td>
+                            <td>A (92.15%)</td>
+                            <td>6.00</td>
+                            <td>5, 7</td>
+                            <td>5</td>
+                        </tr>
+                        <tr>
+                            <td>Chemistry w/lab</td>
+                            <td>Robert Miller</td>
+                            <td>A (95.6%)</td>
+                            <td>4.50</td>
+                            <td>2, 3, 8</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Drawing</td>
+                            <td>Andrew Brown</td>
+                            <td>B (78.2%)</td>
+                            <td>4.50</td>
+                            <td>4, 5, 7</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Piano</td>
+                            <td>Danielle Boucher</td>
+                            <td>C (59.1%)</td>
+                            <td>6.00</td>
+                            <td>3, 5, 6</td>
+                            <td>3</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </td>
+        </tr>-->
+            <tr>
+                <td class="signature-table">
+                    <table cell-padding="10">
+                        <tr>
+                            <td width="33.33%">
+                                <p class="long-line"></p>
+                                <p class="text-center sign"><b>Teacher's Signature</b></p>
+                                <p class="text-center"><b>Date:</b>&nbsp;<span class="small-line"></span></p>
+                            </td>
+                            <td width="33.33%">
+                                <p class="long-line m-auto"></p>
+                                <p class="text-center sign"><b>Principal's Signature</b></p>
+                                <p class="text-center"><b>Date:</b>&nbsp;<span class="small-line"></span></p>
+                            </td>
+                            <td width="33.33%">
+                                <p class="long-line ml-auto"></p>
+                                <p class="text-center sign"><b>Parent/Guardian's Signature</b></p>
+                                <p class="text-center"><b>Date:</b>&nbsp;<span class="small-line"></span></p>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+        {{/each}}
+        <div style="page-break-before:always">&nbsp;</div>
+        <table>
+            <tr>
+                <td class="comments">
+                    <table>
+                        <h4>For comment keys pleasefollow the description below:</h4>
+                        {{#each CourseCommentCategoryData}}
+                        <tr>
+                            <td>
+                                <p>{{CourseCommentId}}. {{Comments}}</p>
+                                <!--<p>2. Shows academic improvements</p>
+                        <p>3. Participates effectively</p>
+                        <p>4. Positive attitude and effort</p>
+                        <p>5. Makes connection and applies knowledge</p>
+                        <p>6. Displays good study skills</p>
+                        <p>7. Works well in groupactivities</p>
+                        <p>8. Home assignments are generally inferior to work done in school</p>
+                        <p>9. Home assignments are generally superior to work done in school</p>-->
+                            </td>
+                            <!--<td>
+                        <p>10. Appears disorganized</p>
+                        <p>11. Quality of work declining</p>
+                        <p>12. Does not bring materials/follow directions</p>
+                        <p>13. Inconsistent effort</p>
+                        <p>14. Needs to participate more in discussion</p>
+                        <p>15. Difficulty in making connections and applying knowledge</p>
+                        <p>16. Has difficulty on exams</p>
+                        <p>17. Unable to maintain attentiveness throughout entire class period</p>
+                    </td>-->
+                        </tr>
+                        {{/each}}
+                    </table>
+                </td>
+            </tr>
+            {{#if TeacherCommentList}}
+            <tr>
+                <td class="comments">
+                    <h4>Teacher comments:</h4>
+                    {{#each TeacherCommentList}}
+                    <p> {{TeacherComments}}. {{OverallTeacherComments}}</p>
+                    {{/each}}
+                    <!--<p>
+                2. Vivamus imperdiet pretium pellentesque. Mauris vitae iaculis magna. Nam ut leo in ante
+                convallis pulvinar nec et dui.
+            </p>
+            <p>
+                3. Ut tempus tristique velit ut eleifend. In hac habitasse platea dictumst. Pellentesque ac
+                mattis ipsum.
+            </p>
+            <p>4. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <p>
+                5. Vivamus imperdiet pretium pellentesque. Mauris vitae iaculis magna. Nam ut leo in ante
+                convallis pulvinar nec et dui.
+            </p>-->
+                </td>
+            </tr>
+            {{/if}}
+        </table>
+        </table>
+    </div>
+</body>
+
+</html>

@@ -1,4 +1,29 @@
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, OnInit, ViewChild } from '@angular/core';
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+import { Component, OnDestroy, OnInit, ViewChild } from '@angular/core';
 import icMoreVert from '@iconify/icons-ic/twotone-more-vert';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -12,16 +37,21 @@ import { fadeInUp400ms } from '../../../../@vex/animations/fade-in-up.animation'
 import { stagger40ms } from '../../../../@vex/animations/stagger.animation';
 import { TranslateService } from '@ngx-translate/core';
 import { ParentInfoService } from '../../../services/parent-info.service';
-import { GetAllParentModel } from "../../../models/parent-info.model";
+import { filterParams, GetAllParentModel, GetAllParentResponseModel, ParentAdvanceSearchModel, ParentList } from "../../../models/parent-info.model";
 import { LoaderService } from '../../../services/loader.service';
 import { MatTableDataSource } from '@angular/material/table';
 import { StudentService } from '../../../services/student.service';
 import { MatPaginator } from '@angular/material/paginator';
 import { MatSort } from '@angular/material/sort';
-import { LayoutService } from 'src/@vex/services/layout.service';
+import { LayoutService } from '../../../../@vex/services/layout.service';
 import { ExcelService } from '../../../services/excel.service';
-import { fadeInRight400ms } from 'src/@vex/animations/fade-in-right.animation';
-import { BehaviorSubject } from 'rxjs';
+import { fadeInRight400ms } from '../../../../@vex/animations/fade-in-right.animation';
+import { RolePermissionListViewModel } from '../../../models/roll-based-access.model';
+import { CryptoService } from '../../../services/Crypto.service';
+import { CommonService } from '../../../services/common.service';
+import { FormControl } from '@angular/forms';
+import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { DefaultValuesService } from 'src/app/common/default-values.service';
 
 @Component({
   selector: 'vex-parentinfo',
@@ -33,9 +63,9 @@ import { BehaviorSubject } from 'rxjs';
     fadeInRight400ms
   ]
 })
-export class ParentinfoComponent implements OnInit {
+export class ParentinfoComponent implements OnInit, OnDestroy {
   columns = [
-    { label: 'Parent Name', property: 'name', type: 'text', visible: true },
+    { label: 'Parent Name', property: 'firstname', type: 'text', visible: true },
     { label: 'Profile', property: 'userProfile', type: 'text', visible: true },
     { label: 'Email Address', property: 'workEmail', type: 'text', visible: true },
     { label: 'Mobile Phone', property: 'mobile', type: 'number', visible: true },
@@ -45,11 +75,8 @@ export class ParentinfoComponent implements OnInit {
   @ViewChild(MatPaginator, { static: false }) paginator: MatPaginator;
   @ViewChild(MatSort) sort: MatSort
 
-  searchKey: string;
-
   icMoreVert = icMoreVert;
-  totalCount: BehaviorSubject<number> = new BehaviorSubject<number>(null);
-  totalCountValue = this.totalCount.asObservable();
+  totalCount: number =0;
   icAdd = icAdd;
   icEdit = icEdit;
   icDelete = icDelete;
@@ -57,13 +84,44 @@ export class ParentinfoComponent implements OnInit {
   icFilterList = icFilterList;
   icImpersonate = icImpersonate;
   loading: boolean;
-  searchValue: any = null;
-  searchCount: number = null;
+  searchCount: number;
   getAllParentModel: GetAllParentModel = new GetAllParentModel();
-  parentFieldsModelList: MatTableDataSource<any>;
+  parentFieldsModelList: MatTableDataSource<ParentList>;
   allParentList = [];
   parentListForExcel = [];
   showAdvanceSearchPanel: boolean = false;
+  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
+  pageNumber:number;
+  pageSize:number;
+  searchCtrl: FormControl;
+  categories=[
+    {
+      categoryId:3,
+      title:'General Info'
+    },
+    {
+      categoryId:4,
+      title:'Enrollment Info'
+    },
+    {
+      categoryId:5,
+      title:'Address & Contact'
+    },
+    {
+      categoryId:6,
+      title:'Family Info'
+    },
+    {
+      categoryId:7,
+      title:'Medical Info'
+    },
+    {
+      categoryId:8,
+      title:'Documents'
+    }
+  ];
+  filterParamsFromAdvanceSearch: filterParams[]=[];
+  filterParams: filterParams[]=[];;
   constructor(
     private router: Router,
     private parentInfoService: ParentInfoService,
@@ -72,8 +130,12 @@ export class ParentinfoComponent implements OnInit {
     public translateService: TranslateService,
     private studentService: StudentService,
     private layoutService: LayoutService,
-    private excelService: ExcelService
+    private excelService: ExcelService,
+    private cryptoService: CryptoService,
+    private commonService:CommonService,
+    private defaultValuesService: DefaultValuesService
   ) {
+    this.getAllParentModel.pageSize = this.defaultValuesService.getPageSize() ? this.defaultValuesService.getPageSize() : 10;
     if (localStorage.getItem("collapseValue") !== null) {
       if (localStorage.getItem("collapseValue") === "false") {
         this.layoutService.expandSidenav();
@@ -84,6 +146,8 @@ export class ParentinfoComponent implements OnInit {
       this.layoutService.expandSidenav();
     }
     translateService.use('en');
+    this.getAllParentModel.filterParams=null;
+    
     this.loaderService.isLoading.subscribe((val) => {
       this.loading = val;
     });
@@ -93,21 +157,170 @@ export class ParentinfoComponent implements OnInit {
   }
 
   ngOnInit(): void {
-
+    this.searchCtrl = new FormControl();
+    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
   }
-  getTotalCount(){
-    let count;
-    this.totalCountValue.subscribe(
-      res => {
-        count = res;
+
+  ngAfterViewInit() {
+    //  Sorting
+    this.getAllParentModel = new GetAllParentModel();
+    this.sort.sortChange.subscribe((res) => {
+      if(this.filterParamsFromAdvanceSearch?.length>0){
+        Object.assign(this.getAllParentModel,{filterParams: this.filterParamsFromAdvanceSearch});
       }
-    );
-    return count;
+      this.getAllParentModel.pageNumber = this.pageNumber
+      this.getAllParentModel.pageSize = this.pageSize;
+      this.getAllParentModel.sortingModel.sortColumn = res.active;
+      if (this.searchCtrl.value) {
+        let filterParams = [
+          {
+            columnName: null,
+            filterValue: this.searchCtrl.value,
+            filterOption: 4
+          }
+        ]
+        Object.assign(this.getAllParentModel, { filterParams: filterParams });
+        this.filterParams=filterParams;
+      }
+      if (res.direction == "") {
+        this.getAllParentModel.sortingModel = null;
+        this.getAllparentList();
+        this.getAllParentModel = new GetAllParentModel();
+        this.getAllParentModel.sortingModel = null;
+      } else {
+        this.getAllParentModel.sortingModel.sortDirection = res.direction;
+        this.getAllparentList();
+      }
+    });
+
+    //  Searching
+    this.searchCtrl.valueChanges.pipe(debounceTime(500), distinctUntilChanged()).subscribe((term) => {
+      this.filterParamsFromAdvanceSearch=null;
+      this.parentInfoService.setAdvanceSearchParams(null);
+      if (term != '') {
+        this.callWithFilterValue(term);
+      } else {
+        this.callWithoutFilterValue()
+      }
+    });
+  }
+
+  callWithFilterValue(term) {
+
+    let filterParams = [
+      {
+        columnName: null,
+        filterValue: term,
+        filterOption: 4
+      }
+    ]
+    if (this.sort.active) {
+      this.getAllParentModel.sortingModel.sortColumn = this.sort.active;
+      this.getAllParentModel.sortingModel.sortDirection = this.sort.direction;
+    }
+    Object.assign(this.getAllParentModel, { filterParams: filterParams });
+    this.filterParams=filterParams;
+    
+    this.getAllParentModel.pageNumber = 1;
+    this.paginator.pageIndex = 0;
+    this.getAllParentModel.pageSize = this.pageSize;
+    this.getAllparentList();
+  }
+
+  callWithoutFilterValue() {
+      Object.assign(this.getAllParentModel, { filterParams: null });
+      this.filterParams=null;
+    this.getAllParentModel.pageNumber = this.paginator.pageIndex + 1;
+    this.getAllParentModel.pageSize = this.pageSize;
+    if (this.sort.active != undefined && this.sort.direction != "") {
+      this.getAllParentModel.sortingModel.sortColumn = this.sort.active;
+      this.getAllParentModel.sortingModel.sortDirection = this.sort.direction;
+    }
+    this.getAllparentList();
   }
 
   goToStudentInformation(studentId) {
     this.studentService.setStudentId(studentId)
-    this.router.navigateByUrl('/school/students/student-generalinfo');
+    this.checkStudentViewPermission();
+  }
+
+  getPageEvent(event){
+    if(this.filterParamsFromAdvanceSearch?.length>0){
+      Object.assign(this.getAllParentModel,{filterParams: this.filterParamsFromAdvanceSearch});
+    }
+    if(this.sort.active!=undefined && this.sort.direction!=""){
+      this.getAllParentModel.sortingModel.sortColumn=this.sort.active;
+      this.getAllParentModel.sortingModel.sortDirection=this.sort.direction;
+    }
+    if(this.searchCtrl.value){
+      let filterParams=[
+        {
+         columnName:null,
+         filterValue:this.searchCtrl.value,
+         filterOption:3
+        }
+      ]
+     Object.assign(this.getAllParentModel,{filterParams: filterParams});
+    this.filterParams=filterParams;
+    }
+    
+    this.getAllParentModel.pageNumber=event.pageIndex+1;
+    this.getAllParentModel.pageSize=event.pageSize;
+    this.defaultValuesService.setPageSize(event.pageSize);
+    this.getAllparentList();
+  }
+
+  checkStudentViewPermission(){
+    let categoryId;
+    let categoryName;
+     for (const permission of this.permissionListViewModel.permissionList[2].permissionGroup.permissionCategory[0].permissionSubcategory){
+      if(permission.rolePermission[0].canView){
+       categoryName=permission.permissionSubcategoryName;       
+       let index;
+       index=this.categories.findIndex((item)=>item.title.toLowerCase()===categoryName.toLowerCase());
+       if(index!=-1){
+        categoryId=this.categories[index].categoryId;
+       }
+       break;
+      }
+    }
+    if(categoryId){
+      this.checkStudentCurrentCategoryAndRoute(categoryId,categoryName);
+    }
+  }
+
+  checkStudentCurrentCategoryAndRoute(categoryId,categoryName) {
+    this.studentService.setCategoryTitle(categoryName);
+    this.studentService.setCategoryId(0);
+    this.commonService.setModuleName('Student');
+    if(categoryId === 3) {
+      this.router.navigate(['/school', 'students', 'student-generalinfo']);
+    } else if(categoryId === 4 ) {
+      this.router.navigate(['/school', 'students', 'student-enrollmentinfo']);
+    } else if(categoryId === 5 ) {
+        this.router.navigate(['/school', 'students', 'student-address-contact']);
+    } else if(categoryId === 6 ) {
+      this.router.navigate(['/school', 'students', 'student-familyinfo']);
+    } else if(categoryId === 7 ) {
+      this.router.navigate(['/school', 'students', 'student-medicalinfo']);
+    }
+     else if(categoryId === 8 ) {
+      this.router.navigate(['/school', 'students', 'student-comments']);
+    } else if(categoryId === 9 ) {
+      this.router.navigate(['/school', 'students', 'student-documents']);
+    } else if(categoryId === 100 ) {
+      this.router.navigate(['/school', 'students', 'student-course-schedule']);
+    }  else if(categoryId === 101 ) {
+      this.router.navigate(['/school', 'students', 'student-attendance']);
+    }  else if(categoryId === 102 ) {
+      this.router.navigate(['/school', 'students', 'student-transcript']);
+    }  else if(categoryId === 103 ) {
+      this.router.navigate(['/school', 'students', 'student-report-card']);
+    }
+    else if(categoryId > 9 ) {
+      this.router.navigate(['/school', 'students', 'custom', categoryName.trim().toLowerCase().split(' ').join('-')]);
+    }
+
   }
 
   toggleColumnVisibility(column, event) {
@@ -122,98 +335,64 @@ export class ParentinfoComponent implements OnInit {
 
   viewGeneralInfo(parentInfo) {
     this.parentInfoService.setParentId(parentInfo.parentId);
-    this.parentInfoService.setParentDetails(parentInfo)
-    this.router.navigateByUrl('/school/parents/parent-generalinfo');
+    this.parentInfoService.setParentDetails(parentInfo);
+    this.checkViewPermission();
   }
 
-  onSearchClear() {
-    this.searchKey = "";
-    this.applyFilter();
+  checkViewPermission(){
+    let pageId: string;
+    if (this.permissionListViewModel.permissionList[3].permissionGroup.permissionCategory[0].rolePermission[0].canView){
+      pageId = 'General Info';
+      this.checkCurrentCategoryAndRoute(pageId);
+    }
+    else if (this.permissionListViewModel.permissionList[3].permissionGroup.permissionCategory[1].rolePermission[0].canView){
+      pageId = 'Address Info';
+      this.checkCurrentCategoryAndRoute(pageId);
+    }
   }
 
-  applyFilter() {
-    this.parentFieldsModelList.filter = JSON.stringify(this.searchKey.trim());
-    if (this.parentFieldsModelList.filteredData.length === 0){
-      this.totalCount.next(null);
-    }
-    else{
-      this.totalCount.next(this.parentFieldsModelList.filteredData.length);
+  checkCurrentCategoryAndRoute(pageId) {
+    if(pageId === 'General Info') {
+      this.router.navigate(['/school', 'parents', 'parent-generalinfo']);
+    } else if(pageId === 'Address Info') {
+      this.router.navigate(['/school', 'parents', 'parent-addressinfo']);
     }
   }
+
 
   getAllparentList() {
+    if(this.getAllParentModel.sortingModel?.sortColumn==""){
+      this.getAllParentModel.sortingModel=null
+    }
     this.parentInfoService.getAllParentInfo(this.getAllParentModel).subscribe(
-      (res: GetAllParentModel) => {
+      (res: GetAllParentResponseModel) => {
         if (typeof (res) == 'undefined') {
-          this.snackbar.open('Parent list failed. ' + sessionStorage.getItem("httpError"), '', {
+          this.snackbar.open(sessionStorage.getItem("httpError"), '', {
             duration: 10000
           });
         }
         else {
           if (res._failure) {
-              this.totalCount.next(null);
               if (res.parentInfoForView === null){
                 this.parentFieldsModelList = new MatTableDataSource([]);
-                this.parentFieldsModelList.sort = this.sort;
-                this.parentFieldsModelList.paginator = this.paginator;
-                
+                this.totalCount=0;
                 this.snackbar.open( res._message, '', {
                   duration: 10000
                 });
               }
               else{
                 this.parentFieldsModelList = new MatTableDataSource([]);
-                this.parentFieldsModelList.sort = this.sort;
-                this.parentFieldsModelList.paginator = this.paginator;
+                this.totalCount=0;
               }
           }
           else {
-          
-            let parentList=res.parentInfoForView.map((item,i)=>{
-              item.studentFirstName=item.students.map((item)=>{
-                return item.split('|')[0];
-              });
-              item.studentMiddleName=item.students.map((item)=>{
-                return item.split('|')[1];
-              });
-              item.studentLastName=item.students.map((item)=>{
-                return item.split('|')[2];
-              });
-              item.studentFullName=item.students.map((item)=>{
-                return item.split('|')[0]+' '+item.split('|')[2];
-              });
-              return {
-                parentId: item.parentId,
-                name: item.firstname + ' ' + item.lastname,
-                userProfile: item.userProfile==null?'':item.userProfile,
-                workEmail: item.workEmail==null?'':item.workEmail,
-                mobile: item.mobile==null?'':item.mobile,
-                students: item.students,
-                firstname:item.firstname==null?'':item.firstname,
-                middlename:item.middlename==null?'':item.middlename,
-                lastname:item.lastname==null?'':item.lastname,
-                personalEmail:item.personalEmail==null?'':item.personalEmail,
-                homePhone:item.homePhone==null?'':item.homePhone,
-                workPhone:item.workPhone==null?'':item.workPhone,
-                studentFirstName:item.studentFirstName,
-                studentMiddleName:item.studentMiddleName,
-                studentLastName:item.studentLastName,
-                studentFullName:item.studentFullName,
-                addressLineOne:item.addressLineOne==null?'':item.addressLineOne,
-                addressLineTwo:item.addressLineTwo==null?'':item.addressLineTwo,
-                country:item.country==null?'':item.country,
-                state:item.state==null?'':item.state,
-                city:item.city==null?'':item.city,
-                zip:item.zip==null?'':item.zip
-              };
-            })
-            this.allParentList = parentList;
+            this.totalCount=res.totalCount;
+            this.pageNumber = res.pageNumber;
+            this.pageSize = res._pageSize;
             this.parentListForExcel = res.parentInfoForView;
-            this.parentFieldsModelList = new MatTableDataSource(parentList);
-            this.parentFieldsModelList.sort = this.sort;
-            this.parentFieldsModelList.paginator = this.paginator;
-            this.parentFieldsModelList.filterPredicate = this.createFilter();
-            this.totalCount.next(this.parentFieldsModelList.filteredData.length);
+            this.parentFieldsModelList = new MatTableDataSource(res.parentInfoForView);
+            this.getAllParentModel = new GetAllParentModel();
+
           }
         }
       }
@@ -221,118 +400,79 @@ export class ParentinfoComponent implements OnInit {
   }
 
   exportParentListToExcel() {
-    if (this.parentListForExcel.length != 0) {
-      let parentList = this.parentListForExcel?.map((item) => {
-        let students = item.students?.map((student) => {
-          return student.split('|')[0];
-        });
-        return {
-          ParentsName: item.firstname + ' ' + item.lastname,
-          Profile: item.userProfile,
-          EmailAddress: item.workEmail,
-          MobilePhone: item.mobile,
-          AssociatedStudents: students == undefined ? '' : students.toString()
-        }
-      });
-      this.excelService.exportAsExcelFile(parentList, 'Parents_List_');
-    } else {
-      this.snackbar.open('No Records Found. Failed to Export Parent List', '', {
+    if(!this.totalCount){
+      this.snackbar.open('No Record Found. Failed to Export Parent List','', {
         duration: 5000
       });
+      return
     }
+    let getAllParent: GetAllParentModel = new GetAllParentModel();
+    getAllParent.pageNumber=0;
+    getAllParent.pageSize=0;
+    if(this.sort.active && this.sort.direction){
+      getAllParent.sortingModel.sortColumn=this.sort.active;
+      getAllParent.sortingModel.sortDirection=this.sort.direction;
+    }else{
+      getAllParent.sortingModel=null;
+    }
+    if(this.filterParamsFromAdvanceSearch?.length>0){
+        getAllParent.filterParams=[...this.filterParamsFromAdvanceSearch]
+    }else if(this.filterParams){
+      getAllParent.filterParams=this.filterParams
+    }
+      this.parentInfoService.getAllParentInfo(getAllParent).subscribe(res => {
+        if(res._failure){
+          if(res)
+          this.snackbar.open(res._message,'', {
+            duration: 5000
+          });
+        }else{
+          if(res.parentInfoForView.length>0){
+            let parentList = res.parentInfoForView?.map((item:ParentList)=>{
+              let associatedStudents=[];
+              associatedStudents = item.students?.map((student:any)=>{
+                return student.split('|')[0]+' '+student.split('|')[2];
+              })
+              return {
+               'Parent\'s Name': item.firstname+' '+item.lastname,
+               'Profile' : item.userProfile,
+               'Email Address' : item.workEmail,
+               'Mobile Phone' : item.mobile,
+               'Associated Students' : associatedStudents?associatedStudents?.join(', '):'-'
+             }
+            });
+            this.excelService.exportAsExcelFile(parentList,'Parent_List_')
+          }else{
+            this.snackbar.open('No Record Found. Failed to Export Parent List','', {
+              duration: 5000
+            });
+          }
+        }
+      });
+      
   }
 
-  getSearchResult(res) {
-    this.parentFieldsModelList.filter = JSON.stringify(res);
-    this.searchCount = this.parentFieldsModelList.filteredData.length;
-    this.totalCount.next(this.parentFieldsModelList.filteredData.length);
-
-    if (this.parentFieldsModelList.filteredData.length > 0){
-      this.showAdvanceSearchPanel = false;
-    }
+  getSearchResult(res: GetAllParentResponseModel) {
+    this.searchCount=res.parentInfoForView?.length | 0;
+    this.pageNumber = res.pageNumber;
+    this.pageSize = res._pageSize;
+    this.totalCount=res.totalCount;
+    this.parentFieldsModelList = new MatTableDataSource(res.parentInfoForView);
+    this.getAllParentModel = new GetAllParentModel();
   }
 
   getSearchInput(event){
-    this.searchValue = event;
+    this.filterParamsFromAdvanceSearch = event;
+    this.parentInfoService.setAdvanceSearchParams(this.filterParamsFromAdvanceSearch);
   }
+
   resetParentList(){
     this.searchCount = null;
-    this.searchValue = null;
+    this.getAllParentModel.filterParams=null;
+    this.parentInfoService.setAdvanceSearchParams(null);
     this.getAllparentList();
   }
-  createFilter(): (data: any, filter: string) => boolean {
 
-    let filterFunction = function(data, filter): boolean {
-      if(typeof JSON.parse(filter)!='string' ){
-        let searchTerms = JSON.parse(filter);
-        for (const key in searchTerms) {
-          if(searchTerms[key]){
-            searchTerms[key]=searchTerms[key].toLowerCase()
-          }          
-      }
-        return (
-          data.firstname.toLowerCase().indexOf(searchTerms.firstname) !== -1 
-          &&
-          data.middlename.toLowerCase()
-            .indexOf(searchTerms.middlename) !== -1 
-            &&
-          data.lastname?.toLowerCase().indexOf(searchTerms.lastname) !== -1
-           &&
-           data.personalEmail?.toLowerCase().indexOf(searchTerms.personalEmail) !== -1
-           &&
-           data.workEmail?.toLowerCase().indexOf(searchTerms.workEmail) !== -1
-           &&
-           data.homePhone?.toLowerCase().indexOf(searchTerms.homePhone) !== -1
-           &&
-           data.mobile?.toLowerCase().indexOf(searchTerms.mobile) !== -1
-           &&
-           data.workPhone?.toLowerCase().indexOf(searchTerms.workPhone) !== -1
-           &&
-          data.studentFirstName.join(',')
-            .toLowerCase()
-            .indexOf(searchTerms.studentFirstName) !== -1
-             &&
-              data.studentMiddleName.join(',')
-            .toLowerCase()
-            .indexOf(searchTerms.studentMiddleName) !== -1 
-            &&
-              data.studentLastName.join(',')
-            .toLowerCase()
-            .indexOf(searchTerms.studentLastName) !== -1
-            &&
-            data.addressLineOne?.toLowerCase().indexOf(searchTerms.addressLineOne) !== -1
-            &&
-            data.addressLineTwo?.toLowerCase().indexOf(searchTerms.addressLineTwo) !== -1
-            &&
-            data.country?.toLowerCase().indexOf(searchTerms.country) !== -1
-            &&
-            data.state?.toLowerCase().indexOf(searchTerms.state) !== -1
-            &&
-            data.city?.toLowerCase().indexOf(searchTerms.city) !== -1
-            &&
-            data.zip?.toLowerCase().indexOf(searchTerms.zip) !== -1
-        );
-      }else{
-        filter=JSON.parse(filter).toLowerCase();
-        return (
-          data.name?.toLowerCase().includes(filter)
-          ||
-           data.userProfile?.toLowerCase().includes(filter)
-           ||
-           data.workEmail?.toLowerCase().includes(filter)
-          ||
-           data.mobile?.toLowerCase().includes(filter)
-           ||
-          data.studentFullName.join(',')
-            .toLowerCase()
-            .indexOf(filter) !== -1
-        );
-      }
-      
-    };
-
-    return filterFunction;
-  }
 
   showAdvanceSearch() {
     this.showAdvanceSearchPanel = true;
@@ -342,5 +482,8 @@ export class ParentinfoComponent implements OnInit {
     this.showAdvanceSearchPanel = false;
   }
 
+  ngOnDestroy(){
+    this.parentInfoService.setAdvanceSearchParams(null)
+  }
 
 }

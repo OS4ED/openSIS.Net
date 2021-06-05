@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, EventEmitter, Inject, OnInit, Output, ViewChild } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
@@ -60,7 +85,7 @@ export class AddCalendarComponent implements OnInit {
       isDefaultCalendar: [false]
     });
     if(this.data.calendarListCount==0){
-      this.calendarAddViewModel.schoolCalendar.startDate=sessionStorage.getItem("markingPeriod");
+      this.calendarAddViewModel.schoolCalendar.startDate=sessionStorage.getItem("fullYearStartDate");
     }
       
     if (this.data == null) {
@@ -96,7 +121,7 @@ export class AddCalendarComponent implements OnInit {
   }
 
   checkDate(){
-    let markingPeriodDate=new Date(sessionStorage.getItem("markingPeriod")).getTime();
+    let markingPeriodDate=new Date(sessionStorage.getItem("fullYearStartDate")).getTime();
     let startDate=new Date(this.calendarAddViewModel.schoolCalendar.startDate).getTime(); 
     if((startDate!=markingPeriodDate && this.form.value.isDefaultCalendar) || (this.data.calendarListCount==0 && startDate!=markingPeriodDate)){
       this.form.controls.startDate.setErrors({'nomatch': true});
@@ -109,7 +134,7 @@ export class AddCalendarComponent implements OnInit {
 
   showOptions(event:MatCheckboxChange){
   if(event.checked){
-    this.calendarAddViewModel.schoolCalendar.startDate=sessionStorage.getItem("markingPeriod");
+    this.calendarAddViewModel.schoolCalendar.startDate=sessionStorage.getItem("fullYearStartDate");
     this.checkDate();
   }
   }

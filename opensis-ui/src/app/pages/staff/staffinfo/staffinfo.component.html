@@ -7,10 +7,10 @@
 
     <vex-page-layout-content class="-mt-6">
 
-        <div class="card overflow-auto -mt-16">
-            <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
-                <div class="md:flex w-full justify-between">
-                    <div class="py-3" fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
+        <div class="card -mt-16">
+            <div class="bg-white px-6 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="md:flex w-full justify-between items-center">
+                    <div fxFlex.lt-md="auto" fxHide.xs fxLayout="row" fxLayoutAlign="start center">
 
                         <div class="flex items-center">
                             <input [formControl]="searchCtrl"
@@ -22,16 +22,19 @@
                                 <mat-icon [icIcon]="icSearch"></mat-icon>
                             </button>
                             <a (click)="showAdvanceSearch()" [class.disabled] = "totalCount == null" 
-                            [class.text-gray-light]="totalCount == null" 
-                            [class.text-primary]="totalCount != null" class=" cursor-pointer ml-3">
-                                <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
-                                | translate}}
+                                [class.text-gray-light]="totalCount == null" [class.text-primary]="totalCount != null"
+                                class=" cursor-pointer ml-3">
+                                <mat-icon aria-hidden="false" class="md:mr-2 align-middle">tune</mat-icon><span
+                                    class="hidden md:inline-block">{{'advanceSearch'
+                                    | translate}}</span>
                             </a>
                         </div>
                     </div>
 
+                    <hr class="md:hidden -mx-6">
 
-                    <div fxFlex="200px" class="pt-3">
+
+                    <div fxFlex.lt-md="200px" class="py-2">
                         <a (click)="exportStaffListToExcel()" class="cursor-pointer p-1 mt-1 inline-block align-middle"
                             matTooltip="Export to Excel"><i class="icon icon-file-excel text-lg"></i></a>
                         <button [matMenuTriggerFor]="columnFilterMenu" class="ml-4" fxFlex="none" mat-icon-button
@@ -66,12 +69,11 @@
                         <mat-icon>arrow_drop_down</mat-icon>
                     </button>
 
-                        <button *ngIf="addPermission" color="primary" class="ml-4 rounded-r-none" fxFlex="none" mat-raised-button
-                            type="button" (click)='goToAdd()'>
-                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
-                                size="24px">
+                        <button *ngIf="addPermission" color="primary" class="ml-4 rounded-r-none" fxFlex="none"
+                            mat-raised-button type="button" (click)='goToAdd()'>
+                            <ic-icon [icon]="icAdd" class="md:mr-2" inline="true" size="24px">
                             </ic-icon>
-                            <span>Add New Staff</span>
+                            <span class="hidden md:inline-block">Add New Staff</span>
                         </button>
                         <button *ngIf="addPermission" [matMenuTriggerFor]="importStudents"
                             class="align-middle w-8 h-9 p-0 pt-1 border border-gray rounded rounded-l-none">
@@ -96,6 +98,7 @@
                 </mat-menu>
             </div>
 
+            <div class="overflow-auto">
             <table @stagger mat-table [dataSource]="staffList" class="mat-elevation-z8 table-auto w-full" matSort>
 
                 <ng-container matColumnDef="lastFamilyName">
@@ -182,7 +185,8 @@
                 <tr mat-footer-row *matFooterRowDef="['invalidsearct']" [class.hide]="(searchCount !== 0)|| searchCount == null"></tr>
                 <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount!=null"></tr>
             </table>
-            <mat-paginator [class.hide]="totalCount==0" [length]="totalCount" [pageSize]="pageSize"
+            </div>
+            <mat-paginator [class.hide]="totalCount===0" [length]="totalCount" [pageSize]="pageSize"
                 [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'></mat-paginator>
         </div>
 

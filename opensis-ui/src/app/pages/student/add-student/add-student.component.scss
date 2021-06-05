@@ -14,3 +14,22 @@
         font-size: 20px;
     }
 }
+
+@media (max-width: 991.98px) {
+    .critical-alert {
+        right: 61px;
+    }
+    .persistent-bar {
+        .critical-alert {
+            width: 25px;
+            height: 25px;
+            border-width: 1px;
+            right: -2px;
+            top: -2px;
+
+            .mat-icon {
+                font-size: 14px;
+            }
+        }
+    }
+}

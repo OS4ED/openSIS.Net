@@ -1,0 +1,457 @@
+<div *ngIf="currentTab === 'gradebook'">
+    <div class="card">
+        <div *ngIf="subjectDetails">
+            <h4 class="px-4 py-2 text-lg">
+                <span class="cursor-pointer text-blue" (click)="backTogradeList()">
+                    <mat-icon class="mr-4 align-middle">west</mat-icon>
+                </span>
+                <span class="font-semibold text-lg text-primary">Homework</span>
+            </h4>
+            <mat-divider></mat-divider>
+        </div>
+        <div *ngIf="currentComponent === 'gradebookGrade'">
+            <div class="bg-white px-4 md:h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="md:flex w-full items-center">
+                    <div class="py-2 mr-4" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="flex items-center w-full">
+                            <input matInput class="py-3 border-0 outline-none w-full bg-transparent"
+                                appearance="outline" color="primary" placeholder="Search..." type="search">
+                            <button class="ml-4" mat-icon-button type="button">
+                                <mat-icon [icIcon]="icSearch"></mat-icon>
+                            </button>
+                        </div>
+                    </div>
+                    <div class="mb-4 md:mb-0">
+                        <mat-slide-toggle color="primary" class="mr-6">{{ 'includeInactiveStudents' | translate }}
+                        </mat-slide-toggle>
+                        <mat-slide-toggle color="primary" class="">{{ 'showUpgradedOnly' | translate }}
+                        </mat-slide-toggle>
+                    </div>
+                </div>
+            </div>
+            <div class="overflow-x-auto overflow-y-hidden border">
+                <table class="w-full schedule-table gradebook-table">
+                    <thead>
+                        <tr>
+                            <th class="align-bottom bg-skyblue-light">{{ "name" | translate }}</th>
+                            <th class="align-bottom bg-skyblue-light">
+                                <p class="font-semibold">{{ "overall" | translate }}</p>
+                                <p class="font-semibold">{{ "marks" | translate }}</p>
+                            </th>
+                            <th class="align-bottom bg-skyblue-light">
+                                <p class="font-semibold">{{ "overall" | translate }}</p>
+                                <p class="font-semibold">{{ "grade" | translate }}</p>
+                            </th>
+                            <th class="bg-skyblue-light">
+                                <div class="flex items-center justify-between mb-4">
+                                    <p class="font-semibold whitespace-nowrap">Quiz Contest 01</p>
+                                    <div>
+                                        <button mat-button [matMenuTriggerFor]="beforeMenu" class="min-w-0 p-0 ml-2">
+                                            <mat-icon class="font-semibold align-middle cursor-pointer">more_vert
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #beforeMenu="matMenu" xPosition="before">
+                                            <button mat-menu-item>{{ 'editGrades' | translate }}</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <p class="text-blue cursor-pointer" (click)="showSubjectList()">Quiz</p>
+                                    <p>Out of 20</p>
+                                </div>
+                            </th>
+                            <th class="bg-skyblue-light">
+                                <div class="flex items-center justify-between mb-4">
+                                    <p class="font-semibold whitespace-nowrap">Class Test 04</p>
+                                    <div>
+                                        <button mat-button [matMenuTriggerFor]="beforeMenu" class="min-w-0 p-0 ml-2">
+                                            <mat-icon class="font-semibold align-middle cursor-pointer">more_vert
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #beforeMenu="matMenu" xPosition="before">
+                                            <button mat-menu-item>{{ 'editGrades' | translate }}</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <p class="text-blue cursor-pointer" (click)="showSubjectList()">Homework</p>
+                                    <p>Out of 20</p>
+                                </div>
+                            </th>
+                            <th class="bg-skyblue-light">
+                                <div class="flex items-center justify-between mb-4">
+                                    <p class="font-semibold whitespace-nowrap">Class Test 03</p>
+                                    <div>
+                                        <button mat-button [matMenuTriggerFor]="beforeMenu" class="min-w-0 p-0 ml-2">
+                                            <mat-icon class="font-semibold align-middle cursor-pointer">more_vert
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #beforeMenu="matMenu" xPosition="before">
+                                            <button mat-menu-item>{{ 'editGrades' | translate }}</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <p class="text-blue cursor-pointer" (click)="showSubjectList()">Homework</p>
+                                    <p>Out of 20</p>
+                                </div>
+                            </th>
+                            <th class="bg-skyblue-light">
+                                <div class="flex items-center justify-between mb-4">
+                                    <p class="font-semibold whitespace-nowrap">Class Test 02</p>
+                                    <div>
+                                        <button mat-button [matMenuTriggerFor]="beforeMenu" class="min-w-0 p-0 ml-2">
+                                            <mat-icon class="font-semibold align-middle cursor-pointer">more_vert
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #beforeMenu="matMenu" xPosition="before">
+                                            <button mat-menu-item>{{ 'editGrades' | translate }}</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <p class="text-blue cursor-pointer" (click)="showSubjectList()">Homework</p>
+                                    <p>Out of 20</p>
+                                </div>
+                            </th>
+                            <th class="bg-skyblue-light">
+                                <div class="flex items-center justify-between mb-4">
+                                    <p class="font-semibold whitespace-nowrap">Class Test 01</p>
+                                    <div>
+                                        <button mat-button [matMenuTriggerFor]="beforeMenu" class="min-w-0 p-0 ml-2">
+                                            <mat-icon class="font-semibold align-middle cursor-pointer">more_vert
+                                            </mat-icon>
+                                        </button>
+                                        <mat-menu #beforeMenu="matMenu" xPosition="before">
+                                            <button mat-menu-item>{{ 'editGrades' | translate }}</button>
+                                        </mat-menu>
+                                    </div>
+                                </div>
+                                <div class="">
+                                    <p class="text-blue cursor-pointer" (click)="showSubjectList()">Homework</p>
+                                    <p>Out of 20</p>
+                                </div>
+                            </th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="cursor-pointer w-full" matTooltip="Justin Aponte, ID : OPS54"
+                        aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                            <td class="text-gray whitespace-nowrap">
+                                <div class="flex">
+                                    <div class="flex-shrink-0 h-12 w-12">
+                                        <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                                    </div>
+                                    <div class="ml-3 flex flex-col justify-center">
+                                        <h6 class="text-sm font-semibold whitespace-nowrap text-blue cursor-pointer"
+                                            (click)="changeComponent('gradeDetails')">Justin Aponte</h6>
+                                        <div>
+                                            <span>{{ 'id' | translate }} : OPS54</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-gray whitespace-nowrap">72/100</td>
+                            <td class="text-gray whitespace-nowrap">72% <span class="font-medium text-black">[ B+
+                                    ]</span>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        <input type="text" class="p-1 border border-gray-light rounded w-12 mr-2" />
+                                        <span class="mt-1">/20</span>
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        18/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        18/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        18/20
+                                    </div>
+                                    <button class="">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        18/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr class="cursor-pointer w-full" matTooltip="Javier Holmes, ID : OPS62"
+                        aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                            <td class="text-gray whitespace-nowrap">
+                                <div class="flex">
+                                    <div class="flex-shrink-0 h-12 w-12">
+                                        <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                                    </div>
+                                    <div class="ml-3 flex flex-col justify-center">
+                                        <h6 class="text-sm font-semibold whitespace-nowrap text-blue cursor-pointer"
+                                            (click)="changeComponent('gradeDetails')">Javier Holmes</h6>
+                                        <div>
+                                            <span>{{ 'id' | translate }} : OPS62</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-gray whitespace-nowrap">68/100</td>
+                            <td class="text-gray whitespace-nowrap">68% <span class="font-medium text-black">[ B
+                                    ]</span>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        <input type="text" class="p-1 border border-gray-light rounded w-12 mr-2" />
+                                        <span class="mt-1">/20</span>
+                                    </div>
+                                    <button class="">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-green"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr  class="cursor-pointer w-full" matTooltip="James Parker, ID : OPS54"
+                        aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                            <td class="text-gray whitespace-nowrap">
+                                <div class="flex">
+                                    <div class="flex-shrink-0 h-12 w-12">
+                                        <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                                    </div>
+                                    <div class="ml-3 flex flex-col justify-center">
+                                        <h6 class="text-sm font-semibold whitespace-nowrap text-blue cursor-pointer"
+                                            (click)="changeComponent('gradeDetails')">James Parker</h6>
+                                        <div>
+                                            <span>{{ 'id' | translate }} : OPS54</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-gray whitespace-nowrap">60/100</td>
+                            <td class="text-gray whitespace-nowrap">60% <span class="font-medium text-black">[ B+
+                                    ]</span>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        <input type="text" class="p-1 border border-gray-light rounded w-12 mr-2" />
+                                        <span class="mt-1">/20</span>
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        15/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-green"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        15/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        15/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-green"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        15/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-green"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                        <tr  class="cursor-pointer w-full" matTooltip="Colin Parker, ID : OPS45"
+                        aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'">
+                            <td class="text-gray whitespace-nowrap">
+                                <div class="flex">
+                                    <div class="flex-shrink-0 h-12 w-12">
+                                        <img src="assets/img/default.jpg" alt="" class="h-12 w-12 rounded-full" />
+                                    </div>
+                                    <div class="ml-3 flex flex-col justify-center">
+                                        <h6 class="text-sm font-semibold whitespace-nowrap text-blue cursor-pointer"
+                                            (click)="changeComponent('gradeDetails')">Colin Parker</h6>
+                                        <div>
+                                            <span>{{ 'id' | translate }} : OPS45</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="text-gray whitespace-nowrap">68/100</td>
+                            <td class="text-gray whitespace-nowrap">68% <span class="font-medium text-black">[ B+
+                                    ]</span>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        <input type="text" class="p-1 border border-gray-light rounded w-12 mr-2" />
+                                        <span class="mt-1">/20</span>
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-green"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                            <td class="text-gray">
+                                <div class="flex justify-between items-center">
+                                    <div class="flex">
+                                        17/20
+                                    </div>
+                                    <button class="" (click)="addGradeComment()">
+                                        <i class="icon icon-bubble text-lg text-gray-light"></i>
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div class="text-right p-4">
+                <button mat-raised-button color="primary">{{ 'submit' | translate }}</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card" *ngIf="currentComponent === 'gradeDetails'">
+        <div class="flex items-center p-4 text-lg">
+            <span class="cursor-pointer text-blue" (click)="changeComponent('gradebookGrade')">
+                <mat-icon class="mr-4 align-middle">west</mat-icon>
+            </span>
+            <div class="flex">
+                <div class="flex-shrink-0 h-10 w-10">
+                    <img src="assets/img/default.jpg" alt="" class="h-10 w-10 rounded-full" />
+                </div>
+                <div class="ml-3">
+                    <p class="text-lg font-semibold text-blue cursor-pointer" (click)="changeComponent('gradeDetails')">
+                        Justin Aponte</p>
+                    <p class="text-gray text-xs">{{ 'id' | translate }} : OPS54</p>
+                </div>
+            </div>
+        </div>
+        <mat-divider></mat-divider>
+        <vex-gradebook-grade-details></vex-gradebook-grade-details>
+    </div>
+</div>
+
+
+

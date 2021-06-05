@@ -1,5 +1,5 @@
 <div fxLayout="row" fxLayoutAlign="start center" mat-dialog-title class="mb-4">
-    <h2 class="headline m-0" fxFlex="auto">{{ "addMedicalNotes" | translate }}</h2>
+    <h2 class="headline m-0" fxFlex="auto">{{ medicalComponentTitle | translate }}</h2>
     <button class="text-secondary" mat-dialog-close mat-icon-button type="button">
         <mat-icon [icIcon]="icClose"></mat-icon>
     </button>
@@ -7,26 +7,30 @@
 </div>
 <mat-divider class="-mx-6 mb-6"></mat-divider>
 <mat-dialog-content fxLayout="column">
-    <ul class="grid grid-cols-1">
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ 'date' | translate }}</mat-label>
-                <input matInput [matDatepicker]="date" required>
-                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
-                <mat-datepicker #date></mat-datepicker>
-            </mat-form-field>
-        </li>
-        <li>
-            <mat-form-field class="w-full" appearance="outline" color="primary">
-                <mat-label>{{ 'doctorsNote' | translate }}</mat-label>
-                <textarea matInput></textarea>
-            </mat-form-field>
-        </li>
-    </ul>
-    <div class="text-right pt-6">
-        <button mat-button class="mr-2">{{ 'cancel' | translate }}
-        </button>
-        <button color="primary" mat-flat-button type="submit">{{ 'submit' | translate }}
-        </button>
-    </div>
+    <form [formGroup]="form">
+        <ul class="grid grid-cols-1">
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{ 'date' | translate }}</mat-label>
+                    <input matInput [matDatepicker]="date" formControlName="noteDate" required>
+                    <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                    <mat-datepicker #date></mat-datepicker>
+                    <mat-error *ngIf="form.get('noteDate').hasError('required')">{{'dateIsRequired'|translate}}</mat-error>
+                </mat-form-field>
+            </li>
+            <li>
+                <mat-form-field class="w-full" appearance="outline" color="primary">
+                    <mat-label>{{ 'doctorsNote' | translate }}</mat-label>
+                    <textarea formControlName="medicalNote" matInput></textarea>
+                </mat-form-field>
+            </li>
+        </ul>
+        <div class="text-right pt-6">
+            <button mat-button (click)="cancel()" class="mr-2">{{ 'cancel' | translate }}
+            </button>
+            <button color="primary" (click)="submit()" mat-flat-button type="submit">{{ buttonType | translate }}
+            </button>
+        </div>
+    </form>
+    
 </mat-dialog-content>

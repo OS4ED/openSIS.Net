@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { DashboardViewModel } from '../models/dashboard.model';
+import { DashboardViewModel, ScheduledCourseSectionViewModel } from '../models/dashboard.model';
 import { Observable,BehaviorSubject } from 'rxjs';
 import { DefaultValuesService } from '../common/default-values.service';
 
@@ -21,6 +21,17 @@ export class DasboardService {
     return this.http.post<DashboardViewModel>(apiurl, obj)
   }
 
+  getDashboardViewForCalendarView(obj: DashboardViewModel) {
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.academicYear= this.defaultValuesService.getAcademicYear();
+    let apiurl = this.apiUrl + obj._tenantName + "/Common/getDashboardViewForCalendarView";
+    return this.http.post<DashboardViewModel>(apiurl, obj)
+  }
+  getDashboardViewForStaff(obj: ScheduledCourseSectionViewModel) {
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    let apiurl = this.apiUrl + obj._tenantName + "/Common/getDashboardViewForStaff";
+    return this.http.post<ScheduledCourseSectionViewModel>(apiurl, obj)
+  }
 
   sendPageLoadEvent(event) {
     this.dashboardSubject.next(event);

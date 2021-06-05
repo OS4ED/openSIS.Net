@@ -1,5 +1,7 @@
-<div class="flex container-sidenav-secondary">
+<vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+<div class="flex container-sidenav-secondary" [ngClass]="secondarySidebar==0?'' : 'show-secondary-sidebar'">
     <div class="sidenav-secondary">
+        <button mat-icon-button class="close-secondary-sidebar" (click)="toggleSecondarySidebar()"><mat-icon>close</mat-icon></button>
         <vex-scrollbar class="flex-auto">
             <div class="h-45 text-center sm:px-0 pt-5 pb-2">
                 <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" class="inline-block"></vex-profile-image>
@@ -23,37 +25,31 @@
         </vex-scrollbar>
     </div>
     <div class="right-content">
-
-
         <vex-page-layout>
             <vex-page-layout-header class="pb-10 pt-6" fxLayoutAlign="center start">
                 <vex-secondary-toolbar current="Parent Information" class="w-full">
                     <vex-breadcrumbs [crumbs]="['Parents',pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
-            <vex-page-layout-content class="-mt-4">
-                <mat-drawer-container class="bg-transparent flex-auto flex -mt-16">
-                    <mat-drawer-content class="flex-auto flex items-start">
-                        <div class="w-full" fxFlex="auto">
-
-                            <div *ngIf="pageId =='General Info'">
-                                <vex-editparent-generalinfo [parentDetailsForViewAndEdit]="addParentInfoModel" 
-                                [parentCreateMode]="parentCreateMode"></vex-editparent-generalinfo>
-                            </div>
-
-                            <div *ngIf="pageId =='Address Info'">
-                                <vex-editparent-addressinfo [parentDetailsForViewAndEdit]="addParentInfoModel"
-                                [parentCreateMode]="parentCreateMode"></vex-editparent-addressinfo>
-                            </div>
-
-                            <!-- <div *ngIf="pageId =='School Access'">
-                                <vex-viewparent-schoolaccess></vex-viewparent-schoolaccess>
-                            </div> -->
-
+            <div class="bg-primary px-4 py-2 rounded -mt-16 mx-4 persistent-bar">
+                <div class="flex items-center">
+                    <button mat-icon-button class="text-white mr-2" (click)="toggleSecondarySidebar()"><mat-icon>apps</mat-icon></button>
+                    <div class="h-45 text-center sm:px-0">
+                        <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"
+                            style="width:50px" class="mx-auto inline-block"></vex-profile-image>
                         </div>
-                    </mat-drawer-content>
-                </mat-drawer-container>
+                    <div class="px-4">
+                        <h4 class="mb-0 text-white">{{parentTitle}}</h4>
+                        <div class="text-white opacity-50">Parent</div>
+                    </div>
+                </div>
+            </div>
+            <vex-page-layout-content class="-mt-4">
+                <div class="w-full">
+                            <router-outlet></router-outlet>
+                        </div>
             </vex-page-layout-content>
         </vex-page-layout>
     </div>
+    <div class="sidebar-overlay"  (click)="toggleSecondarySidebar()"></div>
 </div>

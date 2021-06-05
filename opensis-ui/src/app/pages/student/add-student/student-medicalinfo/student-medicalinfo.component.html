@@ -1,11 +1,11 @@
 <form (ngSubmit)="submit()" #f="ngForm" appInvalidControlScroll
     *ngIf="studentCreateMode==studentCreate.EDIT || studentCreateMode==studentCreate.ADD">
     <mat-card class="w-full">
-        <h3 class="flex-auto h-9 px-4">{{'medicalInformation' | translate}}</h3>
+        <h3 class="flex-auto h-9">{{'medicalInformation' | translate}}</h3>
         <mat-card-content>
             <div @stagger fxLayout="column" class="-mx-4">
                 <ul class="flex flex-row text-gray font-semibold">
-                    <li class="px-8 py-2 cursor-pointer" (click)="changeTab('activities')"
+                    <li class="px-4 py-2 cursor-pointer" (click)="changeTab('activities')"
                         [class.active]="currentTab === 'activities'"
                         [ngClass]="currentTab === 'activities' ? 'text-black border-b-2 border-primary' : ''">
                         {{'activities' | translate}}</li>
@@ -14,7 +14,7 @@
                         [ngClass]="currentTab === 'providerInformation' ? 'text-black border-b-2 border-primary' : ''">
                         {{'providerInformation' | translate}}</li>
                 </ul>
-                <hr class=""/>
+                <hr class="" />
                 <div [ngSwitch]="currentTab">
                     <div *ngSwitchCase="'activities'" class="px-4">
                         <!-- <h4 class="text-primary px-4 pb-2">{{'alertInformation'|translate}}</h4>
@@ -42,68 +42,62 @@
                     </div>
                     <div *ngSwitchCase="'providerInformation'">
                         <div class="pt-6 px-4">
-                            <div class="mb-2 md:flex md:flex-wrap">
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                            <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'primaryCarePhysician'|translate}}</mat-label>
                                         <input name="primaryCarePhysician"
-                                            [(ngModel)]="studentAddModel.studentMaster.primaryCarePhysician" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.primaryCarePhysician" matInput>
                                     </mat-form-field>
-                                </div>
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'primaryCarePhysicianPhone'|translate}}</mat-label>
                                         <input name="primaryCarePhysicianPhone"
-                                            [(ngModel)]="studentAddModel.studentMaster.primaryCarePhysicianPhone"
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.primaryCarePhysicianPhone"
                                             matInput>
                                     </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="mb-2 md:flex md:flex-wrap">
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'preferredMedicalFacility'|translate}}</mat-label>
                                         <input name="medicalFacility"
-                                            [(ngModel)]="studentAddModel.studentMaster.medicalFacility" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.preferredMedicalFacility" matInput>
                                     </mat-form-field>
-                                </div>
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'preferredMedicalFacilityPhone'|translate}}</mat-label>
                                         <input name="medicalFacilityPhone"
-                                            [(ngModel)]="studentAddModel.studentMaster.medicalFacilityPhone" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.preferredMedicalFacilityPhone" matInput>
                                     </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="mb-2 md:flex md:flex-wrap">
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'insuranceCompany'|translate}}</mat-label>
                                         <input name="insuranceCompany"
-                                            [(ngModel)]="studentAddModel.studentMaster.insuranceCompany" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.insuranceCompany" matInput>
                                     </mat-form-field>
-                                </div>
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'insuranceCompanyPhone'|translate}}</mat-label>
                                         <input name="insuranceCompanyPhone"
-                                            [(ngModel)]="studentAddModel.studentMaster.insuranceCompanyPhone" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.insuranceCompanyPhone" matInput>
                                     </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="mb-2 md:flex md:flex-wrap">
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'policyNumber'|translate}}</mat-label>
                                         <input name="policyNumber"
-                                            [(ngModel)]="studentAddModel.studentMaster.policyNumber" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.policyNumber" matInput>
                                     </mat-form-field>
-                                </div>
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'policyHolderName'|translate}}</mat-label>
                                         <mat-select name="suffix"
-                                            [(ngModel)]="studentAddModel.studentMaster.policyHolder">
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.policyHolderName">
                                             <mat-option value="" disabled *ngIf="parentsFullName?.length==0">No Parents
                                                 Found
                                             </mat-option>
@@ -112,45 +106,41 @@
                                             </mat-option>
                                         </mat-select>
                                     </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="mb-2 md:flex md:flex-wrap">
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'dentist'|translate}}</mat-label>
-                                        <input name="dentist" [(ngModel)]="studentAddModel.studentMaster.dentist"
+                                        <input name="dentist" [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.dentistName"
                                             matInput>
                                     </mat-form-field>
-                                </div>
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'dentistsPhone'|translate}}</mat-label>
                                         <input name="dentistPhone"
-                                            [(ngModel)]="studentAddModel.studentMaster.dentistPhone" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.dentistPhone" matInput>
                                     </mat-form-field>
-                                </div>
-                            </div>
-                            <div class="mb-2 md:flex md:flex-wrap">
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'vision'|translate}}</mat-label>
-                                        <input name="vision" [(ngModel)]="studentAddModel.studentMaster.vision"
+                                        <input name="vision" [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.visionName"
                                             matInput>
                                     </mat-form-field>
-                                </div>
-                                <div class="flex flex-1 mx-4 md:w-1/2">
+                                </li>
+                                <li>
                                     <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                         <mat-label>{{'visionProvidersPhone'|translate}}</mat-label>
                                         <input name="visionPhone"
-                                            [(ngModel)]="studentAddModel.studentMaster.visionPhone" matInput>
+                                            [(ngModel)]="addEditStudentMedicalProviderModel.studentMedicalProvider.visionProviderPhone" matInput>
                                     </mat-form-field>
-                                </div>
-                            </div>
+                                </li>
+                            </ul>
                         </div>
                     </div>
                 </div>
-               
-                <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
+
+                <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="addEditStudentMedicalProviderModel" [module]="module"
                     [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
             </div>
         </mat-card-content>
@@ -166,9 +156,9 @@
 
 <mat-card class="w-full" *ngIf="studentCreateMode == studentCreate.VIEW">
 
-    <div class="flex items-center px-4" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center mb-2" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto h-9">{{'medicalInformation' | translate}}</h3>
-        <button *ngIf="currentTab === 'providerInformation'  && editPermission" mat-button color="primary"
+        <button *ngIf="currentTab === 'providerInformation'  && editPermission" mat-raised-button color="primary"
             (click)="editMedicalInfo()">
             <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
         </button>
@@ -178,11 +168,11 @@
         <!-- start update design -->
         <div class="-mx-4">
             <ul class="flex flex-row text-gray font-semibold">
-                <li class="px-8 py-2 cursor-pointer" (click)="changeTab('activities')"
+                <li class="px-4 py-2 cursor-pointer" (click)="changeTab('activities')"
                     [class.active]="currentTab === 'activities'"
                     [ngClass]="currentTab === 'activities' ? 'text-black border-b-2 border-primary' : ''">{{'activities'
                     | translate}}</li>
-                <li class="px-8 py-2 cursor-pointer" (click)="changeTab('providerInformation')"
+                <li class="px-4 py-2 cursor-pointer" (click)="changeTab('providerInformation')"
                     [class.active]="currentTab === 'providerInformation'"
                     [ngClass]="currentTab === 'providerInformation' ? 'text-black border-b-2 border-primary' : ''">
                     {{'providerInformation' | translate}}</li>
@@ -190,8 +180,8 @@
             <mat-divider></mat-divider>
             <div [ngSwitch]="currentTab">
                 <div *ngSwitchCase="'activities'">
-                    <div class="px-8 pt-6">
-                        <h4 class="text-green font-medium">{{'alertInformation'|translate}}</h4>
+                    <div class="pt-6 px-4">
+                        <h4 class="text-green">{{'alertInformation'|translate}}</h4>
                         <div class="border border-gray-light rounded mt-2 mb-4">
                             <div class="overflow-x-auto overflow-y-hidden">
                                 <!-- <ul class="grid grid-cols-4 border-b p-4 font-semibold">
@@ -211,7 +201,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr *ngFor="let medicalinfo of studentMedicalInfoListModel.studentMedicalAlertList">
+                                            <td>{{medicalinfo.alertType|EmtyValueCheckPipe}}</td>
+                                            <td>{{medicalinfo.alertDescription|EmtyValueCheckPipe}}
+                                            </td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon (click)="editAlert(medicalinfo)" [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon (click)="confirmDeleteStudentMedicalAlert(medicalinfo)" [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
                                             <td>{{studentAddModel.studentMaster.criticalAlert|EmtyValueCheckPipe}}</td>
                                             <td>{{studentAddModel.studentMaster.alertDescription|EmtyValueCheckPipe}}
                                             </td>
@@ -223,7 +226,7 @@
                                                     <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
                                                 </span>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
@@ -233,8 +236,8 @@
                                     }}</span>
                             </div>
                         </div>
-                        <hr class="mt-6 mb-4 -mx-8" />
-                        <h4 class="text-green font-medium">{{'medicalNotes'|translate}}</h4>
+                        <hr class="mt-6 mb-4 -mx-4" />
+                        <h4 class="text-green">{{'medicalNotes'|translate}}</h4>
                         <div class="border border-gray-light rounded mt-2 mb-4">
                             <div class="overflow-x-auto overflow-y-hidden">
                                 <table class="w-full medical-info-table">
@@ -246,7 +249,19 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr *ngFor="let medicalinfo of studentMedicalInfoListModel.studentMedicalNoteList">
+                                            <td>{{medicalinfo.noteDate |date| EmtyValueCheckPipe}}</td>
+                                            <td>{{medicalinfo.medicalNote| EmtyValueCheckPipe}}</td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon (click)="editMedicalNotes(medicalinfo)" [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon (click)="confirmDeleteStudentMedicalNote(medicalinfo)" [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
                                             <td>May 10, 2021</td>
                                             <td>Arthur is allergic to prawns/crabs. He has recorded medical history of
                                                 allergic symptoms.</td>
@@ -258,7 +273,7 @@
                                                     <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
                                                 </span>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
@@ -268,8 +283,8 @@
                                     }}</span>
                             </div>
                         </div>
-                        <hr class="mt-6 mb-4 -mx-8" />
-                        <h4 class="text-green font-medium">{{'immunizationPhysicalRecord'|translate}}</h4>
+                        <hr class="mt-6 mb-4 -mx-4" />
+                        <h4 class="text-green">{{'immunizationPhysicalRecord'|translate}}</h4>
                         <div class="border border-gray-light rounded mt-2 mb-4">
                             <div class="overflow-x-auto overflow-y-hidden">
                                 <table class="w-full medical-info-table">
@@ -282,7 +297,20 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
+                                        <tr *ngFor="let medicalinfo of studentMedicalInfoListModel.studentMedicalImmunizationList">
+                                            <td>{{medicalinfo.immunizationType}}</td>
+                                            <td>{{medicalinfo.immunizationDate|date}}</td>
+                                            <td>{{medicalinfo.comment}}</td>
+                                            <td class="cursor-pointer">
+                                                <span class="mr-2">
+                                                    <mat-icon (click)="editImmunization(medicalinfo)" [icIcon]="icEdit"></mat-icon>
+                                                </span>
+                                                <span>
+                                                    <mat-icon (click)="confirmDeleteStudentMedicalImmunization(medicalinfo)" [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                </span>
+                                            </td>
+                                        </tr>
+                                        <!-- <tr>
                                             <td>Immunization</td>
                                             <td>May 18, 2021</td>
                                             <td>Rotavirus immunization was done.</td>
@@ -294,7 +322,7 @@
                                                     <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
                                                 </span>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
@@ -304,8 +332,8 @@
                                     translate }}</span>
                             </div>
                         </div>
-                        <hr class="mt-6 mb-4 -mx-8" />
-                        <h4 class="text-green font-medium">{{'nurseVisitRecord'|translate}}</h4>
+                        <hr class="mt-6 mb-4 -mx-4" />
+                        <h4 class="text-green">{{'nurseVisitRecord'|translate}}</h4>
                         <div class="border border-gray-light rounded mt-2 mb-0">
                             <div class="overflow-x-auto overflow-y-hidden">
                                 <table class="w-full medical-info-table">
@@ -321,25 +349,25 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr>
-                                            <td>Aug 10, 2020</td>
-                                            <td>10:00AM</td>
-                                            <td>10:30AM</td>
-                                            <td>Rashes on skin</td>
-                                            <td>Treatment given</td>
-                                            <td class="">
+                                        <tr *ngFor="let medicalinfo of studentMedicalInfoListModel.studentMedicalNurseVisitList">
+                                            <td>{{medicalinfo.nurseVisitDate| date}}</td>
+                                            <td>{{medicalinfo.timeIn|date:'h:mm a'}}</td>
+                                            <td>{{medicalinfo.timeOut|date:'h:mm a'}}</td>
+                                            <td>{{medicalinfo.reason}}</td>
+                                            <td>{{medicalinfo.result}}</td>
+                                            <td [class.text-green]="medicalinfo.comment">
                                                 <i class="icon icon-bubble"></i>
                                             </td>
                                             <td class="cursor-pointer">
                                                 <span class="mr-2">
-                                                    <mat-icon [icIcon]="icEdit"></mat-icon>
+                                                    <mat-icon (click)="editNurseVisit(medicalinfo)" [icIcon]="icEdit"></mat-icon>
                                                 </span>
                                                 <span>
-                                                    <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
+                                                    <mat-icon (click)="confirmDeleteStudentMedicalNurseVisit(medicalinfo)" [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
                                                 </span>
                                             </td>
                                         </tr>
-                                        <tr>
+                                        <!-- <tr>
                                             <td>Aug 11, 2020</td>
                                             <td>11:00AM</td>
                                             <td>11:15AM</td>
@@ -356,7 +384,7 @@
                                                     <mat-icon [icIcon]="icDeleteForever" class="mr-2"></mat-icon>
                                                 </span>
                                             </td>
-                                        </tr>
+                                        </tr> -->
                                     </tbody>
                                 </table>
                             </div>
@@ -369,84 +397,93 @@
                     </div>
                 </div>
                 <div *ngSwitchCase="'providerInformation'">
-                    <div class="px-4 pt-6">
-                        <div class="w-full lg:w-2/3">
-                            <ul class="grid md:grid-cols-2 col-gap-8 row-gap-10 my-0 mx-4">
+                    <div class="pt-6 px-4">
+                        <div class="w-full">
+                            <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-10 my-0">
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'primaryCarePhysician' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.primaryCarePhysician|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.primaryCarePhysician|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'primaryCarePhysicianPhone' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.primaryCarePhysicianPhone|EmtyValueCheckPipe}}
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.primaryCarePhysicianPhone|EmtyValueCheckPipe}}
                                     </p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'insuranceCompany' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.insuranceCompany|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.insuranceCompany|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'insuranceCompanyPhone' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.insuranceCompanyPhone|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.insuranceCompanyPhone|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'policyNumber' | translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.policyNumber|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.policyNumber|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'policyHolderName' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.policyHolder|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.policyHolderName|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacility' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.medicalFacility|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.preferredMedicalFacility|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'preferredMedicalFacilityPhone' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.medicalFacilityPhone|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.preferredMedicalFacilityPhone|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'dentist' | translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.dentist|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.dentistName|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'dentistsPhone' | translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.dentistPhone|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.dentistPhone|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'vision' | translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.vision|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.visionName|EmtyValueCheckPipe}}</p>
                                 </li>
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'visionProvidersPhone' |
                                         translate}}</label>
                                     <p class="mt-1 text-base leading-5 sm:mt-0 sm:col-span-2">
-                                        {{studentAddModel.studentMaster.visionPhone|EmtyValueCheckPipe}}</p>
+                                        {{addEditStudentMedicalProviderModel.studentMedicalProvider.visionProviderPhone|EmtyValueCheckPipe}}</p>
                                 </li>
                             </ul>
                         </div>
+                        <div *ngIf="addEditStudentMedicalProviderModel.fieldsCategoryList?.length>0">
+                            <hr class="-mx-4 mt-6" 
+                            [class.hide]="addEditStudentMedicalProviderModel?.fieldsCategoryList[categoryId]?.customFields?.length===0">
+                            <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="addEditStudentMedicalProviderModel" 
+                            [module]="module" [categoryId]="categoryId" [studentCreateMode]="studentCreateMode">
+                            </vex-custom-field-without-form>
+                        </div>
+                        
                     </div>
                 </div>
             </div>
-        </div>
+            
+            </div>
         <!-- End update Design -->
 
 
@@ -534,12 +571,8 @@
                     </li>
                 </ul>
             </div>
-            <hr class="-mx-4 mt-6"
-                [class.hide]="studentAddModel.fieldsCategoryList[categoryId].customFields.length===0">
-
-            <vex-custom-field-without-form [schoolDetailsForViewAndEdit]="studentAddModel" [module]="module"
-                [categoryId]="categoryId" [studentCreateMode]="studentCreateMode"></vex-custom-field-without-form>
-
+            
         </div> -->
+
     </mat-card-content>
 </mat-card>

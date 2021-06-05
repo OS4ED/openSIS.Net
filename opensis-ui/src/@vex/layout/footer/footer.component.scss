@@ -13,4 +13,9 @@
   padding-right: var(--padding);
   position: relative;
   z-index: var(--footer-z-index);
+
+  @media (max-width: 991.98px) {
+    height: auto;
+    background: none;
+  }
 }

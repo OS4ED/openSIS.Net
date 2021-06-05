@@ -1,4 +1,30 @@
-import { Component, OnInit } from '@angular/core';
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+import { COMMA, ENTER } from '@angular/cdk/keycodes';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { TranslateService } from '@ngx-translate/core';
 import { FinalGradeService } from '../../../../../services/final-grade.service';
 import { fadeInRight400ms } from '../../../../../../@vex/animations/fade-in-right.animation';
@@ -23,6 +49,9 @@ import { LoaderService } from 'src/app/services/loader.service';
 import { GradesService } from 'src/app/services/grades.service';
 import { GradeScaleListView } from 'src/app/models/grades.model';
 import { LayoutService } from 'src/@vex/services/layout.service';
+import { MatAutocomplete, MatAutocompleteSelectedEvent } from '@angular/material/autocomplete';
+import { Observable } from 'rxjs';
+import { MatChipInputEvent } from '@angular/material/chips';
 
 @Component({
   selector: 'vex-grade-details',
@@ -35,6 +64,15 @@ import { LayoutService } from 'src/@vex/services/layout.service';
   ]
 })
 export class GradeDetailsComponent implements OnInit {
+  visible = true;
+  selectable = true;
+  removable = true;
+  separatorKeysCodes: number[] = [ENTER, COMMA];
+  filteredFruits: Observable<string[]>;
+  fruits: string[] = ['Lemon'];
+  allFruits: string[] = ['Apple', 'Lemon', 'Lime', 'Orange', 'Strawberry'];
+  @ViewChild('fruitInput') fruitInput: ElementRef<HTMLInputElement>;
+
   pageStatus = "Grade Details";
   showComment: boolean = false;
   staffDetails;
@@ -45,6 +83,7 @@ export class GradeDetailsComponent implements OnInit {
   courseList = [];
   courseStandardList = [];
   gradeScaleStandardList = [];
+  gradeScaleList = [];
   loading: boolean = false;
   isPercentChecked: boolean = false;
   reportCardGrade = [
@@ -55,8 +94,11 @@ export class GradeDetailsComponent implements OnInit {
     { id: 5, value: 'F' }
   ];
   totalCount: number = 0;
+  @ViewChild('auto') matAutocomplete: MatAutocomplete;
   courseSectionId: number;
+  courseSectionDetails=[];
   markingPeriodList = [];
+  studentFinalGradeComments;
   gradeScaleListView: GradeScaleListView = new GradeScaleListView();
   courseStandardForCourseViewModel: CourseStandardForCourseViewModel = new CourseStandardForCourseViewModel();
   reportCardCategoryWithComments: GetAllCourseCommentCategoryModel = new GetAllCourseCommentCategoryModel();
@@ -88,11 +130,12 @@ export class GradeDetailsComponent implements OnInit {
     this.staffDetails = this.finalGradeService.getStaffDetails();
     this.layoutService.collapseSidenav();
 
+
   }
 
   ngOnInit(): void {
     this.addUpdateStudentFinalGradeModel.isPercent = true;
-    this.isPercentChecked=true;
+    this.isPercentChecked = true;
     this.allScheduledCourseSectionBasedOnTeacher.staffId = this.staffDetails.staffId;
     if (this.allScheduledCourseSectionBasedOnTeacher.staffId) {
 
@@ -101,6 +144,12 @@ export class GradeDetailsComponent implements OnInit {
       this.router.navigate(['/school', 'staff', 'teacher-functions', 'input-final-grade']);
     }
     this.getAllMarkingPeriodList();
+  }
+
+  selected(event: MatAutocompleteSelectedEvent): void {
+    if (this.addUpdateStudentFinalGradeModel.studentFinalGradeList[this.selectedStudent].studentFinalGradeComments.findIndex(item => item.courseCommentId === event.option.value.courseCommentId) === -1) {
+      this.addUpdateStudentFinalGradeModel.studentFinalGradeList[this.selectedStudent].studentFinalGradeComments.push(event.option.value);
+    }
   }
 
   percentToGrade(index) {
@@ -127,31 +176,17 @@ export class GradeDetailsComponent implements OnInit {
   }
 
   selectedGrade(grade, index) {
-    if (grade === 'A') {
-      this.addUpdateStudentFinalGradeModel.studentFinalGradeList[index].percentMarks = 95;
-    }
-    else if (grade === 'B') {
-      this.addUpdateStudentFinalGradeModel.studentFinalGradeList[index].percentMarks = 85;
-    }
-    else if (grade === 'C') {
-      this.addUpdateStudentFinalGradeModel.studentFinalGradeList[index].percentMarks = 75;
-    }
-    else if (grade === 'D') {
-      this.addUpdateStudentFinalGradeModel.studentFinalGradeList[index].percentMarks = 65;
-    }
-    else if (grade === 'F') {
-      this.addUpdateStudentFinalGradeModel.studentFinalGradeList[index].percentMarks = 55;
-    }
+    this.addUpdateStudentFinalGradeModel.studentFinalGradeList[index].percentMarks = this.gradeScaleList.filter(x => x.title === grade)[0].breakoff;
   }
 
   onCheckboxChange(value) {
     if (value.currentTarget.checked) {
       this.addUpdateStudentFinalGradeModel.isPercent = false;
-      this.isPercentChecked=true;
+      this.isPercentChecked = true;
     }
-    else{
+    else {
       this.addUpdateStudentFinalGradeModel.isPercent = true;
-      this.isPercentChecked=false;
+      this.isPercentChecked = false;
     }
 
 
@@ -190,6 +225,7 @@ export class GradeDetailsComponent implements OnInit {
           }
         } else {
           this.allScheduledCourseSectionBasedOnTeacher = res;
+          this.allScheduledCourseSectionBasedOnTeacher.courseSectionViewList.filter(x => x.gradeScaleType !== 'Ungraded');
 
         }
       }
@@ -212,32 +248,45 @@ export class GradeDetailsComponent implements OnInit {
 
   selectedCourseSection(courseSection) {
     this.courseSectionId = courseSection;
-    let courseSectionDetails = this.allScheduledCourseSectionBasedOnTeacher.courseSectionViewList.filter(x => x.courseSectionId === +this.courseSectionId);
-    this.courseSectionData = this.findMarkingPeriodTitleById(courseSectionDetails[0]);
+    this.courseSectionDetails = this.allScheduledCourseSectionBasedOnTeacher.courseSectionViewList.filter(x => x.courseSectionId === +this.courseSectionId);
+    this.courseSectionData = this.findMarkingPeriodTitleById(this.courseSectionDetails[0]);
     this.markingPeriodList = this.getMarkingPeriodTitleListModel.getMarkingPeriodView.filter(x => x.value === this.courseSectionData.markingPeriodId);
     this.addUpdateStudentFinalGradeModel.markingPeriodId = this.getMarkingPeriodTitleListModel.getMarkingPeriodView.filter(x => x.value === this.courseSectionData.markingPeriodId)[0].value;
     this.addUpdateStudentFinalGradeModel.schoolId = this.defaultValuesService.getSchoolID();
     this.addUpdateStudentFinalGradeModel.tenantId = this.defaultValuesService.getTenantID();
-    this.addUpdateStudentFinalGradeModel.courseId = courseSectionDetails[0].courseId;
-    this.addUpdateStudentFinalGradeModel.courseSectionId = courseSectionDetails[0].courseSectionId;
-    this.addUpdateStudentFinalGradeModel.calendarId = courseSectionDetails[0].calendarId;
+    this.addUpdateStudentFinalGradeModel.courseId = this.courseSectionDetails[0].courseId;
+    this.addUpdateStudentFinalGradeModel.courseSectionId = this.courseSectionDetails[0].courseSectionId;
+    this.addUpdateStudentFinalGradeModel.calendarId = this.courseSectionDetails[0].calendarId;
     this.finalGradeService.getAllStudentFinalGradeList(this.addUpdateStudentFinalGradeModel).subscribe((res) => {
       if (res) {
         if (res._failure) {
-          this.addUpdateStudentFinalGradeModel.courseId = courseSectionDetails[0].courseId;
-          this.addUpdateStudentFinalGradeModel.calendarId = courseSectionDetails[0].calendarId;
+          this.addUpdateStudentFinalGradeModel.courseId = this.courseSectionDetails[0].courseId;
+          this.addUpdateStudentFinalGradeModel.calendarId = this.courseSectionDetails[0].calendarId;
           this.getAllReportCardCommentsWithCategory(this.addUpdateStudentFinalGradeModel.courseId);
           this.getAllCourseStandard(this.addUpdateStudentFinalGradeModel.courseId);
-          this.getAllGradeScaleList(courseSectionDetails[0].standardGradeScaleId).then(() => {
-            this.searchScheduledStudentForGroupDrop(courseSectionDetails[0].courseSectionId);
-          });
+          if (this.courseSectionDetails[0].gradeScaleType !== 'Numeric' || this.courseSectionDetails[0].gradeScaleType !== 'Teacher_Scale') {
+            this.addUpdateStudentFinalGradeModel.isPercent = false;
+            this.isPercentChecked = true;
+            this.getAllGradeScaleList(this.courseSectionDetails[0].standardGradeScaleId).then(() => {
+              this.searchScheduledStudentForGroupDrop(this.courseSectionDetails[0].courseSectionId);
+            });
+          }
+          else {
+            this.searchScheduledStudentForGroupDrop(this.courseSectionDetails[0].courseSectionId);
+          }
+
         }
         else {
           this.getAllReportCardCommentsWithCategory(this.addUpdateStudentFinalGradeModel.courseId);
           this.getAllCourseStandard(this.addUpdateStudentFinalGradeModel.courseId);
-          this.getAllGradeScaleList(courseSectionDetails[0].standardGradeScaleId);
-          this.scheduleStudentListViewModel.courseSectionId = courseSectionDetails[0].courseSectionId;
+          if (this.courseSectionDetails[0].gradeScaleType !== 'Numeric' || this.courseSectionDetails[0].gradeScaleType !== 'Teacher_Scale') {
+            this.addUpdateStudentFinalGradeModel.isPercent = false;
+            this.isPercentChecked = true;
+            this.getAllGradeScaleList(this.courseSectionDetails[0].standardGradeScaleId);
+          }
+          this.scheduleStudentListViewModel.courseSectionId = this.courseSectionDetails[0].courseSectionId;
           this.scheduleStudentListViewModel.profilePhoto = true;
+          this.scheduleStudentListViewModel.sortingModel = null;
           this.studentScheduleService.searchScheduledStudentForGroupDrop(this.scheduleStudentListViewModel).subscribe((res) => {
             if (res) {
               if (res._failure) {
@@ -370,6 +419,7 @@ export class GradeDetailsComponent implements OnInit {
         if (data._failure) {
         } else {
           this.gradeScaleStandardList = data.gradeScaleList.filter(x => x.gradeScaleId === +standardGradeScaleId)[0]?.grade;
+          this.gradeScaleList = data.gradeScaleList.filter(x => x.useAsStandardGradeScale === false)[0]?.grade;
           resolve('');
         }
       });
@@ -378,6 +428,7 @@ export class GradeDetailsComponent implements OnInit {
   }
 
   searchScheduledStudentForGroupDrop(courseSectionId) {
+    this.scheduleStudentListViewModel.sortingModel = null;
     this.scheduleStudentListViewModel.courseSectionId = courseSectionId;
     this.scheduleStudentListViewModel.profilePhoto = true;
     this.studentScheduleService.searchScheduledStudentForGroupDrop(this.scheduleStudentListViewModel).subscribe((res) => {
@@ -409,7 +460,7 @@ export class GradeDetailsComponent implements OnInit {
   }
 
   initializeDefaultValues(item, i) {
-    for (let j = 0; j < this.gradeScaleStandardList.length; j++) {
+    for (let j = 0; j < this.gradeScaleStandardList?.length; j++) {
       this.addUpdateStudentFinalGradeModel.studentFinalGradeList[i].studentFinalGradeStandard[j] = [];
     }
     this.addUpdateStudentFinalGradeModel.studentFinalGradeList[i].studentId = item.studentId;

@@ -1,15 +1,15 @@
 <mat-card class="w-full">
 
-    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressInformation' | translate}}</h3>
-        <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}</button>
+        <button mat-button color="primary"><mat-icon class="md:mr-2">edit</mat-icon> <span class="hidden md:inline-block">{{'editInformation' |translate}}</span></button>
     </div>
     <mat-card-content>
 
         <div @stagger fxLayout="column">
-            <h4 class="text-primary pt-6 pb-4 px-4">{{'homeAddress'|translate}} <span class="same-as-home-address">Same as Student's Home Address</span></h4>            
+            <h4 class="text-primary pt-6 pb-4">{{'homeAddress'|translate}} <span class="same-as-home-address">Same as Student's Home Address</span></h4>            
             <!-- <h4 class="text-primary pt-6 pb-4 px-4">{{'homeAddress'|translate}} <span class="different-from-home-address">Different from Student's Home Address</span></h4> -->
-            <ul class="grid grid-cols-3 col-gap-8 row-gap-10 mt-2 mx-4 mb-6">
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">2000 Ruth St NW</p>

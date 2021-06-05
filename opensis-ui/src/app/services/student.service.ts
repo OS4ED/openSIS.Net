@@ -1,3 +1,4 @@
+import { AddEditStudentMedicalProviderModel } from './../models/student.model';
 import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
@@ -14,13 +15,15 @@ import {
   StudentEnrollmentModel,
   StudentEnrollmentSchoolListModel,
   StudentImportModel,
-  StudentName
+  StudentName,
+  StudentMedicalInfoListModel
 } from '../models/student.model';
 import { StudentCommentsAddView, StudentCommentsListViewModel } from '../models/student-comments.model';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { CryptoService } from './Crypto.service';
 import { DefaultValuesService } from '../common/default-values.service';
 import { SchoolCreate } from '../enums/school-create.enum';
+import { AddEditStudentMedicalAlertModel, AddEditStudentMedicalImmunizationModel, AddEditStudentMedicalNoteModel, AddEditStudentMedicalNurseVisitModel } from '../models/student.model';
 @Injectable({
   providedIn: 'root'
 })
@@ -33,7 +36,7 @@ export class StudentService {
   private studentCreateMode = new BehaviorSubject(this.studentCreate.ADD);
   studentCreatedMode = this.studentCreateMode.asObservable();
 
-  private studentDetailsForViewAndEdit = new BehaviorSubject(false);
+  private studentDetailsForViewAndEdit = new BehaviorSubject(null);
   studentDetailsForViewedAndEdited = this.studentDetailsForViewAndEdit.asObservable();
   
   private categoryId = new BehaviorSubject(null);
@@ -275,20 +278,137 @@ export class StudentService {
     const apiurl = this.apiUrl + obj._tenantName + '/Student/addStudentList';
     return this.http.post<StudentImportModel>(apiurl, obj);
   }
+  addStudentMedicalAlert(obj: AddEditStudentMedicalAlertModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalAlert.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalAlert.schoolId = this.defaultValuesService.getSchoolID();
+    obj.studentMedicalAlert.createdBy = this.defaultValuesService.getUserName();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/addStudentMedicalAlert';
+    return this.http.post<AddEditStudentMedicalAlertModel>(apiurl, obj);
+  }
+  updateStudentMedicalAlert(obj: AddEditStudentMedicalAlertModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalAlert.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalAlert.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/updateStudentMedicalAlert';
+    return this.http.put<AddEditStudentMedicalAlertModel>(apiurl, obj);
+  }
+  deleteStudentMedicalAlert(obj: AddEditStudentMedicalAlertModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalAlert.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalAlert.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/deleteStudentMedicalAlert';
+    return this.http.post<AddEditStudentMedicalAlertModel>(apiurl, obj);
+  }
+  addStudentMedicalNote(obj: AddEditStudentMedicalNoteModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalNote.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalNote.schoolId = this.defaultValuesService.getSchoolID();
+    obj.studentMedicalNote.createdBy = this.defaultValuesService.getUserName();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/addStudentMedicalNote';
+    return this.http.post<AddEditStudentMedicalNoteModel>(apiurl, obj);
+  }
+  updateStudentMedicalNote(obj: AddEditStudentMedicalNoteModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalNote.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalNote.schoolId = this.defaultValuesService.getSchoolID();
+    obj.studentMedicalNote.updatedBy = this.defaultValuesService.getUserName();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/updateStudentMedicalNote';
+    return this.http.put<AddEditStudentMedicalNoteModel>(apiurl, obj);
+  }
+  deleteStudentMedicalNote(obj: AddEditStudentMedicalNoteModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalNote.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalNote.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/deleteStudentMedicalNote';
+    return this.http.post<AddEditStudentMedicalNoteModel>(apiurl, obj);
+  }
+  addStudentMedicalImmunization(obj: AddEditStudentMedicalImmunizationModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalImmunization.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalImmunization.schoolId = this.defaultValuesService.getSchoolID();
+    obj.studentMedicalImmunization.createdBy = this.defaultValuesService.getUserName();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/addStudentMedicalImmunization';
+    return this.http.post<AddEditStudentMedicalImmunizationModel>(apiurl, obj);
+  }
+  updateStudentMedicalImmunization(obj: AddEditStudentMedicalImmunizationModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalImmunization.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalImmunization.schoolId = this.defaultValuesService.getSchoolID();
+    obj.studentMedicalImmunization.updatedBy = this.defaultValuesService.getUserName();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/updateStudentMedicalImmunization';
+    return this.http.put<AddEditStudentMedicalImmunizationModel>(apiurl, obj);
+  }
+  deleteStudentMedicalImmunization(obj: AddEditStudentMedicalImmunizationModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalImmunization.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalImmunization.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/deleteStudentMedicalImmunization';
+    return this.http.post<AddEditStudentMedicalImmunizationModel>(apiurl, obj);
+  }
+  addStudentMedicalNurseVisit(obj: AddEditStudentMedicalNurseVisitModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalNurseVisit.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalNurseVisit.schoolId = this.defaultValuesService.getSchoolID();
+    obj.studentMedicalNurseVisit.createdBy = this.defaultValuesService.getUserName();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/addStudentMedicalNurseVisit';
+    return this.http.post<AddEditStudentMedicalNurseVisitModel>(apiurl, obj);
+  }
+  updateStudentMedicalNurseVisit(obj: AddEditStudentMedicalNurseVisitModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalNurseVisit.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalNurseVisit.schoolId = this.defaultValuesService.getSchoolID();
+    obj.studentMedicalNurseVisit.updatedBy = this.defaultValuesService.getUserName();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/updateStudentMedicalNurseVisit';
+    return this.http.put<AddEditStudentMedicalNurseVisitModel>(apiurl, obj);
+  }
+  deleteStudentMedicalNurseVisit(obj: AddEditStudentMedicalNurseVisitModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalNurseVisit.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalNurseVisit.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/deleteStudentMedicalNurseVisit';
+    return this.http.post<AddEditStudentMedicalNurseVisitModel>(apiurl, obj);
+  }
+  addStudentMedicalProvider(obj: AddEditStudentMedicalProviderModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalProvider.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalProvider.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/addStudentMedicalProvider';
+    return this.http.post<AddEditStudentMedicalProviderModel>(apiurl, obj);
+  }
+  updateStudentMedicalProvider(obj: AddEditStudentMedicalProviderModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalProvider.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalProvider.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/updateStudentMedicalProvider';
+    return this.http.put<AddEditStudentMedicalProviderModel>(apiurl, obj);
+  }
+  deleteStudentMedicalProvider(obj: AddEditStudentMedicalProviderModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentMedicalProvider.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentMedicalProvider.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/deleteStudentMedicalProvider';
+    return this.http.post<AddEditStudentMedicalProviderModel>(apiurl, obj);
+  }
+  getAllStudentMedicalInfo(obj: StudentMedicalInfoListModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    const apiurl = this.apiUrl + obj._tenantName + '/Student/getAllStudentMedicalInfo';
+    return this.http.post<StudentMedicalInfoListModel>(apiurl, obj);
+  }
 
   setStudentName(studentName) {
     this.studentName = {
       firstGivenName: studentName.split('|')[0],
       middleName: studentName.split('|')[1],
       lastFamilyName: studentName.split('|')[2]
-    }
+    };
   }
   getStudentName() {
     return this.studentName;
   }
 
   setStudentFirstView(status){
-    this.isFirstView=status;
+    this.isFirstView = status;
   }
   getStudentFirstView(){
     return this.isFirstView;
@@ -306,10 +426,9 @@ export class StudentService {
     this.categoryId.next(data);
   }
 
-  setCategoryTitle(title :string){
+  setCategoryTitle(title: string){
     this.categoryTitle.next(title);
   }
-  
   setDataAfterSavingGeneralInfo(data) {
     this.dataAfterSavingGeneralInfo.next(data);
   }

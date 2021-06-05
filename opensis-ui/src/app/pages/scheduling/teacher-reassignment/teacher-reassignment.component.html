@@ -104,7 +104,7 @@
                                             <ng-container *ngFor="let day of course.weekDays.split('').sort()">
                                                 <span
                                                 class="w-5 h-5 text-center text-xs rounded inline-block text-white mr-1 font-medium"
-                                                [ngClass]="course.meetingDays.includes(day)?'bg-primary':'bg-gray-light'"
+                                                [ngClass]="course.cloneMeetingDays.includes(day)?'bg-primary':'bg-gray-light'"
                                                 [matTooltip]="day|weekDay:false:true" [matTooltipPosition]="'above'">{{day|weekDay:true:false}}</span>
                                         
                                             </ng-container>

@@ -23,6 +23,17 @@ const routes: Routes = [
         canActivate: [AuthGuard,RolePermissionGuard]
       },
       {
+        path: 'teacher',
+        children:[
+          {
+            path:'dashboards',
+            loadChildren: () => import('./pages/dashboards/teacher-dashboard/teacher-dashboard.module').then(m => m.TeacherDashboardModule),
+            //canActivate: [AuthGuard,RolePermissionGuard]
+          }
+        ]
+        
+      },
+      {
         path: '',
         children: [
           {
@@ -265,7 +276,27 @@ const routes: Routes = [
             // canActivate: [AuthGuard]            
           }
         ]
-      },            
+      }, 
+      {
+        path: '',
+        children: [
+          {
+            path: 'grades/report-cards',
+            loadChildren: () => import('./pages/grades/report-cards/report-cards.module').then(m => m.ReportCardsModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      }, 
+      {
+        path: '',
+        children: [
+          {
+            path: 'grades/transcripts',
+            loadChildren: () => import('./pages/grades/transcripts/transcripts.module').then(m => m.TranscriptsModule),
+            // canActivate: [AuthGuard]            
+          }
+        ]
+      },              
     ]
   },
 ];

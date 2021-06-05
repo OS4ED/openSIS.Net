@@ -1,4 +1,4 @@
-import { AfterViewInit, ChangeDetectorRef, Component, Inject, Input, OnInit, TemplateRef, ViewChild } from '@angular/core';
+import { AfterViewInit, ChangeDetectorRef, Component, HostListener, Inject, Input, OnDestroy, OnInit, TemplateRef, ViewChild } from '@angular/core';
 import { BreakpointObserver } from '@angular/cdk/layout';
 import { LayoutService } from '../services/layout.service';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -12,7 +12,9 @@ import * as jwt_decode from 'jwt-decode';
 import { MatDialog } from '@angular/material/dialog';
 import { SessionExpireAlertComponent } from './session-expire/session-expire-alert/session-expire-alert.component';
 import { DefaultValuesService } from '../../app/common/default-values.service';
-import { timer } from 'rxjs';
+import { interval, Subscription, timer } from 'rxjs';
+import { UserViewModel } from 'src/app/models/user.model';
+import { SessionService } from '../services/session.service';
 
 @UntilDestroy()
 @Component({
@@ -20,8 +22,26 @@ import { timer } from 'rxjs';
   templateUrl: './layout.component.html',
   styleUrls: ['./layout.component.scss']
 })
-export class LayoutComponent implements OnInit, AfterViewInit {
+export class LayoutComponent implements OnInit, AfterViewInit,OnDestroy {
+  userActivity;
 
+  @HostListener('window:mousemove', ['$event'])
+  @HostListener('window:keydown', ['$event'])
+  keyPress(event): void {
+    clearTimeout(this.userActivity);
+    this.setTimeout();
+  }
+  setTimeout(): void {
+    this.userActivity = setTimeout(()=> {
+      this.openDialog();
+    }, 1000 * 60 * 20);
+  }
+
+  minutes:number;
+  count: number;
+  tokenEndTime;
+  tokenExpired: boolean= false;
+  searchTimer: Subscription;
   @Input() sidenavRef: TemplateRef<any>;
   @Input() toolbarRef: TemplateRef<any>;
   @Input() footerRef: TemplateRef<any>;
@@ -48,21 +68,49 @@ export class LayoutComponent implements OnInit, AfterViewInit {
   );
 
   searchOpen$ = this.layoutService.searchOpen$;
-
   @ViewChild('quickpanel', { static: true }) quickpanel: MatSidenav;
   @ViewChild('sidenav', { static: true }) sidenav: MatSidenav;
   @ViewChild(MatSidenavContainer, { static: true }) sidenavContainer: MatSidenavContainer;
 
   constructor(private cd: ChangeDetectorRef,
-              private breakpointObserver: BreakpointObserver,
-              private layoutService: LayoutService,
-              private configService: ConfigService,
-              private router: Router,
-              private defaultValueService:DefaultValuesService,
-              @Inject(DOCUMENT) private document: Document,
-              private dialog: MatDialog) { }
+    private breakpointObserver: BreakpointObserver,
+    private layoutService: LayoutService,
+    private configService: ConfigService,
+    private router: Router,
+    private sessionService: SessionService,
+    private defaultValueService: DefaultValuesService,
+    @Inject(DOCUMENT) private document: Document,
+    private dialog: MatDialog) { }
 
   ngOnInit() {
+    this.tokenDetails();
+    this.count= this.minutes-1;
+    const source = interval(1000 * 60 * 1);
+    this.searchTimer = source.subscribe(() => {
+      if (this.count > 1) {
+        this.count--;
+      }
+      else if (this.count === 1) {
+        this.tokenDetails();
+        this.count= this.minutes-1;
+        const loginViewModel: UserViewModel = new UserViewModel();
+        this.sessionService.RefreshToken(loginViewModel).subscribe(res => {
+          if (res) {
+            if (res._failure) {
+              this.openDialog();
+            }
+            else {
+              this.defaultValueService.setToken(res._token);
+              this.checkToken();
+            }
+          }
+        });
+      }
+    });
+
+
+
+    
     /**
      * Expand Sidenav when we switch from mobile to desktop view
      */
@@ -98,7 +146,15 @@ export class LayoutComponent implements OnInit, AfterViewInit {
 
     this.checkToken();
   }
-
+tokenDetails(){
+  let decoded = JSON.parse(JSON.stringify(jwt_decode.default(sessionStorage.getItem('token'))));
+    let date1: any = new Date(decoded.exp * 1000)
+    let date2: any = new Date();
+    let res = Math.abs(date1 - date2) / 1000;
+    this.minutes = Math.floor(res / 60) % 60;
+    this.tokenEndTime = (this.minutes - 2) * 60 * 1000;
+    this.tokenExpired = Date.now() > (decoded.exp * 1000 - 120000);
+}
   ngAfterViewInit(): void {
     /**
      * Enable Scrolling to specific parts of the page using the Router
@@ -142,49 +198,63 @@ export class LayoutComponent implements OnInit, AfterViewInit {
     });
   }
 
-  clearStorage(){
+  clearStorage() {
     localStorage.clear();
     let schoolId = this.defaultValueService.getSchoolID()
     sessionStorage.clear();
-    if(schoolId){
+    if (schoolId) {
       this.defaultValueService.setSchoolID(JSON.stringify(schoolId))
     }
-    sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
-    let a =sessionStorage.setItem('tenant',this.defaultValueService.getDefaultTenant());
+    sessionStorage.setItem('tenant', this.defaultValueService.getDefaultTenant());
+    let a = sessionStorage.setItem('tenant', this.defaultValueService.getDefaultTenant());
   }
 
-  checkToken() { 
-    let decoded = JSON.parse(JSON.stringify(jwt_decode.default(sessionStorage.getItem('token'))));
-    let date1:any = new Date(decoded.exp*1000)
-    let date2:any = new Date();
-    let res = Math.abs(date1 - date2) / 1000;
-    let minutes = Math.floor(res / 60) % 60;
-    let tokenEndTime=(minutes-2)*60*1000;
-    const tokenExpired = Date.now() > (decoded.exp * 1000-120000);
+  checkToken() {
+    this.tokenDetails();
+    if (!this.tokenExpired) {
+      const source = timer(this.tokenEndTime);
+      source.subscribe(() => {
 
-    if (!tokenExpired) {
-      const source = timer(tokenEndTime);
-      source.subscribe(()=>{
-        if(this.router.url != '/'){
-          this.dialog.open(SessionExpireAlertComponent, {
-            maxWidth: '600px',
-            disableClose:true
-          }).afterClosed().subscribe(token => {
-            if (token){
-              this.defaultValueService.setToken(token)
-              this.checkToken();
-              return;
+        const loginViewModel: UserViewModel = new UserViewModel();
+        this.sessionService.RefreshToken(loginViewModel).subscribe(res => {
+          if (res) {
+            if (res._failure) {
+              this.openDialog();
             }
-             this.clearStorage();
-             this.dialog.closeAll();
-             this.router.navigateByUrl('/');
-         });
-        }
+            else {
+              this.defaultValueService.setToken(res._token);
+              this.checkToken();
+            }
+
+          }
+        });
       });
     } else {
       this.clearStorage();
       this.dialog.closeAll();
       this.router.navigateByUrl('/');
     }
+  }
+
+  openDialog() {
+    if (this.router.url != '/') {
+      this.dialog.open(SessionExpireAlertComponent, {
+        maxWidth: '600px',
+        disableClose: true
+      }).afterClosed().subscribe(token => {
+        if (token) {
+          this.defaultValueService.setToken(token)
+          this.checkToken();
+          return;
+        }
+        this.clearStorage();
+        this.dialog.closeAll();
+        this.router.navigateByUrl('/');
+      });
+    }
+  }
+
+  ngOnDestroy() {
+    this.searchTimer.unsubscribe()
   }
 }

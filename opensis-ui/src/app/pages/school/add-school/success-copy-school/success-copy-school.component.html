@@ -9,10 +9,10 @@
         <i class="icon icon-checkmark-circle text-green text-5xl"></i>
         <!-- <mat-icon class="text-green text-4xl">check_circle</mat-icon> -->
         <h5 class="text-green text-3xl mt-2">{{ 'sucess' | translate}}</h5>
-        <p class="text-lg my-4">{{ 'aNewSchoolNamed' | translate}} <b>Satyabhama High school</b> {{ 'createdSuccessfully' | translate }}. {{ 'allDataSuccessfullyCopiedToNewSchool' | translate }}</p>
+        <p class="text-lg my-4">{{ 'aNewSchoolNamed' | translate}} <b>{{newSchoolName}}</b> {{ 'createdSuccessfully' | translate }}. {{ 'allDataSuccessfullyCopiedToNewSchool' | translate }}</p>
     </div>
     <div class="text-center mt-8">
-        <button color="primary" mat-flat-button type="submit">
+        <button color="primary" mat-flat-button (click)="goToNewSchool(data.newSchoolData?.schoolId)" type="button">
             {{ 'goToNewSchool' | translate }}
         </button>
     </div>

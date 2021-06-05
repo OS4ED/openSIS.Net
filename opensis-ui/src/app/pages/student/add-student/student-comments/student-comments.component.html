@@ -1,12 +1,12 @@
 <mat-card class="w-full">
 
-    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'comments' | translate}}</h3>
         <div>
             <a (click)="exportCommentsToExcel()" class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Export as Excel"><i class="icon icon-file-excel text-lg"></i></a>
             <a class="cursor-pointer p-1 mt-1 mr-3 inline-block align-middle" matTooltip="Print"><mat-icon [icIcon]="icPrint"></mat-icon></a>
             <button *ngIf="addPermission" mat-raised-button color="primary" class="align-middle" (click)='openAddNew()'>
-                <mat-icon [icIcon]="icAdd"></mat-icon> {{'addComment' |translate}}
+                <mat-icon [icIcon]="icAdd"></mat-icon><span class="ml-2 hidden md:inline-block">{{'addComment' |translate}}</span>
             </button>
         </div>
     </div>
@@ -45,7 +45,7 @@
                 </div>
 
             </div>
-            <div class="text-center" *ngIf="listCount === null">No Data</div>
+            <div class="text-center border-t mt-4 pt-2" *ngIf="listCount === null">No Data</div>
         </div>
     </mat-card-content>
 </mat-card>

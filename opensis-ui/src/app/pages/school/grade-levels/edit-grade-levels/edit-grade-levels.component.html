@@ -36,13 +36,13 @@
         <div class="flex-1 mx-6 md:w-1/2">
             <mat-form-field class="w-full" appearance="outline" color="primary">
                 <mat-label>{{'gradeLevelEquivalency' | translate}}</mat-label>
-                <mat-select formControlName="equivalencyId" name="equivalencyId">
-                    <mat-option value="null">N/A</mat-option>
+                <mat-select formControlName="equivalencyId" name="equivalencyId" required>
                     <mat-option *ngFor="let list of getGradeEquivalencyList.gradeEquivalencyList"
                         value="{{list.equivalencyId}}">
                         {{list.gradeLevelEquivalency}}
                     </mat-option>
                 </mat-select>
+                <mat-error *ngIf="form.get('equivalencyId').hasError('required')">{{'gradeLevelEquivalencyIsRequired'|translate}}</mat-error>                
             </mat-form-field>
         </div>
         <div class="flex-1 mx-6 md:w-1/2">

@@ -7,8 +7,7 @@
 
     <vex-page-layout-content class="-mt-6">
         <div class="card -mt-16">
-            <div class="p-6 text-center">To schedule teachers into course sections, search and select teacher(s) and
-                course section(s) first.</div>
+            <div class="p-6 text-center">{{ 'toScheduleTeachersIntoCourseSectionsSearchAndSelectTeachersAndCourseSectionsFirst' | translate }}</div>
             <hr class="border-normal">
             <div class="flex w-full">
                 <div class="w-1/2 border-r border-normal cursor-pointer relative" (click)="selectTeacher()">
@@ -17,11 +16,11 @@
                             <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
                         </div>
                         <div class="w-10/12 pl-6">
-                            <h2 *ngIf="selectedTeachers?.length==0">Teacher</h2>
+                            <h2 *ngIf="selectedTeachers?.length==0">{{ 'teacher' | translate }}</h2>
                             <h2 *ngIf="selectedTeachers?.length>0">
                                 {{selectedTeachers.length>1?selectedTeachers?.length+' Teachers
                                 Selected':selectedTeachers?.length+' Teacher Selected'}}</h2>
-                            <p class="text-blue">Select Teacher to Schedule</p>
+                            <p class="text-blue">{{ 'selectTeacherToSchedule' | translate }}</p>
                         </div>
                     </div>
                     <div class="schedule-icon bg-white"><img src="assets/img/icons/teacher-course-schedule.svg"
@@ -30,12 +29,12 @@
                 <div class="w-1/2 cursor-pointer" (click)="selectCourseSection()">
                     <div class="flex items-center">
                         <div class="w-10/12 text-right pr-6">
-                            <h2 *ngIf="selectedCourseSection?.length==0">Course Section</h2>
+                            <h2 *ngIf="selectedCourseSection?.length==0">{{ 'courseSection' | translate }}</h2>
                             <h2 *ngIf="selectedCourseSection?.length>0">
                                 {{selectedCourseSection?.length>1?selectedCourseSection?.length+' Course Sections
                                 Selected':selectedCourseSection?.length+' Course Section Selected'}}</h2>
 
-                            <p class="text-blue">Select Course Section to Schedule</p>
+                            <p class="text-blue">{{ 'selectCourseSectionToSchedule' |translate }}</p>
                         </div>
                         <div class="w-2/12 bg-primary text-white text-center py-6 rounded-br relative arrow-left">
                             <i class="icon icon-plus3 sm:text-xl lg:text-4xl"></i>
@@ -44,25 +43,30 @@
                 </div>
             </div>
         </div>
-        <div class="fixed w-full h-full z-50 top-0 left-0" *ngIf="globalLoader && selectedTeachers.length>0 && selectedTeachers.length>0">
+        <div class="fixed w-full h-full z-50 top-0 left-0"
+            *ngIf="globalLoader && selectedTeachers.length>0 && selectedTeachers.length>0">
 
-        </div> 
+        </div>
         <div class="card mt-6 p-4" *ngIf="globalLoader && selectedTeachers.length>0 && selectedTeachers.length>0">
-        <div class="flex">
-            <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
-            <div class="ml-4">
-                <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="selectionProcessing && !checkAvailabilityLoader && !startSchedulingLoader">Selection Processing</span>
-                <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="checkAvailabilityLoader">Checking Availability</span>
-                <span class="text-lg inline-block align-middle text-primary font-bold" *ngIf="startSchedulingLoader">Scheduling Teachers</span>
+            <div class="flex">
+                <img src="assets/img/icons/loading-process.svg" class="flex-shrink-0 mt-1 self-start animate-spin w-5">
+                <div class="ml-4">
+                    <span class="text-lg inline-block align-middle text-primary font-bold"
+                        *ngIf="selectionProcessing && !checkAvailabilityLoader && !startSchedulingLoader">Selection
+                        Processing</span>
+                    <span class="text-lg inline-block align-middle text-primary font-bold"
+                        *ngIf="checkAvailabilityLoader">Checking Availability</span>
+                    <span class="text-lg inline-block align-middle text-primary font-bold"
+                        *ngIf="startSchedulingLoader">Scheduling Teachers</span>
 
-                <p class="">Please do not refresh the page or click back button.</p>
+                    <p class="">{{ 'pleaseDoNotRefreshThePageOrClickBackButton' | translate }}</p>
+                </div>
             </div>
         </div>
-    </div>
-        <div class="pt-6" *ngIf="staffScheduleListForView.staffScheduleViewList && !staffSchedulingFinished && selectedTeachers.length>0 && selectedCourseSection.length>0">
-            <h4 class="text-primary font-bold">Course Section Details</h4>
-            <p>Select course section details are given below. Check teacher availability before proceeding to
-                scheduling.</p>
+        <div class="pt-6"
+            *ngIf="staffScheduleListForView.staffScheduleViewList && !staffSchedulingFinished && selectedTeachers.length>0 && selectedCourseSection.length>0">
+            <h4 class="text-primary font-bold">{{ 'courseSectionDetails' | translate }}</h4>
+            <p>{{ 'selectedCourseSectionDetailsAreGivenBelowCheckTeacherAvailabilityBeforeProceedingToScheduling' | translate }}</p>
             <div class="card mt-4 p-4"
                 *ngFor="let teacherSchedule of staffScheduleListForView.staffScheduleViewList;let indexOfStaffGrid=index">
                 <div class="teacher-info mb-2">
@@ -87,8 +91,7 @@
                             <thead>
                                 <tr>
                                     <th width="1%">
-                                        <mat-checkbox color="primary"
-                                           [disabled]="teacherSchedule.conflictStaff"
+                                        <mat-checkbox color="primary" [disabled]="teacherSchedule.conflictStaff"
                                             [checked]="teacherSchedule.allCourseSectionChecked && !teacherSchedule.conflictStaff"
                                             (change)="masterCheckToggle($event.checked,indexOfStaffGrid)">
                                         </mat-checkbox>
@@ -106,26 +109,33 @@
                             <tbody>
                                 <tr *ngFor="let courseSection of teacherSchedule.courseSectionViewList;let index=index">
                                     <td>
-                                        <mat-checkbox color="primary" [disabled]="courseSection.conflictCourseSection" [checked]="courseSection.checked && !courseSection.conflictCourseSection"
+                                        <mat-checkbox color="primary" [disabled]="courseSection.conflictCourseSection"
+                                            [checked]="courseSection.checked && !courseSection.conflictCourseSection"
                                             (change)="singleSelection($event.checked,index,indexOfStaffGrid)">
                                         </mat-checkbox>
                                     </td>
-                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.courseTitle}}</td>
-                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.courseSectionName}}</td>
-                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.markingPeriodTitle}}</td>
-                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.durationStartDate|date:'mediumDate'}}</td>
-                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">{{courseSection.durationEndDate|date:'mediumDate'}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">
+                                        {{courseSection.courseTitle}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">
+                                        {{courseSection.courseSectionName}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">
+                                        {{courseSection.markingPeriodTitle}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">
+                                        {{courseSection.durationStartDate|date:'mediumDate'}}</td>
+                                    <td [ngClass]="courseSection.conflictCourseSection?'text-warn':''">
+                                        {{courseSection.durationEndDate|date:'mediumDate'}}</td>
                                     <td>
                                         <ng-container
                                             *ngIf="courseSection.scheduleType=='Fixed Schedule' || courseSection.scheduleType=='Variable Schedule';else otherSchedule">
                                             <ng-container *ngFor="let day of courseSection.weekDays.split('').sort()">
                                                 <span
-                                                class="w-5 h-5 text-center text-xs rounded inline-block text-white mr-1 font-medium"
-                                                [ngClass]="courseSection.cloneMeetingDays.includes(day)?'bg-primary':'bg-gray-light'"
-                                                [matTooltip]="day|weekDay:false:true" [matTooltipPosition]="'above'">{{day|weekDay:true:false}}</span>
-                                        
+                                                    class="w-5 h-5 text-center text-xs rounded inline-block text-white mr-1 font-medium"
+                                                    [ngClass]="courseSection.cloneMeetingDays.includes(day)?'bg-primary':'bg-gray-light'"
+                                                    [matTooltip]="day|weekDay:false:true"
+                                                    [matTooltipPosition]="'above'">{{day|weekDay:true:false}}</span>
+
                                             </ng-container>
-                                    
+
                                         </ng-container>
                                         <ng-template #otherSchedule>
                                             <span class="text-primary">
@@ -135,17 +145,18 @@
                                     </td>
                                     <td>
                                         <ng-container *ngFor="let staff of courseSection?.scheduledStaff?.split('|')">
-                                        <button [matTooltip]="staff"
-                                            aria-label="Button that displays a tooltip when focused or hovered over"
-                                            [matTooltipPosition]="'above'">
-                                            <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
-                                        </button>
-                                    </ng-container>
-                                    <ng-container *ngIf="courseSection.scheduledStaff==null">-</ng-container>
+                                            <button [matTooltip]="staff"
+                                                aria-label="Button that displays a tooltip when focused or hovered over"
+                                                [matTooltipPosition]="'above'">
+                                                <img src="assets/img/icons/teacher_blue.svg" alt="" width="20">
+                                            </button>
+                                        </ng-container>
+                                        <ng-container *ngIf="courseSection.scheduledStaff==null">-</ng-container>
                                     </td>
                                     <td>
                                         <a href="javascript:void();" class="text-xl"
-                                            (click)="viewCorrespondingSchedule(courseSection)"><i class="icon icon-info2"></i></a>
+                                            (click)="viewCorrespondingSchedule(courseSection)"><i
+                                                class="icon icon-info2"></i></a>
                                     </td>
                                 </tr>
                             </tbody>
@@ -156,32 +167,38 @@
             <div class="flex mt-4 items-center flex-wrap">
                 <p class="text-base mt-2 mr-10" *ngIf="!noConflictDetected && checkAvailabilityFinished">
                     <i class="icon icon-notification2 mr-2 text-warn"></i>
-                    Items in red denotes teacher unavailability.You can change your selection or proceed to scheduling.
+                    {{ 'itemsInRedDenotesTeacherUnavailabilityYouCanChangeYourSelectionOrProceedToScheduling' | translate }}
                 </p>
                 <!-- After completed conflicts below text is seen -->
-                <p class="text-base mt-2 mr-10" *ngIf="noConflictDetected && checkAvailabilityFinished"><i class="icon icon-checkmark-circle mr-2 text-green"></i>There are no conflicts detected. You may proceed to scheduling.</p>
+                <p class="text-base mt-2 mr-10" *ngIf="noConflictDetected && checkAvailabilityFinished"><i
+                        class="icon icon-checkmark-circle mr-2 text-green"></i>{{ 'thereAreNoConflictsDetectedYouMayProceedToScheduling' | translate }}</p>
 
 
                 <div class="ml-auto mt-2">
-                    <button @stagger color="primary" [disabled]="checkAvailabilityLoader" mat-raised-button (click)="checkAvailability()">
+                    <button @stagger color="primary" [disabled]="checkAvailabilityLoader" mat-raised-button
+                        (click)="checkAvailability()">
                         <mat-icon class="ml-2" *ngIf="checkAvailabilityLoader">
                             <mat-spinner color="primary" diameter="20">
                             </mat-spinner>
-                          </mat-icon>
-                        <i class="icon icon-loop3 mr-2" *ngIf="!checkAvailabilityLoader"></i>{{ 'checkAvailability' | translate }}
+                        </mat-icon>
+                        <i class="icon icon-loop3 mr-2" *ngIf="!checkAvailabilityLoader"></i>{{ 'checkAvailability' |
+                        translate }}
                     </button>
-                    <button @stagger *ngIf="isStartSchedulingPossible" [disabled]="startSchedulingLoader" (click)="startScheduling()" mat-raised-button type="submit" class="bg-green ml-2 text-white">
+                    <button @stagger *ngIf="isStartSchedulingPossible" [disabled]="startSchedulingLoader"
+                        (click)="startScheduling()" mat-raised-button type="submit" class="bg-green ml-2 text-white">
                         <mat-icon class="ml-2" *ngIf="startSchedulingLoader">
                             <mat-spinner color="primary" diameter="20">
                             </mat-spinner>
-                          </mat-icon>
-                      {{ 'startScheduling' | translate }}
+                        </mat-icon>
+                        {{ 'startScheduling' | translate }}
                     </button>
                 </div>
             </div>
         </div>
-        <div *ngIf="staffSchedulingFinished">
-              <h3 class="text-center"> Staff Scheduling Finished Successfully!</h3>
+        <div class="card mt-6 px-6 py-20 text-center" *ngIf="staffSchedulingFinished">
+            <mat-icon class="text-green w-auto h-auto text-6xl">check_circle</mat-icon>
+            <h3 class="text-primary font-semibold text-2xl mb-1">{{ 'success' | translate }}</h3>
+            <p>{{ 'teacherScheduledSuccessfully' | translate }}</p>
         </div>
     </vex-page-layout-content>
 </vex-page-layout>

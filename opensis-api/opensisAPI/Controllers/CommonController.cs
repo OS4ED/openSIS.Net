@@ -1,4 +1,29 @@
-﻿using System;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -8,6 +33,7 @@ using Microsoft.AspNetCore.Mvc;
 using opensis.core.Common.Interfaces;
 using opensis.data.ViewModels.CommonModel;
 using opensis.data.ViewModels.School;
+using opensis.data.ViewModels.StaffSchedule;
 
 namespace opensisAPI.Controllers
 {
@@ -428,6 +454,102 @@ namespace opensisAPI.Controllers
                 gradeEducationalStageList._failure = true;
             }
             return gradeEducationalStageList;
+        }
+
+        [HttpPost("getDashboardViewForStaff")]
+        public ActionResult<ScheduledCourseSectionViewModel> GetDashboardViewForStaff(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel scheduledCourseSectionView = new ScheduledCourseSectionViewModel();
+            try
+            {
+                scheduledCourseSectionView = _commonService.GetDashboardViewForStaff(scheduledCourseSectionViewModel);
+            }
+            catch (Exception es)
+            {
+                scheduledCourseSectionView._message = es.Message;
+                scheduledCourseSectionView._failure = true;
+            }
+            return scheduledCourseSectionView;
+        }
+
+        [HttpPost("getDashboardViewForCalendarView")]
+        public ActionResult<DashboardViewModel> GetDashboardViewForCalendarView(DashboardViewModel dashboardViewModel)
+        {
+            DashboardViewModel dashboardView = new DashboardViewModel();
+            try
+            {
+                dashboardView = _commonService.GetDashboardViewForCalendarView(dashboardViewModel);
+            }
+            catch (Exception es)
+            {
+                dashboardView._failure = true;
+                dashboardView._message = es.Message;
+            }
+            return dashboardView;
+        }
+
+        [HttpPost("resetPassword")]
+        public ActionResult<ResetPasswordModel> ResetPasswordForUser(ResetPasswordModel resetPasswordModel)
+        {
+            ResetPasswordModel resetPassword = new ResetPasswordModel();
+            try
+            {
+                resetPassword = _commonService.ResetPasswordForUser(resetPasswordModel);
+            }
+            catch (Exception es)
+            {
+                resetPassword._failure = true;
+                resetPassword._message = es.Message;
+            }
+            return resetPassword;
+        }
+
+        [HttpPost("getExcelHeader")]
+        public ActionResult<ExcelHeaderModel> GetExcelHeader( ExcelHeaderModel excelHeaderModel)
+        {
+            ExcelHeaderModel excelHeader = new ExcelHeaderModel();
+            try
+            {
+                excelHeader = _commonService.GetExcelHeader(excelHeaderModel);
+            }
+            catch (Exception es)
+            {
+                excelHeader._failure = true;
+                excelHeader._message = es.Message;
+            }
+            return excelHeader;
+        }
+
+        [HttpPost("AddUpdateSchoolPreference")]
+        public ActionResult<SchoolPreferenceAddViewModel> AddUpdateSchoolPreference(SchoolPreferenceAddViewModel schoolPreferenceAddViewModel)
+        {
+            SchoolPreferenceAddViewModel schoolPreferenceAdd = new SchoolPreferenceAddViewModel();
+            try
+            {
+                schoolPreferenceAdd = _commonService.AddUpdateSchoolPreference(schoolPreferenceAddViewModel);
+            }
+            catch (Exception es)
+            {
+                schoolPreferenceAdd._failure = true;
+                schoolPreferenceAdd._message = es.Message;
+            }
+            return schoolPreferenceAdd;
+        }
+
+        [HttpPost("viewSchoolPreference")]
+        public ActionResult<SchoolPreferenceAddViewModel> ViewSchoolPreference(SchoolPreferenceAddViewModel schoolPreferenceAddViewModel)
+        {
+            SchoolPreferenceAddViewModel schoolPreferenceView = new SchoolPreferenceAddViewModel();
+            try
+            {
+                schoolPreferenceView = _commonService.ViewSchoolPreference(schoolPreferenceAddViewModel);
+            }
+            catch (Exception es)
+            {
+                schoolPreferenceView._failure = true;
+                schoolPreferenceView._message = es.Message;
+            }
+            return schoolPreferenceView;
         }
     }
 }

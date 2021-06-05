@@ -222,14 +222,14 @@
                     <mat-slide-toggle  (change)="portalUserCheck($event)"  [checked] = "isPortalUser" color="primary">{{'portalAccess' | translate}}</mat-slide-toggle>
                 </div>
         
-                <mat-form-field *ngIf="isPortalUser === true" appearance="outline" color="primary">
+                <mat-form-field *ngIf="isPortalUser" appearance="outline" color="primary">
                     <mat-label>{{'loginEmailAddress' | translate}}</mat-label>
                     <input   [(ngModel)]="addParentInfoModel.parentInfo.loginEmail" type="email" name="loginEmail" #loginEmail="ngModel" matInput required>
                     <mat-error class="text-red" *ngIf="loginEmail.errors?.required">
                         {{'loginEmailAddressIsRequired'|translate}}</mat-error>
                 </mat-form-field>
         
-                <mat-form-field *ngIf="isPortalUser === true" appearance="outline" color="primary" class=" mb-6">
+                <mat-form-field *ngIf="isPortalUser" appearance="outline" color="primary" class=" mb-6">
                     <mat-label>{{'password' | translate}}</mat-label>
                     <input   [(ngModel)]="addParentInfoModel.passwordHash"  type="password" name="passwordHash" #passwordHash="ngModel" [disabled]="disablePassword" matInput required>
                     <mat-error class="text-red" *ngIf="passwordHash.errors?.required">

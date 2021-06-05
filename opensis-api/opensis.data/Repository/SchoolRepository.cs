@@ -1,4 +1,29 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using opensis.data.Helper;
 using opensis.data.Interface;
@@ -374,6 +399,7 @@ namespace opensis.data.Repository
                                     customFields.CustomFieldsValue.FirstOrDefault().CustomFieldType = customFields.Type;
                                     customFields.CustomFieldsValue.FirstOrDefault().SchoolId = school.schoolMaster.SchoolId;
                                     customFields.CustomFieldsValue.FirstOrDefault().TargetId = school.schoolMaster.SchoolId;
+                                    customFields.CustomFieldsValue.FirstOrDefault().CustomFields = null;
                                     this.context?.CustomFieldsValue.AddRange(customFields.CustomFieldsValue);
                                 }
                             }
@@ -385,6 +411,20 @@ namespace opensis.data.Repository
                     {
                         school.schoolMaster.SchoolDetail.FirstOrDefault().SchoolMaster = null;
                     }
+                    if (school.schoolMaster.FieldsCategory.ToList().Count > 0)
+                    {
+                        foreach (var FieldsCategory in school.schoolMaster.FieldsCategory)
+                        {
+                            if (FieldsCategory.CustomFields.ToList().Count > 0)
+                            {
+                                if (FieldsCategory.CustomFields.FirstOrDefault().CustomFieldsValue.ToList().Count > 0)
+                                {
+                                    FieldsCategory.CustomFields.FirstOrDefault().CustomFieldsValue.FirstOrDefault().CustomFields = null;
+                                }
+                            }
+                        }
+                    }
+
                     school._failure = false;
                     school._message = "School Updated Successfully";
                 }
@@ -608,7 +648,7 @@ namespace opensis.data.Repository
 
                         permisionGrp.TenantId = school.schoolMaster.TenantId;
                         permisionGrp.SchoolId = school.schoolMaster.SchoolId;
-                        permisionGrp.IsActive = true;
+                        //permisionGrp.IsActive = true;
                         permisionGrp.PermissionCategory = null;
                         this.context?.PermissionGroup.Add(permisionGrp);
                         //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
@@ -817,9 +857,15 @@ namespace opensis.data.Repository
                 try
                 {
                     var copyFromSchool = this.context?.SchoolMaster.FirstOrDefault(x => x.TenantId == copySchoolViewModel.TenantId && x.SchoolId == copySchoolViewModel.FromSchoolId);
+                    string schoolName = null;
 
                     if (copyFromSchool != null)
                     {
+                        if (copySchoolViewModel.schoolMaster.SchoolName != null)
+                        {
+                            schoolName = copySchoolViewModel.schoolMaster.SchoolName;
+                        }
+                        
                         copySchoolViewModel.schoolMaster = copyFromSchool;
                         int? MasterSchoolId = Utility.GetMaxPK(this.context, new Func<SchoolMaster, int>(x => x.SchoolId));
                         copySchoolViewModel.schoolMaster.SchoolId = (int)MasterSchoolId;
@@ -832,25 +878,24 @@ namespace opensis.data.Repository
                             copySchoolViewModel._message = "Guid is already exist, Please try again.";
                             return copySchoolViewModel;
                         }
+
+                        copySchoolViewModel.schoolMaster.SchoolName = schoolName;
                         copySchoolViewModel.schoolMaster.SchoolGuid = GuidId;
                         copySchoolViewModel.schoolMaster.SchoolInternalId = null;
                         this.context?.SchoolMaster.Add(copySchoolViewModel.schoolMaster);
                         this.context.SaveChanges();
-                        //this.context?.SchoolMaster.Remove(copySchoolViewModel.schoolMaster);
-
 
                         int? Ide = null;
                         Ide = (int)Utility.GetMaxPK(this.context, new Func<SchoolDetail, int>(x => x.Id));
 
                         var schoolDetailsData = this.context?.SchoolDetail.Where(x => x.TenantId == copySchoolViewModel.TenantId && x.SchoolId == copySchoolViewModel.FromSchoolId).ToList();
 
-
                         if (schoolDetailsData.Count > 0)
                         {
                             schoolDetailsData.ForEach(x => x.SchoolMaster = null);
 
                             var SchoolDetails = new List<SchoolDetail>(){new SchoolDetail()
-                            { TenantId =copySchoolViewModel.TenantId, SchoolId = MasterSchoolId, Id = (int)Ide, Affiliation = schoolDetailsData.FirstOrDefault().Affiliation, LowestGradeLevel = schoolDetailsData.FirstOrDefault().LowestGradeLevel, HighestGradeLevel = schoolDetailsData.FirstOrDefault().HighestGradeLevel, Instagram = schoolDetailsData.FirstOrDefault().Instagram, Internet = schoolDetailsData.FirstOrDefault().Internet, NameOfPrincipal = schoolDetailsData.FirstOrDefault().NameOfPrincipal,NameOfAssistantPrincipal = schoolDetailsData.FirstOrDefault().NameOfAssistantPrincipal }
+                            { TenantId =copySchoolViewModel.TenantId, SchoolId = MasterSchoolId, Id = (int)Ide, Affiliation = schoolDetailsData.FirstOrDefault().Affiliation,Associations =schoolDetailsData.FirstOrDefault().Associations,Locale =schoolDetailsData.FirstOrDefault().Locale, LowestGradeLevel = schoolDetailsData.FirstOrDefault().LowestGradeLevel, HighestGradeLevel = schoolDetailsData.FirstOrDefault().HighestGradeLevel,DateSchoolOpened =schoolDetailsData.FirstOrDefault().DateSchoolOpened,DateSchoolClosed =schoolDetailsData.FirstOrDefault().DateSchoolClosed, Status = schoolDetailsData.FirstOrDefault().Status, Internet = schoolDetailsData.FirstOrDefault().Internet, Gender =schoolDetailsData.FirstOrDefault().Gender,Electricity =schoolDetailsData.FirstOrDefault().Electricity,Telephone =schoolDetailsData.FirstOrDefault().Telephone,Fax =schoolDetailsData.FirstOrDefault().Fax,Website =schoolDetailsData.FirstOrDefault().Website,Email =schoolDetailsData.FirstOrDefault().Email,Twitter =schoolDetailsData.FirstOrDefault().Twitter,Facebook =schoolDetailsData.FirstOrDefault().Facebook,Instagram =schoolDetailsData.FirstOrDefault().Instagram,LinkedIn =schoolDetailsData.FirstOrDefault().LinkedIn,Youtube =schoolDetailsData.FirstOrDefault().Youtube,SchoolLogo =schoolDetailsData.FirstOrDefault().SchoolLogo,NameOfPrincipal = schoolDetailsData.FirstOrDefault().NameOfPrincipal,NameOfAssistantPrincipal = schoolDetailsData.FirstOrDefault().NameOfAssistantPrincipal,RunningWater =schoolDetailsData.FirstOrDefault().RunningWater,MainSourceOfDrinkingWater =schoolDetailsData.FirstOrDefault().MainSourceOfDrinkingWater,CurrentlyAvailable =schoolDetailsData.FirstOrDefault().CurrentlyAvailable,TotalFemaleToilets =schoolDetailsData.FirstOrDefault().TotalFemaleToilets,FemaleToiletType =schoolDetailsData.FirstOrDefault().FemaleToiletType,FemaleToiletAccessibility =schoolDetailsData.FirstOrDefault().FemaleToiletAccessibility,TotalFemaleToiletsUsable =schoolDetailsData.FirstOrDefault().TotalFemaleToiletsUsable,MaleToiletType =schoolDetailsData.FirstOrDefault().MaleToiletType,TotalMaleToilets =schoolDetailsData.FirstOrDefault().TotalMaleToilets,TotalMaleToiletsUsable =schoolDetailsData.FirstOrDefault().TotalMaleToiletsUsable,MaleToiletAccessibility =schoolDetailsData.FirstOrDefault().MaleToiletAccessibility,ComonToiletType =schoolDetailsData.FirstOrDefault().ComonToiletType,TotalCommonToilets =schoolDetailsData.FirstOrDefault().TotalCommonToilets,TotalCommonToiletsUsable =schoolDetailsData.FirstOrDefault().TotalCommonToiletsUsable,CommonToiletAccessibility =schoolDetailsData.FirstOrDefault().CommonToiletAccessibility,HandwashingAvailable =schoolDetailsData.FirstOrDefault().HandwashingAvailable,SoapAndWaterAvailable =schoolDetailsData.FirstOrDefault().SoapAndWaterAvailable,HygeneEducation =schoolDetailsData.FirstOrDefault().HygeneEducation }
                             };
 
                             this.context?.SchoolDetail.AddRange(SchoolDetails);
@@ -956,8 +1001,7 @@ namespace opensis.data.Repository
                              new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=copySchoolViewModel.schoolMaster.ModifiedBy, TenantId= copySchoolViewModel.schoolMaster.TenantId,SchoolId=copySchoolViewModel.schoolMaster.SchoolId,LovName="Field Type",LovColumnValue="Multiple SelectBox",CreatedBy=copySchoolViewModel.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+65},
                              new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=copySchoolViewModel.schoolMaster.ModifiedBy, TenantId= copySchoolViewModel.schoolMaster.TenantId,SchoolId=copySchoolViewModel.schoolMaster.SchoolId,LovName="Field Type",LovColumnValue="Date",CreatedBy=copySchoolViewModel.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+66},
                              new DpdownValuelist(){UpdatedOn=DateTime.UtcNow,UpdatedBy=copySchoolViewModel.schoolMaster.ModifiedBy, TenantId= copySchoolViewModel.schoolMaster.TenantId,SchoolId=copySchoolViewModel.schoolMaster.SchoolId,LovName="Field Type",LovColumnValue="Textarea",CreatedBy=copySchoolViewModel.schoolMaster.CreatedBy,CreatedOn=DateTime.UtcNow,Id=(long)dpdownValueId+67},
-                            
-                            
+                                                       
                         };
                         this.context?.DpdownValuelist.AddRange(DpdownValuelist);
                         var dpdownValueIde = dpdownValueId+68;
@@ -1052,7 +1096,7 @@ namespace opensis.data.Repository
 
                                 permisionGrp.TenantId = copySchoolViewModel.schoolMaster.TenantId;
                                 permisionGrp.SchoolId = copySchoolViewModel.schoolMaster.SchoolId;
-                                permisionGrp.IsActive = true;
+                                //permisionGrp.IsActive = true;
                                 permisionGrp.PermissionCategory = null;
                                 this.context?.PermissionGroup.Add(permisionGrp);
                                 //this.context?.SaveChanges(objModel.UserName, objModel.HostName, objModel.IpAddress, objModel.Page);
@@ -1412,8 +1456,6 @@ namespace opensis.data.Repository
                             }
                         }
                         
-                        //long? dpdownValueIde = Utility.GetMaxLongPK(this.context, new Func<DpdownValuelist, long>(x => x.Id));
-
                         if (copySchoolViewModel.SchoolLevel == true)
                         {
 
@@ -1427,7 +1469,6 @@ namespace opensis.data.Repository
                         }
                         else
                         {
-                            //long? dpdownValueIde = Utility.GetMaxLongPK(this.context, new Func<DpdownValuelist, long>(x => x.Id));
                             var DpdownValueList = new List<DpdownValuelist>() {
 
                             new DpdownValuelist() { UpdatedOn = DateTime.UtcNow, UpdatedBy = copySchoolViewModel.schoolMaster.ModifiedBy, TenantId = copySchoolViewModel.schoolMaster.TenantId, SchoolId = copySchoolViewModel.schoolMaster.SchoolId, LovName = "School Level", LovColumnValue = copySchoolViewModel.schoolMaster.SchoolLevel, CreatedBy = copySchoolViewModel.schoolMaster.CreatedBy, CreatedOn = DateTime.UtcNow, Id = (long)dpdownValueIde ++ }
@@ -1534,7 +1575,6 @@ namespace opensis.data.Repository
                                 this.context.DpdownValuelist.AddRange(EthnicityData);
                             }
                         }
-
 
                         this.context?.SaveChanges();
                         transaction.Commit();

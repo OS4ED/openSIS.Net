@@ -1,4 +1,29 @@
-﻿using System;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using System;
 using System.Collections.Generic;
 
 namespace opensis.data.Models
@@ -22,6 +47,7 @@ namespace opensis.data.Models
             Quarters = new HashSet<Quarters>();
             SchoolCalendars = new HashSet<SchoolCalendars>();
             SchoolDetail = new HashSet<SchoolDetail>();
+            SchoolPreference = new HashSet<SchoolPreference>();
             SchoolYears = new HashSet<SchoolYears>();
             SearchFilter = new HashSet<SearchFilter>();
             Semesters = new HashSet<Semesters>();
@@ -78,7 +104,7 @@ namespace opensis.data.Models
         public virtual ICollection<Quarters> Quarters { get; set; }
         public virtual ICollection<SchoolCalendars> SchoolCalendars { get; set; }
         public virtual ICollection<SchoolDetail> SchoolDetail { get; set; }
-        
+        public virtual ICollection<SchoolPreference> SchoolPreference { get; set; }
         public virtual ICollection<SchoolYears> SchoolYears { get; set; }
         public virtual ICollection<SearchFilter> SearchFilter { get; set; }
         public virtual ICollection<Semesters> Semesters { get; set; }

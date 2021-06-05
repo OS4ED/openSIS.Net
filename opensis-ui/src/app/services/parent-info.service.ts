@@ -1,21 +1,33 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
-import { ViewParentInfoModel, GetAllParentModel, AddParentInfoModel, ParentInfoList, GetAllParentInfoModel, RemoveAssociateParent } from '../models/parent-info.model';
+import { ViewParentInfoModel, GetAllParentModel, AddParentInfoModel, ParentInfoList, GetAllParentInfoModel, RemoveAssociateParent, GetAllParentResponseModel, ParentAdvanceSearchModel } from '../models/parent-info.model';
 import { CryptoService } from './Crypto.service';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DefaultValuesService } from '../common/default-values.service';
+import { SchoolCreate } from '../enums/school-create.enum';
 @Injectable({
   providedIn: 'root'
 })
 export class ParentInfoService {
-
+  parentCreate = SchoolCreate;
   apiUrl: string = environment.apiURL;
   private parentId;
   private parentDetails;
+  private advanceSearchParams=null;
   userName = sessionStorage.getItem('user');
 
-  constructor(private http: HttpClient, private cryptoService: CryptoService, private defaultValuesService: DefaultValuesService) { }
+  private parentCreateMode = new BehaviorSubject(this.parentCreate.VIEW);
+  parentCreatedMode = this.parentCreateMode.asObservable();
+
+  private parentDetailsForViewAndEdit = new BehaviorSubject(null);
+  parentDetailsForViewedAndEdited = this.parentDetailsForViewAndEdit.asObservable();
+
+  constructor(
+    private http: HttpClient,
+    private cryptoService: CryptoService,
+    private defaultValuesService: DefaultValuesService
+    ) { }
 
 
   setParentId(id: number) {
@@ -54,9 +66,11 @@ export class ParentInfoService {
 
   updateParentInfo(parentInfo: AddParentInfoModel) {
     parentInfo = this.defaultValuesService.getAllMandatoryVariable(parentInfo);
+    parentInfo.passwordHash = this.cryptoService.encrypt(parentInfo.passwordHash);
     parentInfo.parentInfo.schoolId = this.defaultValuesService.getSchoolID();
     parentInfo.parentInfo.tenantId = this.defaultValuesService.getTenantID();
     parentInfo.parentInfo.parentPhoto = this.parentImage;
+    parentInfo.parentInfo.parentAddress[0].parentId= parentInfo.parentInfo.parentId;
     parentInfo.parentInfo.parentAddress[0].tenantId = this.defaultValuesService.getTenantID();
     parentInfo.parentInfo.parentAddress[0].schoolId = this.defaultValuesService.getSchoolID();
     let apiurl = this.apiUrl + parentInfo._tenantName + "/ParentInfo/updateParentInfo";
@@ -65,7 +79,7 @@ export class ParentInfoService {
   getAllParentInfo(Obj: GetAllParentModel) {
     Obj = this.defaultValuesService.getAllMandatoryVariable(Obj);
     let apiurl = this.apiUrl + Obj._tenantName + "/ParentInfo/getAllParentInfo";
-    return this.http.post<GetAllParentModel>(apiurl, Obj);
+    return this.http.post<GetAllParentResponseModel>(apiurl, Obj);
   }
   addParentForStudent(obj: AddParentInfoModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
@@ -128,13 +142,27 @@ export class ParentInfoService {
     this.parentImage = imageInBase64;
   }
 
+  setParentCreateMode(data) {
+    this.parentCreateMode.next(data);
+  }
 
+  setParentDetailsForViewAndEdit(data) {
+    this.parentDetailsForViewAndEdit.next(data);
+  }
 
+  setAdvanceSearchParams(params){
+    this.advanceSearchParams=params
+  }
 
-
-
-
-
-
-
+  getAdvanceSearchParams(){
+    if(this.advanceSearchParams){
+      let parentSearchModel: ParentAdvanceSearchModel = new ParentAdvanceSearchModel();;
+      for(let param of this.advanceSearchParams){
+        parentSearchModel[param.columnName] = param.filterValue;
+      }
+    return parentSearchModel;
+    }else{
+      return null
+    }
+  }
 }

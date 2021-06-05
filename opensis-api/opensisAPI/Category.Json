@@ -606,5 +606,43 @@
     "CreatedOn": "2021-02-24",
     "UpdatedBy": "",
     "UpdatedOn": ""
+  },
+  {
+    "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
+    "SchoolId": "1",
+    "PermissionCategoryId": "33",
+    "PermissionGroupId": "8",
+    "PermissionCategoryName": "Report Cards",
+    "ShortCode": "rc",
+    "Path": "/school/grades/report-cards",
+    "Title": "Report Cards",
+    "Type": "link",
+    "EnableView": true,
+    "EnableAdd": true,
+    "EnableEdit": true,
+    "EnableDelete": true,
+    "CreatedBy": "Admin",
+    "CreatedOn": "2021-02-24",
+    "UpdatedBy": "",
+    "UpdatedOn": ""
+  },
+  {
+    "TenantId": "1e93c7bf-0fae-42bb-9e09-a1cedc8c0355",
+    "SchoolId": "1",
+    "PermissionCategoryId": "34",
+    "PermissionGroupId": "8",
+    "PermissionCategoryName": "Transcripts",
+    "ShortCode": "trns",
+    "Path": "/school/grades/transcripts",
+    "Title": "Transcripts",
+    "Type": "link",
+    "EnableView": true,
+    "EnableAdd": true,
+    "EnableEdit": true,
+    "EnableDelete": true,
+    "CreatedBy": "Admin",
+    "CreatedOn": "2021-02-24",
+    "UpdatedBy": "",
+    "UpdatedOn": ""
   }
 ]

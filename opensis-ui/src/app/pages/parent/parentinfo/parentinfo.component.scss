@@ -1,5 +1,5 @@
 .students-list::after {
-    content: ', ';
+    content: ", ";
     display: inline-block;
     padding-right: 5px;
 }
@@ -28,9 +28,15 @@
 .table-search {
     width: 70px;
     transition: all 0.3s ease;
+    @media screen and (max-width: 767.98px) {
+        width: 50%;
+    }
   
     &:focus {
       width: 180px;
+        @media screen and (max-width: 767.98px) {
+            width: 50%;
+        }
     }
 }
 

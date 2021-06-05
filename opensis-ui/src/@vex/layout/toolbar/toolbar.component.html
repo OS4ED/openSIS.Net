@@ -3,18 +3,15 @@
     <mat-icon [icIcon]="icMenu"></mat-icon>
   </button>
 
-  <a *ngIf="isVerticalLayout$ | async"
-     [routerLink]="['/']"
-     class="ltr:mr-4 rtl:ml-4 block"
-     fxLayout="row"
-     fxLayoutAlign="start center">
+  <a [routerLink]="['/school/dashboards']"
+     class="ltr:ml-2 rtl:ml-2 small-mobile-logo">
     <!-- <img class="w-8 select-none" src="assets/img/demo/logo.svg">
     <h1 [fxHide]="mobileQuery" class="title ltr:pl-4 rtl:pr-4 m-0 select-none">VEX</h1> -->
     <img src="assets/img/logo-icon.png" class="w-8 select-none">
-    <h1 [fxHide]="mobileQuery" class="title ltr:pl-4 rtl:pr-4 m-0 select-none"><img src="assets/img/opensistext.png"></h1>
+    <!-- <h1 [fxHide]="mobileQuery" class="title ltr:pl-4 rtl:pr-4 m-0 select-none"><img src="assets/img/opensistext.png"></h1> -->
   </a>
 
-  <div #megaMenuOriginRef class="ltr:ml-2 rtl:mr-2">
+  <div #megaMenuOriginRef class="rtl:mr-2">
     <div class="-mx-1 flex items-center">
       <button *ngIf="isHorizontalLayout$ | async"
               [fxHide]="mobileQuery"
@@ -29,14 +26,14 @@
     </div>
   </div>
 
-  <div *ngIf="(isVerticalLayout$ | async) && isNavbarInToolbar$ | async"
+  <!-- <div *ngIf="(isVerticalLayout$ | async) && isNavbarInToolbar$ | async"
        [fxHide]="mobileQuery"
        class="px-gutter"
        fxFlex="none"
        fxLayout="row"
        fxLayoutAlign="start center">
     <vex-navigation-item *ngFor="let item of navigationItems" [item]="item"></vex-navigation-item>
-  </div>
+  </div> -->
 
   <span fxFlex></span>
 

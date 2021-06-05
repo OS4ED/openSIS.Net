@@ -14,10 +14,10 @@
   }
 }
 
-
 @media only screen and (max-width: 767px) {
   .login-bg {
-    background: rgba(var(--background-base), 1);
+    background: #0389c9 url('assets/img/login-wave-bg.jpg') no-repeat top center;
+    background-size: 100%;
   }
 }
 
@@ -30,7 +30,6 @@
   border-radius: 50%;
   background: rgba(0,0,0, 0.3);
 }
-
 
 .sidenav {
   &.collapsed:not(.open) {
@@ -53,7 +52,6 @@
 .mat-drawer-content {
   z-index: auto !important;
 }
-
 
 .attendance-code-tab-group {
   .mat-tab-label {
@@ -102,12 +100,10 @@
   min-height: 49px;
 
   .mat-form-field-wrapper {
-
     .mat-form-field-flex {
       .mat-form-field-outline {
         min-height: 49px;
       }
-
     }
 
     .mat-form-field-subscript-wrapper {
@@ -151,7 +147,6 @@
 
   &.mat-form-field-appearance-outline {
     .mat-form-field-outline-thick {
-
       .mat-form-field-outline-start,
       .mat-form-field-outline-end,
       .mat-form-field-outline-gap {
@@ -228,7 +223,6 @@
   }
 }
 
-
 .language-selection {
   .mat-form-field-appearance-standard {
     .mat-form-field-flex {
@@ -268,6 +262,11 @@
   }
 }
 
+/* mat-card style overwrite */
+::ng-deep .mat-card {
+  padding: 20px;
+}
+
 .mat-sort-header-content {
   text-align: left !important;
 }
@@ -275,12 +274,21 @@
 .container-sidenav-secondary {
   width: 100%;
 
+  .close-secondary-sidebar {
+    display: none;
+  }
+
   .sidenav-secondary {
     width       : 240px;
     background  : #fff;
     border-top  : 1px solid #eee;
     border-right: 1px solid rgb(228, 228, 228);
     height      : calc(100vh - 120px);
+
+    a.active {
+        background-color: var(--background-hover);
+        border-radius: 0;
+    }
 
     .mat-expansion-panel:not([class*="mat-elevation-z"]) {
       box-shadow: none;
@@ -329,6 +337,74 @@
     width: calc(100% - 240px);
     height      : calc(100vh - 120px);
     overflow: auto;
+
+    .vex-page-layout-content {
+      margin-top: -5rem;
+    }
+
+    .persistent-bar {
+      display: none;
+    }
+  }
+
+  .sidebar-overlay {
+    display: none;
+  }
+}
+
+@media (max-width: 991.98px) {
+  .container-sidenav-secondary {
+    display: block;
+
+    .close-secondary-sidebar {
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      z-index: 9;
+      display: block;
+    }
+
+    .sidenav-secondary {
+      position: fixed;
+      top: 0;
+      left: -100%;
+      transition: all 0.5s ease;
+      z-index: 9;
+      width: 300px;
+      height: 100vh;
+    }
+
+    &.show-secondary-sidebar {
+      .sidenav-secondary {
+        left: 0;
+
+        .simplebar-wrapper {
+          height: 100vh;
+        }
+      }
+      .sidebar-overlay {
+        background: rgba(0, 0, 0, 0.4);
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        z-index: 8;
+        display: block;
+      }
+    }
+    .right-content {
+      width: 100%;
+      height: auto;
+
+      .vex-page-layout-content {
+        margin-top: 0;
+      }
+
+      .persistent-bar {
+        display: block;
+      }
+    }
   }
 }
 
@@ -342,7 +418,6 @@
 .mat-drawer.mat-drawer-side {
     z-index: 4 !important;
 }
-
 
 .border-normal {
   border-color: rgba(0,0,0,0.1);
@@ -373,7 +448,6 @@
   // --color-warn: yellow;
   // --color-warn-contrast: black;
 } */
-
 
 //Bootstrap tables
 //
@@ -728,7 +802,6 @@
 
 //end of Bootstrap Table
 
-
 //Bootstrap Card
 
 .bcard {
@@ -962,9 +1035,7 @@
   }
 }
 
-
 //End of bootstrap card
-
 
 /* Default Table Properties */
 table {
@@ -994,6 +1065,18 @@ table {
     stroke: #4caf50;
   }
   &.spinner-blue circle {
-    stroke: #0C3F8A;
+    stroke: #0c3f8a;
+  }
+}
+
+.cal-month-view .bg-aqua,
+.cal-week-view .cal-day-columns .bg-aqua,
+.cal-day-view .bg-aqua {
+  background-color: #ffdee4 !important;
+}
+
+.attendance-code-tab-group {
+  .cdk-focused{
+    background-color: transparent !important;
   }
 }

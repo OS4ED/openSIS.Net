@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import {
   ChangeDetectionStrategy,
   ChangeDetectorRef,
@@ -49,6 +74,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
   permissionListViewModel: RolePermissionListViewModel = new RolePermissionListViewModel();
   currentCategory = 3; // because 3 is the id of general info.
   indexOfCategory = 0;
+  secondarySidebar = 0;
   icSchool = icSchool;
   icCalendar = icCalendar;
   icAlarm = icAlarm;
@@ -99,15 +125,17 @@ export class AddStudentComponent implements OnInit, OnDestroy {
         if(res && res!==this.categoryTitle){
           this.categoryTitle=res;
           let index=0;
-          this.fieldsCategory.map((item,i)=>{
-            if(item.title===this.categoryTitle){
-              this.currentCategory=item.categoryId;
-              index=i;
-            }
-          })
-    this.studentService.setCategoryId(index);
-        
-        this.checkCurrentCategoryAndRoute();
+          if(this.fieldsCategory.length>0){
+            this.fieldsCategory.map((item,i)=>{
+              if(item.title===this.categoryTitle){
+                this.currentCategory=item.categoryId;
+                index=i;
+              }
+            });
+      this.studentService.setCategoryId(index);
+          this.checkCurrentCategoryAndRoute();
+          }
+          
         }
       });
     this.studentService.modeToUpdate
@@ -137,7 +165,9 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     // this.checkCurrentCategoryAndRoute();
     this.commonService.setModuleName(this.module);
     this.studentService.dataAfterSavingGeneralInfoChanged.subscribe((res)=>{
-      this.afterSavingGeneralInfo(res);
+      if(res){
+        this.afterSavingGeneralInfo(res);
+      }
     })
 
     this.permissionListViewModel = JSON.parse(
@@ -217,6 +247,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     }
     this.studentService.setCategoryId(this.indexOfCategory);
     this.studentService.setStudentCreateMode(this.studentCreateMode);
+    this.secondarySidebar = 0; // Close secondary sidenav in mobile view
     this.checkCurrentCategoryAndRoute();
   }
 
@@ -306,6 +337,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
 
   changeTempCategory(step: number = 3) {
     this.currentCategory = step;
+    this.secondarySidebar = 0; // Close secondary sidenav in mobile view
     this.checkCurrentCategoryAndRoute();
   }
 
@@ -334,6 +366,14 @@ export class AddStudentComponent implements OnInit, OnDestroy {
 
   }
 
+  toggleSecondarySidebar() {
+    if(this.secondarySidebar === 0){
+      this.secondarySidebar = 1;
+    } else {
+      this.secondarySidebar = 0;
+    }
+  }
+
   ngAfterViewChecked() {
     this.cdr.detectChanges();
   }
@@ -358,6 +398,7 @@ export class AddStudentComponent implements OnInit, OnDestroy {
     this.studentService.sendDetails(undefined);
     this.studentService.setCategoryTitle(null);
     this.studentService.setStudentCloneImage(null);
+    this.studentService.setDataAfterSavingGeneralInfo(null)
     this.destroySubject$.next();
     this.destroySubject$.complete();
   }

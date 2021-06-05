@@ -39,10 +39,14 @@ import { MatButtonToggleModule } from '@angular/material/button-toggle';
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { ReportCardCommentsComponent } from '../../grades/report-card-comments/report-card-comments.component';
 import { StandardGradesComponent } from '../../grades/standard-grades/standard-grades.component';
-import { ReportCardsComponent } from '../../grades/report-cards/report-cards.component';
+// import { ReportCardsComponent } from '../../grades/report-cards/report-cards.component';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
-import { TranscriptsComponent } from '../../grades/transcripts/transcripts.component';
+// import { TranscriptsComponent } from '../../grades/transcripts/transcripts.component';
 import { MatDividerModule } from '@angular/material/divider';
+import { NgxDocViewerModule } from 'ngx-doc-viewer';
+import { MatExpansionModule } from '@angular/material/expansion';
+// import { SearchStudentComponent } from '../../grades/search-student/search-student.component';
+import {MatProgressSpinnerModule} from '@angular/material/progress-spinner';
 
 
 
@@ -60,8 +64,9 @@ import { MatDividerModule } from '@angular/material/divider';
     HonorRollSetupComponent,
     ReportCardCommentsComponent,
     StandardGradesComponent,
-    ReportCardsComponent,
-    TranscriptsComponent
+    // ReportCardsComponent,
+    // TranscriptsComponent,
+    // SearchStudentComponent
   ],
   imports: [
     CommonModule,
@@ -96,7 +101,10 @@ import { MatDividerModule } from '@angular/material/divider';
     MatButtonToggleModule,
     DragDropModule,
     MatSlideToggleModule,
-    MatDividerModule
+    MatDividerModule,
+    NgxDocViewerModule,
+    MatExpansionModule,
+    MatProgressSpinnerModule
   ]
 })
 export class GradeSettingsModule { }

@@ -1,7 +1,7 @@
 <mat-card-content>
-    <div class="max-w-screen-xl mx-auto px-2">
+    <div class="max-w-screen-xl mx-auto">
         <div class="my-6">
-            <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-6 md:row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'schoolName' | translate}} </label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolName|EmtyValueCheckPipe}}
@@ -92,13 +92,13 @@
             </ul>
             <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolViewDetails" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
         </div>
-        <hr class="-mx-6 mt-12 mb-6">
+        <hr class="-mx-5 mt-12 mb-6">
         <div>
             <div class="flex items-center pb-4">
                 <h4 class="text-blue font-medium mr-4">{{'addressInformation' | translate}} &nbsp; <span class="text-gray-light">|</span></h4>
                 <a (click)="showOnGoogleMap()" class="cursor-pointer"><i class="icon icon-location4 mr-2"></i>Show on Map</a>
             </div>
-            <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-6 md:row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'streetAddress1' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.streetAddress1|EmtyValueCheckPipe}}</p>
@@ -143,12 +143,12 @@
                 </li>
             </ul>
         </div>
-        <hr class="-mx-6 mt-12 mb-6">
+        <hr class="-mx-5 mt-12 mb-6">
         <div class="pb-4">
             <div class="pb-4">
                 <h4 class="text-blue font-medium">{{'contactInformation' | translate}}</h4>
             </div>
-            <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-6 md:row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'principal' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">{{schoolViewDetails?.schoolMaster.schoolDetail[0].nameOfPrincipal|EmtyValueCheckPipe}}</p>

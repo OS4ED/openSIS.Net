@@ -1,0 +1,36 @@
+.timeline {
+    position: relative;
+    .timeline-content {
+      padding: 1rem 1.5rem;
+      padding-top: 0;
+      position: relative;
+  
+      &:last-child {
+        &::after {
+          border-left: none;
+        }
+      }
+  
+      &::before {
+        content: " ";
+        width: 12px;
+        height: 12px;
+        position: absolute;
+        left: 0px;
+        top: 6px;
+        background: #dedede;
+        border-radius: 50%;
+        border: 2px solid #fff;
+      }
+      &::after {
+        content: " ";
+        border-left: 2px solid #dedede;
+        position: absolute;
+        left: 5px;
+        top: 18px;
+        width: 2px;
+        height: 100%;
+        z-index: 0;
+      }
+    }
+  }

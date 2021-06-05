@@ -1,13 +1,13 @@
 <mat-card class="w-full">
 
-    <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'loginInformation' | translate}}</h3>
         <button mat-button color="primary"><mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}</button>
     </div>
     <mat-card-content>
 
         <div @stagger fxLayout="column">
-            <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-2 mx-4">
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">{{'username' | translate}}</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">johndoe@example.com</p>
@@ -21,9 +21,9 @@
                 </li>
             </ul>
 
-            <h4 class="text-primary pt-6 pb-0 px-4">{{'secretQuestionAndAnswer'|translate}}</h4>
-            <p class="pb-3 px-4 text-gray">( {{'answersAreHiddenForSecurityReasons' | translate}} )</p>
-            <ul class="grid grid-cols-2 col-gap-8 row-gap-10 mt-2 mx-4">
+            <h4 class="text-primary pt-6 pb-0">{{'secretQuestionAndAnswer'|translate}}</h4>
+            <p class="pb-3 text-gray">( {{'answersAreHiddenForSecurityReasons' | translate}} )</p>
+            <ul class="grid grid-cols-2 md:grid-cols-3 xl:grid-cols-4 col-gap-8 row-gap-10">
                 <li>
                     <label class="text-sm leading-5 text-gray">Your Favourite Movie?</label>
                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">*****</p>

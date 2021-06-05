@@ -32,7 +32,8 @@ import { SharedModuleModule } from 'src/app/pages/shared-module/shared-module.mo
 import { InputFinalGradeComponent } from './input-final-grade.component';
 import { InputFinalGradeRoutingModule } from './input-final-grade-routing.module';
 import { GradeDetailsComponent } from './grade-details/grade-details.component';
-
+import { MatChipsModule } from '@angular/material/chips';
+import { MatAutocompleteModule } from '@angular/material/autocomplete';
 
 
 @NgModule({
@@ -70,7 +71,9 @@ import { GradeDetailsComponent } from './grade-details/grade-details.component';
     MatExpansionModule,
     MatNativeDateModule,
     MatSlideToggleModule,
-    MatRippleModule
+    MatRippleModule,
+    MatChipsModule,
+    MatAutocompleteModule
   ]
 })
 export class InputFinalGradeModule { }

@@ -1,4 +1,29 @@
-﻿using opensis.core.helper;
+﻿/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+using opensis.core.helper;
 using opensis.core.Student.Interfaces;
 using opensis.data.Interface;
 using opensis.data.Models;
@@ -6,6 +31,7 @@ using opensis.data.ViewModels.Student;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace opensis.core.Student.Services
 {
@@ -659,12 +685,12 @@ namespace opensis.core.Student.Services
         /// </summary>
         /// <param name="transcriptViewModel"></param>
         /// <returns></returns>
-        public TranscriptViewModel GenerateTranscriptForStudent(TranscriptViewModel transcriptViewModel)
+        public TranscriptViewModel TranscriptViewForStudent(TranscriptViewModel transcriptViewModel)
         {
             TranscriptViewModel transcriptView = new TranscriptViewModel();
             if (TokenManager.CheckToken(transcriptViewModel._tenantName + transcriptViewModel._userName, transcriptViewModel._token))
             {
-                transcriptView = this.studentRepository.GenerateTranscriptForStudent(transcriptViewModel);
+                transcriptView = this.studentRepository.TranscriptViewForStudent(transcriptViewModel);
             }
             else
             {
@@ -673,6 +699,365 @@ namespace opensis.core.Student.Services
             }
             return transcriptView;
         }
-       
+
+        /// <summary>
+        /// Add Transcript For Students
+        /// </summary>
+        /// <param name="transcriptAddViewModel"></param>
+        /// <returns></returns>
+        public TranscriptAddViewModel AddTranscriptForStudent(TranscriptAddViewModel transcriptAddViewModel)
+        {
+            TranscriptAddViewModel transcriptAdd = new TranscriptAddViewModel();
+            if (TokenManager.CheckToken(transcriptAddViewModel._tenantName + transcriptAddViewModel._userName, transcriptAddViewModel._token))
+            {
+                transcriptAdd = this.studentRepository.AddTranscriptForStudent(transcriptAddViewModel);
+            }
+            else
+            {
+                transcriptAdd._failure = true;
+                transcriptAdd._message = TOKENINVALID;
+            }
+            return transcriptAdd;
+        }
+
+        /// <summary>
+        /// Generate Pdf Transcript For Student
+        /// </summary>
+        /// <param name="transcriptAddViewModel"></param>
+        /// <returns></returns>
+        public async Task<TranscriptAddViewModel> GenerateTranscriptForStudent(TranscriptAddViewModel transcriptAddViewModel)
+        {
+            TranscriptAddViewModel transcriptAdd = new TranscriptAddViewModel();
+            if (TokenManager.CheckToken(transcriptAddViewModel._tenantName + transcriptAddViewModel._userName, transcriptAddViewModel._token))
+            {
+                transcriptAdd = await this.studentRepository.GenerateTranscriptForStudent(transcriptAddViewModel);
+            }
+            else
+            {
+                transcriptAdd._failure = true;
+                transcriptAdd._message = TOKENINVALID;
+            }
+            return transcriptAdd;
+        }
+
+        /// <summary>
+        /// Add Student Medical Alert
+        /// </summary>
+        /// <param name="studentMedicalAlertAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalAlertAddViewModel AddStudentMedicalAlert(StudentMedicalAlertAddViewModel studentMedicalAlertAddViewModel)
+        {
+            StudentMedicalAlertAddViewModel studentMedicalAlertAdd = new StudentMedicalAlertAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalAlertAddViewModel._tenantName + studentMedicalAlertAddViewModel._userName, studentMedicalAlertAddViewModel._token))
+            {
+                studentMedicalAlertAdd = this.studentRepository.AddStudentMedicalAlert(studentMedicalAlertAddViewModel);
+            }
+            else
+            {
+                studentMedicalAlertAdd._failure = true;
+                studentMedicalAlertAdd._message = TOKENINVALID;
+            }
+            return studentMedicalAlertAdd;
+        }
+
+        /// <summary>
+        /// Update Student Medical Alert
+        /// </summary>
+        /// <param name="studentMedicalAlertAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalAlertAddViewModel UpdateStudentMedicalAlert(StudentMedicalAlertAddViewModel studentMedicalAlertAddViewModel)
+        {
+            StudentMedicalAlertAddViewModel studentMedicalAlertUpdate = new StudentMedicalAlertAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalAlertAddViewModel._tenantName + studentMedicalAlertAddViewModel._userName, studentMedicalAlertAddViewModel._token))
+            {
+                studentMedicalAlertUpdate = this.studentRepository.UpdateStudentMedicalAlert(studentMedicalAlertAddViewModel);
+            }
+            else
+            {
+                studentMedicalAlertUpdate._failure = true;
+                studentMedicalAlertUpdate._message = TOKENINVALID;
+            }
+            return studentMedicalAlertUpdate;
+        }
+
+        /// <summary>
+        /// Delete Student Medical Alert
+        /// </summary>
+        /// <param name="studentMedicalAlertAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalAlertAddViewModel DeleteStudentMedicalAlert(StudentMedicalAlertAddViewModel studentMedicalAlertAddViewModel)
+        {
+            StudentMedicalAlertAddViewModel studentMedicalAlertdelete = new StudentMedicalAlertAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalAlertAddViewModel._tenantName + studentMedicalAlertAddViewModel._userName, studentMedicalAlertAddViewModel._token))
+            {
+                studentMedicalAlertdelete = this.studentRepository.DeleteStudentMedicalAlert(studentMedicalAlertAddViewModel);
+            }
+            else
+            {
+                studentMedicalAlertdelete._failure = true;
+                studentMedicalAlertdelete._message = TOKENINVALID;
+            }
+            return studentMedicalAlertdelete;
+        }
+
+        /// <summary>
+        /// Add Student Medical Note
+        /// </summary>
+        /// <param name="studentMedicalNoteAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalNoteAddViewModel AddStudentMedicalNote(StudentMedicalNoteAddViewModel studentMedicalNoteAddViewModel)
+        {
+            StudentMedicalNoteAddViewModel studentMedicalNoteAdd = new StudentMedicalNoteAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalNoteAddViewModel._tenantName + studentMedicalNoteAddViewModel._userName, studentMedicalNoteAddViewModel._token))
+            {
+                studentMedicalNoteAdd = this.studentRepository.AddStudentMedicalNote(studentMedicalNoteAddViewModel);
+            }
+            else
+            {
+                studentMedicalNoteAdd._failure = true;
+                studentMedicalNoteAdd._message = TOKENINVALID;
+            }
+            return studentMedicalNoteAdd;
+        }
+
+        /// <summary>
+        /// Update Student Medical Note
+        /// </summary>
+        /// <param name="studentMedicalNoteAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalNoteAddViewModel UpdateStudentMedicalNote(StudentMedicalNoteAddViewModel studentMedicalNoteAddViewModel)
+        {
+            StudentMedicalNoteAddViewModel studentMedicalNoteUpdate = new StudentMedicalNoteAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalNoteAddViewModel._tenantName + studentMedicalNoteAddViewModel._userName, studentMedicalNoteAddViewModel._token))
+            {
+                studentMedicalNoteUpdate = this.studentRepository.UpdateStudentMedicalNote(studentMedicalNoteAddViewModel);
+            }
+            else
+            {
+                studentMedicalNoteUpdate._failure = true;
+                studentMedicalNoteUpdate._message = TOKENINVALID;
+            }
+            return studentMedicalNoteUpdate;
+        }
+
+        /// <summary>
+        /// Delete Student Medical Note
+        /// </summary>
+        /// <param name="studentMedicalNoteAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalNoteAddViewModel DeleteStudentMedicalNote(StudentMedicalNoteAddViewModel studentMedicalNoteAddViewModel)
+        {
+            StudentMedicalNoteAddViewModel studentMedicalNoteDelete = new StudentMedicalNoteAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalNoteAddViewModel._tenantName + studentMedicalNoteAddViewModel._userName, studentMedicalNoteAddViewModel._token))
+            {
+                studentMedicalNoteDelete = this.studentRepository.DeleteStudentMedicalNote(studentMedicalNoteAddViewModel);
+            }
+            else
+            {
+                studentMedicalNoteDelete._failure = true;
+                studentMedicalNoteDelete._message = TOKENINVALID;
+            }
+            return studentMedicalNoteDelete;
+        }
+
+        /// <summary>
+        /// Add Student Medical Immunization
+        /// </summary>
+        /// <param name="studentMedicalImmunizationAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalImmunizationAddViewModel AddStudentMedicalImmunization(StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAddViewModel)
+        {
+            StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAdd = new StudentMedicalImmunizationAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalImmunizationAddViewModel._tenantName + studentMedicalImmunizationAddViewModel._userName, studentMedicalImmunizationAddViewModel._token))
+            {
+                studentMedicalImmunizationAdd = this.studentRepository.AddStudentMedicalImmunization(studentMedicalImmunizationAddViewModel);
+            }
+            else
+            {
+                studentMedicalImmunizationAdd._failure = true;
+                studentMedicalImmunizationAdd._message = TOKENINVALID;
+            }
+            return studentMedicalImmunizationAdd;
+        }
+
+        /// <summary>
+        /// Update Student Medical Immunization
+        /// </summary>
+        /// <param name="studentMedicalImmunizationAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalImmunizationAddViewModel UpdateStudentMedicalImmunization(StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAddViewModel)
+        {
+            StudentMedicalImmunizationAddViewModel studentMedicalImmunizationUpdate = new StudentMedicalImmunizationAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalImmunizationAddViewModel._tenantName + studentMedicalImmunizationAddViewModel._userName, studentMedicalImmunizationAddViewModel._token))
+            {
+                studentMedicalImmunizationUpdate = this.studentRepository.UpdateStudentMedicalImmunization(studentMedicalImmunizationAddViewModel);
+            }
+            else
+            {
+                studentMedicalImmunizationUpdate._failure = true;
+                studentMedicalImmunizationUpdate._message = TOKENINVALID;
+            }
+            return studentMedicalImmunizationUpdate;
+        }
+
+        /// <summary>
+        /// Delete Student Medical Immunization
+        /// </summary>
+        /// <param name="studentMedicalImmunizationAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalImmunizationAddViewModel DeleteStudentMedicalImmunization(StudentMedicalImmunizationAddViewModel studentMedicalImmunizationAddViewModel)
+        {
+            StudentMedicalImmunizationAddViewModel studentMedicalImmunizationDelete = new StudentMedicalImmunizationAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalImmunizationAddViewModel._tenantName + studentMedicalImmunizationAddViewModel._userName, studentMedicalImmunizationAddViewModel._token))
+            {
+                studentMedicalImmunizationDelete = this.studentRepository.DeleteStudentMedicalImmunization(studentMedicalImmunizationAddViewModel);
+            }
+            else
+            {
+                studentMedicalImmunizationDelete._failure = true;
+                studentMedicalImmunizationDelete._message = TOKENINVALID;
+            }
+            return studentMedicalImmunizationDelete;
+        }
+
+        /// <summary>
+        /// Add Student Medical Nurse Visit
+        /// </summary>
+        /// <param name="studentMedicalNurseVisitAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalNurseVisitAddViewModel AddStudentMedicalNurseVisit(StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAddViewModel)
+        {
+            StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAdd = new StudentMedicalNurseVisitAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalNurseVisitAddViewModel._tenantName + studentMedicalNurseVisitAddViewModel._userName, studentMedicalNurseVisitAddViewModel._token))
+            {
+                studentMedicalNurseVisitAdd = this.studentRepository.AddStudentMedicalNurseVisit(studentMedicalNurseVisitAddViewModel);
+            }
+            else
+            {
+                studentMedicalNurseVisitAdd._failure = true;
+                studentMedicalNurseVisitAdd._message = TOKENINVALID;
+            }
+            return studentMedicalNurseVisitAdd;
+        }
+
+        /// <summary>
+        /// Update Student Medical Nurse Visit
+        /// </summary>
+        /// <param name="studentMedicalNurseVisitAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalNurseVisitAddViewModel UpdateStudentMedicalNurseVisit(StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAddViewModel)
+        {
+            StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitUpdate = new StudentMedicalNurseVisitAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalNurseVisitAddViewModel._tenantName + studentMedicalNurseVisitAddViewModel._userName, studentMedicalNurseVisitAddViewModel._token))
+            {
+                studentMedicalNurseVisitUpdate = this.studentRepository.UpdateStudentMedicalNurseVisit(studentMedicalNurseVisitAddViewModel);
+            }
+            else
+            {
+                studentMedicalNurseVisitUpdate._failure = true;
+                studentMedicalNurseVisitUpdate._message = TOKENINVALID;
+            }
+            return studentMedicalNurseVisitUpdate;
+        }
+
+        /// <summary>
+        /// Delete Student Medical Nurse Visit
+        /// </summary>
+        /// <param name="studentMedicalNurseVisitAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalNurseVisitAddViewModel DeleteStudentMedicalNurseVisit(StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitAddViewModel)
+        {
+            StudentMedicalNurseVisitAddViewModel studentMedicalNurseVisitDelete = new StudentMedicalNurseVisitAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalNurseVisitAddViewModel._tenantName + studentMedicalNurseVisitAddViewModel._userName, studentMedicalNurseVisitAddViewModel._token))
+            {
+                studentMedicalNurseVisitDelete = this.studentRepository.DeleteStudentMedicalNurseVisit(studentMedicalNurseVisitAddViewModel);
+            }
+            else
+            {
+                studentMedicalNurseVisitDelete._failure = true;
+                studentMedicalNurseVisitDelete._message = TOKENINVALID;
+            }
+            return studentMedicalNurseVisitDelete;
+        }
+
+        /// <summary>
+        /// Add Student Medical Provider
+        /// </summary>
+        /// <param name="studentMedicalProviderAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalProviderAddViewModel AddStudentMedicalProvider(StudentMedicalProviderAddViewModel studentMedicalProviderAddViewModel)
+        {
+            StudentMedicalProviderAddViewModel studentMedicalProviderAdd = new StudentMedicalProviderAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalProviderAddViewModel._tenantName + studentMedicalProviderAddViewModel._userName, studentMedicalProviderAddViewModel._token))
+            {
+                studentMedicalProviderAdd = this.studentRepository.AddStudentMedicalProvider(studentMedicalProviderAddViewModel);
+            }
+            else
+            {
+                studentMedicalProviderAdd._failure = true;
+                studentMedicalProviderAdd._message = TOKENINVALID;
+            }
+            return studentMedicalProviderAdd;
+        }
+
+        /// <summary>
+        /// Update Student Medical Provider
+        /// </summary>
+        /// <param name="studentMedicalProviderAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalProviderAddViewModel UpdateStudentMedicalProvider(StudentMedicalProviderAddViewModel studentMedicalProviderAddViewModel)
+        {
+            StudentMedicalProviderAddViewModel studentMedicalProviderUpdate = new StudentMedicalProviderAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalProviderAddViewModel._tenantName + studentMedicalProviderAddViewModel._userName, studentMedicalProviderAddViewModel._token))
+            {
+                studentMedicalProviderUpdate = this.studentRepository.UpdateStudentMedicalProvider(studentMedicalProviderAddViewModel);
+            }
+            else
+            {
+                studentMedicalProviderUpdate._failure = true;
+                studentMedicalProviderUpdate._message = TOKENINVALID;
+            }
+            return studentMedicalProviderUpdate;
+        }
+
+        /// <summary>
+        /// Delete Student Medical Provider
+        /// </summary>
+        /// <param name="studentMedicalProviderAddViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalProviderAddViewModel DeleteStudentMedicalProvider(StudentMedicalProviderAddViewModel studentMedicalProviderAddViewModel)
+        {
+            StudentMedicalProviderAddViewModel studentMedicalProviderDelete = new StudentMedicalProviderAddViewModel();
+            if (TokenManager.CheckToken(studentMedicalProviderAddViewModel._tenantName + studentMedicalProviderAddViewModel._userName, studentMedicalProviderAddViewModel._token))
+            {
+                studentMedicalProviderDelete = this.studentRepository.DeleteStudentMedicalProvider(studentMedicalProviderAddViewModel);
+            }
+            else
+            {
+                studentMedicalProviderDelete._failure = true;
+                studentMedicalProviderDelete._message = TOKENINVALID;
+            }
+            return studentMedicalProviderDelete;
+        }
+
+        /// <summary>
+        /// Get All Student Medical Info
+        /// </summary>
+        /// <param name="studentMedicalInfoViewModel"></param>
+        /// <returns></returns>
+        public StudentMedicalInfoViewModel GetAllStudentMedicalInfo(StudentMedicalInfoViewModel studentMedicalInfoViewModel)
+        {
+            StudentMedicalInfoViewModel studentMedicalInfoList = new StudentMedicalInfoViewModel();
+            if (TokenManager.CheckToken(studentMedicalInfoViewModel._tenantName + studentMedicalInfoViewModel._userName, studentMedicalInfoViewModel._token))
+            {
+                studentMedicalInfoList = this.studentRepository.GetAllStudentMedicalInfo(studentMedicalInfoViewModel);
+            }
+            else
+            {
+                studentMedicalInfoList._failure = true;
+                studentMedicalInfoList._message = TOKENINVALID;
+            }
+            return studentMedicalInfoList;
+        }
     }
 }

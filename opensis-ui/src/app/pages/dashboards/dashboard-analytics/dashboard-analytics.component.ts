@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { ChangeDetectorRef, Component, OnChanges, OnDestroy, OnInit, SimpleChanges } from '@angular/core';
 import icGroup from '@iconify/icons-ic/twotone-group';
 import icPageView from '@iconify/icons-ic/twotone-pageview';
@@ -48,7 +73,7 @@ import { SchoolService } from '../../../services/school.service';
     },
   ],
 })
-export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
+export class DashboardAnalyticsComponent implements OnInit, OnDestroy {
 
   view: CalendarView = CalendarView.Month;
   viewDate: Date = new Date();
@@ -58,7 +83,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
   activeDayIsOpen = true;
   weekendDays: number[];
   filterDays = [];
- 
+
 
   tableColumns: TableColumn<Order>[] = [
     {
@@ -145,7 +170,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
   calendarTitle: string;
   noticeBody: string;
   refresh: Subject<any> = new Subject();
-  cssClass: string;
+  cssClass = 'bg-aqua';
   showCalendarView: boolean = false;
   noticeHide: boolean = true;
 
@@ -153,7 +178,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     private snackbar: MatSnackBar,
     private commonService: CommonService,
     private dasboardService: DasboardService,
-    private schoolService:SchoolService) {
+    private schoolService: SchoolService) {
     if (localStorage.getItem("collapseValue") !== null) {
       if (localStorage.getItem("collapseValue") === "false") {
         this.layoutService.expandSidenav();
@@ -167,10 +192,11 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
   }
 
   ngOnInit() {
-    this.schoolService.schoolListCalled.pipe(takeUntil(this.destroySubject$)).subscribe((res)=>{
-     
-      if(res.academicYearChanged || res.academicYearLoaded){
+    this.schoolService.schoolListCalled.pipe(takeUntil(this.destroySubject$)).subscribe((res) => {
+
+      if (res.academicYearChanged || res.academicYearLoaded) {
         this.getDashboardView();
+        this.getDashboardViewForCalendarView();
       }
     })
     setTimeout(() => {
@@ -197,29 +223,40 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     });
   }
   getDashboardView() {
-    this.events$ = this.dasboardService.getDashboardView(this.dashboardViewModel).pipe(shareReplay(),tap((res)=> {
-      if (typeof (res) == 'undefined') {
-        this.snackbar.open('Dashboard View failed. ' + sessionStorage.getItem("httpError"), '', {
-          duration: 10000
-        });
-      }
-      else {
+    this.dasboardService.getDashboardView(this.dashboardViewModel).subscribe((res) => {
+      if (res) {
         if (res._failure) {
         }
         else {
           this.studentCount = res.totalStudent !== null ? res.totalStudent : 0;
           this.staffCount = res.totalStaff !== null ? res.totalStaff : 0;
           this.parentCount = res.totalParent !== null ? res.totalParent : 0;
-          if(res.noticeTitle !==null){
+          if (res.noticeTitle !== null) {
             this.noticeTitle = res.noticeTitle;
             this.noticeHide = true;
           }
-          else{
-            
+          else {
+
             this.noticeHide = false;
           }
-         
           this.noticeBody = res.noticeBody;
+
+        }
+      }
+      else {
+        this.snackbar.open('Dashboard View failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
+    });
+  }
+
+  getDashboardViewForCalendarView() {
+    this.events$ = this.dasboardService.getDashboardViewForCalendarView(this.dashboardViewModel).pipe(shareReplay(), tap((res) => {
+      if (res) {
+        if (res._failure) {
+        }
+        else {
           this.calendars = res.schoolCalendar;
           this.showCalendarView = false;
           if (this.calendars !== null) {
@@ -229,11 +266,15 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
           }
         }
       }
-    
+      else {
+        this.snackbar.open('Dashboard View failed. ' + sessionStorage.getItem("httpError"), '', {
+          duration: 10000
+        });
+      }
     }),
       map(({ calendarEventList }: { calendarEventList: CalendarEventModel[] }) => {
-        if(calendarEventList !==null ){
-          let eventList= calendarEventList.map((calendar: CalendarEventModel) => {
+        if (calendarEventList !== null) {
+          let eventList = calendarEventList.map((calendar: CalendarEventModel) => {
 
             return {
               id: calendar.eventId,
@@ -247,23 +288,21 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
               draggable: true
             };
           });
-          return eventList.sort((n1,n2) => {
+          return eventList.sort((n1, n2) => {
             if (n1.start > n2.start) {
-                return 1;
+              return 1;
             }
-        
+
             if (n1.start < n2.start) {
-                return -1;
+              return -1;
             }
-        
+
             return 0;
-        });
+          });
         }
-        
+
       })
     );
-
-   
   }
 
   getDays(days: string) {
@@ -276,7 +315,7 @@ export class DashboardAnalyticsComponent implements OnInit,OnDestroy {
     this.refresh.next();
   }
 
-   
+
   ngOnDestroy(): void {
     this.destroySubject$.next();
     this.destroySubject$.complete();

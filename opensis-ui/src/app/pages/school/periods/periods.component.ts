@@ -1,3 +1,28 @@
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
 import { Component, OnInit, ViewChild } from '@angular/core';
 import icAdd from '@iconify/icons-ic/baseline-add';
 import icEdit from '@iconify/icons-ic/twotone-edit';
@@ -103,6 +128,10 @@ export class PeriodsComponent implements OnInit {
   selectBlock(element) {
     this.currentBlockId = element.blockId;
     let periodList = element.blockPeriod?.map(function (item) {
+      let length = Math.round(((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime())) / 60000);
+      if (length < 0) {
+        length += 1440;
+      }
       return {
         blockId: item.blockId,
         periodId: item.periodId,
@@ -112,7 +141,7 @@ export class PeriodsComponent implements OnInit {
         periodEndTime:  new Date("1900-01-01T" + item.periodEndTime),
         calculateAttendance: item.calculateAttendance,
         sortOrder:item.periodSortOrder,
-        length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000)
+        length
       };
     });
     this.blockPeriodList = new MatTableDataSource(periodList);
@@ -159,6 +188,10 @@ export class PeriodsComponent implements OnInit {
 
   itemInPeriodList(index=0,response){
     let periodList = response.getBlockListForView[index].blockPeriod?.map(function (item) {
+      let length = Math.round(((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime())) / 60000);
+      if (length < 0) {
+        length += 1440;
+      }
       return {
         blockId: item.blockId,
         periodId: item.periodId,
@@ -168,7 +201,7 @@ export class PeriodsComponent implements OnInit {
         periodEndTime:  new Date("1900-01-01T" + item.periodEndTime),
         calculateAttendance: item.calculateAttendance,
         sortOrder:item.periodSortOrder,
-        length: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000)
+        length
       };
     });
     return periodList;
@@ -185,13 +218,16 @@ export class PeriodsComponent implements OnInit {
   excelPeriodList(index=0,response){
     
     let periodList = response.getBlockListForView[index].blockPeriod?.map((item)=> {
-
+      let length = Math.round(((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime())) / 60000);
+      if (length < 0) {
+        length += 1440;
+      }
       return {
         [this.translateKey('title') ]: item.periodTitle,
         [this.translateKey('shortName')]: item.periodShortName,
         [this.translateKey('startTime')]: moment(new Date("1900-01-01T" + item.periodStartTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
         [this.translateKey('endTime')]:  moment(new Date("1900-01-01T" + item.periodEndTime), ["YYYY-MM-DD hh:mm:ss"]).format("hh:mm A"),
-        [this.translateKey('lengthInMinutes')]: Math.round((new Date("1900-01-01T" + item.periodEndTime).getTime() - new Date("1900-01-01T" + item.periodStartTime).getTime()) / 60000),
+        [this.translateKey('lengthInMinutes')]: length,
         [this.translateKey('calculateAttendance')]: item.calculateAttendance? this.translateKey('yes'): this.translateKey('no')
       };
     });

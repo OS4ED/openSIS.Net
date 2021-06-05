@@ -20,10 +20,10 @@
     </div>
 
     <div class="px-gutter border-t border-b py-3">
-        <p class="text-secondary font-medium text-xs flex align-center mb-2">
+        <p class="text-secondary font-medium text-xs flex align-center">
             <mat-icon [icIcon]="icPreview" class="mr-3"></mat-icon><span>{{'visibleFrom' | translate}} {{ visibleFrom }}</span>
         </p>
-        <p *ngIf="showMember" class="text-secondary font-medium text-xs flex align-center">
+        <p *ngIf="showMember" class="text-secondary font-medium text-xs flex align-center mt-2">
             <mat-icon [icIcon]="icPeople" class="mr-3"></mat-icon><span>{{'visibleTo' | translate}} {{ visibleTo }}</span>
         </p>
     </div>

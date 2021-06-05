@@ -15,7 +15,7 @@
   background: -webkit-linear-gradient(top,  #0c3e8a 0%,#00a0dd 100%); /* Chrome10-25,Safari5.1-6 */
   background: linear-gradient(to bottom,  #0c3e8a 0%,#00a0dd 100%); /* W3C, IE10+, FF16+, Chrome26+, Opera12+, Safari7+ */
   filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#0c3e8a', endColorstr='#00a0dd',GradientType=0 ); /* IE6-9 */
-
+  z-index: 9;
 
   ::ng-deep .mat-drawer-inner-container {
     overflow: hidden;
@@ -31,6 +31,12 @@
 
 .has-footer .content {
   min-height: calc(100% - var(--toolbar-height) - var(--navigation-height) - var(--footer-height));
+  @media (max-width: 767.98px){
+    min-height: calc(100% - 64px - 75px);
+  }
+  @media (max-width: 427.98px){
+    min-height: calc(100% - 64px - 96px);
+  }
 }
 
 .scroll-disabled {
@@ -89,6 +95,7 @@
     position: fixed;
     width: var(--toolbar-width);
     z-index: 3;
+    @apply shadow;
   }
 
   .content {

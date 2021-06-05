@@ -2,9 +2,7 @@
     <div class="flex justify-between items-center mb-4 flex-wrap">
         <div class="flex flex-col">
             <h4 class="flex items-center font-medium h-6">{{ 'takingAttendanceFor' | translate }} :
-                <!-- <mat-icon class="align-middle cursor-pointer">today
-                </mat-icon> <span class="text-primary underline ml-2">March 13, 2021</span> -->
-                <div class="flex">
+                <div class="flex" (click)="picker.open()">
                     <mat-datepicker-toggle matPrefix [for]="picker" class="text-black w-10 h-5 px-2">
                     </mat-datepicker-toggle>
                     <mat-datepicker #picker></mat-datepicker>
@@ -112,7 +110,7 @@
 <div class="card" *ngIf="currentComponent === 'missingAttendanceList'">
     <h4 class="p-4 text-lg">
         <span class="cursor-pointer text-blue" (click)="changeComponent('takeAttendance')">
-            <mat-icon class="ml-2 mr-4 align-middle">west</mat-icon>
+            <mat-icon class="ml-1 mr-4 align-middle">west</mat-icon>
         </span>
         <span class="font-medium text-base">{{ 'missingAttendanceList' | translate }}</span>
     </h4>

@@ -126,6 +126,8 @@ export class staffMasterCloneModel extends StaffMasterModel{
 export class GetAllStaffModel {
     getStaffListForView: [StaffListModel];
     staffMaster: [staffMasterCloneModel];
+    missingAttendanceDateList=[]; // for getting first mising attendance data
+    staffId: number;
     tenantId: string;
     schoolId: number;
     includeInactive: boolean;
@@ -140,8 +142,8 @@ export class GetAllStaffModel {
     _failure: boolean;
     _message: string;
     _userName: string;
-    public dobStartDate : string;
-    public dobEndDate : string;
+    public dobStartDate : Date|string;
+    public dobEndDate : Date|string;
     public fullName:string;
     public profilePhoto:boolean;
     constructor() {

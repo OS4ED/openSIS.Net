@@ -20,4 +20,8 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="3.2.1" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\JSReport\JSReport.csproj" />
+  </ItemGroup>
+
 </Project>

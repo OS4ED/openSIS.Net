@@ -1,54 +1,68 @@
-<mat-card class="w-full mb-6 bg-green text-white">
-    <div class="flex justify-between items-center">
+<!-- <mat-card class="w-full mb-6 bg-green text-white">
+    <div class="flex justify-between items-center flex-wrap">
         <div>
-            <h4 class="font-medium text-lg">{{ 'cumulativeGpa' | translate }} : 3.38</h4>
+            <h4 class="font-medium text-base md:text-lg lg:pr-6">{{ 'cumulativeGpa' | translate }} : 3.38</h4>
         </div>
         <div>
-            <h4 class="font-medium text-lg">{{ 'totalCreditAttempt' | translate }} : 6.00</h4>
+            <h4 class="font-medium text-base md:text-lg lg:pr-6">{{ 'totalCreditAttempt' | translate }} : 6.00</h4>
         </div>
-        <div class="flex justify-between items-center">
-            <h4 class="font-medium text-lg mr-2">{{ 'totalCreditEarned' | translate }} : 6.00</h4>
+        <div class="flex lg:justify-between items-center">
+            <h4 class="font-medium text-base md:text-lg mr-2">{{ 'totalCreditEarned' | translate }} : 6.00</h4>
             <button mat-flat-button color="primary" (click)="openDownloadTranscript()" *ngIf="openTranscript">
-                <mat-icon>download</mat-icon>{{ 'downloadTranscript' | translate }}
+                <mat-icon>download</mat-icon><span class="ml-2 hidden md:inline-block">{{ 'downloadTranscript' | translate }}</span>
             </button>
         </div>
     </div>
-</mat-card>
-<mat-card class="w-full mb-6" *ngIf="downloadTranscript">
+</mat-card> -->
+<mat-card class="w-full mb-6">
     <div class="flex justify-between items-center mb-4">
         <h4 class="font-semibold text-green">{{ 'downloadTranscript' | translate }}</h4>
-        <mat-icon class="text-gray cursor-pointer" (click)="closeTranscript()">close</mat-icon>
+        <mat-icon class="text-gray cursor-pointer" >close</mat-icon>
     </div>
     <p class="font-semibold mb-2">{{ 'includeOnTranscript' | translate }}</p>
     <div class="mb-4">
-        <mat-slide-toggle color="primary" class="mr-8">{{ 'schoolLogo' | translate }}</mat-slide-toggle>
-        <mat-slide-toggle color="primary" class="mr-8">{{ 'studentPhoto' | translate }}</mat-slide-toggle>
-        <mat-slide-toggle color="primary" class="mr-8">{{ 'gradeLegend' | translate }}</mat-slide-toggle>
-        <mat-slide-toggle color="primary" class="mr-8">{{ 'signatureLine' | translate }}</mat-slide-toggle>
+        <mat-slide-toggle color="primary" class="mr-8" [checked]="studentTranscipt.schoolLogo" [(ngModel)]="studentTranscipt.schoolLogo">
+            {{ 'schoolLogo' | translate }}
+        </mat-slide-toggle>
+        <mat-slide-toggle color="primary" class="mr-8" [checked]="studentTranscipt.studentPhoto" [(ngModel)]="studentTranscipt.studentPhoto">
+            {{ 'studentPhoto' | translate }}
+        </mat-slide-toggle>
+        <mat-slide-toggle color="primary" class="mr-8" [checked]="studentTranscipt.gradeLagend" [(ngModel)]="studentTranscipt.gradeLagend">
+            {{ 'gradeLegend' | translate }}
+        </mat-slide-toggle>
+        <mat-slide-toggle color="primary" class="mr-8" [checked]="true" disbaled>{{ 'signatureLine' | translate }}</mat-slide-toggle>
     </div>
     <p class="font-semibold">{{ "gradeLevels" | translate }}</p>
     <div class="flex justify-between items-center mb-2">
         <div>
-            <mat-checkbox class="mr-6">Grade 9</mat-checkbox>
-            <mat-checkbox class="mr-6">Grade 10</mat-checkbox>
-            <mat-checkbox checked="checked" class="mr-6" color="primary">Grade 11</mat-checkbox>
-            <mat-checkbox checked="checked" class="mr-6" color="primary">Grade 12</mat-checkbox>
+            <ng-container *ngFor="let checkBox of getAllGradeLevels.tableGradelevelList">
+                <mat-checkbox color="primary" class="mr-6" (change)="onGradeLevelChange($event,checkBox.gradeId)">{{checkBox.title}}
+                </mat-checkbox>
+            </ng-container>
+            <ng-container *ngIf="!getAllGradeLevels.tableGradelevelList?.length">
+                <span>{{'pleaseAddGradeLevel'|translate}}</span>
+           </ng-container>
         </div>
-        <button mat-flat-button color="primary">
-            <i class="icon icon-file-pdf mr-2"></i>{{ 'downloadAsPdf' | translate }}
+                <mat-error *ngIf="gradeLevelError">{{'pleaseSelectAtLeastOneGradeLevel'|translate}}</mat-error>
+        <button mat-flat-button color="primary" (click)="generateTranscript()">
+            <span class="ml-2 hidden md:inline-block">{{ 'generateTranscriptForSelectedStudents' | translate }}</span>
         </button>
     </div>
 </mat-card>
-<mat-card class="w-full mb-6 py-4">
-    <div class="flex justify-between items-center -ml-4">
-        <div class="flex items-center py-1 border-l-4 border-green">
+<mat-card *ngIf="pdfByteArrayForTranscript">
+    <ngx-doc-viewer [url]="'data:application/pdf;base64,' + pdfByteArrayForTranscript" viewer="pdf"  style="width:100%;height:93vh;">
+    </ngx-doc-viewer>
+</mat-card>
+<!-- <mat-card class="w-full mb-6 py-4">
+    <div class="flex justify-between items-center -ml-4 flex-wrap">
+        <div class="flex items-center py-1 border-l-4 border-green flex-wrap">
             <h4 class="pl-4 text-xl font-medium text-green">9th Grade</h4><span class="ml-4 text-base">(Satyabhama High
                 school)</span>
         </div>
-        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2016-2017</h5>
+        <h5 class="pl-6 text-medium">{{ 'schoolYear' | translate }} : 2016-2017</h5>
     </div>
-    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
-        <table class="w-full schedule-table mb-10">
+    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden mb-10">
+        <table class="w-full schedule-table">
             <thead>
                 <tr>
                     <th>{{ "courseCode" | translate }}</th>
@@ -129,15 +143,15 @@
             </tbody>
         </table>
     </div>
-    <div class="flex justify-between items-center -ml-4">
-        <div class="flex items-center py-1 border-l-4 border-green">
+    <div class="flex justify-between items-center -ml-4 flex-wrap">
+        <div class="flex items-center py-1 border-l-4 border-green flex-wrap">
             <h4 class="pl-4 text-xl font-medium text-green">10th Grade</h4><span class="ml-4 text-base">(Pathbhaban High
                 school)</span>
         </div>
-        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2017-2018</h5>
+        <h5 class="pl-6 text-medium">{{ 'schoolYear' | translate }} : 2017-2018</h5>
     </div>
-    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
-        <table class="w-full schedule-table mb-10">
+    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden mb-10">
+        <table class="w-full schedule-table">
             <thead>
                 <tr>
                     <th>{{ "courseCode" | translate }}</th>
@@ -218,15 +232,15 @@
             </tbody>
         </table>
     </div>
-    <div class="flex justify-between items-center -ml-4">
-        <div class="flex items-center py-1 border-l-4 border-green">
+    <div class="flex justify-between items-center -ml-4 flex-wrap">
+        <div class="flex items-center py-1 border-l-4 border-green flex-wrap">
             <h4 class="pl-4 text-xl font-medium text-green">11th Grade</h4><span class="ml-4 text-base">(Southpoint High
                 school)</span>
         </div>
-        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2018-2019</h5>
+        <h5 class="pl-6 text-medium">{{ 'schoolYear' | translate }} : 2018-2019</h5>
     </div>
-    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
-        <table class="w-full schedule-table mb-10">
+    <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden mb-10">
+        <table class="w-full schedule-table">
             <thead>
                 <tr>
                     <th>{{ "courseCode" | translate }}</th>
@@ -307,12 +321,12 @@
             </tbody>
         </table>
     </div>
-    <div class="flex justify-between items-center -ml-4">
-        <div class="flex items-center py-1 border-l-4 border-green">
+    <div class="flex justify-between items-center -ml-4 flex-wrap">
+        <div class="flex items-center py-1 border-l-4 border-green flex-wrap">
             <h4 class="pl-4 text-xl font-medium text-green">12th Grade</h4><span class="ml-4 text-base">(Southpoint High
                 school)</span>
         </div>
-        <h5 class="text-medium">{{ 'schoolYear' | translate }} : 2019-2020</h5>
+        <h5 class="pl-6 text-medium">{{ 'schoolYear' | translate }} : 2019-2020</h5>
     </div>
     <div class="-mx-4 border-t mt-3 overflow-x-auto overflow-y-hidden">
         <table class="w-full schedule-table">
@@ -396,4 +410,4 @@
             </tbody>
         </table>
     </div>
-</mat-card>
+</mat-card> -->

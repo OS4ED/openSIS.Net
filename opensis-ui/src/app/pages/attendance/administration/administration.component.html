@@ -7,8 +7,8 @@
 
     <vex-page-layout-content class="-mt-6">
         <div class="card overflow-auto -mt-16">
-            <div class="p-4 pb-2">
-                <ul class="grid md:grid-cols-5 col-gap-4 row-gap-2">
+            <div class="px-6 pt-4 pb-2">
+                <ul class="grid grid-cols-1 md:grid-cols-4 lg:grid-cols-5 col-gap-4 row-gap-2">
                     <li>
                         <mat-form-field class="w-full m-0" appearance="outline" color="primary">
                             <mat-label>{{ "attendanceDate" | translate }}</mat-label>
@@ -28,17 +28,16 @@
                 </ul>
             </div>
             <mat-divider></mat-divider>
-            <div class="bg-white px-3 py-2 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
-                <div class="flex w-full justify-between">
-                    <div class="flex">
-                        <input matInput class="px-4 py-3 border-0 outline-none w-full bg-transparent"
+            <div class="bg-white px-6 py-2 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                <div class="lg:flex w-full justify-between">
+                    <div class="flex items-center">
+                        <input matInput class="py-3 border-0 outline-none w-full bg-transparent table-serch"
                             appearance="outline" color="primary" placeholder="Search..." type="search">
                         <button class="ml-4" mat-icon-button type="button">
                             <mat-icon [icIcon]="icSearch"></mat-icon>
                         </button>
-                        <a class="w-full text-primary cursor-pointer ml-3 pt-2">
-                            <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
-                            | translate}}
+                        <a class="lg:w-full text-primary cursor-pointer ml-3">
+                            <mat-icon aria-hidden="false" class="mr-0 lg:mr-2 align-middle">tune</mat-icon><span class="hidden lg:inline-block">{{'advanceSearch' | translate}}</span>
                         </a>
                     </div>
                 </div>

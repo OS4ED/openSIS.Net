@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { CheckSchoolInternalIdViewModel, SchoolAddViewModel } from '../models/school-master.model';
+import { CheckSchoolInternalIdViewModel, CopySchoolModel, SchoolAddViewModel } from '../models/school-master.model';
 import { AllSchoolListModel, GetAllSchoolModel, OnlySchoolListModel } from '../models/get-all-school.model';
 import { BehaviorSubject, Subject } from 'rxjs';
 import { DataAvailablity } from '../models/user.model';
@@ -67,6 +67,12 @@ export class SchoolService {
     obj.schoolMaster.schoolDetail[0].schoolLogo = this.schoolImage;
     let apiurl = this.apiUrl + obj._tenantName + "/School/updateSchool";
     return this.http.put<SchoolAddViewModel>(apiurl, obj)
+  }
+  copySchool(obj: CopySchoolModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.schoolMaster.tenantId = this.defaultValuesService.getTenantID();
+    let apiurl = this.apiUrl + obj._tenantName + "/School/copySchool";
+    return this.http.post<CopySchoolModel>(apiurl, obj)
   }
   checkSchoolInternalId(obj: CheckSchoolInternalIdViewModel) {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);

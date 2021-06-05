@@ -58,6 +58,7 @@ namespace opensis.data.Models
         public virtual DbSet<ParentAddress> ParentAddress { get; set; }
         public virtual DbSet<ParentAssociationship> ParentAssociationship { get; set; }
         public virtual DbSet<ParentInfo> ParentInfo { get; set; }
+        public virtual DbSet<ParentListView> PaentListView { get; set; }
         public virtual DbSet<PermissionCategory> PermissionCategory { get; set; }
         public virtual DbSet<PermissionGroup> PermissionGroup { get; set; }
         public virtual DbSet<PermissionSubcategory> PermissionSubcategory { get; set; }
@@ -72,7 +73,7 @@ namespace opensis.data.Models
         public virtual DbSet<SchoolCalendars> SchoolCalendars { get; set; }
         public virtual DbSet<SchoolDetail> SchoolDetail { get; set; }
         public virtual DbSet<SchoolMaster> SchoolMaster { get; set; }
-        public virtual DbSet<SchoolPeriodsObsolete> SchoolPeriodsObsolete { get; set; }
+        public virtual DbSet<SchoolPreference> SchoolPreference { get; set; }
         public virtual DbSet<SchoolYears> SchoolYears { get; set; }
         public virtual DbSet<SearchFilter> SearchFilter { get; set; }
         public virtual DbSet<Sections> Sections { get; set; }
@@ -84,6 +85,7 @@ namespace opensis.data.Models
         public virtual DbSet<StaffSchoolInfo> StaffSchoolInfo { get; set; }
         public virtual DbSet<State> State { get; set; }
         public virtual DbSet<StudentAttendance> StudentAttendance { get; set; }
+        public virtual DbSet<StudentAttendanceComments> StudentAttendanceComments { get; set; }
         public virtual DbSet<StudentComments> StudentComments { get; set; }
         public virtual DbSet<StudentCoursesectionSchedule> StudentCoursesectionSchedule { get; set; }
         public virtual DbSet<StudentDocuments> StudentDocuments { get; set; }
@@ -95,8 +97,16 @@ namespace opensis.data.Models
         public virtual DbSet<StudentFinalGradeStandard> StudentFinalGradeStandard { get; set; }
         public virtual DbSet<StudentFinalGradeComments> StudentFinalGradeComments { get; set; }
         public virtual DbSet<StudentMaster> StudentMaster { get; set; }
-
+        public virtual DbSet<StudentMedicalAlert> StudentMedicalAlert { get; set; }
+        public virtual DbSet<StudentMedicalImmunization> StudentMedicalImmunization { get; set; }
+        public virtual DbSet<StudentMedicalNote> StudentMedicalNote { get; set; }
+        public virtual DbSet<StudentMedicalNurseVisit> StudentMedicalNurseVisit { get; set; }
+        public virtual DbSet<StudentMedicalProvider> StudentMedicalProvider { get; set; }
+        public virtual DbSet<StudentReportCardDetail> StudentReportCardDetail { get; set; }
+        public virtual DbSet<StudentReportCardMaster> StudentReportCardMaster { get; set; }
         public virtual DbSet<StudentScheduleView> StudentScheduleView { get; set; }
+        public virtual DbSet<StudentTranscriptDetail> StudentTranscriptDetail { get; set; }
+        public virtual DbSet<StudentTranscriptMaster> StudentTranscriptMaster { get; set; }
         public virtual DbSet<Subject> Subject { get; set; }
         public virtual DbSet<UserMaster> UserMaster { get; set; }
         public virtual DbSet<UserSecretQuestions> UserSecretQuestions { get; set; }
@@ -210,6 +220,9 @@ namespace opensis.data.Models
                 entity.Property(e => e.CalendarId).HasColumnName("calendar_id");
 
                 entity.Property(e => e.AttendanceTaken).HasColumnName("attendance_taken");
+                entity.Property(e => e.TakeAttendanceVariable).HasColumnName("take_attendance_variable");
+                entity.Property(e => e.TakeAttendanceCalendar).HasColumnName("take_attendance_calendar");
+                entity.Property(e => e.TakeAttendanceBlock).HasColumnName("take_attendance_block");
             });
 
             modelBuilder.Entity<AttendanceCode>(entity =>
@@ -2011,6 +2024,8 @@ namespace opensis.data.Models
                 entity.Property(e => e.ValidTo)
                     .HasColumnName("valid_to")
                     .HasColumnType("date");
+
+                entity.Property(e => e.VisibleToAllSchool).HasColumnName("visible_to_all_school");
             });
 
             modelBuilder.Entity<ParentAddress>(entity =>
@@ -2120,7 +2135,6 @@ namespace opensis.data.Models
                     .IsUnicode(false);
             });
 
-
             modelBuilder.Entity<ParentInfo>(entity =>
             {
                 entity.HasKey(e => new { e.TenantId, e.SchoolId, e.ParentId })
@@ -2188,14 +2202,14 @@ namespace opensis.data.Models
                     .IsUnicode(false)
                     .HasComment("emailaddress mapped to user_master");
 
-                
+
 
                 entity.Property(e => e.Salutation)
                     .HasColumnName("salutation")
                     .HasMaxLength(20)
                     .IsUnicode(false);
 
-               
+
 
                 entity.Property(e => e.Suffix)
                    .HasColumnName("suffix")
@@ -2220,6 +2234,163 @@ namespace opensis.data.Models
                 entity.Property(e => e.WorkPhone)
                     .HasColumnName("work_phone")
                     .HasMaxLength(30)
+                    .IsUnicode(false);
+            });
+
+            modelBuilder.Entity<ParentListView>(entity =>
+            {
+                entity.HasNoKey();
+
+                entity.ToView("parent_list_view");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.ParentId).HasColumnName("parent_id");
+
+                entity.Property(e => e.ParentGuid).HasColumnName("parent_guid");
+
+                entity.Property(e => e.BusDropoff).HasColumnName("bus_dropoff");
+
+                entity.Property(e => e.BusNo)
+                    .HasColumnName("bus_No")
+                    .HasMaxLength(15)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.BusPickup).HasColumnName("bus_pickup");
+
+                entity.Property(e => e.ParentPhoto).HasColumnName("parent_photo");
+                entity.Property(e => e.PersonalEmail)
+                    .HasColumnName("personal_email")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Firstname)
+                    .HasColumnName("firstname")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Middlename)
+                   .HasColumnName("middlename")
+                   .HasMaxLength(50)
+                   .IsUnicode(false);
+
+                entity.Property(e => e.HomePhone)
+                    .HasColumnName("home_phone")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.IsPortalUser).HasColumnName("is_portal_user");
+
+                entity.Property(e => e.LastUpdated)
+                    .HasColumnName("last_updated")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Lastname)
+                    .HasColumnName("lastname")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Mobile)
+                    .HasColumnName("mobile")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.LoginEmail)
+                    .HasColumnName("login_email")
+                    .HasMaxLength(150)
+                    .IsUnicode(false)
+                    .HasComment("emailaddress mapped to user_master");
+
+
+
+                entity.Property(e => e.Salutation)
+                    .HasColumnName("salutation")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+
+
+                entity.Property(e => e.Suffix)
+                   .HasColumnName("suffix")
+                   .HasMaxLength(20)
+                   .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UserProfile)
+                    .HasColumnName("user_profile")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WorkEmail)
+                    .HasColumnName("work_email")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.WorkPhone)
+                    .HasColumnName("work_phone")
+                    .HasMaxLength(30)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.FirstGivenName)
+                   .HasColumnName("first_given_name")
+                   .HasMaxLength(50)
+                   .IsUnicode(false);
+
+                entity.Property(e => e.LastFamilyName)
+                                    .HasColumnName("last_family_name")
+                                    .HasMaxLength(50)
+                                    .IsUnicode(false);
+
+                entity.Property(e => e.StudentMiddleName)
+                                    .HasColumnName("student_middle_name")
+                                    .HasMaxLength(50)
+                                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLineOne)
+                    .HasColumnName("address_line_one")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AddressLineTwo)
+                    .HasColumnName("address_line_two")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.City)
+                    .HasColumnName("city")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Country)
+                    .HasColumnName("country")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.State)
+                    .HasColumnName("state")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StudentAddressSame).HasColumnName("student_address_same");
+
+                entity.Property(e => e.Zip)
+                    .HasColumnName("zip")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Associationship)
+                    .HasColumnName("associationship");
+
+                entity.Property(e => e.Students)
+                    .HasColumnName("students")
                     .IsUnicode(false);
             });
 
@@ -2855,13 +3026,11 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.CommonToiletAccessibility)
                     .HasColumnName("common_toilet_accessibility")
-                    .HasMaxLength(50)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.ComonToiletType)
                     .HasColumnName("comon_toilet_type")
-                    .HasMaxLength(50)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.CurrentlyAvailable).HasColumnName("currently_available");
 
@@ -2890,13 +3059,11 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.FemaleToiletAccessibility)
                     .HasColumnName("female_toilet_accessibility")
-                    .HasMaxLength(50)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.FemaleToiletType)
                     .HasColumnName("female_toilet_type")
-                    .HasMaxLength(50)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.Gender)
                 .HasColumnName("gender")
@@ -2950,13 +3117,11 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.MaleToiletAccessibility)
                     .HasColumnName("male_toilet_accessibility")
-                    .HasMaxLength(50)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.MaleToiletType)
                     .HasColumnName("male_toilet_type")
-                    .HasMaxLength(50)
-                    .IsFixedLength();
+                    .IsUnicode(false);
 
                 entity.Property(e => e.NameOfAssistantPrincipal)
                     .HasColumnName("name_of_assistant_principal")
@@ -3161,66 +3326,67 @@ namespace opensis.data.Models
                     .HasConstraintName("FK_school_master_plans");
             });
 
-            modelBuilder.Entity<SchoolPeriodsObsolete>(entity =>
+            modelBuilder.Entity<SchoolPreference>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.PeriodId })
-                    .HasName("pk_table_school_periods");
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.SchoolPreferenceId })
+                    .HasName("PK_school_preference_1");
 
-                entity.ToTable("school_periods_obsolete");
+                entity.ToTable("school_preference");
 
                 entity.Property(e => e.TenantId).HasColumnName("tenant_id");
 
                 entity.Property(e => e.SchoolId).HasColumnName("school_id");
 
-                entity.Property(e => e.PeriodId).HasColumnName("period_id");
+                entity.Property(e => e.SchoolPreferenceId).HasColumnName("school_preference_id");
 
-                entity.Property(e => e.AcademicYear)
-                    .HasColumnName("academic_year")
-                    .HasColumnType("decimal(4, 0)");
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false)
+                    ;
 
-                entity.Property(e => e.Attendance).HasColumnName("attendance");
-
-                entity.Property(e => e.Block)
-                    .HasColumnName("block")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.EndTime).HasColumnName("end_time");
-
-                entity.Property(e => e.IgnoreScheduling)
-                    .HasColumnName("ignore_scheduling")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
-
-                entity.Property(e => e.LastUpdated)
-                    .HasColumnName("last_updated")
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
                     .HasColumnType("datetime");
 
-                entity.Property(e => e.Length)
-                    .HasColumnName("length")
-                    .HasColumnType("decimal(10, 0)");
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
 
-                entity.Property(e => e.RolloverId).HasColumnName("rollover_id");
+                entity.Property(e => e.FullDayMinutes).HasColumnName("full_day_minutes");
 
-                entity.Property(e => e.ShortName)
-                    .HasColumnName("short_name")
-                    .HasMaxLength(10)
-                    .IsUnicode(false);
+                entity.Property(e => e.HalfDayMinutes).HasColumnName("half_day_minutes");
 
-                entity.Property(e => e.SortOrder).HasColumnName("sort_order");
+                entity.Property(e => e.MaxInactivityDays).HasColumnName("max_inactivity_days");
 
-                entity.Property(e => e.StartTime).HasColumnName("start_time");
-
-                entity.Property(e => e.Title)
-                    .HasColumnName("title")
-                    .HasMaxLength(100)
-                    .IsUnicode(false);
+                entity.Property(e => e.MaxLoginFailure).HasColumnName("max_login_failure");
 
                 entity.Property(e => e.UpdatedBy)
                     .HasColumnName("updated_by")
-                    .HasMaxLength(100)
+                    .HasMaxLength(150)
                     .IsUnicode(false);
+                    
+
+                entity.Property(e => e.SchoolAltId)
+                    .HasColumnName("school_alt_id")
+                    .HasMaxLength(50)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.SchoolGuid).HasColumnName("school_guid");
+
+                entity.Property(e => e.SchoolInternalId)
+                    .HasColumnName("school_internal_id")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.SchoolMaster)
+                    .WithMany(p => p.SchoolPreference)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_school_preference_school_master");
             });
+
 
             modelBuilder.Entity<SchoolYears>(entity =>
             {
@@ -4100,7 +4266,7 @@ namespace opensis.data.Models
 
             modelBuilder.Entity<StudentAttendance>(entity =>
             {
-                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.StaffId, e.CourseId, e.CourseSectionId, e.AttendanceCategoryId, e.AttendanceCode, e.AttendanceDate });
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.StaffId, e.CourseId, e.CourseSectionId, e.AttendanceCategoryId, e.AttendanceCode, e.AttendanceDate, e.BlockId, e.PeriodId });
 
                 entity.ToTable("student_attendance");
 
@@ -4115,6 +4281,10 @@ namespace opensis.data.Models
 
                 entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.StudentId, e.AttendanceDate })
                     .HasName("IX_student_attendance_3");
+
+                entity.HasIndex(e => new { e.TenantId, e.SchoolId, e.StudentId, e.StudentAttendanceId })
+                    .HasName("student_attendance_id_idx")
+                    .IsUnique();
 
                 entity.Property(e => e.TenantId).HasColumnName("tenant_id");
 
@@ -4140,11 +4310,6 @@ namespace opensis.data.Models
 
                 entity.Property(e => e.PeriodId).HasColumnName("period_id");
 
-                entity.Property(e => e.Comments)
-                    .HasColumnName("comments")
-                    .HasMaxLength(250)
-                    .IsUnicode(false);
-
                 entity.Property(e => e.CreatedBy)
                     .HasColumnName("created_by")
                     .HasMaxLength(150)
@@ -4153,6 +4318,10 @@ namespace opensis.data.Models
                 entity.Property(e => e.CreatedOn)
                     .HasColumnName("created_on")
                     .HasColumnType("datetime");
+
+                entity.Property(e => e.StudentAttendanceId)
+                    .IsRequired()
+                    .HasColumnName("student_attendance_id");
 
                 entity.Property(e => e.UpdatedBy)
                     .HasColumnName("updated_by")
@@ -4187,6 +4356,59 @@ namespace opensis.data.Models
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_student_attendance_student_coursesection_schedule");
             });
+
+            modelBuilder.Entity<StudentAttendanceComments>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.StudentAttendanceId, e.CommentId });
+
+                entity.ToTable("student_attendance_comments");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.StudentAttendanceId).HasColumnName("student_attendance_id");
+
+                entity.Property(e => e.CommentId).HasColumnName("comment_id");
+
+                entity.Property(e => e.Comment)
+                    .HasColumnName("comment")
+                    .HasMaxLength(500)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CommentTimestamp)
+                    .HasColumnName("comment_timestamp")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentAttendance)
+                    .WithMany(p => p.StudentAttendanceComments)
+                    .HasPrincipalKey(p => new { p.TenantId, p.SchoolId, p.StudentId, p.StudentAttendanceId })
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId, d.StudentAttendanceId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_attendance_comments_student_attendance");
+            });
+
+
 
             modelBuilder.Entity<StudentComments>(entity =>
             {
@@ -5249,6 +5471,481 @@ namespace opensis.data.Models
 
             });
 
+            modelBuilder.Entity<StudentMedicalAlert>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.Id });
+
+                entity.ToTable("student_medical_alert");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.AlertDescription)
+                    .HasColumnName("alert_description")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.AlertType)
+                    .HasColumnName("alert_type")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentMedicalAlert)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_medical_alert_student_master");
+            });
+
+            modelBuilder.Entity<StudentMedicalImmunization>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.Id });
+
+                entity.ToTable("student_medical_immunization");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Comment)
+                    .HasColumnName("comment")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ImmunizationDate)
+                    .HasColumnName("immunization_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.ImmunizationType)
+                    .HasColumnName("immunization_type")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentMedicalImmunization)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_medical_immunization_student_master");
+            });
+
+            modelBuilder.Entity<StudentMedicalNote>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.Id });
+
+                entity.ToTable("student_medical_note");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.MedicalNote)
+                    .HasColumnName("medical_note")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.NoteDate)
+                    .HasColumnName("note_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentMedicalNote)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_medical_note_student_master");
+            });
+
+            modelBuilder.Entity<StudentMedicalNurseVisit>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.Id });
+
+                entity.ToTable("student_medical_nurse_visit");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Comment)
+                    .HasColumnName("comment")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.NurseVisitDate)
+                    .HasColumnName("nurse_visit_date")
+                    .HasColumnType("date");
+
+                entity.Property(e => e.Reason)
+                    .HasColumnName("reason")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.Result)
+                    .HasColumnName("result")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TimeIn)
+                    .HasColumnName("time_in")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.TimeOut)
+                    .HasColumnName("time_out")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentMedicalNurseVisit)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_medical_nurse_visit_student_master");
+            });
+
+            modelBuilder.Entity<StudentMedicalProvider>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.Id });
+
+                entity.ToTable("student_medical_provider");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.DentistName)
+                    .HasColumnName("dentist_name")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.DentistPhone)
+                    .HasColumnName("dentist_phone")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InsuranceCompany)
+                    .HasColumnName("insurance_company")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.InsuranceCompanyPhone)
+                    .HasColumnName("insurance_company_phone")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PolicyHolderName)
+                    .HasColumnName("policy_holder_name")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PolicyNumber)
+                    .HasColumnName("policy_number")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PreferredMedicalFacility)
+                    .HasColumnName("preferred_medical_facility")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PreferredMedicalFacilityPhone)
+                    .HasColumnName("preferred_medical_facility_phone")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrimaryCarePhysician)
+                    .HasColumnName("primary_care_physician")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.PrimaryCarePhysicianPhone)
+                    .HasColumnName("primary_care_physician_phone")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.VisionName)
+                    .HasColumnName("vision_name")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.VisionProviderPhone)
+                    .HasColumnName("vision_provider_phone")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentMedicalProvider)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_medical_provider_student_master");
+            });
+
+            modelBuilder.Entity<StudentReportCardDetail>(entity =>
+            {
+                entity.ToTable("student_report_card_detail");
+
+                entity.Property(e => e.Id)
+                    .HasColumnName("id")
+                    .ValueGeneratedNever();
+
+                entity.Property(e => e.Comments)
+                    .HasColumnName("comments")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CourseName)
+                    .HasColumnName("course_name")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Gpa)
+                    .HasColumnName("gpa")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.Grade)
+                    .HasColumnName("grade")
+                    .HasMaxLength(20)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.GradeTitle)
+                    .IsRequired()
+                    .HasColumnName("grade_title")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.MarkingPeriodTitle)
+                    .HasColumnName("marking_period_title")
+                    .HasMaxLength(50)
+                    .IsFixedLength();
+
+                entity.Property(e => e.OverallTeacherComments)
+                    .HasColumnName("overall_teacher_comments")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.SchoolYear)
+                    .IsRequired()
+                    .HasColumnName("school_year")
+                    .HasMaxLength(9)
+                    .IsUnicode(false)
+                    .HasComment("year_marking_period_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.Teacher)
+                    .HasColumnName("teacher")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TeacherComments)
+                    .HasColumnName("teacher_comments")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentReportCardMaster)
+                    .WithMany(p => p.StudentReportCardDetail)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId, d.SchoolYear, d.MarkingPeriodTitle })
+                    .HasConstraintName("FK_student_report_card_detail_student_report_card_master");
+            });
+
+            modelBuilder.Entity<StudentReportCardMaster>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.SchoolYear, e.MarkingPeriodTitle })
+                    .HasName("PK_student_report_card_2");
+
+                entity.ToTable("student_report_card_master");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.SchoolYear)
+                    .HasColumnName("school_year")
+                    .HasMaxLength(9)
+                    .IsUnicode(false)
+                    .HasComment("year_marking_period_id");
+
+                entity.Property(e => e.MarkingPeriodTitle)
+                    .HasColumnName("marking_period_title")
+                    .HasMaxLength(50)
+                    .IsFixedLength();
+
+                entity.Property(e => e.Absences).HasColumnName("absences");
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.ExcusedAbsences).HasColumnName("excused_absences");
+
+                entity.Property(e => e.GradeTitle)
+                    .IsRequired()
+                    .HasColumnName("grade_title")
+                    .IsUnicode(false);
+
+                entity.Property(e => e.ReportGenerationDate)
+                    .HasColumnName("report_generation_date")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.StudentInternalId)
+                    .HasColumnName("student_internal_id")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.YodAbsence).HasColumnName("yod_absence");
+
+                entity.Property(e => e.YodAttendance)
+                    .HasColumnName("yod_attendance")
+                    .HasMaxLength(4)
+                    .IsUnicode(false)
+                    .HasComment("example:99%,100%");
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentReportCardMaster)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_report_card_student_master");
+            });
+
             modelBuilder.Entity<StudentScheduleView>(entity =>
             {
                 entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.CourseId, e.CourseSectionId })
@@ -5289,6 +5986,164 @@ namespace opensis.data.Models
                     .IsUnicode(false);
             });
 
+            modelBuilder.Entity<StudentTranscriptDetail>(entity =>
+            {
+                entity.HasKey(e => new { e.Id, e.TenantId, e.SchoolId, e.StudentId });
+
+                entity.ToTable("student_transcript_detail");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.CourseCode)
+                    .HasColumnName("course_code")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CourseName)
+                    .HasColumnName("course_name")
+                    .HasMaxLength(250)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreditEarned)
+                    .HasColumnName("credit_earned")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.CreditHours)
+                    .HasColumnName("credit_hours")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.GpValue)
+                    .HasColumnName("gp_value")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.Grade)
+                    .HasColumnName("grade")
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .IsFixedLength();
+
+                entity.Property(e => e.GradeTitle)
+                    .IsRequired()
+                    .HasColumnName("grade_title")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentTranscriptMaster)
+                    .WithMany(p => p.StudentTranscriptDetail)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId, d.GradeTitle })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_transcript_detail_student_transcript_master1");
+            });
+
+            modelBuilder.Entity<StudentTranscriptMaster>(entity =>
+            {
+                entity.HasKey(e => new { e.TenantId, e.SchoolId, e.StudentId, e.GradeTitle })
+                    .HasName("PK_student_transcript");
+
+                entity.ToTable("student_transcript_master");
+
+                entity.Property(e => e.TenantId).HasColumnName("tenant_id");
+
+                entity.Property(e => e.SchoolId).HasColumnName("school_id");
+
+                entity.Property(e => e.StudentId).HasColumnName("student_id");
+
+                entity.Property(e => e.GradeTitle)
+                    .HasColumnName("grade_title")
+                    .HasMaxLength(200)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedBy)
+                    .HasColumnName("created_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.CreatedOn)
+                    .HasColumnName("created_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.CreditAttempted)
+                    .HasColumnName("credit_attempted")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.CumulativeGpa)
+                    .HasColumnName("cumulative_gpa")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.GeneratedOn)
+                    .HasColumnName("generated_on")
+                    .HasColumnType("datetime");
+
+                entity.Property(e => e.Gpa)
+                    .HasColumnName("gpa")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.SchoolName)
+                    .HasColumnName("school_name")
+                    .HasMaxLength(100)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.SchoolYear)
+                    .HasColumnName("school_year")
+                    .HasMaxLength(9)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.StudentInternalId)
+                    .HasColumnName("student_internal_id")
+                    .HasMaxLength(50)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.TotalCreditAttempted)
+                    .HasColumnName("total_credit_attempted")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.TotalCreditEarned)
+                    .HasColumnName("total_credit_earned")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.TotalGradeCreditEarned)
+                    .HasColumnName("total_grade_credit_earned")
+                    .HasColumnType("decimal(5, 2)");
+
+                entity.Property(e => e.UpdatedBy)
+                    .HasColumnName("updated_by")
+                    .HasMaxLength(150)
+                    .IsUnicode(false);
+
+                entity.Property(e => e.UpdatedOn)
+                    .HasColumnName("updated_on")
+                    .HasColumnType("datetime");
+
+                entity.HasOne(d => d.StudentMaster)
+                    .WithMany(p => p.StudentTranscriptMaster)
+                    .HasForeignKey(d => new { d.TenantId, d.SchoolId, d.StudentId })
+                    .OnDelete(DeleteBehavior.ClientSetNull)
+                    .HasConstraintName("FK_student_transcript_master_student_master");
+            });
 
             modelBuilder.Entity<Subject>(entity =>
             {
@@ -5972,7 +6827,8 @@ namespace opensis.data.Models
             {
                 string[] tenants = new string[] { "TenantA" };
                 string connectionString = "Server=SABYA\\SQLEXPRESS;Database={tenant};User Id=sa; Password=admin@123;MultipleActiveResultSets=true";
-                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "opensisv2_New"));
+                //string connectionString = "Server=DESKTOP-40434IR\\SQLEXPRESS;Database={tenant};User Id=sa; Password=os4ed;MultipleActiveResultSets=true";
+                optionsBuilder.UseSqlServer(connectionString.Replace("{tenant}", "opensisv2_dev"));
 
                 //foreach (string tenant in tenants)
                 //{

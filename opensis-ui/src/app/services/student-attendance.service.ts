@@ -3,9 +3,11 @@ import { Injectable } from '@angular/core';
 import { environment } from '../../environments/environment';
 import { DefaultValuesService } from '../common/default-values.service';
 import { GetAllCourseListModel } from '../models/course-manager.model';
+import { ScheduledCourseSectionViewModel } from '../models/dashboard.model';
 import { GetAllStaffModel } from '../models/staff.model';
 import {
   AddUpdateStudentAttendanceModel,
+  AddUpdateStudentAttendanceModelFor360,
   GetAllStudentAttendanceListModel,
   SearchCourseSectionForStudentAttendance,
   StaffDetailsModel } from '../models/take-attendance-list.model';
@@ -59,5 +61,23 @@ export class StudentAttendanceService {
     studentAttendance = this.defaultValuesService.getAllMandatoryVariable(studentAttendance);
     const apiurl = this.apiUrl + studentAttendance._tenantName + '/StudentAttendance/addUpdateStudentAttendance';
     return this.http.post<AddUpdateStudentAttendanceModel>(apiurl, studentAttendance);
+  }
+
+  addUpdateStudentAttendanceForStudent360(studentAttendance: AddUpdateStudentAttendanceModelFor360) {
+    studentAttendance = this.defaultValuesService.getAllMandatoryVariable(studentAttendance);
+    const apiurl = this.apiUrl + studentAttendance._tenantName + '/StudentAttendance/addUpdateStudentAttendanceForStudent360';
+    return this.http.post<AddUpdateStudentAttendanceModelFor360>(apiurl, studentAttendance);
+  }
+
+  staffListForMissingAttendance(obj: GetAllStaffModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    const apiurl = this.apiUrl + obj._tenantName + '/StudentAttendance/staffListForMissingAttendance';
+    return this.http.post<GetAllStaffModel>(apiurl, obj);
+  }
+
+  missingAttendanceList(obj: GetAllStaffModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    const apiurl = this.apiUrl + obj._tenantName + '/StudentAttendance/missingAttendanceList';
+    return this.http.post<ScheduledCourseSectionViewModel>(apiurl, obj);
   }
 }

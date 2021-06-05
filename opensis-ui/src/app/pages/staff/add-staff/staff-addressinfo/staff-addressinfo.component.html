@@ -3,14 +3,13 @@
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.EDIT || staffCreateMode == staffCreate.ADD">
     <form (ngSubmit)="f.form.valid && submitAddress()" #f="ngForm" novalidate appInvalidControlScroll>
 
-        <mat-card-header>
-            <mat-card-title>{{'addressAndContact'|translate}}</mat-card-title>
-        </mat-card-header>
-        <mat-card-content>
-
+        <div>
+            <h3 class="mb-6">{{'addressAndContact'|translate}}</h3>
+        </div>
+        <mat-card-content class="mb-0">
             <div @stagger fxLayout="column">
-                <h4 class="text-primary px-4 pb-2 pt-2">{{'personalContactInformation'|translate}}</h4>
-                <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <h4 class="text-primary pb-2">{{'personalContactInformation'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'homePhone'|translate}}</mat-label>
@@ -94,8 +93,8 @@
                 <hr class="-mx-4 mt-6">
 
 
-                <h4 class="text-primary px-4 pb-2 pt-6">{{'homeAddress'|translate}}</h4>
-                <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <h4 class="text-primary pb-2 pt-6">{{'homeAddress'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress1'|translate}}</mat-label>
@@ -151,7 +150,7 @@
                             <input  name="busNo" [(ngModel)]="staffAddModel.staffMaster.busNo" matInput>
                         </mat-form-field>
                     </li>
-                    <li class="flex flex-1 mx-4 md:w-1/2 md:pt-3">
+                    <li class="flex flex-1 md:w-1/2 md:pt-3">
                         <mat-checkbox name="busPickup" [(ngModel)]="staffAddModel.staffMaster.busPickup" color="primary" class="mr-6">{{'busPickup' | translate}}
                         </mat-checkbox>
                         <mat-checkbox name="busDropoff"  [(ngModel)]="staffAddModel.staffMaster.busDropoff" color="primary">{{'busDropoff' | translate}}
@@ -162,14 +161,14 @@
 
                 <hr class="-mx-4 mt-6">
 
-                <h4 class="text-primary px-4 pb-2 pt-6">{{'mailingAddress'|translate}}</h4>
-                <div class="px-4 pb-3">
+                <h4 class="text-primary pb-2 pt-6">{{'mailingAddress'|translate}}</h4>
+                <div class="pb-3">
                     <mat-checkbox [checked]="checkBoxChecked" #checkBox
                         [(ngModel)]="staffAddModel.staffMaster.mailingAddressSameToHome"
                         (click)="copyHomeAddress($event)" name="mailingAddressSameToHome" color="primary">
                         {{'sameAsHomeAddress' | translate}}</mat-checkbox>
                 </div>
-                <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress1'|translate}}</mat-label>
@@ -222,8 +221,8 @@
                 <hr class="-mx-4 mt-6">
 
 
-                <h4 class="text-primary px-4 pb-2 pt-6">{{'emergencyContactInfo'|translate}}</h4>
-                <ul class="grid grid-cols-2 col-gap-8 row-gap-2 mt-2 mx-4">
+                <h4 class="text-primary pb-2 pt-6">{{'emergencyContactInfo'|translate}}</h4>
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'firstName'|translate}}</mat-label>
@@ -282,13 +281,11 @@
                     </li>
                 </ul>
             </div>
-        </mat-card-content>
-        <mat-card-actions>
-            <div class="px-4 mb-2 text-right">
-                <button *ngIf="staffCreateMode == staffCreate.EDIT" (click)="cancelEdit()" mat-raised-button>{{'cancel'|translate}}</button>
+            <div class="text-right">
+                <button *ngIf="staffCreateMode == staffCreate.EDIT" (click)="cancelEdit()" mat-button class="mr-2">{{'cancel'|translate}}</button>
                 <button color="primary" mat-raised-button>{{actionButton|translate}}</button>
             </div>
-        </mat-card-actions>
+        </mat-card-content>
     </form>
 </mat-card>
 
@@ -296,10 +293,10 @@
 
 <!--Staff Address View -->
 <mat-card class="w-full" *ngIf="staffCreateMode == staffCreate.VIEW">
-    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto">{{'addressAndContact' | translate}}</h3>
         <button mat-raised-button *ngIf="editPermission" (click)="editAddressContactInfo()" color="primary">
-            <mat-icon [icIcon]="icEdit"></mat-icon> {{'editInformation' |translate}}
+            <mat-icon [icIcon]="icEdit" class="md:mr-2"></mat-icon> <span class="hidden md:inline-block">{{'editInformation' |translate}}</span>
         </button>
     </div>
     <vex-view-staff-addressinfo

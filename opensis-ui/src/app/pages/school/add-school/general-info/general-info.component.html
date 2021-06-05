@@ -1,9 +1,9 @@
 <mat-card class="w-full" *ngIf="schoolCreateMode==schoolCreate.EDIT || schoolCreateMode==schoolCreate.ADD">
     <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
-        <h3 class="font-medium mx-2">{{'generalInformation'|translate}}</h3>
+        <h3 class="font-medium">{{'generalInformation'|translate}}</h3>
         <mat-card-content>
             <div class="pt-6" @stagger fxLayout="column">
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'schoolName'|translate}}</mat-label>
@@ -221,13 +221,13 @@
                      </ul>
                      <vex-custom-field-without-form  [schoolDetailsForViewAndEdit]="schoolAddViewModel" [categoryId] = "categoryId" [module] = "module" [schoolCreateMode]="schoolCreateMode"></vex-custom-field-without-form>
             </div>
-            <hr class="-mx-4 mt-4 mb-6">
+            <hr class="-mx-5 mt-4 mb-6">
             <div @stagger fxLayout="column">
-                <div class="px-4 pb-3">
+                <div class="pb-3">
                     <h4 class="text-primary font-medium">{{'addressInformation'|translate}}</h4>
                 </div>
 
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'streetAddress1'|translate}}</mat-label>
@@ -333,14 +333,14 @@
                     </li>
                     <li>
                         <div class="flex">
-                            <div class="md:w-6/12 md:pr-4">
+                            <div class="w-6/12 pr-2 md:pr-4">
                                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                     <mat-label>{{'latitude'|translate}}</mat-label>
                                     <input type="number"
                                         [(ngModel)]="schoolAddViewModel.schoolMaster.latitude" name="latitude" matInput>
                                 </mat-form-field>
                             </div>
-                            <div class="md:w-6/12 md:pl-4">
+                            <div class="w-6/12 pl-2 md:pl-4">
                                 <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                                     <mat-label>{{'longitude'|translate}}</mat-label>
                                     <input type="number"
@@ -352,12 +352,12 @@
                     </li>
                 </ul>
             </div>
-            <hr class="-mx-4 mt-4 mb-6">
+            <hr class="-mx-5 mt-4 mb-6">
             <div @stagger fxLayout="column">
-                <div class="px-4 pb-3">
+                <div class="pb-3">
                     <h4 class="text-primary font-medium">{{'contactInformation'|translate}}</h4>
                 </div>
-                <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-2">
+                <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
                     <li>
                         <mat-form-field fxFlex="auto" class="w-full" appearance="outline" color="primary">
                             <mat-label>{{'principal'|translate}}</mat-label>
@@ -459,7 +459,7 @@
             </div>
         </mat-card-content>
         <mat-card-actions class="mb-0">
-            <div class="px-4 text-right">
+            <div class="text-right">
                 <button mat-button type="button" *ngIf="schoolCreateMode == schoolCreate.EDIT" (click)="cancelEdit()">{{'cancel'|translate}}</button>
                 <button color="primary" mat-raised-button>{{formActionButtonTitle|translate}}</button>
             </div>
@@ -467,9 +467,9 @@
     </form>
 </mat-card>
 <mat-card @fadeInUp class="w-full" fxFlex="auto" *ngIf="schoolCreateMode == schoolCreate.VIEW">
-    <div class="flex items-center mx-2" fxLayout="row" fxLayoutAlign="center center">
+    <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
         <h3 class="flex-auto font-medium">{{'generalInformation' | translate}}</h3>
-        <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit" style="font-size: 20px;" class="mr-1"></mat-icon>{{'editInformation' |translate}}</button>
+        <button *ngIf="editPermission" mat-raised-button color="primary" (click)="editGeneralInfo()"><mat-icon [icIcon]="icEdit" class="md:mr-1"></mat-icon><span class="hidden md:inline-block">{{'editInformation' |translate}}</span></button>
     </div>
     <vex-view-general-info [schoolCreateMode]="schoolCreateMode"
      [categoryId]="categoryId"

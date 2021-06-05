@@ -7,7 +7,8 @@
     <vex-page-layout-content class="">
 
         <div class="card px-6 py-4 border border-warn text-warn text-lg font-semibold bg-warn-light mb-4">
-            <mat-icon [icIcon]="icMissingAttendance" class="align-middle mr-3"></mat-icon> 10 {{
+            <mat-icon [icIcon]="icMissingAttendance" class="align-middle mr-3"></mat-icon>
+            {{scheduledCourseSectionViewModel.missingAttendanceCount}} {{
             'missingAttendanceFound' | translate }}
         </div>
 
@@ -29,295 +30,105 @@
 
         <div class="">
             <h4 class="text-lg font-medium mb-2">
-                <span class="pr-4 border-r border-gray">{{ 'todaysClasses' | translate }}</span>
-                <span class="pl-4 text-blue">{{ 'allClasses' | translate }}</span>
+                <span (click)="todaysClasses()" [ngClass]="scheduledCourseSectionViewModel.allCourse?'':'text-blue'" class="pr-4 cursor-pointer border-r border-gray">{{ 'todaysClasses' | translate }}</span>
+                <span (click)="allClasses()" [ngClass]="scheduledCourseSectionViewModel.allCourse?'text-blue':''" class="pl-4 cursor-pointer">{{ 'allClasses' | translate }}</span>
             </h4>
-            <div class="grid md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 mb-4 ">
-                <a class="card px-4 py-2 border-l-8 border-green cursor-pointer" [routerLink]="['/school', 'class']">
+            <div *ngIf="classCount===0" class="card px-6 pt-4 mb-4">
+                <h5 class="text-primary text-lg font-semibold pb-3">No Classes Found!</h5>
+            </div>
+            <div *ngIf="classCount>0" class="grid md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-4 mb-4">
+                <a *ngFor="let courseSection of scheduledCourseSectionViewModel.courseSectionViewList"
+                    class="card px-4 py-2 border-l-8 border-green cursor-pointer"
+                    (click)="selectCourseSection(courseSection)" [routerLink]="['/school', 'class']">
                     <div class="flex justify-between items-center">
-                        <h5 class="text-green uppercase font-semibold">CHEM0001</h5>
-                        <p>10:00 AM</p>
+                        <h5 class="text-green uppercase font-semibold">{{courseSection.courseSectionName}}</h5>
+                        <p>{{this.getPeriodStartTime(courseSection)|transformTimePipe}}</p>
                     </div>
                     <div class="flex justify-between items-center">
                         <div class="text-gray font-medium mb-2">
-                            <span class="pr-2">Chemistry</span>
+                            <span class="pr-2">{{courseSection.courseTitle}}</span>
                             <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
-                            <span class="pl-2">Grade: 9</span>
+                            <span class="pl-2">{{courseSection.courseGradeLevel}}</span>
                         </div>
                         <div>
-                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
+                            <mat-icon *ngIf="getAttendanceForPeriod(courseSection)" class="text-blue text-xl"
+                                [icIcon]="icHowToReg"></mat-icon>
                         </div>
                     </div>
                     <div class="flex justify-between items-center font-medium flex-wrap">
                         <div class="text-gray mb-2">
-                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 2</span>
-                            <span class="pl-2">Room 403</span>
+                            <span
+                                class="bg-gray text-white font-medium px-2 py-1 rounded">{{this.getPeriodTitle(courseSection)}}</span>
+                            <span class="pl-2">{{this.getRoomTitle(courseSection)}}</span>
                         </div>
-                        <div>
-                            <span>M</span>
-                            <span class="text-gray-light">T</span>
-                            <span>W</span>
-                            <span class="text-gray-light">H</span>
-                            <span>F</span>
-                        </div>
-                    </div>
-                </a>
-                <a class="card px-4 py-2 border-l-8 border-cyan cursor-pointer" [routerLink]="['/school', 'class']">
-                    <div class="flex justify-between items-center">
-                        <h5 class="text-cyan uppercase font-semibold">CHEM0007</h5>
-                        <p>11:00 AM</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray font-medium mb-2">
-                            <span class="pr-2">Chemistry</span>
-                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
-                            <span class="pl-2">Grade: 12</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center font-medium flex-wrap">
-                        <div class="text-gray mb-2">
-                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 3</span>
-                            <span class="pl-2">Room 513</span>
-                        </div>
-                        <div>
-                            <span>M</span>
-                            <span class="text-gray-light">T</span>
-                            <span class="text-gray-light">W</span>
-                            <span class="text-gray-light">H</span>
-                            <span>F</span>
-                        </div>
-                    </div>
-                </a>
-                <a class="card px-4 py-2 border-l-8 border-purple cursor-pointer" [routerLink]="['/school', 'class']">
-                    <div class="flex justify-between items-center">
-                        <h5 class="text-purple uppercase font-semibold">CHEM0005</h5>
-                        <p>12:00 PM</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray font-medium mb-2">
-                            <span class="pr-2">Chemistry</span>
-                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
-                            <span class="pl-2">Grade: 11</span>
-                        </div>
-                        <div>
-                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center font-medium flex-wrap">
-                        <div class="text-gray mb-2">
-                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 2</span>
-                            <span class="pl-2">Room 406</span>
-                        </div>
-                        <div>
-                            <span>M</span>
-                            <span>T</span>
-                            <span class="text-gray-light">W</span>
-                            <span>H</span>
-                            <span>F</span>
-                        </div>
-                    </div>
-                </a>
-                <a class="card px-4 py-2 border-l-8 border-blue cursor-pointer" [routerLink]="['/school', 'class']">
-                    <div class="flex justify-between items-center">
-                        <h5 class="text-blue uppercase font-semibold">CHEM0005</h5>
-                        <p>1:00 PM</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray font-medium mb-2">
-                            <span class="pr-2">Chemistry</span>
-                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
-                            <span class="pl-2">Grade: 9</span>
-                        </div>
-                        <div>
-                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center font-medium flex-wrap">
-                        <div class="text-gray mb-2">
-                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 6</span>
-                            <span class="pl-2">Room 403</span>
-                        </div>
-                        <div>
-                            <span class="text-gray-light">M</span>
-                            <span>T</span>
-                            <span>W</span>
-                            <span>H</span>
-                            <span class="text-gray-light">F</span>
-                        </div>
-                    </div>
-                </a>
-                <a class="card px-4 py-2 border-l-8 border-deep-orange cursor-pointer" [routerLink]="['/school', 'class']">
-                    <div class="flex justify-between items-center">
-                        <h5 class="text-deep-orang uppercase font-semibold">CHEM0001</h5>
-                        <p>4:00 PM</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray font-medium mb-2">
-                            <span class="pr-2">Chemistry</span>
-                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
-                            <span class="pl-2">Grade: 9</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center font-medium flex-wrap">
-                        <div class="text-gray mb-2">
-                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 2</span>
-                            <span class="pl-2">Room 403</span>
-                        </div>
-                        <div>
-                            <span>M</span>
-                            <span class="text-gray-light">T</span>
-                            <span>W</span>
-                            <span class="text-gray-light">H</span>
-                            <span>F</span>
-                        </div>
-                    </div>
-                </a>
-                <a class="card px-4 py-2 border-l-8 border-amber cursor-pointer" [routerLink]="['/school', 'class']">
-                    <div class="flex justify-between items-center">
-                        <h5 class="text-amber uppercase font-semibold">CHEM0001</h5>
-                        <p>5:00 PM</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray font-medium mb-2">
-                            <span class="pr-2">Chemistry</span>
-                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
-                            <span class="pl-2">Grade: 12</span>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center font-medium flex-wrap">
-                        <div class="text-gray mb-2">
-                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 3</span>
-                            <span class="pl-2">Room 513</span>
-                        </div>
-                        <div>
-                            <span>M</span>
-                            <span class="text-gray-light">T</span>
-                            <span class="text-gray-light">W</span>
-                            <span class="text-gray-light">H</span>
-                            <span>F</span>
-                        </div>
-                    </div>
-                </a>
-                <a class="card px-4 py-2 border-l-8 border-gray cursor-pointer" [routerLink]="['/school', 'class']">
-                    <div class="flex justify-between items-center">
-                        <h5 class="text-gray uppercase font-semibold">CHEM0001</h5>
-                        <p>6:00 PM</p>
-                    </div>
-                    <div class="flex justify-between items-center">
-                        <div class="text-gray font-medium mb-2">
-                            <span class="pr-2">Chemistry</span>
-                            <span class="w-1 h-1 inline-block bg-gray-light rounded align-middle"></span>
-                            <span class="pl-2">Grade: 11</span>
-                        </div>
-                        <div>
-                            <mat-icon class="text-blue text-xl" [icIcon]="icHowToReg"></mat-icon>
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center font-medium flex-wrap">
-                        <div class="text-gray mb-2">
-                            <span class="bg-gray text-white font-medium px-2 py-1 rounded">Period 5</span>
-                            <span class="pl-2">Room 406</span>
-                        </div>
-                        <div>
-                            <span>M</span>
-                            <span>T</span>
-                            <span class="text-gray-light">W</span>
-                            <span>H</span>
-                            <span>F</span>
+                        <div class="mb-2">
+                            <ng-container
+                                *ngIf="courseSection.scheduleType=='Fixed Schedule' || courseSection.scheduleType=='Variable Schedule';else otherSchedule">
+                                <ng-container *ngFor="let day of courseSection.weekDays.split('').sort()">
+                                    <span [ngClass]="courseSection.meetingDays.includes(day)?'':'text-gray-light'"
+                                        [matTooltip]="day|weekDay:false:true"
+                                        [matTooltipPosition]="'above'">{{day|weekDay:true:false}}</span>
+
+                                </ng-container>
+
+                            </ng-container>
+                            <ng-template #otherSchedule>
+                                <span class="text-primary">
+                                    {{courseSection.scheduleType}}
+                                </span>
+                            </ng-template>
                         </div>
                     </div>
                 </a>
             </div>
         </div>
-
-        <div class="card px-6 pt-4 mb-4">
+        <div *ngIf="noticeCount===0" class="card px-6 pt-4 mb-4">
+            <h4 class="text-primary text-lg font-semibold pb-3">No Notice Found!</h4>
+        </div>
+        <div *ngIf="noticeCount>0"  class="card px-6 pt-4 mb-4">
             <h4 class="text-primary text-lg font-semibold pb-3">{{ 'notice' | translate }}</h4>
             <mat-divider class="-mx-6"></mat-divider>
             <mat-accordion>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header class="px-0 mr-1">
-                        <mat-panel-title class="font-semibold text-base">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting industry
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <p class="-mx-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-                        took a galley of type and scrambled it to make a type specimen book</p>
-                </mat-expansion-panel>
-                <mat-divider class="-mx-6"></mat-divider>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header class="px-0 mr-1">
-                        <mat-panel-title class="font-semibold text-base">
-                            Lorem Ipsum is simply dummy text of the printing and typesetting
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <p class="-mx-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-                        took a galley of type and scrambled it to make a type specimen book</p>
-                </mat-expansion-panel>
-                <mat-divider class="-mx-6"></mat-divider>
-                <mat-expansion-panel>
-                    <mat-expansion-panel-header class="px-0 mr-1">
-                        <mat-panel-title class="font-semibold text-base">
-                            Lorem Ipsum is simply dummy text of the printing
-                        </mat-panel-title>
-                    </mat-expansion-panel-header>
-                    <p class="-mx-6">Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem
-                        Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer
-                        took a galley of type and scrambled it to make a type specimen book</p>
-                </mat-expansion-panel>
+                <div *ngFor="let notice of scheduledCourseSectionViewModel.noticeList">
+                    <mat-expansion-panel>
+                        <mat-expansion-panel-header class="px-0 mr-1">
+                            <mat-panel-title class="font-semibold text-base">{{notice.title}}
+                            </mat-panel-title>
+                        </mat-expansion-panel-header>
+                        <p class="-mx-6 ql-editor" [innerHTML]="notice.body|safe:'html'"></p>
+                    </mat-expansion-panel>
+                    <mat-divider class="-mx-6"></mat-divider>
+                </div>
             </mat-accordion>
         </div>
 
         <div class="grid md:grid-cols-2 gap-6">
             <div class="card overflow-auto w-full">
+
                 <div class="border-b py-4 px-6">
                     <h4 class="text-lg font-semibold">{{ 'calendarEvents' | translate }}</h4>
                 </div>
                 <div class="flex w-full items-center font-bold border-b">
                     <div class="w-6/12 py-3 pl-6 pr-4">{{ 'eventTitle' | translate }}</div>
                     <div class="w-3/12 py-3 pl-6 pr-4">{{ 'date' | translate }}</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">{{ 'time' | translate }}</div>
+                    <!-- <div class="w-3/12 py-3 pl-6 pr-4">{{ 'time' | translate }}</div> -->
                 </div>
-                <div class="flex w-full items-center border-b">
+                <div *ngFor="let calendarEvent of events$ | async" class="flex w-full items-center border-b">
                     <div class="w-6/12 py-3 pl-6 pr-4"><span
-                            class="inline-block h-2 w-2 bg-green rounded-full mr-3"></span>Sports Event</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 14, 2021</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">10:00 AM</div>
-                </div>
-                <div class="flex w-full items-center border-b">
-                    <div class="w-6/12 py-3 pl-6 pr-4"><span
-                            class="inline-block h-2 w-2 bg-red rounded-full mr-3"></span>Event 1</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 8, 2021</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">12:30 AM</div>
-                </div>
-                <div class="flex w-full items-center border-b">
-                    <div class="w-6/12 py-3 pl-6 pr-4"><span
-                            class="inline-block h-2 w-2 bg-blue rounded-full mr-3"></span>Event 2</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 14, 2021</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">10:45 AM</div>
-                </div>
-                <div class="flex w-full items-center border-b">
-                    <div class="w-6/12 py-3 pl-6 pr-4"><span
-                            class="inline-block h-2 w-2 bg-red rounded-full mr-3"></span>Event 3</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 9, 2021</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">11:00 AM</div>
-                </div>
-                <div class="flex w-full items-center border-b">
-                    <div class="w-6/12 py-3 pl-6 pr-4"><span
-                            class="inline-block h-2 w-2 bg-cyan rounded-full mr-3"></span>Event 4</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 19, 2021</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">12:00 AM</div>
-                </div>
-                <div class="flex w-full items-center border-b">
-                    <div class="w-6/12 py-3 pl-6 pr-4"><span
-                            class="inline-block h-2 w-2 bg-orange rounded-full mr-3"></span>Event 5</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">Apr 9, 2021</div>
-                    <div class="w-3/12 py-3 pl-6 pr-4">11:00 AM</div>
+                            class="inline-block h-2 w-2 bg-green rounded-full mr-3"></span>{{calendarEvent.title}}</div>
+                    <div class="w-3/12 py-3 pl-6 pr-4">{{calendarEvent.start | date:'mediumDate'}}</div>
+                    <!-- <div class="w-3/12 py-3 pl-6 pr-4">10:00 AM</div> -->
                 </div>
             </div>
             <div class="card overflow-auto w-full px-6 py-4">
-                <div class="flex justify-between items-center">
+                <div *ngIf="!showCalendarView">
+                    <h3 class="text-primary font-bold">
+                        No school calendar found.
+                        <a class="cursor-pointer" [routerLink]="['/school/schoolcalendars']">
+                            Create a Calendar</a>
+                    </h3>
+                </div>
+                <div *ngIf="showCalendarView" class="flex justify-between items-center">
                     <h3 class="text-center"> {{ viewDate | calendarDate:(view + 'ViewTitle'):'en' }}</h3>
                     <div class="flex items-center -mr-4">
                         <button [(viewDate)]="viewDate" [view]="view" mat-icon-button mwlCalendarPreviousView>
@@ -328,25 +139,31 @@
                         </button>
                     </div>
                 </div>
-                <mat-divider class="-mx-6 text-border mt-2"></mat-divider>
+                <mat-divider *ngIf="showCalendarView" class="-mx-6 text-border mt-2"></mat-divider>
                 <ng-template #customCellTemplate let-day="day" let-locale="locale">
-                    <div class="cal-cell-top">
+                    <div class="cal-cell-top text-center">
                         <span class="cal-day-number">{{ day.date | calendarDate:'monthViewDayNumber':locale }}</span>
                     </div>
-                    <div class="cal-events px-2 pb-2 justify-center" *ngIf="day.events.length > 0">
-                        <div class="text-xs px-2 py-1 rounded text-white"
-                            *ngFor="let event of day.events;let i = index;">
-                            <span class="align-middle">{{ event.title }}</span>
+                    <div class="cal-events pl-2 pb-2 justify-center" *ngIf="day.events.length > 0">
+                        <div class="mr-2" *ngFor="let event of day.events;">
+
+                            <span #tooltip="matTooltip" [matTooltip]="event.title"
+                                class="inline-block w-3 h-3 rounded-full"
+                                [style.backgroundColor]="event.meta.calendar.eventColor"></span>
+
                         </div>
                     </div>
+
                 </ng-template>
-                <div class="-mx-6">
-                    <div [ngSwitch]="view">
-                        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="events"
+                <vex-scrollbar *ngIf="events$ | async; let event" [ngSwitch]="view"
+                    class="px-0 shadow flex-auto relative" vexContainer>
+                    <div [ngSwitch]="view" *ngIf="showCalendarView">
+                        <mwl-calendar-month-view *ngSwitchCase="'month'" [viewDate]="viewDate" [events]="event"
+                            [weekendDays]="weekendDays" (beforeViewRender)="beforeMonthViewRender($event)"
                             [cellTemplate]="customCellTemplate">
                         </mwl-calendar-month-view>
                     </div>
-                </div>
+                </vex-scrollbar>
             </div>
         </div>
     </vex-page-layout-content>

@@ -39,21 +39,32 @@
                     <div class="timeline-content">
                         <p class="text-primary"><span class="font-semibold">George Smith</span> {{ 'commentedOn' |
                             translate }} <span class="font-semibold">April 10, 2021</span> @ <span
-                                class="font-semibold">10.45 AM</span></p>
+                                class="font-semibold">10.45 AM</span>
+                            <span mat-raised-button matTooltip="Teacher"
+                                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'"
+                                class="cursor-pointer">
+                                <mat-icon class="text-black ml-2 align-middle">person</mat-icon>
+                            </span>
+                        </p>
                         <p>Arthur didnot come to class today.</p>
                     </div>
-                    <div class="timeline-content">
+                    <div class="timeline-content" *ngIf="administratorComment">
                         <p class="text-primary"><span class="font-semibold">John Carter</span> {{
                             'commentedOn' |
                             translate }} <span class="font-semibold">April 10, 2021</span> @ <span
-                                class="font-semibold">12.10 PM</span></p>
+                                class="font-semibold">12.10 PM</span>
+                            <span mat-raised-button matTooltip="Administrator"
+                                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'"
+                                class="cursor-pointer">
+                                <mat-icon class="text-black ml-2 align-middle">manage_accounts</mat-icon>
+                            </span>
+                            <span class="cursor-pointer" (click)="openCommentBox()">
+                                <mat-icon class="text-black ml-2 align-middle">edit</mat-icon>
+                            </span>
+                        </p>
                         <p>Arthur called in sick</p>
                     </div>
-                    <div class="timeline-content">
-                        <!-- <mat-form-field class="w-full m-0" appearance="outline">
-                            <mat-label>{{ 'yourComment' | translate }}</mat-label>
-                            <input matInput placeholder="Arthur's father emailed doctor's note">
-                        </mat-form-field> -->
+                    <div class="timeline-content" *ngIf="commentBox">
                         <div class="w-full border border-gray-light rounded p-2">
                             <label class="text-gray block">{{ 'yourComment' | translate }}</label>
                             <input type="text" value="Arthur's father emailed doctor's note" class="w-full">
@@ -112,14 +123,23 @@
                                 class="font-semibold">10.45 AM</span></p>
                         <p>Arthur didnot come to class today.</p>
                     </div>
-                    <div class="timeline-content">
+                    <div class="timeline-content" *ngIf="administratorComment">
                         <p class="text-primary"><span class="font-semibold">John Carter</span> {{
                             'commentedOn' |
                             translate }} <span class="font-semibold">April 10, 2021</span> @ <span
-                                class="font-semibold">12.10 PM</span></p>
+                                class="font-semibold">12.10 PM</span>
+                            <span mat-raised-button matTooltip="Administrator"
+                                aria-label="Button that displays a tooltip when focused or hovered over" [matTooltipPosition]="'above'"
+                                class="cursor-pointer">
+                                <mat-icon class="text-black ml-2 align-middle">manage_accounts</mat-icon>
+                            </span>
+                            <span class="cursor-pointer" (click)="openCommentBox()">
+                                <mat-icon class="text-black ml-2 align-middle">edit</mat-icon>
+                            </span>
+                        </p>
                         <p>Arthur called in sick</p>
                     </div>
-                    <div class="timeline-content">
+                    <div class="timeline-content" *ngIf="commentBox">
                         <div class="w-full border border-gray-light rounded p-2">
                             <label class="text-gray block">{{ 'yourComment' | translate }}</label>
                             <input type="text" value="Arthur's father emailed doctor's note" class="w-full">

@@ -1,50 +1,52 @@
 <div class="mb-2 lg:flex lg:flex-wrap">
-    <div class="lg:w-3/12 lg:pr-4">
+    <div class="lg:w-4/12 xl:w-3/12 lg:pr-4 mb-6">
         <mat-card class="w-full p-0" fxFlex="auto">
-            <div class="px-gutter py-4">
+            <div class="p-4">
                 <h4 class="text-primary p-0 mb-4">{{'categories'|translate}}</h4>
 
-                
-                <div *ngFor="let fieldsCategory of fieldsCategoryList" >
-                    <div *ngIf="!restrictedCategoryid.includes(fieldsCategory.categoryId)" class="mt-2 flex flex-wrap justify-between">
-                        <a class="cursor-pointer" [ngClass]="{'font-bold':currentCategoryId === fieldsCategory.categoryId}" (click)="selectCategory(fieldsCategory)">{{fieldsCategory.title}} </a>
+
+                <div *ngFor="let fieldsCategory of fieldsCategoryList">
+                    <div *ngIf="!restrictedCategoryid.includes(fieldsCategory.categoryId)"
+                        class="mt-2 flex flex-wrap justify-between">
+                        <a class="cursor-pointer"
+                            [ngClass]="{'font-bold':currentCategoryId === fieldsCategory.categoryId}"
+                            (click)="selectCategory(fieldsCategory)">{{fieldsCategory.title}} </a>
                         <div *ngIf="!fieldsCategory.isSystemCategory">
-                            <a class="cursor-pointer mr-3" *ngIf="editPermission" (click)="editFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icEdit"></mat-icon></a>
-                            <a class="cursor-pointer" *ngIf="deletePermission" (click)="confirmDeleteFieldCategory(fieldsCategory)"><mat-icon [icIcon]="icDelete"></mat-icon></a>
+                            <a class="cursor-pointer mr-3" *ngIf="editPermission"
+                                (click)="editFieldCategory(fieldsCategory)">
+                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                            </a>
+                            <a class="cursor-pointer" *ngIf="deletePermission"
+                                (click)="confirmDeleteFieldCategory(fieldsCategory)">
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </a>
                         </div>
                     </div>
                 </div>
-                <hr class="my-3"/>
+                <hr class="my-3" />
                 <button *ngIf="addPermission" color="" class="w-full text-primary" mat-button type="button"
                     (click)='goToAddCategory()'>
-                    <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
-                        size="24px">
+                    <ic-icon [icon]="icAdd" inline="true" size="24px">
                     </ic-icon>
-                    <span>{{'addNewCategory'|translate}}</span>
+                    <span class="ml-2">{{'addNewCategory'|translate}}</span>
                 </button>
             </div>
         </mat-card>
     </div>
-    <div class="lg:w-9/12 lg:pl-4">
+    <div class="lg:w-8/12 xl:w-9/12 lg:pl-4">
         <mat-card class="w-full p-0" fxFlex="auto">
-            <div class="bg-white px-6 h-16 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+            <div class="bg-white h-16 border-b sticky left-0 px-4" fxLayout="row" fxLayoutAlign="start center">
                 <div class="flex w-full justify-between">
                     <div class="py-3" fxFlex="300px" fxFlex.lt-md="auto" fxHide.xs fxLayout="row"
                         fxLayoutAlign="start center">
 
                         <div class="flex">
-                            <input
-                            matInput
-                            [(ngModel)]="searchKey"
-                            (keyup)="applyFilter()"
-                            class="py-3 border-0 outline-none w-full bg-transparent"
-                            appearance="outline" color="primary"
-                             placeholder="Search..."
-                            type="search">
-                            <button mat-button matSuffix mat-icon-button aria-label="clear"
-                            *ngIf="searchKey"
-                            (click)="onSearchClear()">
-                            <mat-icon>close</mat-icon>
+                            <input matInput [(ngModel)]="searchKey" (keyup)="applyFilter()"
+                                class="py-3 border-0 outline-none w-full bg-transparent" appearance="outline"
+                                color="primary" placeholder="Search..." type="search">
+                            <button mat-button matSuffix mat-icon-button aria-label="clear" *ngIf="searchKey"
+                                (click)="onSearchClear()">
+                                <mat-icon>close</mat-icon>
                             </button>
                         </div>
                     </div>
@@ -55,91 +57,92 @@
                             <mat-icon [icIcon]="icFilterList"></mat-icon>
                         </button>
 
-                        <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button type="button"
-                        [disabled]="restrictedCategoryid.includes(currentCategoryId)"
+                        <button *ngIf="addPermission" color="primary" class="ml-4" fxFlex="none" mat-raised-button
+                            type="button" [disabled]="restrictedCategoryid.includes(currentCategoryId)"
                             (click)='goToAdd()'>
-                            <ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2" inline="true"
-                                size="24px">
+                            <ic-icon [icon]="icAdd" inline="true" size="24px">
                             </ic-icon>
-                            <span>{{'addNewField'|translate}}</span>
+                            <span class="ml-2 hidden md:inline-block">{{'addNewField'|translate}}</span>
                         </button>
                     </div>
                 </div>
             </div>
+            <div class="overflow-x-auto overflow-y-hidden">
+                <table @stagger mat-table [dataSource]="customFieldList" class="mat-elevation-z8 table-auto w-full"
+                    cdkDropList (cdkDropListDropped)="drop($event)">
 
-            <table @stagger mat-table [dataSource]="customFieldList" 
-            class="mat-elevation-z8 table-auto w-full"
-            cdkDropList (cdkDropListDropped)="drop($event)">
 
-
-                <ng-container matColumnDef="fieldId">
-                    <th mat-header-cell *matHeaderCellDef></th>
-                    <td mat-cell *matCellDef="let element" >
-                        <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
-                   <!--      <div class="w-10 drag-icon">
+                    <ng-container matColumnDef="fieldId">
+                        <th mat-header-cell *matHeaderCellDef></th>
+                        <td mat-cell *matCellDef="let element">
+                            <mat-icon class="cursor-move" cdkDragHandle>reorder</mat-icon>
+                            <!--      <div class="w-10 drag-icon">
                             <i  class="material-icons" cdkDragHandle>reorder</i>
                         </div> -->
-                    </td>
-                </ng-container>
+                        </td>
+                    </ng-container>
 
 
-                <ng-container matColumnDef="title">
-                    <mat-header-cell *matHeaderCellDef>{{'fieldName'|translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        {{element.title}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="title">
+                        <mat-header-cell *matHeaderCellDef>{{'fieldName'|translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.title}}
+                        </mat-cell>
+                    </ng-container>
 
-                <!-- Body -->
+                    <!-- Body -->
 
-                <ng-container matColumnDef="type">
-                    <mat-header-cell *matHeaderCellDef>{{'fieldType'|translate}}
-                    </mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        {{element.type}}
-                    </mat-cell>
-                </ng-container>
-
-
-
-                <ng-container matColumnDef="hide">
-                    <mat-header-cell *matHeaderCellDef>{{'inUse'|translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                        {{element.hide|EmtyBooleanCheckReversePipe}}
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="type">
+                        <mat-header-cell *matHeaderCellDef>{{'fieldType'|translate}}
+                        </mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.type}}
+                        </mat-cell>
+                    </ng-container>
 
 
 
-                <ng-container matColumnDef="action">
-                    <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
-                    <mat-cell *matCellDef="let element">
-                            <a *ngIf="editPermission && !element.systemField" class="mr-3 cursor-pointer" (click)="openEditdata(element)">
-                            <mat-icon [icIcon]="icEdit"></mat-icon>
-                        </a>
-                        <a *ngIf="deletePermission && !element.systemField" class="cursor-pointer"(click)="confirmDelete(element)">
-                            <mat-icon [icIcon]="icDelete"></mat-icon>
-                        </a>
-                    </mat-cell>
-                </ng-container>
+                    <ng-container matColumnDef="hide">
+                        <mat-header-cell *matHeaderCellDef>{{'inUse'|translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            {{element.hide|EmtyBooleanCheckReversePipe}}
+                        </mat-cell>
+                    </ng-container>
 
-                <ng-container matColumnDef="loading">
-                    <mat-footer-cell *matFooterCellDef colspan="6">
-                        <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
-                    </mat-footer-cell>
-                </ng-container>
-                <ng-container matColumnDef="noData">
-                    <td mat-footer-cell *matFooterCellDef colspan="6">
-                      No Data
-                    </td>
-                  </ng-container>
 
-                <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
-                <mat-row cdkDrag *matRowDef="let row; columns: visibleColumns" @fadeInUp></mat-row >
-                <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
-                <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="customFieldList?.data.length!=0"></tr>
-            </table>
-            
+
+                    <ng-container matColumnDef="action">
+                        <mat-header-cell *matHeaderCellDef>{{'action'|translate}}</mat-header-cell>
+                        <mat-cell *matCellDef="let element">
+                            <a *ngIf="editPermission && !element.systemField" class="mr-3 cursor-pointer"
+                                (click)="openEditdata(element)">
+                                <mat-icon [icIcon]="icEdit"></mat-icon>
+                            </a>
+                            <a *ngIf="deletePermission && !element.systemField" class="cursor-pointer"
+                                (click)="confirmDelete(element)">
+                                <mat-icon [icIcon]="icDelete"></mat-icon>
+                            </a>
+                        </mat-cell>
+                    </ng-container>
+
+                    <ng-container matColumnDef="loading">
+                        <mat-footer-cell *matFooterCellDef colspan="6">
+                            <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+                        </mat-footer-cell>
+                    </ng-container>
+                    <ng-container matColumnDef="noData">
+                        <td mat-footer-cell *matFooterCellDef colspan="6">
+                            No Data
+                        </td>
+                    </ng-container>
+
+                    <mat-header-row *matHeaderRowDef="visibleColumns"></mat-header-row>
+                    <mat-row cdkDrag *matRowDef="let row; columns: visibleColumns" @fadeInUp></mat-row>
+                    <mat-footer-row *matFooterRowDef="['loading']" [class.hide]="!loading"></mat-footer-row>
+                    <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="customFieldList?.data.length!=0">
+                    </tr>
+                </table>
+            </div>
             <mat-menu #columnFilterMenu="matMenu" xPosition="before" yPosition="below">
                 <button (click)="toggleColumnVisibility(column, $event)" *ngFor="let column of columns"
                     class="checkbox-item mat-menu-item">

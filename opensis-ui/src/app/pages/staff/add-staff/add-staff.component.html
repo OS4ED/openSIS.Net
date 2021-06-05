@@ -1,6 +1,7 @@
 <vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
-<div class="flex container-sidenav-secondary">
+<div class="flex container-sidenav-secondary" [ngClass]="secondarySidebar==0?'' : 'show-secondary-sidebar'">
     <div class="sidenav-secondary">
+        <button mat-icon-button class="close-secondary-sidebar" (click)="toggleSecondarySidebar()"><mat-icon>close</mat-icon></button>
         <vex-scrollbar class="flex-auto">
             <div class="h-45 text-center sm:px-0 pt-5 pb-2">
                 <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage" class="mx-auto">
@@ -12,7 +13,7 @@
                 <div class="rounded-full py-1 px-3 bg-gray text-white inline-block mt-3" *ngIf="profile">{{profile}}</div>
             </div>
             <hr class="mt-4" />
-            <div class="px-gutter sm:px-0">
+            <div>
                 <a @fadeInRight *ngFor="let field of fieldsCategory; let index =index"
                     (click)="changeCategory(field,index)"
                     class="list-item mt-2 no-underline flex items-center rounded-none" matRipple
@@ -37,8 +38,23 @@
                     <vex-breadcrumbs [crumbs]="['Staff', pageStatus]" class="flex-auto"></vex-breadcrumbs>
                 </vex-secondary-toolbar>
             </vex-page-layout-header>
+            <div class="bg-primary px-4 py-2 rounded -mt-16 mx-4 persistent-bar">
+                <div class="flex items-center">
+                    <button mat-icon-button class="text-white mr-2" (click)="toggleSecondarySidebar()">
+                        <mat-icon>apps</mat-icon>
+                    </button>
+                    <div class="h-45 text-center sm:px-0">
+                        <vex-profile-image [enableCropTool]="enableCropTool" [responseImage]="responseImage"
+                            style="width:50px" class="mx-auto inline-block"></vex-profile-image>
+                    </div>
+                    <div class="text-left px-4">
+                        <h4 class="mb-0 text-white">{{staffTitle}}</h4>
+                        <div class="text-white opacity-50" *ngIf="profile">{{profile}}</div>
+                    </div>
+                </div>
+            </div>
             <vex-page-layout-content class="-mt-4">
-                <div class="w-full -mt-16">
+                <div class="w-full">
                     <router-outlet></router-outlet>
                     <!-- <vex-staff-generalinfo *ngIf="currentCategory==12" [staffCreateMode]="staffCreateMode"
                     (dataAfterSavingGeneralInfo)="afterSavingGeneralInfo($event)" [staffDetailsForViewAndEdit]="staffAddModel" [categoryId]="indexOfCategory">
@@ -67,4 +83,5 @@
             </vex-page-layout-content>
         </vex-page-layout>
     </div>
+    <div class="sidebar-overlay"  (click)="toggleSecondarySidebar()"></div>
 </div>

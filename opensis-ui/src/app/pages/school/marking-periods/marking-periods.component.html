@@ -5,9 +5,10 @@
         </vex-secondary-toolbar>
     </vex-page-layout-header>
     <vex-mat-spinner-overlay *ngIf="loading"></vex-mat-spinner-overlay>
-    <div class="-mt-6 w-full" vexContainer>
-        <mat-drawer-container class="bg-transparent flex-auto flex -mt-16" *ngIf="list.length > 0 ; else noData" vexContainer>
-            <mat-drawer [(opened)]="menuOpen" mode="over" class="w-10/12">
+
+
+    <div class="md:flex -mt-16 mx-2" [ngClass]="viewDetailsModal===1?'showing-details':''" *ngIf="list.length > 0 ; else noData">
+        <div class="w-full md:w-6/12 lg:w-5/12 px-4">
                 <mat-card @stagger class="w-full">
                     <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
                         <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
@@ -17,11 +18,10 @@
                     <ul class="marking-period-tree">
                         <ng-template #recursiveList let-list>
                             <li *ngFor="let item of list;let indexOfelement=index;">                             
-                                <div class="tree-node card flex justify-between shadow-none border-solid border commonClass" [ngClass]= "indexOfelement === 0 && item.isParent? 'active' :''">
-                                    <a  (click) = "viewDetails(item,$event.target)"  class="w-full p-3 cursor-pointer"> {{item.title}}</a>
-                                    <!-- <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                        <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                    </button> -->
+                            <div class="tree-node card flex justify-between shadow-none border-solid border commonClass"
+                                [ngClass]="indexOfelement === 0 && item.isParent? 'active' :''">
+                                <a (click)="viewDetails(item,$event.target)" class="w-full p-3 cursor-pointer">
+                                    {{item.title}}</a>
                                     <div>
                                         <div class="flex items-center">
                                             <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
@@ -48,62 +48,19 @@
                         <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: list }"></ng-container>
                     </ul>
                 </mat-card>
-            </mat-drawer>
-            <mat-drawer-content class="flex-auto flex items-start p-gutter">
-                <mat-card @stagger class="hidden md:block mr-6 ng-tns-c284-386 ng-star-inserted md:w-5/12">
-                    <div class="flex items-center pl-0" fxLayout="row" fxLayoutAlign="center center">
-                        <h6 class="flex-auto">{{'markingPeriodsList' | translate}}</h6>
-                        <!-- <button (click)="openAddNew()" type="button" color="primary" mat-button><ic-icon [icon]="icAdd" class="ltr:-ml-1 rtl:-mr-1 ltr:mr-2 rtl:ml-2 ic-inline" inline="true"></ic-icon> {{'addMarkingPeriod' | translate}}</button> -->
                     </div>
-                    <p class="text-gray text-xs pb-5">{{'clickAnItemToViewDetailsOnTheRightSide' | translate}}</p>
-                    <ul class="marking-period-tree">
-                        <ng-template #recursiveList let-list>
-                            <li *ngFor="let item of list;let indexOfelement=index;">
-                                <div [ngClass]= "indexOfelement === 0 && item.isParent? 'tree-node card flex shadow-none border-solid border commonClass active' :'tree-node card flex shadow-none border-solid border commonClass' ">
-                                    <a  (click) = "viewDetails(item,$event.target)" class="w-full p-3 cursor-pointer"> {{item.title}}</a>
-                                    <button [matMenuTriggerFor]="addNewMenu" class="w-10 pt-3" type="button">
-                                        <mat-icon [icIcon]="icArrowDropDown" size="20px"></mat-icon>
-                                    </button>
-    
-                                    <mat-menu #addNewMenu="matMenu" [overlapTrigger]="false" xPosition="before"
-                                        yPosition="below">
-                                        <button *ngIf="editPermission" (click) = "editItem(item)" mat-menu-item>
-                                            <span>{{'editItem' | translate}}</span>
+        <div class="marking-period-details md:w-6/12 lg:w-7/12 px-4">
+            <mat-card @fadeInUp class="w-full pt-2" fxFlex="auto">
+                <div class="flex items-center mb-2" fxLayout="row" fxLayoutAlign="center center">
+                    <h3 class="flex-auto" *ngIf="viewFirstChild != undefined">{{viewFirstChild.title}}</h3>
+                    <div>
+                    <button [matMenuTriggerFor]="addMenu" mat-icon-button type="button">
+                        <mat-icon [icIcon]="icMoreVert" size="20px"></mat-icon>
                                         </button>
-    
-                                        <button *ngIf="deletePermission" (click) = "confirmDelete(item)" mat-menu-item>
-                                            <span>{{'deleteItem' | translate}}</span>
+                    <button (click)="closeDetailsModal()" class="md:hidden text-primary" mat-icon-button type="button">
+                        <mat-icon>close</mat-icon>
                                         </button>
-                                        <div *ngIf="item.isParent || (item.semesterId > 0 && item.isParent === false) || (item.semesterId > 0 &&  item.isParent === false) || (item.yearId > 0 && item.isParent === false)">
-                                            <button *ngIf="addPermission" (click) = "addChildren(item)"  mat-menu-item>
-                                                <span>{{'addChildMarkingPeriod' | translate}}</span>
-                                            </button>
-                                        </div>
-                                        
-                                    </mat-menu>
                                 </div>              
-                                
-                                <ul *ngIf="item.children && item.children.length > 0">
-                                    <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: item.children }"></ng-container>
-                                   
-                                </ul>
-                            </li>
-                        </ng-template>                   
-                        <ng-container *ngTemplateOutlet="recursiveList; context:{ $implicit: list }"></ng-container>
-                    </ul>
-                </mat-card>
-
-                <mat-card @fadeInUp class="w-full md:w-7/12 p-0" fxFlex="auto" >
-                    <div class="flex items-center mx-4 py-3 pl-0 md:pl-3" fxLayout="row" fxLayoutAlign="center center">
-                        <button (click)="openMenu()" class="md:hidden text-primary" mat-icon-button
-                            type="button">
-                            <mat-icon [icIcon]="icMenu"></mat-icon>
-                        </button>
-                       
-                        <h3 class="flex-auto" *ngIf="viewFirstChild != undefined">{{viewFirstChild.title}}</h3>
-                        <button [matMenuTriggerFor]="addMenu" class="w-10 pt-3" type="button">
-                            <mat-icon [icIcon]="icMoreVert" size="20px"></mat-icon>
-                        </button>
                         <mat-menu #addMenu="matMenu" [overlapTrigger]="false" xPosition="before"  yPosition="below">
                             <button *ngIf="editPermission" (click) = "editItem(viewFirstChild)" mat-menu-item>
                                 <span>{{'editItem' | translate}}</span>
@@ -115,8 +72,10 @@
                                                                
                         </mat-menu>
                     </div>
+                
                     <mat-card-content>
-                        <div class="border-t border-b py-3 px-6">
+                    <hr class="-mx-4">
+                    <div class="py-3">
                             <div class="flex items-center mr-6">
                                 <div *ngIf="doesGrades;else doesnotGrades" class="mr-6">
                                     <mat-icon [icIcon]="icCheckBox" class="inline-block align-middle"></mat-icon> {{'graded' | translate}}
@@ -138,7 +97,7 @@
                                 </ng-template>
                             </div>
                         </div>
-                        <div class="p-6">
+                    <hr class="mb-4 -mx-4">
                             <ul class="grid md:grid md:grid-cols-2 md:col-gap-8 row-gap-5 md:row-gap-10">
                                 <li>
                                     <label class="text-sm leading-5 text-gray">{{'title' | translate}}</label>
@@ -165,17 +124,13 @@
                                     <p class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2" *ngIf="viewFirstChild != undefined">{{viewFirstChild.postEndDate}}</p>
                                 </li>
                             </ul>
-                        </div>
                     </mat-card-content>
             </mat-card>
+        </div>
+    </div>
             
-            </mat-drawer-content>
-        </mat-drawer-container>
         <ng-template #noData>
-            <mat-drawer-container class="bg-transparent flex-auto flex -mt-16" vexContainer>
-                <mat-drawer-content class="flex-auto flex items-start p-gutter">
-                    <mat-card @stagger class="w-full text-center py-20 md:py-32">
-
+        <div class="w-full bg-white rounded text-center py-20 md:py-32">
                         <div @fadeInUp class="text-center">
                             <div class="mb-6">
                                 <ic-icon [icon]="icInfo" size="60px"></ic-icon>
@@ -188,10 +143,6 @@
                                     </ic-icon> {{'addASchoolYearToBegin' | translate}}
                                 </button>
             </div>
-                    </mat-card>
-                </mat-drawer-content>
-            </mat-drawer-container>
+        </div>
         </ng-template>
-        
-    </div>
 </vex-page-layout>

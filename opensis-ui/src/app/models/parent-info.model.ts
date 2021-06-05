@@ -130,11 +130,74 @@ export class ViewParentInfoModel extends CommonField {
 }
 
 export class GetAllParentModel extends CommonField {
+        courseSectionId: number;
+        pageNumber: number;
+        pageSize: number;
+        sortingModel: sorting;
+        filterParams: filterParams[];
+        dobStartDate: string;
+        dobEndDate: string;
+        fullName: string;
+        profilePhoto: boolean;
+        includeInactive: boolean;
+
+        constructor(){
+            super();
+            this.pageNumber = 1;
+            this.pageSize = 10;
+            this.sortingModel = new sorting();
+            this.filterParams = null;
+            this.includeInactive = false;
+            this._failure = false;
+        }
+}
+export class GetAllParentResponseModel{
+    parentInfoForView: ParentList[];
+    parentInfo: [];
+    studentId: number;
+    firstname: string;
+    lastname: string;
+    mobile: null;
+    email: string;
+    streetAddress: string;
+    city: string;
+    state: string;
+    zip: string;
+    totalCount: number;
+    pageNumber: number;
+    _pageSize: number;
+    _failure: boolean;
+    _message: string;
+}
+
+export class ParentList{
     tenantId: string;
     schoolId: number;
-    public parentInfoForView: [ParentInfoModel]
-
-
+    parentId: number;
+    firstname: string;
+    middlename: string;
+    lastname: string;
+    salutation: string;
+    suffix: string;
+    mobile: string;
+    workPhone: string;
+    homePhone: string;
+    personalEmail: string;
+    workEmail: string;
+    loginEmail: string;
+    userProfile: string;
+    isPortalUser: boolean;
+    isCustodian: boolean;
+    fullAddress: string;
+    getStudentForView:[]
+    students: [];
+    addressLineOne: string;
+    addressLineTwo: string;
+    country: string;
+    city: string;
+    state: string;
+    zip: string;
+    studentAddressSame: boolean
 }
 
 
@@ -163,24 +226,24 @@ export class RemoveAssociateParent extends CommonField {
 }
 
 export class ParentAdvanceSearchModel {
-    public firstname: string;
-    public middlename: string;
-    public lastname: string;
-    public userProfile: string;
-    public personalEmail: string;
-    public workEmail: string;
-    public homePhone: string;
-    public mobile: string;
-    public workPhone: string;
-    public studentFirstName: string;
-    public studentMiddleName: string;
-    public studentLastName: string;
-    public addressLineOne: string;
-    public addressLineTwo: string;
-    public country: string;
-    public state: string;
-    public city: string;
-    public zip: string;
+    public firstname?: string;
+    public middlename?: string;
+    public lastname?: string;
+    public userProfile?: string;
+    public personalEmail?: string;
+    public workEmail?: string;
+    public homePhone?: string;
+    public mobile?: string;
+    public workPhone?: string;
+    public firstGivenName?: string;
+    public studentMiddleName?: string;
+    public lastFamilyName?: string;
+    public addressLineOne?: string;
+    public addressLineTwo?: string;
+    public country?: string;
+    public state?: string;
+    public city?: string;
+    public zip?: string;
 
     constructor() {
         this.firstname = '';
@@ -192,14 +255,34 @@ export class ParentAdvanceSearchModel {
         this.homePhone = '';
         this.mobile = '';
         this.workPhone = ''
-        this.studentFirstName = '';
+        this.firstGivenName = '';
         this.studentMiddleName = '';
-        this.studentLastName = '';
+        this.lastFamilyName = '';
         this.addressLineOne = '';
         this.addressLineTwo = '';
         this.country = '';
         this.state = '';
         this.city = '';
         this.zip = '';
+    }
+}
+
+export class filterParams {
+    columnName: string;
+    filterValue: string;
+    filterOption: number;
+    constructor() {
+        this.columnName = null;
+        this.filterOption = 3;
+        this.filterValue = null;
+    }
+}
+
+class sorting {
+    sortColumn: string;
+    sortDirection: string;
+    constructor() {
+        this.sortColumn = "";
+        this.sortDirection = "";
     }
 }

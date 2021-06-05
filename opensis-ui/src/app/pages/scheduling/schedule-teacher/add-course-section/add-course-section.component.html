@@ -92,7 +92,7 @@
             </ng-container>
             <ng-container matColumnDef="gradeLevelTitle">
                 <th mat-header-cell *matHeaderCellDef>{{ "gradeLevel" | translate }}</th>
-                <td mat-cell *matCellDef="let element">-</td>
+                <td mat-cell *matCellDef="let element">{{element.courseGradeLevel}}</td>
             </ng-container>
             <ng-container matColumnDef="scheduledTeacher">
                 <th mat-header-cell *matHeaderCellDef>{{ "scheduledTeacher" | translate}}</th>

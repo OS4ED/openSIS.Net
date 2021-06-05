@@ -32,6 +32,7 @@ import { RouterModule } from "@angular/router";
 import { MatSlideToggleModule } from "@angular/material/slide-toggle";
 import { FlexLayoutModule } from "@angular/flex-layout";
 import { AddTeacherCommentsComponent } from "./take-attendance/add-teacher-comments/add-teacher-comments.component";
+import { SharedModuleModule } from "../../shared-module/shared-module.module";
 
 @NgModule({
   declarations: [
@@ -69,7 +70,8 @@ import { AddTeacherCommentsComponent } from "./take-attendance/add-teacher-comme
     IconModule,
     RouterModule,
     MatSlideToggleModule,
-    FlexLayoutModule
+    FlexLayoutModule,
+    SharedModuleModule
   ],
 })
 export class MissingAttendanceModule {}

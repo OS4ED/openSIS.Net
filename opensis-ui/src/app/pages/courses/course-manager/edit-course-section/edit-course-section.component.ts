@@ -1,4 +1,29 @@
-import { Component, ComponentFactoryResolver, Inject, OnInit, Optional, Output, EventEmitter } from '@angular/core';
+/***********************************************************************************
+openSIS is a free student information system for public and non-public
+schools from Open Solutions for Education, Inc.Website: www.os4ed.com.
+
+Visit the openSIS product website at https://opensis.com to learn more.
+If you have question regarding this software or the license, please contact
+via the website.
+
+The software is released under the terms of the GNU Affero General Public License as
+published by the Free Software Foundation, version 3 of the License.
+See https://www.gnu.org/licenses/agpl-3.0.en.html.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+
+Copyright (c) Open Solutions for Education, Inc.
+
+All rights reserved.
+***********************************************************************************/
+
+import { Component, ComponentFactoryResolver, Inject, OnInit, Optional, Output, EventEmitter, ElementRef } from '@angular/core';
 import { MatDialogRef, MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { Observable, Subject } from 'rxjs';
 import * as moment from 'moment';
@@ -90,6 +115,7 @@ export class EditCourseSectionComponent implements OnInit {
   endDate;
   showCalendarDates;
   seatChangeFlag: boolean;
+  isAttendanceCategoryRequired: boolean;
   staticGradeScaleValue=[
     {
       gradeScaleId:'Ungraded',
@@ -106,6 +132,7 @@ export class EditCourseSectionComponent implements OnInit {
   ]
   constructor(
     private dialogRef: MatDialogRef<EditCourseSectionComponent>,
+    private el: ElementRef,
     @Optional() @Inject(MAT_DIALOG_DATA) public data: any,
     private router: Router,
     private calendarService: CalendarService,
@@ -427,8 +454,23 @@ export class EditCourseSectionComponent implements OnInit {
     this.courseSectionAddViewModel.courseSection = this.courseSection;
 
   }
+
+
+  scrollToInvalidControl(){
+       const firstInvalidControl: HTMLElement = document.querySelector(
+        '.attendanceCategory'
+      );
+        firstInvalidControl.scrollIntoView({ behavior: 'smooth',block: 'center' });
+  }
+
   submit() {
-    if (this.form.valid) {
+    this.checkRealtimeValidationError();
+    this.form.markAllAsTouched();
+    if(this.isAttendanceCategoryRequired){
+      this.scrollToInvalidControl();
+    } 
+    if (this.form.valid && !this.isAttendanceCategoryRequired) {
+       this.collectValuesFromForm();
       if (this.data.editMode) {
         this.updateCourseSection();
       } else {
@@ -436,8 +478,41 @@ export class EditCourseSectionComponent implements OnInit {
       }
     }
   }
+
+  checkRealtimeValidationError(){
+    if(this.courseSection.scheduleType==='fixedschedule'){
+        if(this.courseSection.attendanceTaken && !this.form.value.attendanceCategoryId){
+          this.form.get('attendanceCategoryId').setValidators([Validators.required]);
+          this.isAttendanceCategoryRequired=true;
+        }else{
+          this.form.get('attendanceCategoryId').clearValidators();
+          this.form.controls.attendanceCategoryId.markAsUntouched();
+          this.isAttendanceCategoryRequired=false;
+        }
+    }else if(this.courseSection.scheduleType==='variableSchedule'){
+        let takeAttendance = this.courseSectionAddViewModel.courseVariableScheduleList.some((item)=>item.takeAttendance);
+        this.checkAttendanceCategoryBasedOnTakeAttendance(takeAttendance)
+    }else if(this.courseSection.scheduleType==='calendarschedule'){
+      let takeAttendance=this.courseSectionAddViewModel.courseCalendarScheduleList.some((item)=>item.takeAttendance)
+      this.checkAttendanceCategoryBasedOnTakeAttendance(takeAttendance)
+
+    }else if(this.courseSection.scheduleType==='blockSchedule'){
+      let takeAttendance=this.courseSectionAddViewModel.courseBlockScheduleList.some((item)=>item.takeAttendance);
+      this.checkAttendanceCategoryBasedOnTakeAttendance(takeAttendance)
+    }
+  }
+
+  checkAttendanceCategoryBasedOnTakeAttendance(takeAttendance){
+    if(takeAttendance && !this.form.value.attendanceCategoryId){
+      this.form.get('attendanceCategoryId').setValidators([Validators.required]);
+      this.isAttendanceCategoryRequired=true;
+    }else{
+      this.form.get('attendanceCategoryId').clearValidators();
+      this.form.controls.attendanceCategoryId.markAsUntouched();
+      this.isAttendanceCategoryRequired=false;
+    }
+  }
   addCourseSection() {
-    this.collectValuesFromForm();
     this.courseSectionAddViewModel.courseSection.createdBy = sessionStorage.getItem("email")
     this.courseSectionService.addCourseSection(this.courseSectionAddViewModel).subscribe(data => {
       if (typeof (data) == 'undefined') {
@@ -460,7 +535,6 @@ export class EditCourseSectionComponent implements OnInit {
     });
   }
   updateCourseSection() {
-    this.collectValuesFromForm();
     this.courseSectionAddViewModel.courseSection.updatedBy = sessionStorage.getItem("email")
     this.courseSection.courseSectionId = this.data.courseSectionDetails.courseSection.courseSectionId;
     this.courseSectionService.updateCourseSection(this.courseSectionAddViewModel).subscribe(data => {

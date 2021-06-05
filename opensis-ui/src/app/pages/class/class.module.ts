@@ -35,15 +35,28 @@ import { AddAssignmentComponent } from './assignments/add-assignment/add-assignm
 import { CreateAssignmentComponent } from './assignments/create-assignment/create-assignment.component';
 import { MatSelectModule } from '@angular/material/select';
 import { QuillModule } from 'ngx-quill';
+import { DeleteAssignmentsComponent } from './assignments/delete-assignments/delete-assignments.component';
+import { MatMenuModule } from '@angular/material/menu';
+import { GradebookGradesComponent } from './grades/gradebook-grades/gradebook-grades.component';
+import { AddGradeCommentsComponent } from './grades/gradebook-grades/add-grade-comments/add-grade-comments.component';
+import { GradebookGradeDetailsComponent } from './grades/gradebook-grades/gradebook-grade-details/gradebook-grade-details.component';
+import { GradesComponent } from './grades/grades.component';
+import { InputEffortGradesComponent } from './grades/input-effort-grades/input-effort-grades.component';
+import { InputFinalGradesComponent } from './grades/input-final-grades/input-final-grades.component';
+import { SharedModuleModule } from '../shared-module/shared-module.module';
+import { MatSortModule } from '@angular/material/sort';
+import {ClipboardModule} from '@angular/cdk/clipboard';
+import { MatCheckboxModule } from '@angular/material/checkbox';
 
 
 @NgModule({
-  declarations: [ClassComponent, CourseOverviewComponent, StudentsComponent, AttendanceComponent, MissingAttendanceListComponent, AddTeacherCommentsComponent, AssignmentsComponent, AddAssignmentComponent, CreateAssignmentComponent],
+  declarations: [ClassComponent, CourseOverviewComponent, StudentsComponent, AttendanceComponent, MissingAttendanceListComponent, AddTeacherCommentsComponent, AssignmentsComponent, AddAssignmentComponent, CreateAssignmentComponent, DeleteAssignmentsComponent, GradebookGradesComponent, AddGradeCommentsComponent, GradebookGradeDetailsComponent, GradesComponent, InputEffortGradesComponent, InputFinalGradesComponent],
   imports: [
     CommonModule,
     ClassRoutingModule,
     FlexLayoutModule,
     MatIconModule,
+    ClipboardModule,
     MatTooltipModule,
     IconModule,
     SecondaryToolbarModule,
@@ -52,6 +65,7 @@ import { QuillModule } from 'ngx-quill';
     PageLayoutModule,
     ContainerModule,
     TranslateModule,
+    MatCheckboxModule,
     MatExpansionModule,
     MatDividerModule,
     MatFormFieldModule,
@@ -61,10 +75,13 @@ import { QuillModule } from 'ngx-quill';
     MatDatepickerModule,
     MatDialogModule,
     FormsModule,
+    SharedModuleModule,
     ReactiveFormsModule,
     MatMomentDateModule,
     MatPaginatorModule,
+    MatSortModule,
     MatSelectModule,
+    MatMenuModule,
     QuillModule.forRoot({
       modules: {
         toolbar: [
@@ -86,7 +103,6 @@ import { QuillModule } from 'ngx-quill';
           ['clean'],                                         // remove formatting button
 
           ['link', 'image', 'video']                         // link and image, video
-          
         ]
       }
     })

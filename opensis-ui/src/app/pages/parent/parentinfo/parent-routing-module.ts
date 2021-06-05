@@ -10,9 +10,9 @@ const routes: Routes = [
      component: ParentinfoComponent
  },
   {
-    path: 'parent-generalinfo',
-    component: EditParentComponent
-  },
+    path:'',
+    loadChildren: () => import('../edit-parent/edit-parent.module').then(m => m.EditParentModule),
+   }, 
 ];
 
 

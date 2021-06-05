@@ -1,137 +1,182 @@
-<div class="-mt-16">
-    <div class="w-full p-0">
-        <div class="card px-6 py-4 mb-8">
-            <h4 class="text-green font-medium mb-2">{{ "selectReportCardTemplate" | translate }}</h4>
-            <div class="mb-4">
-                <!-- <mat-button-toggle-group>
-                    <mat-button-toggle value="default" class="bg-primary text-white text-medium py-1 px-2">Default
-                    </mat-button-toggle>
-                    <mat-button-toggle value="chuuk" class="text-medium py-1 px-2">Chuuk</mat-button-toggle>
-                    <mat-button-toggle value="kosrea" class="text-medium py-1 px-2">Kosrea</mat-button-toggle>
-                    <mat-button-toggle value="phonpei" class="text-medium py-1 px-2">Phonpei</mat-button-toggle>
-                    <mat-button-toggle value="yap" class="text-medium py-1 px-2">Yap</mat-button-toggle>
-                </mat-button-toggle-group> -->
-                <ul class="grid md:grid-cols-5 col-gap-4 row-gap-2">
-                    <li>
-                        <mat-form-field class="w-full m-0" appearance="outline" color="primary">
-                            <mat-label>{{ "reportCardTemplate" | translate }}</mat-label>
-                            <mat-select>
-                                <mat-option value="default">Default</mat-option>
-                            </mat-select>
-                        </mat-form-field>
-                    </li>
-                </ul>
-            </div>
-            <h4 class="text-green font-medium mb-2">{{ "includeOnReportCard" | translate }}</h4>
-            <div class="mb-2">
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "teacherName" | translate}}
-                </mat-slide-toggle>
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "signatureLine" | translate}}
-                </mat-slide-toggle>
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "teacherComments" | translate}}
-                </mat-slide-toggle>
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "percentage" | translate}}
-                </mat-slide-toggle>
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "gpa" | translate}}
-                </mat-slide-toggle>
-            </div>
-            <div class="mb-2">
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "yearToDateDailyAbsences" | translate}}
-                </mat-slide-toggle>
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "dailyAbsencesThisMarkingPeriod" | translate}}
-                </mat-slide-toggle>
-                <mat-slide-toggle class="mr-4" color="primary" checked="checked">
-                    {{ "otherAttendanceCodeYearToDate" | translate}}
-                </mat-slide-toggle>
-                <div class="select-dropdown inline-block">
-                    <select>
-                        <option value="na" selected>EA(Excused Absence)</option>
-                    </select>
-                </div>
-            </div>
-            <h4 class="text-green font-medium mb-2">{{ "markingPeriods" | translate }}</h4>
-            <div class="mb-4">
-                <mat-checkbox class="mr-6">Quarter 1</mat-checkbox>
-                <mat-checkbox class="mr-6">Quarter 2</mat-checkbox>
-                <mat-checkbox checked="checked" class="mr-6" color="primary">Semester 1</mat-checkbox>
-                <mat-checkbox class="mr-6">Quarter 3</mat-checkbox>
-                <mat-checkbox class="mr-6">Quarter 4</mat-checkbox>
-                <mat-checkbox checked="checked" class="mr-6" color="primary">Sem 2</mat-checkbox>
-            </div>
-        </div>
-        <div class="card">
-            <h4 class="px-6 py-4 text-primary font-medium">{{ "selectstudents" | translate }}</h4>
-            <mat-divider></mat-divider>
-            <div class="bg-white px-3 py-2 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
-                <div class="flex w-full justify-between">
-                    <div class="flex">
-                        <input matInput class="px-4 py-3 border-0 outline-none w-full bg-transparent"
-                            appearance="outline" color="primary" placeholder="Search..." type="search">
-                        <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
-                            <mat-icon [icIcon]="icSearch"></mat-icon>
-                        </button>
-                        <a class="w-full text-primary cursor-pointer ml-3 pt-2">
-                            <mat-icon aria-hidden="false" class="mr-2 align-middle">tune</mat-icon>{{'advanceSearch'
-                            | translate}}
-                        </a>
+<vex-mat-spinner-overlay *ngIf="loading" color="accent"></vex-mat-spinner-overlay>
+<vex-page-layout>
+    <vex-page-layout-header class="pb-16" fxLayout="column" fxLayoutAlign="center start">
+        <vex-secondary-toolbar current="{{ 'reportCards' | translate }}" class="w-full">
+            <vex-breadcrumbs [crumbs]="['Grades']" class="flex-auto"></vex-breadcrumbs>
+        </vex-secondary-toolbar>
+    </vex-page-layout-header>
+    <vex-page-layout-content class="-mt-6">
+        <div class="-mt-16">
+            <div class="w-full p-0">
+                <div class="card px-6 py-4 mb-8">
+                    <h4 class="text-green font-medium mb-2">{{ "selectReportCardTemplate" | translate }}</h4>
+                    <div class="mb-4">
+                        <ul class="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 col-gap-4 row-gap-2">
+                            <li>
+                                <mat-form-field class="w-full m-0" appearance="outline" color="primary">
+                                    <mat-label>{{ "reportCardTemplate" | translate }}</mat-label>
+                                    <mat-select>
+                                        <mat-option value="" selected>Default</mat-option>
+                                    </mat-select>
+                                </mat-form-field>
+                            </li>
+                        </ul>
+                    </div>
+                    <h4 class="text-green font-medium mb-2">{{ "includeOnReportCard" | translate }}</h4>
+                    <div class="mb-2">
+                        <mat-slide-toggle class="mr-4" color="primary" [(ngModel)]="addReportCardPdf.teacherName">
+                            {{ "teacherName" | translate}}
+                        </mat-slide-toggle>
+                        <mat-slide-toggle class="mr-4" color="primary">
+                            {{ "signatureLine" | translate}}
+                        </mat-slide-toggle>
+                        <mat-slide-toggle class="mr-4" color="primary" [(ngModel)]="addReportCardPdf.teacherComments">
+                            {{ "teacherComments" | translate}}
+                        </mat-slide-toggle>
+                        <mat-slide-toggle class="mr-4" color="primary" [(ngModel)]="addReportCardPdf.parcentage">
+                            {{ "percentage" | translate}}
+                        </mat-slide-toggle>
+                        <mat-slide-toggle class="mr-4" color="primary" [(ngModel)]="addReportCardPdf.gpa">
+                            {{ "gpa" | translate}}
+                        </mat-slide-toggle>
+                    </div>
+                    <div class="mb-2">
+                        <mat-slide-toggle class="mr-4" color="primary"
+                            [(ngModel)]="addReportCardPdf.yearToDateDailyAbsences">
+                            {{ "yearToDateDailyAbsences" | translate}}
+                        </mat-slide-toggle>
+                        <mat-slide-toggle class="mr-4" color="primary"
+                            [(ngModel)]="addReportCardPdf.dailyAbsencesThisMarkingPeriod">
+                            {{ "dailyAbsencesThisMarkingPeriod" | translate}}
+                        </mat-slide-toggle>
+                        <mat-slide-toggle class="mr-4" color="primary"
+                            [(ngModel)]="addReportCardPdf.otherAttendanceCodeYearToDate">
+                            {{ "otherAttendanceCodeYearToDate" | translate}}
+                        </mat-slide-toggle>
+                        <div class="select-dropdown inline-block">
+                            <select>
+                                <option value="na" selected>EA(Excused Absence)</option>
+                            </select>
+                        </div>
+                    </div>
+                    <h4 class="text-green font-medium mb-2">{{ "markingPeriods" | translate }}</h4>
+                    <div class="mb-4">
+                        <mat-checkbox (change)="markingPeriodChecked($event, markingPeriod)"
+                            *ngFor="let markingPeriod of markingPeriodList" class="mr-6">{{markingPeriod?.fullName}}
+                        </mat-checkbox>
+                        <mat-error *ngIf="markingPeriodError">Please select any marking period.</mat-error>
                     </div>
                 </div>
+                <div class="card mb-8">
+                    <h4 class="px-6 py-4 text-primary font-medium">{{ "selectstudents" | translate }}</h4>
+                    <mat-divider></mat-divider>
+                    <div class="bg-white px-6 py-2 border-b sticky left-0" fxLayout="row" fxLayoutAlign="start center">
+                        <div class="lg:flex w-full justify-between">
+                            <div class="flex items-center">
+                                <input class="py-3 border-0 outline-none w-full bg-transparent table-search"
+                                    appearance="outline" color="primary" [formControl]="searchCtrl"
+                                    placeholder="Search..." type="search">
+                                <button class="ml-4" fxFlex="none" fxHide.gt-xs mat-icon-button type="button">
+                                    <mat-icon [icIcon]="icSearch"></mat-icon>
+                                </button>
+                                <a class="lg:w-full text-primary cursor-pointer ml-3"
+                                    (click)="showAdvanceSearchPanel = true;">
+                                    <mat-icon aria-hidden="false" class="mr-0 lg:mr-2 align-middle">tune</mat-icon><span class="hidden lg:inline-block">{{'advanceSearch' | translate}}</span>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="overflow-auto">
+                        <table @stagger mat-table [dataSource]="StudentModelList" class="mat-elevation-z8 shadow-none"
+                            matSort>
+                            <ng-container matColumnDef="studentSelected">
+                                <th [class.hide]="totalCount==0" mat-header-cell *matHeaderCellDef width="1%">
+                                    <mat-checkbox color="primary" #masterCheckBox [indeterminate]="someComplete()"
+                                        (change)="setAll($event.checked)"></mat-checkbox>
+                                </th>
+                                <td mat-cell *matCellDef="let element">
+                                    <mat-checkbox color="primary" [checked]="doCheck(element.studentId)"
+                                        (change)="selectedStudent(element.studentId, $event)"></mat-checkbox>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="studentName">
+                                <th mat-header-cell *matHeaderCellDef>{{ "studentName" | translate }}</th>
+                                <td mat-cell *matCellDef="let element">
+                                    <a class="text-blue cursor-pointer">{{element.firstGivenName}} {{element.middleName
+                                        ? " "+element.middleName:''}}{{element.lastFamilyName}}</a>
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="studentId">
+                                <th mat-header-cell *matHeaderCellDef>{{ "studentId" | translate }}</th>
+                                <td mat-cell *matCellDef="let element">
+                                    {{ element.studentInternalId | EmtyValueCheckPipe}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="alternateId">
+                                <th mat-header-cell *matHeaderCellDef>{{ 'alternateId' | translate }}</th>
+                                <td mat-cell *matCellDef="let element">{{ element.alternateId | EmtyValueCheckPipe}}
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="gradeLevelTitle">
+                                <th mat-header-cell *matHeaderCellDef>{{ 'gradeLevel' | translate }}</th>
+                                <td mat-cell *matCellDef="let element">{{ element.studentEnrollment[0]?.gradeLevelTitle
+                                    | EmtyValueCheckPipe}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="section">
+                                <th mat-header-cell *matHeaderCellDef>{{ 'section' | translate }}</th>
+                                <td mat-cell *matCellDef="let element">{{ element.section | EmtyValueCheckPipe}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="homePhone">
+                                <th mat-header-cell *matHeaderCellDef>{{ 'phone' | translate }}</th>
+                                <td mat-cell *matCellDef="let element">{{ element.homePhone | EmtyValueCheckPipe}}</td>
+                            </ng-container>
+                            <ng-container matColumnDef="invalidsearct">
+                                <td mat-footer-cell *matFooterCellDef colspan="7">
+                                    No record found as per your search criteria. Please <a
+                                        class="cursor-pointer text-blue underline" (click)="resetStudentList()">click
+                                        here</a> to reset
+                                </td>
+                            </ng-container>
+                            <ng-container matColumnDef="noData">
+                                <td mat-footer-cell *matFooterCellDef colspan="7">
+                                    {{loading?('fetchingData' | translate):('noData' | translate) }}
+                                </td>
+                            </ng-container>
+                            <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+                            <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+                            <tr mat-footer-row *matFooterRowDef="['invalidsearct']"
+                                [class.hide]="(searchCount !== 0)|| searchCount == null"></tr>
+                            <tr mat-footer-row *matFooterRowDef="['noData']" [class.hide]="totalCount != null"></tr>
+                        </table>
+                        <mat-paginator [length]="totalCount" [class.hide]="totalCount==0" [pageSize]="pageSize"
+                            [pageSizeOptions]="[10, 20, 30, 40]" showFirstLastButtons (page)='getPageEvent($event)'>
+                        </mat-paginator>
+                    </div>
+                    <div class="text-right p-4">
+                        <button color="primary" mat-raised-button type="submit" (click)="generateReportCard()">
+                            {{ 'generateReportCardForSelectedStudents' | translate }}
+                        </button>
+                    </div>
+                </div>
+                <div class="card " *ngIf="pdfData">
+                    <ngx-doc-viewer [url]="'data:application/pdf;base64,' +  this.pdfData.reportCardPdf" viewer="pdf"
+                        style="width:100%;height:93vh;">
+                    </ngx-doc-viewer>
+                </div>
             </div>
-            <div class="overflow-auto">
-                <table mat-table [dataSource]="studentDetails" class="mat-elevation-z8 shadow-none">
-                    <ng-container matColumnDef="studentSelected">
-                        <th mat-header-cell *matHeaderCellDef width="1%">
-                            <mat-checkbox color="primary"></mat-checkbox>
-                        </th>
-                        <td mat-cell *matCellDef="let element">
-                            <mat-checkbox color="primary" [checked]="element.studentSelected"></mat-checkbox>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="studentName">
-                        <th mat-header-cell *matHeaderCellDef>{{ "studentName" | translate }}</th>
-                        <td mat-cell *matCellDef="let element">
-                            <a class="text-blue cursor-pointer">{{ element.studentName }}</a>
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="studentId">
-                        <th mat-header-cell *matHeaderCellDef>{{ "studentId" | translate }}</th>
-                        <td mat-cell *matCellDef="let element">
-                            {{ element.studentId }}
-                        </td>
-                    </ng-container>
-                    <ng-container matColumnDef="alternateId">
-                        <th mat-header-cell *matHeaderCellDef>{{ 'alternateId' | translate }}</th>
-                        <td mat-cell *matCellDef="let element">{{ element.alternateId }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="gradeLevel">
-                        <th mat-header-cell *matHeaderCellDef>{{ 'gradeLevel' | translate }}</th>
-                        <td mat-cell *matCellDef="let element">{{ element.gradeLevel }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="section">
-                        <th mat-header-cell *matHeaderCellDef>{{ 'section' | translate }}</th>
-                        <td mat-cell *matCellDef="let element">{{ element.section }}</td>
-                    </ng-container>
-                    <ng-container matColumnDef="phone">
-                        <th mat-header-cell *matHeaderCellDef>{{ 'phone' | translate }}</th>
-                        <td mat-cell *matCellDef="let element">{{ element.phone }}</td>
-                    </ng-container>
 
-                    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
-                    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
-                </table>
-            </div>
-            <div class="text-right p-4">
-                <button color="primary" mat-raised-button type="submit">
-                    {{ 'generateReportCardForSelectedStudents' | translate }}
-                </button>
-            </div>
+
         </div>
-    </div>
-</div>
+
+        <div class="fixed top-0 left-0 w-full h-full z-50" *ngIf="showAdvanceSearchPanel">
+            <div class="advance-search-panel absolute bg-white w-full sm:w-4/6 md:w-3/6 lg:w-2/6 h-full z-20"
+                @fadeInRight>
+                <vex-search-student (searchList)="getSearchResult($event)" [filterJsonParams]="filterJsonParams"
+                    [incomingSearchValue]="searchValue" (toggelValues)="getToggleValues($event)"
+                    [incomingToggleValues]="toggleValues" (showHideAdvanceSearch)="hideAdvanceSearch($event)"
+                    (searchValue)="getSearchInput($event)"></vex-search-student>
+            </div>
+            <div class="advance-search-backdrop bg-black opacity-50 fiexd top-0 left-0 w-full h-full z-10"></div>
+        </div>
+    </vex-page-layout-content>
+</vex-page-layout>

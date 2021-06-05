@@ -184,6 +184,7 @@ export class CourseSection {
     public calendarId: number;
     public attendanceCategoryId: number;
     public creditHours: number;
+    public academicYear: number;
     public seats: number;
     public allowStudentConflict: boolean;
     public allowTeacherConflict: boolean;
@@ -386,4 +387,11 @@ class StaffModel extends StaffMasterModel{
     firstLanguageName:string; // Front End Uses
     secondLanguageName:string; // Front End Uses
     thirdLanguageName:string; // Front End Uses
+}
+export class ClassRoomURLInCourseSectionModel extends CommonField{
+    courseSection: CourseSection;
+    constructor(){
+        super();
+        this.courseSection = new CourseSection();
+    }
 }

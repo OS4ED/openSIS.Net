@@ -1,11 +1,11 @@
 <vex-mat-spinner-overlay *ngIf="loading && forceLoaderToStop"></vex-mat-spinner-overlay>
 
-<div class="w-full h-full login-bg" fxLayout="column" fxLayoutAlign="center center">
+<div class="login-bg w-full h-screen overflow-auto pb-6 md:pb-0 md:overflow-hidden md:h-full md:flex md:flex-col justify-center items-center">
   <div @fadeInUp class="w-full md:max-w-md">
 
     <div class="card overflow-hidden w-full">
       <div class="p-4 pb-0 px-4" fxLayout="column" fxLayoutAlign="center center">
-      <div class="fill-current text-center">
+        <div class="fill-current text-center login-logo flex items-center align-middle justify-center">
           <img src="assets/img/opensis_logo.png" alt="openSIS">
       </div>
     </div>
@@ -15,7 +15,7 @@
       <div class="text-2xl leading-tight">{{ time | async | date: 'fullDate'}}</div>
     </div>
 
-      <div class="text-center mt-3 bg-primary-light py-1">
+      <div class="hidden md:block text-center mt-3 bg-primary-light py-1">
         <!-- <h2 class="title m-0">Welcome back</h2> -->
         <h4 class="body-2 text-primary m-0">{{'SIS'| translate}}</h4>
       </div>
@@ -68,12 +68,13 @@
         </div>
       
        
-        <button color="primary" mat-raised-button type="button" class="pt-2 pb-2" type="submit" >
+        <button color="primary" mat-raised-button type="button" class="pt-2 pb-2 login-btn" type="submit">
           {{'signIn'|translate}}
         </button>
        
     </form>    
     </div>
-    <div class="pt-5 text-center text-xs text-primary md:text-white px-6 md:px-0">openSIS is a product of Open Solutions for Education, Inc. (<a
-        href="http://www.os4ed.com" target="_blank">OS4ED</a>) and is licensed under the GNU AGPLv3.</div>
+    <div class="pt-5 text-center text-xs text-white px-6 md:px-0">openSIS is a product of Open Solutions
+      for Education, Inc. (<a href="http://www.os4ed.com" target="_blank">OS4ED</a>) and is licensed under the GNU
+      AGPLv3.</div>
   </div>

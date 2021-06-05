@@ -5,10 +5,8 @@
     <p display-2>{{data.message}}</p>
 
 
-    <mat-dialog-actions>
+    <div mat-dialog-actions align="end">
         <button mat-button (click)="onDismiss()">{{'no'|translate}}</button>
         <button mat-raised-button color="primary" (click)="onConfirm()">{{'yes'|translate}}</button>
-    </mat-dialog-actions>
-
-    
+    </div>
 </div>

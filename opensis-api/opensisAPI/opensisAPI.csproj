@@ -25,5 +25,9 @@
     <Content Update="NLlog.config" CopyToOutputDirectory="PreserveNewest" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="ReportCard\" />
+  </ItemGroup>
+
 
 </Project>

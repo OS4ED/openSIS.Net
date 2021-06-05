@@ -25,7 +25,6 @@ export class NoticeService {
   }
   updateNotice(notice: NoticeAddViewModel) {
     notice = this.defaultValuesService.getAllMandatoryVariable(notice);
-    notice.notice.schoolId = this.defaultValuesService.getSchoolID();
     notice.notice.tenantId = this.defaultValuesService.getTenantID();
     let apiurl = this.apiUrl + notice._tenantName + '/Notice/updateNotice';
     return this.http.post<NoticeAddViewModel>(apiurl, notice);
@@ -36,7 +35,9 @@ export class NoticeService {
     return this.http.post<NoticeListViewModel>(apiurl, notice);
   }
   deleteNotice(notice: NoticeDeleteModel) {
-    notice = this.defaultValuesService.getAllMandatoryVariable(notice);
+    notice._tenantName = this.defaultValuesService.getTenent();
+    notice.tenantId = this.defaultValuesService.getTenantID();
+    notice._token = this.defaultValuesService.getToken();
     let apiurl = this.apiUrl + notice._tenantName + '/Notice/deleteNotice';
     return this.http.post<NoticeDeleteModel>(apiurl, notice);
   }

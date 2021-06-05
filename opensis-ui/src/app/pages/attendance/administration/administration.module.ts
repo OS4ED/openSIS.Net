@@ -25,6 +25,7 @@ import { MatButtonModule } from '@angular/material/button';
 import { AddCommentsComponent } from './add-comments/add-comments.component';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { StudentAttendanceCommentComponent } from './student-attendance-comment/student-attendance-comment.component';
+import { MatTooltipModule } from '@angular/material/tooltip';
 
 
 @NgModule({
@@ -51,7 +52,8 @@ import { StudentAttendanceCommentComponent } from './student-attendance-comment/
     MatDatepickerModule,
     MatInputModule,
     MatButtonModule,
-    MatCheckboxModule
+    MatCheckboxModule,
+    MatTooltipModule
   ]
 })
 export class AdministrationModule { }
