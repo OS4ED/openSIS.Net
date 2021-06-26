@@ -32,6 +32,7 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using opensis.core.Staff.Interfaces;
 using opensis.data.Models;
+using opensis.data.ViewModels.StaffSchedule;
 
 namespace opensisAPI.Controllers
 {
@@ -322,6 +323,22 @@ namespace opensisAPI.Controllers
                 staffListAdd._message = es.Message;
             }
             return staffListAdd;
+        }
+
+        [HttpPost("getScheduledCourseSectionsForStaff")]
+        public ActionResult<ScheduledCourseSectionViewModel> GetScheduledCourseSectionsForStaff(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel staffCourseScheduleView = new ScheduledCourseSectionViewModel();
+            try
+            {
+                staffCourseScheduleView = _staffService.GetScheduledCourseSectionsForStaff(scheduledCourseSectionViewModel);
+            }
+            catch (Exception es)
+            {
+                staffCourseScheduleView._failure = true;
+                staffCourseScheduleView._message = es.Message;
+            }
+            return staffCourseScheduleView;
         }
     }
 }

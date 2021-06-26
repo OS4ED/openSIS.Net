@@ -164,7 +164,6 @@ namespace opensisAPI.Controllers
             }
             catch (Exception ex)
             {
-
                 studentAttendanceList._message = ex.Message;
                 studentAttendanceList._failure = true;
             }
@@ -181,7 +180,6 @@ namespace opensisAPI.Controllers
             }
             catch (Exception ex)
             {
-
                 courseSectionList._message = ex.Message;
                 courseSectionList._failure = true;
             }
@@ -198,11 +196,43 @@ namespace opensisAPI.Controllers
             }
             catch (Exception ex)
             {
-
                 studentAttendanceList._message = ex.Message;
                 studentAttendanceList._failure = true;
             }
-            return studentAttendanceList;
+            return studentAttendanceList; 
+        }
+
+        [HttpPost("updateStudentDailyAttendance")]
+        public ActionResult<StudentDailyAttendanceListViewModel> UpdateStudentDailyAttendance(StudentDailyAttendanceListViewModel studentDailyAttendanceListViewModel)
+        {
+            StudentDailyAttendanceListViewModel studentDailyAttendanceList = new StudentDailyAttendanceListViewModel();
+            try
+            {
+                studentDailyAttendanceList = _studentAttendanceService.UpdateStudentDailyAttendance(studentDailyAttendanceListViewModel);
+            }
+            catch (Exception ex)
+            {
+                studentDailyAttendanceList._message = ex.Message;
+                studentDailyAttendanceList._failure = true;
+            }
+            return studentDailyAttendanceList;
+        }
+
+        [HttpPost("addUpdateStudentAttendanceComments")]
+        public ActionResult<StudentAttendanceCommentsAddViewModel> AddUpdateStudentAttendanceComments(StudentAttendanceCommentsAddViewModel studentAttendanceCommentsAddViewModel)
+        {
+            StudentAttendanceCommentsAddViewModel StudentAttendanceCommentsAddUpdate = new StudentAttendanceCommentsAddViewModel();
+            try
+            {
+                StudentAttendanceCommentsAddUpdate = _studentAttendanceService.AddUpdateStudentAttendanceComments(studentAttendanceCommentsAddViewModel);
+            }
+            catch (Exception ex)
+            {
+
+                StudentAttendanceCommentsAddUpdate._message = ex.Message;
+                StudentAttendanceCommentsAddUpdate._failure = true;
+            }
+            return StudentAttendanceCommentsAddUpdate;
         }
     }
 }

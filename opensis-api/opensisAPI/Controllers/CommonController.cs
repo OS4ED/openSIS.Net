@@ -504,13 +504,13 @@ namespace opensisAPI.Controllers
             return resetPassword;
         }
 
-        [HttpPost("getExcelHeader")]
-        public ActionResult<ExcelHeaderModel> GetExcelHeader( ExcelHeaderModel excelHeaderModel)
+        [HttpPost("getAllFieldList")]
+        public ActionResult<ModuleFieldListModel> GetAllFieldList( ModuleFieldListModel excelHeaderModel)
         {
-            ExcelHeaderModel excelHeader = new ExcelHeaderModel();
+            ModuleFieldListModel excelHeader = new ModuleFieldListModel();
             try
             {
-                excelHeader = _commonService.GetExcelHeader(excelHeaderModel);
+                excelHeader = _commonService.GetAllFieldList(excelHeaderModel);
             }
             catch (Exception es)
             {
@@ -520,7 +520,7 @@ namespace opensisAPI.Controllers
             return excelHeader;
         }
 
-        [HttpPost("AddUpdateSchoolPreference")]
+        [HttpPost("addUpdateSchoolPreference")]
         public ActionResult<SchoolPreferenceAddViewModel> AddUpdateSchoolPreference(SchoolPreferenceAddViewModel schoolPreferenceAddViewModel)
         {
             SchoolPreferenceAddViewModel schoolPreferenceAdd = new SchoolPreferenceAddViewModel();
@@ -550,6 +550,38 @@ namespace opensisAPI.Controllers
                 schoolPreferenceView._message = es.Message;
             }
             return schoolPreferenceView;
+        }
+
+        [HttpPost("getMissingAttendanceCountForDashboardView")]
+        public ActionResult<ScheduledCourseSectionViewModel> GetMissingAttendanceCountForDashboardView(ScheduledCourseSectionViewModel scheduledCourseSectionViewModel)
+        {
+            ScheduledCourseSectionViewModel ScheduledCourseSectionView = new ScheduledCourseSectionViewModel();
+            try
+            {
+                ScheduledCourseSectionView = _commonService.GetMissingAttendanceCountForDashboardView(scheduledCourseSectionViewModel);
+            }
+            catch (Exception es)
+            {
+                ScheduledCourseSectionView._failure = true;
+                ScheduledCourseSectionView._message = es.Message;
+            }
+            return ScheduledCourseSectionView;
+        }
+
+        [HttpPost("changePassword")]
+        public ActionResult<ChangePasswordViewModel> ChangePasswordForUser(ChangePasswordViewModel changePasswordViewModel)
+        {
+            ChangePasswordViewModel changePassword = new ChangePasswordViewModel();
+            try
+            {
+                changePassword = _commonService.ChangePasswordForUser(changePasswordViewModel);
+            }
+            catch (Exception es)
+            {
+                changePassword._failure = true;
+                changePassword._message = es.Message;
+            }
+            return changePassword;
         }
     }
 }

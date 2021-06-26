@@ -34,6 +34,7 @@ using opensis.core.School.Interfaces;
 using opensis.data.Models;
 using opensis.data.ViewModels.Notice;
 using opensis.data.ViewModels.School;
+using opensis.data.ViewModels.User;
 
 namespace opensisAPI.Controllers
 {
@@ -202,6 +203,20 @@ namespace opensisAPI.Controllers
             return copySchool;
         }
 
-
+        [HttpPut("updateLastUsedSchoolId")]
+        public ActionResult<UserViewModel> UpdateLastUsedSchoolId(UserViewModel userViewModel)
+        {
+            UserViewModel userMasterUpdate = new UserViewModel();
+            try
+            {
+                userMasterUpdate = _schoolRegisterService.UpdateLastUsedSchoolId(userViewModel);
+            }
+            catch (Exception es)
+            {
+                userMasterUpdate._failure = true;
+                userMasterUpdate._message = es.Message;
+            }
+            return userMasterUpdate;
+        }
     }
 }
