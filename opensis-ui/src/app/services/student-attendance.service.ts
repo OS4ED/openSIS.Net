@@ -10,7 +10,8 @@ import {
   AddUpdateStudentAttendanceModelFor360,
   GetAllStudentAttendanceListModel,
   SearchCourseSectionForStudentAttendance,
-  StaffDetailsModel } from '../models/take-attendance-list.model';
+  StaffDetailsModel, 
+  StudentUpdateAttendanceCommentsModel} from '../models/take-attendance-list.model';
 
 @Injectable({
   providedIn: 'root'
@@ -79,5 +80,13 @@ export class StudentAttendanceService {
     obj = this.defaultValuesService.getAllMandatoryVariable(obj);
     const apiurl = this.apiUrl + obj._tenantName + '/StudentAttendance/missingAttendanceList';
     return this.http.post<ScheduledCourseSectionViewModel>(apiurl, obj);
+  }
+
+  addUpdateStudentAttendanceComments(obj: StudentUpdateAttendanceCommentsModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    obj.studentAttendanceComments.tenantId = this.defaultValuesService.getTenantID();
+    obj.studentAttendanceComments.schoolId = this.defaultValuesService.getSchoolID();
+    const apiurl = this.apiUrl + obj._tenantName + '/StudentAttendance/addUpdateStudentAttendanceComments';
+    return this.http.post<StudentUpdateAttendanceCommentsModel>(apiurl, obj);
   }
 }

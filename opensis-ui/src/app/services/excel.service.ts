@@ -66,7 +66,7 @@ export class ExcelService {
     workBook = XLSX.read(fileData, { type: 'binary',cellText:false,cellDates:true });
     jsonData = workBook.SheetNames.reduce((initial, name) => {
       const sheet = workBook.Sheets[name];
-      initial[name] = XLSX.utils.sheet_to_json(sheet, {defval:"",header:1,blankrows:false,raw:false,dateNF:'yyyy-mm-dd'});
+      initial[name] = XLSX.utils.sheet_to_json(sheet, {header:1,blankrows:false,raw:false,dateNF:'yyyy-mm-dd'});
       return initial;
     }, {});
     let firstKey = Object.keys(jsonData)[0]

@@ -39,4 +39,12 @@ export class DasboardService {
   getPageLoadEvent(): Observable<any> {
     return this.dashboardSubject.asObservable();
   }
+
+  getMissingAttendanceCountForDashboardView(obj: ScheduledCourseSectionViewModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    let apiurl = this.apiUrl + obj._tenantName + "/Common/getMissingAttendanceCountForDashboardView";
+    return this.http.post<ScheduledCourseSectionViewModel>(apiurl, obj)
+  }
+
+
 }

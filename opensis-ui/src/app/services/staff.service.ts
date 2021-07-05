@@ -9,7 +9,8 @@ import {
   StaffCertificateModel,
   StaffCertificateListModel,
   StaffSchoolInfoModel,
-  StaffImportModel } from '../models/staff.model';
+  StaffImportModel, 
+  ScheduledCourseSectionsForStaffModel} from '../models/staff.model';
 import { DefaultValuesService } from '../common/default-values.service';
 import { SchoolCreate } from '../enums/school-create.enum';
 @Injectable({
@@ -239,6 +240,12 @@ export class StaffService {
 
   setCategoryTitle(title: string){
     this.categoryTitle.next(title);
+  }
+
+  getScheduledCourseSectionsForStaff(obj: ScheduledCourseSectionsForStaffModel){
+    obj = this.defaultValuesService.getAllMandatoryVariable(obj);
+    const apiurl = this.apiUrl + obj._tenantName + '/Staff/getScheduledCourseSectionsForStaff';
+    return this.http.post<ScheduledCourseSectionsForStaffModel>(apiurl, obj);
   }
 
 }

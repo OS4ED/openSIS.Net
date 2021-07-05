@@ -44,11 +44,14 @@ import { StudentService } from '../../../../src/app/services/student.service';
 import { StaffAddModel } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
 import { CryptoService } from '../../services/Crypto.service';
-import { RolePermissionListViewModel, RolePermissionViewModel } from '../../models/roll-based-access.model';
+import { PermissionGroup, Permissions, RolePermissionListViewModel, RolePermissionViewModel } from '../../models/roll-based-access.model';
 import { CommonService } from '../../services/common.service';
 import { DefaultValuesService } from '../default-values.service';
 import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
+import { PageRolesPermission } from '../page-roles-permissions.service';
+import icCheckboxChecked from '@iconify/icons-ic/check-box';
+import icCheckboxUnchecked from '@iconify/icons-ic/check-box-outline-blank';
 
 @Component({
   selector: 'vex-custom-field',
@@ -61,6 +64,9 @@ import { takeUntil } from 'rxjs/operators';
   ]
 })
 export class CustomFieldComponent implements OnInit, OnDestroy {
+  staffCustomFields = [];
+  schoolCustomFields = [];
+  studentCustomFields = [];
   SchoolCreate = SchoolCreate;
   schoolCreateMode;
   studentCreateMode;
@@ -79,15 +85,15 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
   @ViewChild('f') currentForm: NgForm;
   staffMultiSelectValue;
   studentMultiSelectValue;
+  icCheckboxChecked = icCheckboxChecked;
+  icCheckboxUnchecked = icCheckboxUnchecked;
   schoolMultiSelectValue
-  editStudentPermission:boolean= false;
-  editStaffPermission:boolean= false;
-  editSchoolPermission:boolean= false;
-  permissionListViewModel:RolePermissionListViewModel = new RolePermissionListViewModel();
-  permissionGroup:RolePermissionViewModel= new RolePermissionViewModel();
   f: NgForm;
   formActionButtonTitle = "update";
   destroySubject$: Subject<void> = new Subject();
+  schoolPermissions: Permissions = new Permissions();
+  studentPermissions: Permissions;
+  staffPermissions: Permissions;
 
   constructor(
     private snackbar: MatSnackBar,
@@ -95,116 +101,106 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
     private studentService: StudentService,
     private schoolService: SchoolService,
     private staffService: StaffService,
-    private commonService:CommonService,
+    private commonService: CommonService,
     private cryptoService: CryptoService,
-    private defaultService: DefaultValuesService
+    private defaultService: DefaultValuesService,
+    private pageRolePermissions: PageRolesPermission
   ) {
   }
 
   ngOnInit(): void {
-    this.permissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
-
     this.module = this.commonService.getModuleName();
-  // School Details Subscription
+    // School Details Subscription
 
 
-    this.schoolService.selectedCategoryTitle.subscribe((res)=>{
-      if(res && this.module==='School'){
+    this.schoolService.selectedCategoryTitle.subscribe((res) => {
+      if (res && this.module === 'School') {
         this.categoryTitle = res;
       }
     });
-    this.schoolService.categoryIdSelected.subscribe((res)=>{
-      if(res>=0 && this.module==='School'){
+    this.schoolService.categoryIdSelected.subscribe((res) => {
+      if (res >= 0 && this.module === 'School') {
         this.categoryId = res;
         this.checkCustomValue();
       }
     });
-    this.schoolService.schoolCreatedMode.subscribe((res)=>{
-      if(res>=0 && this.module==='School'){
+    this.schoolService.schoolCreatedMode.subscribe((res) => {
+      if (res >= 0 && this.module === 'School') {
         this.schoolCreateMode = res;
       }
     });
-    this.schoolService.schoolDetailsForViewedAndEdited.subscribe((res)=>{
-      if(res?.schoolMaster?.fieldsCategory && this.module==='School'){
+    this.schoolService.schoolDetailsForViewedAndEdited.subscribe((res) => {
+      if (res?.schoolMaster?.fieldsCategory && this.module === 'School') {
         this.schoolDetailsForViewAndEdit = res;
         this.schoolAddViewModel = res;
         // this.checkCustomValue();
       }
     });
 
-  
-// Student Details Subscription
-    this.studentService.selectedCatgoryTitle.subscribe((res)=>{
-      if(res && this.module==='Student'){
-        this.categoryTitle=res;
+
+    // Student Details Subscription
+    this.studentService.selectedCatgoryTitle.subscribe((res) => {
+      if (res && this.module === 'Student') {
+        this.categoryTitle = res;
       }
     })
-    this.studentService.categoryIdSelected.subscribe((res)=>{
-      if(res>=0 && this.module==='Student'){
+    this.studentService.categoryIdSelected.subscribe((res) => {
+      if (res >= 0 && this.module === 'Student') {
         this.categoryId = res;
-      this.checkStudentCustomValue();
+        this.checkStudentCustomValue();
       }
     });
-    this.studentService.studentCreatedMode.subscribe((res)=>{
-      if(res>=0 && this.module==='Student'){
+    this.studentService.studentCreatedMode.subscribe((res) => {
+      if (res >= 0 && this.module === 'Student') {
         this.studentCreateMode = res;
       }
     })
-    this.studentService.studentDetailsForViewedAndEdited.subscribe((res)=>{
-      if(res && this.module==='Student'){
+    this.studentService.studentDetailsForViewedAndEdited.subscribe((res) => {
+      if (res && this.module === 'Student') {
         this.schoolDetailsForViewAndEdit = res;
       }
     })
 
     // Staff Details Subscription
-    this.staffService.staffDetailsForViewedAndEdited.subscribe((res)=>{
-      if(res && this.module==='Staff'){
+    this.staffService.staffDetailsForViewedAndEdited.subscribe((res) => {
+      if (res && this.module === 'Staff') {
         this.schoolDetailsForViewAndEdit = res;
       }
     })
 
-    this.staffService.selectedCategoryTitle.subscribe((res)=>{
-      if(res && this.module==='Staff'){
-        this.categoryTitle=res;
+    this.staffService.selectedCategoryTitle.subscribe((res) => {
+      if (res && this.module === 'Staff') {
+        this.categoryTitle = res;
       }
     })
-    this.staffService.categoryIdSelected.subscribe((res)=>{
-      if(res && this.module==='Staff'){
+    this.staffService.categoryIdSelected.subscribe((res) => {
+      if (res && this.module === 'Staff') {
         this.categoryId = res;
         this.checkStaffCustomValue();
       }
     });
-    this.staffService.staffCreatedMode.subscribe((res)=>{
-      if(res>=0 && this.module==='Staff'){
+    this.staffService.staffCreatedMode.subscribe((res) => {
+      if (res >= 0 && this.module === 'Staff') {
         this.staffCreateMode = res;
       }
     })
-   
+
 
     if (this.module === 'Student') {
-      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 3);
-      let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 5);
-      let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
-      this.editStudentPermission = permissionSubCategory.rolePermission[0].canEdit;
+      this.studentPermissions = this.pageRolePermissions.checkPageRolePermission('/school/students/custom/'+this.categoryTitle.trim().toLowerCase().split(' ').join('-'))
       this.studentAddViewModel = this.schoolDetailsForViewAndEdit;
       this.checkStudentCustomValue();
     }
     else if (this.module === 'School') {
       if(this.schoolAddViewModel.schoolMaster.schoolId===this.defaultService.getSchoolID()){
-        this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 2);
-        let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 1);
-        let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
-        this.editSchoolPermission = permissionSubCategory.rolePermission[0].canEdit;
+        this.schoolPermissions = this.pageRolePermissions.checkPageRolePermission('/school/schoolinfo/custom/'+this.categoryTitle.trim().toLowerCase().split(' ').join('-'))
       }else{
-         this.editSchoolPermission=true;
+         this.schoolPermissions.edit=true;
       }
       this.checkCustomValue();
     }
     else if (this.module === 'Staff') {
-      this.permissionGroup = this.permissionListViewModel?.permissionList.find(x=>x.permissionGroup.permissionGroupId == 5);
-      let permissionCategory= this.permissionGroup.permissionGroup.permissionCategory.find(x=>x.permissionCategoryId == 10);
-      let permissionSubCategory = permissionCategory.permissionSubcategory.find(x=>x.permissionSubcategoryName == this.categoryTitle);
-      this.editStaffPermission = permissionSubCategory.rolePermission[0].canEdit;
+      this.staffPermissions = this.pageRolePermissions.checkPageRolePermission('/school/staff/custom/'+this.categoryTitle.trim().toLowerCase().split(' ').join('-'))
       this.staffAddViewModel = this.schoolDetailsForViewAndEdit;
       this.checkStaffCustomValue();
     }
@@ -230,14 +226,23 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
   checkStudentCustomValue() {
     if (this.studentAddViewModel !== undefined) {
       if (this.studentAddViewModel.fieldsCategoryList !== undefined) {
-        for (let studentCustomField of this.studentAddViewModel.fieldsCategoryList[this.categoryId]?.customFields) {
-          if (studentCustomField?.customFieldsValue.length == 0) {
-            studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
-          }
-          else {
-            if (studentCustomField?.type === 'Multiple SelectBox') {
-              this.studentMultiSelectValue = studentCustomField?.customFieldsValue[0].customFieldValue.split('|');
+        this.studentCustomFields = this.studentAddViewModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x => !x.systemField && !x.hide);
+        if (this.studentCustomFields?.length > 0) {
+          for (let studentCustomField of this.studentCustomFields) {
+            if (studentCustomField?.customFieldsValue.length == 0) {
+              studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
+              if (studentCustomField.type === 'Checkbox') {
+                studentCustomField.customFieldsValue[0].customFieldValue = studentCustomField.defaultSelection === 'Y' ? true : false;
+              }
+              else {
+                studentCustomField.customFieldsValue[0].customFieldValue = studentCustomField.defaultSelection;
+              }
+            }
+            else {
+              if (studentCustomField?.type === 'Multiple SelectBox') {
+                this.studentMultiSelectValue = studentCustomField?.customFieldsValue[0].customFieldValue.split('|');
 
+              }
             }
           }
         }
@@ -249,39 +254,55 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
   checkStaffCustomValue() {
     if (this.staffAddViewModel !== undefined) {
       if (this.staffAddViewModel.fieldsCategoryList !== undefined) {
+        this.staffCustomFields = this.staffAddViewModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x => !x.systemField && !x.hide);
+        if (this.staffCustomFields?.length > 0) {
+          for (let staffCustomField of this.staffCustomFields) {
+            if (staffCustomField?.customFieldsValue.length == 0) {
 
-        for (let staffCustomField of this.staffAddViewModel?.fieldsCategoryList[this.categoryId]?.customFields) {
-          if (staffCustomField?.customFieldsValue.length == 0) {
+              staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
+              if (staffCustomField.type === 'Checkbox') {
+                staffCustomField.customFieldsValue[0].customFieldValue = staffCustomField.defaultSelection === 'Y' ? true : false;
+              }
+              else {
+                staffCustomField.customFieldsValue[0].customFieldValue = staffCustomField.defaultSelection;
+              }
+            }
+            else {
+              if (staffCustomField?.type === 'Multiple SelectBox') {
+                this.staffMultiSelectValue = staffCustomField?.customFieldsValue[0].customFieldValue.split('|');
 
-            staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
-          }
-          else {
-            if (staffCustomField?.type === 'Multiple SelectBox') {
-              this.staffMultiSelectValue = staffCustomField?.customFieldsValue[0].customFieldValue.split('|');
-
+              }
             }
           }
         }
-
       }
     }
   }
 
   checkCustomValue() {
-    if(this.schoolAddViewModel?.schoolMaster?.fieldsCategory?.length>0 && this.categoryId>=0){
-      for (let customField of this.schoolAddViewModel?.schoolMaster?.fieldsCategory[this.categoryId]?.customFields) {
-        if (customField.customFieldsValue.length == 0) {
-          customField.customFieldsValue.push(new CustomFieldsValueModel());
-        }else {
-          if (customField.type === 'Multiple SelectBox') {
-            this.schoolMultiSelectValue = customField.customFieldsValue[0].customFieldValue.split('|');
+    if (this.schoolAddViewModel?.schoolMaster?.fieldsCategory?.length > 0 && this.categoryId >= 0) {
+      this.schoolCustomFields= this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.filter(x => !x.systemField && !x.hide);
+      for (let schoolCustomField of this.schoolCustomFields) {
+        if (schoolCustomField.customFieldsValue.length == 0) {
+
+          schoolCustomField.customFieldsValue.push(new CustomFieldsValueModel());
+          if(schoolCustomField.type==='Checkbox'){
+            schoolCustomField.customFieldsValue[0].customFieldValue= schoolCustomField.defaultSelection==='Y'? true:false;
+          }
+          else{
+            schoolCustomField.customFieldsValue[0].customFieldValue= schoolCustomField.defaultSelection;
+          }
+        }
+        else {
+          if (schoolCustomField?.type === 'Multiple SelectBox') {
+            this.schoolMultiSelectValue = schoolCustomField?.customFieldsValue[0].customFieldValue.split('|');
 
           }
         }
       }
     }
-       
-      
+
+
   }
   updateStudent() {
     this.studentAddViewModel.selectedCategoryId = this.studentAddViewModel.fieldsCategoryList[this.categoryId].categoryId;
@@ -306,8 +327,7 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
             duration: 10000
           });
           this.studentCreateMode = this.SchoolCreate.VIEW
-
-
+          this.studentService.changePageMode(this.studentCreateMode);
         }
       }
 
@@ -317,16 +337,16 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
 
 
   mapCustomFields() {
-    this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields.map((item: any)=>{
-      if(item.customFieldsValue.length === 0 ){
+    this.studentAddViewModel.fieldsCategoryList[this.categoryId].customFields.map((item: any) => {
+      if (item.customFieldsValue.length === 0) {
         item.customFieldsValue.push(new CustomFieldsValueModel())
       }
     })
   }
 
-  mapStaffCustomFields(){
-    this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields.map((item: any)=>{
-      if(item.customFieldsValue.length === 0 ){
+  mapStaffCustomFields() {
+    this.staffAddViewModel.fieldsCategoryList[this.categoryId].customFields.map((item: any) => {
+      if (item.customFieldsValue.length === 0) {
         item.customFieldsValue.push(new CustomFieldsValueModel())
       }
     })
@@ -359,6 +379,7 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
             duration: 10000
           });
           this.schoolCreateMode = this.SchoolCreate.VIEW;
+          this.schoolService.changePageMode(this.schoolCreateMode);
           this.schoolService.changeMessage(true);
 
         }
@@ -390,6 +411,7 @@ export class CustomFieldComponent implements OnInit, OnDestroy {
             duration: 10000
           });
           this.staffCreateMode = this.SchoolCreate.VIEW;
+          this.staffService.changePageMode(this.staffCreateMode);
         }
       }
 

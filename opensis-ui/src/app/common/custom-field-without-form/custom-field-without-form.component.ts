@@ -39,6 +39,8 @@ import { StudentAddModel } from '../../models/student.model';
 import { StudentService } from '../../../../src/app/services/student.service';
 import { StaffAddModel } from '../../models/staff.model';
 import { StaffService } from '../../services/staff.service';
+import icCheckboxChecked from '@iconify/icons-ic/check-box';
+import icCheckboxUnchecked from '@iconify/icons-ic/check-box-outline-blank';
 
 @Component({
   selector: 'vex-custom-field-without-form',
@@ -61,6 +63,8 @@ export class CustomFieldWithoutFormComponent implements OnInit {
   @Input() module;
   staffMultiSelectValue;
   studentMultiSelectValue;
+  icCheckboxChecked = icCheckboxChecked;
+  icCheckboxUnchecked = icCheckboxUnchecked;
   staffCustomFields=[];
   schoolCustomFields=[];
   studentCustomFields=[];
@@ -135,13 +139,19 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
   checkStudentCustomValue() {
     if (this.studentAddModel?.fieldsCategoryList?.length>0) {
-        this.studentCustomFields = this.studentAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField);
+        this.studentCustomFields = this.studentAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField && !x.hide);
         if(this.studentCustomFields?.length>0){
 
         for (let studentCustomField of this.studentCustomFields) {
           if (studentCustomField?.customFieldsValue.length == 0) {
 
             studentCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
+            if(studentCustomField.type==='Checkbox'){
+              studentCustomField.customFieldsValue[0].customFieldValue= studentCustomField.defaultSelection==='Y'? true:false;
+            }
+            else{
+              studentCustomField.customFieldsValue[0].customFieldValue= studentCustomField.defaultSelection;
+            }
           }
           else {
             if (studentCustomField?.type === 'Multiple SelectBox') {
@@ -156,13 +166,19 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
   checkStaffCustomValue(){
       if (this.staffAddModel?.fieldsCategoryList?.length>0) {
-        this.staffCustomFields = this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField);
+        this.staffCustomFields = this.staffAddModel?.fieldsCategoryList[this.categoryId]?.customFields.filter(x=> !x.systemField && !x.hide);
         if(this.staffCustomFields?.length>0 ){
 
         for (let staffCustomField of this.staffCustomFields) {
           if (staffCustomField?.customFieldsValue.length == 0) {
 
             staffCustomField?.customFieldsValue.push(new CustomFieldsValueModel());
+            if(staffCustomField.type==='Checkbox'){
+              staffCustomField.customFieldsValue[0].customFieldValue= staffCustomField.defaultSelection==='Y'? true:false;
+            }
+            else{
+              staffCustomField.customFieldsValue[0].customFieldValue= staffCustomField.defaultSelection;
+            }
           }
           else {
             if (staffCustomField?.type === 'Multiple SelectBox') {
@@ -185,12 +201,17 @@ export class CustomFieldWithoutFormComponent implements OnInit {
         this.schoolAddViewModel = this.schoolDetailsForViewAndEdit;
         if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId]?.customFields !== undefined) {
 
-          this.schoolCustomFields= this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.filter(x => !x.systemField)
+          this.schoolCustomFields= this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.filter(x => !x.systemField && !x.hide);
           for (let schoolCustomField of this.schoolCustomFields) {
             if (schoolCustomField.customFieldsValue.length == 0) {
 
               schoolCustomField.customFieldsValue.push(new CustomFieldsValueModel());
-
+              if(schoolCustomField.type==='Checkbox'){
+                schoolCustomField.customFieldsValue[0].customFieldValue= schoolCustomField.defaultSelection==='Y'? true:false;
+              }
+              else{
+                schoolCustomField.customFieldsValue[0].customFieldValue= schoolCustomField.defaultSelection;
+              }
             }
             else {
               if (schoolCustomField?.type === 'Multiple SelectBox') {
@@ -210,11 +231,17 @@ export class CustomFieldWithoutFormComponent implements OnInit {
 
         if (this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId]?.customFields !== undefined) {
 
-          this.schoolCustomFields= this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.filter(x => !x.systemField)
+          this.schoolCustomFields= this.schoolAddViewModel.schoolMaster.fieldsCategory[this.categoryId].customFields.filter(x => !x.systemField && !x.hide);
           for (let schoolCustomField of this.schoolCustomFields) {
             if (schoolCustomField.customFieldsValue.length == 0) {
 
               schoolCustomField.customFieldsValue.push(new CustomFieldsValueModel());
+              if(schoolCustomField.type==='Checkbox'){
+                schoolCustomField.customFieldsValue[0].customFieldValue= schoolCustomField.defaultSelection==='Y'? true:false;
+              }
+              else{
+                schoolCustomField.customFieldsValue[0].customFieldValue= schoolCustomField.defaultSelection;
+              }
             }
             else {
               if (schoolCustomField?.type === 'Multiple SelectBox') {

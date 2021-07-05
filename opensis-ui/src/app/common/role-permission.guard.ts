@@ -3,15 +3,20 @@ import { CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Rout
 import { Observable } from 'rxjs';
 import { RolePermissionListViewModel } from '../models/roll-based-access.model';
 import { CryptoService } from '../services/Crypto.service';
+import { DefaultValuesService } from './default-values.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RolePermissionGuard implements CanActivate {
-  constructor(private cryptoService:CryptoService,private router: Router){}
+  constructor(private defaultValueService:DefaultValuesService,private router: Router){}
 
   canActivate(route: ActivatedRouteSnapshot,state: RouterStateSnapshot):boolean {
-    let permissions:RolePermissionListViewModel = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')));
+    let permissions:RolePermissionListViewModel = this.defaultValueService.getPermissionList() ;
+    if(!permissions){
+      this.router.navigate(['/']);
+      return false;
+    }
       let isValidRole=false;
       for(let [i,item] of permissions.permissionList.entries()){
         if(item.permissionGroup.path==state.url && item.permissionGroup.rolePermission[0].canView){

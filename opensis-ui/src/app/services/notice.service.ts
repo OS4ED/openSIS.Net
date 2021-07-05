@@ -10,7 +10,7 @@ import { DefaultValuesService } from '../common/default-values.service';
   providedIn: 'root'
 })
 export class NoticeService {
-  private noticeSource = new BehaviorSubject(false);
+  private noticeSource = new BehaviorSubject(Object);
   currentNotice = this.noticeSource.asObservable();
 
   apiUrl: string = environment.apiURL;
@@ -45,7 +45,7 @@ export class NoticeService {
     let apiurl = this.apiUrl + notice._tenantName + '/Notice/viewNotice';
     return this.http.post<NoticeAddViewModel>(apiurl, notice);
   }
-  changeNotice(message: boolean) {
-    this.noticeSource.next(message);
+  changeNotice(obj) {
+    this.noticeSource.next(obj);
   }
 }

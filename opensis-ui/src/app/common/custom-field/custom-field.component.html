@@ -4,29 +4,35 @@
     <div *ngIf="schoolCreateMode == SchoolCreate.EDIT">
         <mat-card class="w-full">
             <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
-                <mat-card-header>
-                    <mat-card-title>{{ categoryTitle }}</mat-card-title>
-                </mat-card-header>
+                <h3 class="font-medium">{{ categoryTitle }}</h3>
                 <mat-card-content>
-                    <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
+                    <div *ngIf="schoolCustomFields?.length > 0">
 
                         <div class="py-6" @stagger fxLayout="column">
                             <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-0">
-                                <li *ngFor="let customField of schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields; let index = index"
+                                <li *ngFor="let customField of schoolCustomFields; let index = index"
                                     [ngSwitch]="customField.type">
                                     <div class="mt-1" *ngSwitchCase="'Checkbox'">
-                                        <mat-checkbox
-                                            [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                        <input type="checkbox"
+                                            [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
+                                            name="{{customField.title.replace(' ','_')}}" color="primary"
+                                            class="form-check-input mr-2" #stCheckBox="ngModel"
+                                            [required]="customField.required ? true : null ">
+                                        <label class="form-check-label">{{customField.title}}</label>
+                                        <mat-error *ngIf="stCheckBox.errors?.required">
+                                            {{customField.title}} is required</mat-error>
+                                        <!-- <mat-checkbox
+                                            [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
                                             name="{{customField.title.replace(' ','_')}}" color="primary" class="mr-6">
                                             {{customField.title}}
-                                        </mat-checkbox>
+                                        </mat-checkbox> -->
                                     </div>
                                     <div *ngSwitchCase="'Dropdown'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
                                             <mat-select name="{{customField.title.replace(' ','_')}}"
                                                 #schoolField="ngModel" [required]="customField.required ? true : null "
-                                                [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue">
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue">
                                                 <mat-option *ngFor="let option of customField.selectOptions.split('|')"
                                                     [value]="option">
                                                     {{ option }}</mat-option>
@@ -35,23 +41,30 @@
                                                 {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
-                                    <div *ngSwitchCase="'Number'">
+                                    <div *ngSwitchCase="'number'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
-                                            <input matInput type="field.type" maxlength="100"  [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                            <input #schoolNumber="ngModel" matInput [type]="customField.type"
+                                                maxlength="100"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
                                                 [required]="customField.required ? true : null"
                                                 name="{{customField.title.replace(' ','_')}}">
+                                            <mat-error *ngIf="schoolNumber.errors?.required">
+                                                {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
-                
+
                                     <div *ngSwitchCase="'Date'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
-                                            <input name="{{customField.title.replace(' ','_')}}"
-                                                [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
-                                                [matDatepicker]="testDate" matInput [required]="customField.required ? true : null ">
+                                            <input #schoolDate="ngModel" name="{{customField.title.replace(' ','_')}}"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
+                                                [matDatepicker]="testDate" matInput
+                                                [required]="customField.required ? true : null ">
                                             <mat-datepicker-toggle [for]="testDate" matSuffix></mat-datepicker-toggle>
                                             <mat-datepicker #testDate></mat-datepicker>
+                                            <mat-error *ngIf="schoolDate.errors?.required">
+                                                {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div *ngSwitchCase="'Textarea'">
@@ -59,7 +72,7 @@
                                             <mat-label>{{customField.title}}</mat-label>
                                             <textarea name="{{customField.title.replace(' ','_')}}" matInput
                                                 #schoolTextArea="ngModel"
-                                                [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
                                                 [required]="customField.required ? true : null "></textarea>
                                             <mat-error *ngIf="schoolTextArea.errors?.required">
                                                 {{customField.title}} is required</mat-error>
@@ -68,11 +81,11 @@
                                     <div *ngSwitchCase="'Text'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
-                                            <input name="{{customField.title.replace(' ','_')}}" #schoolField="ngModel"
-                                                [(ngModel)]="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
-                                                matInput type="customField.type" maxlength="100"
+                                            <input name="{{customField.title.replace(' ','_')}}" #schoolText="ngModel"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue" matInput
+                                                type="customField.type" maxlength="100"
                                                 [required]="customField.required ? true : null ">
-                                            <mat-error *ngIf="schoolField.errors?.required">
+                                            <mat-error *ngIf="schoolText.errors?.required">
                                                 {{customField.title}} is required</mat-error>
 
                                         </mat-form-field>
@@ -80,12 +93,15 @@
                                     <div *ngSwitchCase="'Multiple SelectBox'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
-                                            <mat-select name="{{customField.title.replace(' ','_')}}"
+                                            <mat-select #schoolSelect="ngModel"
+                                                name="{{customField.title.replace(' ','_')}}"
                                                 [(ngModel)]="schoolMultiSelectValue" multiple>
                                                 <mat-option *ngFor="let option of customField.selectOptions.split('|')"
                                                     [value]="option">
                                                     {{option}}</mat-option>
                                             </mat-select>
+                                            <mat-error *ngIf="schoolSelect.errors?.required">
+                                                {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
 
@@ -96,7 +112,8 @@
                 </mat-card-content>
                 <mat-card-actions class="mb-0">
                     <div class="px-4 text-right">
-                        <button *ngIf="schoolCreateMode !== SchoolCreate.VIEW" color="primary" mat-raised-button>{{formActionButtonTitle|translate}}</button>
+                        <button *ngIf="schoolCreateMode !== SchoolCreate.VIEW" color="primary"
+                            mat-raised-button>{{formActionButtonTitle|translate}}</button>
                     </div>
                 </mat-card-actions>
             </form>
@@ -106,30 +123,37 @@
         <mat-card @fadeInUp class="w-full" fxFlex="auto">
             <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
                 <h3 class="flex-auto">{{ categoryTitle }}</h3>
-                <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
-                <button *ngIf="editSchoolPermission" mat-raised-button color="primary" (click)="editOtherInfo()">
-                    <mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}
-                </button>
+                <div *ngIf="schoolCustomFields?.length > 0">
+                    <button *ngIf="schoolPermissions?.edit" mat-raised-button color="primary" (click)="editOtherInfo()">
+                        <mat-icon [icIcon]="icEdit"></mat-icon><span
+                            class="hidden sm:inline-block ml-1">{{'editInformation' |translate}}</span>
+                    </button>
                 </div>
             </div>
 
             <mat-card-content>
-                <div *ngIf="schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields.length > 0">
+                <div *ngIf="schoolCustomFields?.length > 0">
                     <div class="">
                         <div class="pt-6">
                             <ul class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-4 col-gap-8 row-gap-10">
-                                <li
-                                    *ngFor="let customField of schoolAddViewModel.schoolMaster.fieldsCategory[categoryId]?.customFields; let index = index">
+                                <li *ngFor="let customField of schoolCustomFields; let index = index">
                                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                                    <p *ngIf="customField.type !== 'Checkbox' && customField.type !== 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue
+                                    <p *ngIf="customField.type !== 'Checkbox' && customField.type !== 'Date'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0].customFieldValue
                                         | EmtyValueCheckPipe}}
                                     </p>
-                                    <p *ngIf="customField.type === 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue}}
+                                    <p *ngIf="customField.type === 'Checkbox'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        <mat-icon
+                                            [icIcon]="customField?.customFieldsValue[0].customFieldValue === 'true'?icCheckboxChecked:icCheckboxUnchecked"
+                                            class="inline-block align-middle mr-1">
+                                        </mat-icon>
                                     </p>
-                                    <p *ngIf="customField.type === 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{schoolAddViewModel.schoolMaster.fieldsCategory[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue | date:'mediumDate' | EmtyValueCheckPipe}}
+                                    <p *ngIf="customField.type === 'Date'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0].customFieldValue | date:'mediumDate' |
+                                        EmtyValueCheckPipe}}
                                     </p>
                                 </li>
                             </ul>
@@ -149,8 +173,186 @@
 <div *ngIf="studentAddViewModel.fieldsCategoryList && module =='Student'">
     <div *ngIf="studentCreateMode == SchoolCreate.EDIT || studentCreateMode===SchoolCreate.ADD">
         <mat-card class="w-full">
-            <h3 class="flex-auto" *ngIf="studentAddViewModel.fieldsCategoryList[categoryId]?.customFields.length==0">{{ categoryTitle }}</h3>
-            <div *ngIf="studentAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
+            <h3 class="flex-auto" *ngIf="studentCustomFields?.length==0">{{ categoryTitle }}</h3>
+            <div *ngIf="studentCustomFields?.length > 0">
+                <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
+                    <h3 class="font-medium">{{ categoryTitle }}</h3>
+                    <mat-card-content>
+
+
+                        <div class="py-6" @stagger fxLayout="column">
+                            <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0">
+                                <li *ngFor="let customField of studentAddViewModel.fieldsCategoryList[categoryId].customFields; let index = index"
+                                    [ngSwitch]="customField.type">
+                                    <div *ngSwitchCase="'Checkbox'">
+                                        <!-- <mat-checkbox [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
+                                            name="{{customField.title.replace(' ','_')}}" color="primary" class="mr-6">
+                                            {{customField.title}}
+                                        </mat-checkbox> -->
+                                        <input type="checkbox"
+                                            [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
+                                            name="{{customField.title.replace(' ','_')}}" color="primary"
+                                            class="form-check-input mr-2" #stCheckBox="ngModel"
+                                            [required]="customField.required ? true : null ">
+                                        <label class="form-check-label">{{customField.title}}</label>
+                                        <mat-error *ngIf="stCheckBox.errors?.required">
+                                            {{customField.title}} is required</mat-error>
+                                    </div>
+                                    <div *ngSwitchCase="'Dropdown'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <mat-select name="{{customField.title.replace(' ','_')}}"
+                                                #studentDropdown="ngModel"
+                                                [required]="customField.required ? true : null "
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue">
+                                                <mat-option *ngFor="let option of customField.selectOptions.split('|')"
+                                                    [value]="option">
+                                                    {{ option }}</mat-option>
+                                            </mat-select>
+                                            <div *ngIf="f.submitted">
+                                                <mat-error *ngIf="studentDropdown.errors?.required">
+                                                    {{customField.title}} is required</mat-error>
+
+                                            </div>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngSwitchCase="'Textarea'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <textarea name="{{customField.title.replace(' ','_')}}" matInput
+                                                #schoolTextArea="ngModel"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
+                                                [required]="customField.required ? true : null "></textarea>
+                                            <mat-error *ngIf="schoolTextArea.errors?.required">
+                                                {{customField.title}} is required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngSwitchCase="'number'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input #studentNumber="ngModel" matInput [type]="customField.type"
+                                                maxlength="100"
+                                                [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
+                                                [required]="customField.required ? true : null"
+                                                name="{{customField.title.replace(' ','_')}}">
+                                            <mat-error *ngIf="studentNumber.errors?.required">
+                                                {{customField.title}} is required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                    <div *ngSwitchCase="'Date'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input #studentDate="ngModel" name="{{customField.title.replace(' ','_')}}"
+                                                [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
+                                                [matDatepicker]="testDate" matInput
+                                                [required]="customField.required ? true : null ">
+                                            <mat-datepicker-toggle [for]="testDate" matSuffix></mat-datepicker-toggle>
+                                            <mat-datepicker #testDate></mat-datepicker>
+                                            <mat-error *ngIf="studentDate.errors?.required">
+                                                {{customField.title}} is required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngSwitchCase="'Text'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <input name="{{customField.title.replace(' ','_')}}" #schoolField="ngModel"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue" matInput
+                                                type="customField.type" maxlength="100"
+                                                [required]="customField.required ? true : null ">
+                                            <mat-error *ngIf="schoolField.errors?.required">
+                                                {{customField.title}} is required</mat-error>
+
+                                        </mat-form-field>
+                                    </div>
+                                    <div *ngSwitchCase="'Multiple SelectBox'">
+                                        <mat-form-field class="w-full" appearance="outline" color="primary">
+                                            <mat-label>{{customField.title}}</mat-label>
+                                            <mat-select #studentSelect="ngModel"
+                                                name="{{customField.title.replace(' ','_')}}"
+                                                [(ngModel)]="studentMultiSelectValue" multiple>
+                                                <mat-option *ngFor="let option of customField.selectOptions.split('|')"
+                                                    [value]="option">
+                                                    {{option}}</mat-option>
+                                            </mat-select>
+                                            <mat-error *ngIf="studentSelect.errors?.required">
+                                                {{customField.title}} is required</mat-error>
+                                        </mat-form-field>
+                                    </div>
+
+                                </li>
+                            </ul>
+                        </div>
+
+                    </mat-card-content>
+                    <mat-card-actions class="mb-0">
+                        <div class="px-4 text-right">
+                            <button *ngIf="studentCreateMode !== SchoolCreate.VIEW" color="primary"
+                                mat-raised-button>{{formActionButtonTitle|translate}}</button>
+                        </div>
+                    </mat-card-actions>
+                </form>
+            </div>
+        </mat-card>
+    </div>
+    <div *ngIf="studentCreateMode == SchoolCreate.VIEW">
+        <mat-card @fadeInUp class="w-full" fxFlex="auto">
+            <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
+                <h3 class="flex-auto">{{ categoryTitle }}</h3>
+                <div *ngIf="studentCustomFields?.length > 0">
+                    <button *ngIf="studentPermissions?.edit" mat-raised-button color="primary"
+                        (click)="editOtherInfo()">
+                        <mat-icon [icIcon]="icEdit"></mat-icon><span
+                            class="hidden sm:inline-block ml-1">{{'editInformation' |translate}}</span>
+                    </button>
+                </div>
+            </div>
+
+            <mat-card-content>
+                <div *ngIf="studentCustomFields?.length > 0">
+                    <div class="max-w-screen-xl mx-auto">
+                        <div class="my-6">
+                            <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
+                                <li *ngFor="let customField of studentCustomFields; let index = index">
+                                    <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
+                                    <p *ngIf="customField?.type !== 'Checkbox' && customField.type !== 'Date'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0]?.customFieldValue
+                                        | EmtyValueCheckPipe}}
+                                    </p>
+                                    <p *ngIf="customField.type === 'Checkbox'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        <mat-icon
+                                            [icIcon]="customField?.customFieldsValue[0].customFieldValue === 'true'?icCheckboxChecked:icCheckboxUnchecked"
+                                            class="inline-block align-middle mr-1">
+                                        </mat-icon>
+                                    </p>
+                                    <p *ngIf="customField.type === 'Date'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0].customFieldValue | date:'mediumDate' |
+                                        EmtyValueCheckPipe}}
+                                    </p>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </mat-card-content>
+
+        </mat-card>
+    </div>
+
+</div>
+
+<!--End Student Module-->
+
+
+<!--Start Staff Module-->
+<div *ngIf="staffAddViewModel.fieldsCategoryList && module =='Staff'">
+    <div *ngIf="staffCreateMode == SchoolCreate.EDIT || staffCreateMode == SchoolCreate.ADD">
+        <mat-card class="w-full">
+            <h3 class="flex-auto" *ngIf="staffCustomFields?.length==0">{{ categoryTitle }}</h3>
+            <div *ngIf="staffCustomFields?.length > 0">
                 <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
                     <mat-card-header>
                         <mat-card-title>{{ categoryTitle }}</mat-card-title>
@@ -159,15 +361,22 @@
 
 
                         <div class="py-6" @stagger fxLayout="column">
-                            <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
-                                <li *ngFor="let customField of studentAddViewModel.fieldsCategoryList[categoryId].customFields; let index = index"
+                            <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0">
+                                <li *ngFor="let customField of staffCustomFields; let index = index"
                                     [ngSwitch]="customField.type">
                                     <div *ngSwitchCase="'Checkbox'">
-                                        <mat-checkbox
-                                            [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
+                                        <!-- <mat-checkbox [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
                                             name="{{customField.title.replace(' ','_')}}" color="primary" class="mr-6">
                                             {{customField.title}}
-                                        </mat-checkbox>
+                                        </mat-checkbox> -->
+                                        <input type="checkbox"
+                                        [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
+                                        name="{{customField.title.replace(' ','_')}}" color="primary"
+                                        class="form-check-input mr-2" #stCheckBox="ngModel"
+                                        [required]="customField.required ? true : null ">
+                                    <label class="form-check-label">{{customField.title}}</label>
+                                    <mat-error *ngIf="stCheckBox.errors?.required">
+                                        {{customField.title}} is required</mat-error>
                                     </div>
                                     <div *ngSwitchCase="'Dropdown'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
@@ -197,184 +406,38 @@
                                                 {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
-                                    <div *ngSwitchCase="'Number'">
+                                    <div *ngSwitchCase="'number'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
-                                            <input matInput type="field.type" maxlength="100"  [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
-                                                [required]="customField.required ? true : null"
-                                                name="{{customField.title.replace(' ','_')}}">
-                                        </mat-form-field>
-                                    </div>
-                
-                                    <div *ngSwitchCase="'Date'">
-                                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                                            <mat-label>{{customField.title}}</mat-label>
-                                            <input name="{{customField.title.replace(' ','_')}}"
-                                                [(ngModel)]="customField?.customFieldsValue[0].customFieldValue"
-                                                [matDatepicker]="testDate" matInput [required]="customField.required ? true : null ">
-                                            <mat-datepicker-toggle [for]="testDate" matSuffix></mat-datepicker-toggle>
-                                            <mat-datepicker #testDate></mat-datepicker>
-                                        </mat-form-field>
-                                    </div>
-                                    <div *ngSwitchCase="'Text'">
-                                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                                            <mat-label>{{customField.title}}</mat-label>
-                                            <input name="{{customField.title.replace(' ','_')}}" #schoolField="ngModel"
+                                            <input matInput #staffNumber="ngModel" [type]="customField.type"
+                                                maxlength="100"
                                                 [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
-                                                matInput type="customField.type" maxlength="100"
-                                                [required]="customField.required ? true : null ">
-                                            <mat-error *ngIf="schoolField.errors?.required">
-                                                {{customField.title}} is required</mat-error>
-
-                                        </mat-form-field>
-                                    </div>
-                                    <div *ngSwitchCase="'Multiple SelectBox'">
-                                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                                            <mat-label>{{customField.title}}</mat-label>
-                                            <mat-select name="{{customField.title.replace(' ','_')}}"
-                                                [(ngModel)]="studentMultiSelectValue" multiple>
-                                                <mat-option *ngFor="let option of customField.selectOptions.split('|')"
-                                                    [value]="option">
-                                                    {{option}}</mat-option>
-                                            </mat-select>
-                                        </mat-form-field>
-                                    </div>
-
-                                </li>
-                            </ul>
-                        </div>
-
-                    </mat-card-content>
-                    <mat-card-actions class="mb-0">
-                        <div class="px-4 text-right">
-                            <button *ngIf="studentCreateMode !== SchoolCreate.VIEW" color="primary" mat-raised-button>{{formActionButtonTitle|translate}}</button>
-                        </div>
-                    </mat-card-actions>
-                </form>
-            </div>
-        </mat-card>
-    </div>
-    <div *ngIf="studentCreateMode == SchoolCreate.VIEW">
-        <mat-card @fadeInUp class="w-full" fxFlex="auto">
-            <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
-                <h3 class="flex-auto">{{ categoryTitle }}</h3>
-                <div *ngIf="studentAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
-                <button *ngIf="editStudentPermission" mat-button color="primary" (click)="editOtherInfo()">
-                    <mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}
-                </button>
-                </div>
-            </div>
-
-            <mat-card-content>
-                <div *ngIf="studentAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
-                    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
-                        <div class="my-6">
-                            <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
-                                <li
-                                    *ngFor="let customField of studentAddViewModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
-                                    <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                                    <p *ngIf="customField?.type !== 'Checkbox' && customField.type !== 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{customField?.customFieldsValue[0]?.customFieldValue
-                                        | EmtyValueCheckPipe}}
-                                    </p>
-                                    <p *ngIf="customField.type === 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{customField?.customFieldsValue[0].customFieldValue}}
-                                    </p>
-                                    <p *ngIf="customField.type === 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{customField?.customFieldsValue[0].customFieldValue | date:'mediumDate' | EmtyValueCheckPipe}}
-                                    </p>
-                                </li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </mat-card-content>
-
-        </mat-card>
-    </div>
-
-</div>
-
-<!--End Student Module-->
-
-
-<!--Start Staff Module-->
-<div *ngIf="staffAddViewModel.fieldsCategoryList && module =='Staff'">
-    <div *ngIf="staffCreateMode == SchoolCreate.EDIT || staffCreateMode == SchoolCreate.ADD">
-        <mat-card class="w-full">
-        <h3 class="flex-auto" *ngIf="staffAddViewModel.fieldsCategoryList[categoryId]?.customFields.length==0">{{ categoryTitle }}</h3>
-            <div *ngIf="staffAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
-                <form (ngSubmit)="submit()" #f="ngForm" novalidate appInvalidControlScroll>
-                    <mat-card-header>
-                        <mat-card-title>{{ categoryTitle }}</mat-card-title>
-                    </mat-card-header>
-                    <mat-card-content>
-
-
-                        <div class="py-6" @stagger fxLayout="column">
-                            <ul class="md:grid md:grid-cols-2 md:col-gap-8 md:row-gap-0 mx-4">
-                                <li *ngFor="let customField of staffAddViewModel.fieldsCategoryList[categoryId].customFields; let index = index"
-                                    [ngSwitch]="customField.type">
-                                    <div *ngSwitchCase="'Checkbox'">
-                                        <mat-checkbox
-                                            [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
-                                            name="{{customField.title.replace(' ','_')}}" color="primary" class="mr-6">
-                                            {{customField.title}}
-                                        </mat-checkbox>
-                                    </div>
-                                    <div *ngSwitchCase="'Dropdown'">
-                                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                                            <mat-label>{{customField.title}}</mat-label>
-                                            <mat-select name="{{customField.title.replace(' ','_')}}"
-                                                #schoolField="ngModel" [required]="customField.required ? true : null "
-                                                [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue">
-                                                <mat-option *ngFor="let option of customField.selectOptions.split('|')"
-                                                    [value]="option">
-                                                    {{ option }}</mat-option>
-                                            </mat-select>
-                                            <div *ngIf="f.submitted">
-                                                <mat-error *ngIf="schoolField.errors?.required">
-                                                    {{customField.title}} is required</mat-error>
-
-                                            </div>
-                                        </mat-form-field>
-                                    </div>
-                                    <div *ngSwitchCase="'Textarea'">
-                                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                                            <mat-label>{{customField.title}}</mat-label>
-                                            <textarea name="{{customField.title.replace(' ','_')}}" matInput
-                                                #schoolTextArea="ngModel"
-                                                [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
-                                                [required]="customField.required ? true : null "></textarea>
-                                            <mat-error *ngIf="schoolTextArea.errors?.required">
-                                                {{customField.title}} is required</mat-error>
-                                        </mat-form-field>
-                                    </div>
-                                    <div *ngSwitchCase="'Number'">
-                                        <mat-form-field class="w-full" appearance="outline" color="primary">
-                                            <mat-label>{{customField.title}}</mat-label>
-                                            <input matInput type="field.type" maxlength="100"  [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
                                                 [required]="customField.required ? true : null"
                                                 name="{{customField.title.replace(' ','_')}}">
+                                            <mat-error *ngIf="staffNumber.errors?.required">
+                                                {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
-                
+
                                     <div *ngSwitchCase="'Date'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
-                                            <input name="{{customField.title.replace(' ','_')}}"
-                                                [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
-                                                [matDatepicker]="testDate" matInput [required]="customField.required ? true : null ">
+                                            <input #staffDate="ngModel" name="{{customField.title.replace(' ','_')}}"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue"
+                                                [matDatepicker]="testDate" matInput
+                                                [required]="customField.required ? true : null ">
                                             <mat-datepicker-toggle [for]="testDate" matSuffix></mat-datepicker-toggle>
                                             <mat-datepicker #testDate></mat-datepicker>
+                                            <mat-error *ngIf="staffDate.errors?.required">
+                                                {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
                                     <div *ngSwitchCase="'Text'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
                                             <input name="{{customField.title.replace(' ','_')}}" #schoolField="ngModel"
-                                                [(ngModel)]="staffAddViewModel.fieldsCategoryList[categoryId].customFields[index].customFieldsValue[0].customFieldValue"
-                                                matInput type="customField.type" maxlength="100"
+                                                [(ngModel)]="customField.customFieldsValue[0].customFieldValue" matInput
+                                                type="customField.type" maxlength="100"
                                                 [required]="customField.required ? true : null ">
                                             <mat-error *ngIf="schoolField.errors?.required">
                                                 {{customField.title}} is required</mat-error>
@@ -384,12 +447,15 @@
                                     <div *ngSwitchCase="'Multiple SelectBox'">
                                         <mat-form-field class="w-full" appearance="outline" color="primary">
                                             <mat-label>{{customField.title}}</mat-label>
-                                            <mat-select name="{{customField.title.replace(' ','_')}}"
+                                            <mat-select #staffSelect="ngModel"
+                                                name="{{customField.title.replace(' ','_')}}"
                                                 [(ngModel)]="staffMultiSelectValue" multiple>
                                                 <mat-option *ngFor="let option of customField.selectOptions.split('|')"
                                                     [value]="option">
                                                     {{option}}</mat-option>
                                             </mat-select>
+                                            <mat-error *ngIf="staffSelect.errors?.required">
+                                                {{customField.title}} is required</mat-error>
                                         </mat-form-field>
                                     </div>
 
@@ -400,7 +466,8 @@
                     </mat-card-content>
                     <mat-card-actions class="mb-0">
                         <div class="px-4 text-right">
-                            <button *ngIf="staffCreateMode !== SchoolCreate.VIEW" color="primary" mat-raised-button>{{formActionButtonTitle|translate}}</button>
+                            <button *ngIf="staffCreateMode !== SchoolCreate.VIEW" color="primary"
+                                mat-raised-button>{{formActionButtonTitle|translate}}</button>
                         </div>
                     </mat-card-actions>
                 </form>
@@ -409,32 +476,39 @@
     </div>
     <div *ngIf="staffCreateMode == SchoolCreate.VIEW">
         <mat-card @fadeInUp class="w-full" fxFlex="auto">
-            <div class="flex items-center mx-4" fxLayout="row" fxLayoutAlign="center center">
+            <div class="flex items-center" fxLayout="row" fxLayoutAlign="center center">
                 <h3 class="flex-auto">{{ categoryTitle }}</h3>
-                <div *ngIf="staffAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
-                <button *ngIf="editStaffPermission" mat-button color="primary" (click)="editOtherInfo()">
-                    <mat-icon [icIcon]="icEdit"></mat-icon>{{'editInformation' |translate}}
-                </button>
+                <div *ngIf="staffCustomFields?.length > 0">
+                    <button *ngIf="staffPermissions?.edit" mat-raised-button color="primary" (click)="editOtherInfo()">
+                        <mat-icon [icIcon]="icEdit"></mat-icon><span
+                            class="hidden sm:inline-block ml-1">{{'editInformation' |translate}}</span>
+                    </button>
                 </div>
             </div>
 
             <mat-card-content>
-                <div *ngIf="staffAddViewModel.fieldsCategoryList[categoryId]?.customFields.length > 0">
-                    <div class="max-w-screen-xl mx-auto px-4 sm:px-6 lg:px-4">
+                <div *ngIf="staffCustomFields?.length > 0">
+                    <div class="max-w-screen-xl mx-auto">
                         <div class="my-6">
                             <ul class="md:grid md:grid-cols-3 md:col-gap-8 md:row-gap-10">
-                                <li
-                                    *ngFor="let customField of staffAddViewModel.fieldsCategoryList[categoryId]?.customFields; let index = index">
+                                <li *ngFor="let customField of staffCustomFields; let index = index">
                                     <label class="text-sm leading-5 text-gray">{{customField.title}}</label>
-                                    <p *ngIf="customField.type !== 'Checkbox' && customField.type !== 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{staffAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue
+                                    <p *ngIf="customField.type !== 'Checkbox' && customField.type !== 'Date'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0].customFieldValue
                                         | EmtyValueCheckPipe}}
                                     </p>
-                                    <p *ngIf="customField.type === 'Checkbox'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{staffAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue}}
+                                    <p *ngIf="customField.type === 'Checkbox'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        <mat-icon
+                                            [icIcon]="customField?.customFieldsValue[0].customFieldValue === 'true'?icCheckboxChecked:icCheckboxUnchecked"
+                                            class="inline-block align-middle mr-1">
+                                        </mat-icon>
                                     </p>
-                                    <p *ngIf="customField.type === 'Date'" class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
-                                        {{staffAddViewModel.fieldsCategoryList[categoryId].customFields[index]?.customFieldsValue[0].customFieldValue | date:'mediumDate' | EmtyValueCheckPipe}}
+                                    <p *ngIf="customField.type === 'Date'"
+                                        class="mt-1 text-sm leading-5 sm:mt-0 sm:col-span-2">
+                                        {{customField?.customFieldsValue[0].customFieldValue | date:'mediumDate' |
+                                        EmtyValueCheckPipe}}
                                     </p>
                                 </li>
                             </ul>

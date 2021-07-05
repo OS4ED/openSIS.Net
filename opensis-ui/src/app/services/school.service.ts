@@ -31,6 +31,9 @@ export class SchoolService {
   private categoryId = new BehaviorSubject(0);
   categoryIdSelected = this.categoryId.asObservable();
 
+  private currentSchoolName = new Subject();
+  updatedSchoolName = this.currentSchoolName.asObservable();
+
   constructor(private http: HttpClient,
     private defaultValuesService: DefaultValuesService) {
   }
@@ -174,5 +177,9 @@ export class SchoolService {
 
   setCategoryTitle(title:string){
     this.categoryTitle.next(title);
+  }
+
+  updateSchoolName(schoolName: string){
+    this.currentSchoolName.next(schoolName);
   }
 }

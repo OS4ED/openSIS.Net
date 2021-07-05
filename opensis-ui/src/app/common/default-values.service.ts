@@ -1,10 +1,9 @@
-import { HttpClient } from '@angular/common/http';
 import { Injectable, OnInit } from '@angular/core';
-//import { Login } from '../model/login.model';
-import { CompileShallowModuleMetadata } from '@angular/compiler';
 import { CommonField } from '../models/common-field.model';
-import { UserViewModel } from '../models/user.model';
 import { TranslateService } from '@ngx-translate/core';
+import { LoginService } from '../services/login.service';
+import { Router } from '@angular/router';
+import { CryptoService } from '../services/Crypto.service';
 
 @Injectable({
   providedIn: 'root',
@@ -15,7 +14,11 @@ export class DefaultValuesService {
   schoolID: number ;
   academicYear: number;
   markingPeriodStartDate: string;
-  constructor(private http: HttpClient,public translateService: TranslateService) {
+  permissionListKeyName: string;
+  constructor(
+    public translateService: TranslateService,
+    private cryptoService: CryptoService
+    ) {
   }
 
   setDefaultTenant() {
@@ -96,7 +99,10 @@ export class DefaultValuesService {
     return email;
   }
   setToken(token: string) {
-    sessionStorage.setItem('token', token);
+    return new Promise((resolve, reject)=>{
+      sessionStorage.setItem('token', token);
+      resolve('');
+    })
   }
 
   getToken() {
@@ -172,6 +178,14 @@ export class DefaultValuesService {
     return sessionStorage.getItem('tenant');
   }
 
+  getuserMembershipID() {
+    return sessionStorage.getItem('userMembershipID');
+  }
+
+  getuserMembershipName() {
+    return sessionStorage.getItem('membershipName');
+  }
+
   setAll(token: string) {
     this.setDefaultTenant();
     
@@ -207,6 +221,27 @@ export class DefaultValuesService {
     return this.markingPeriodStartDate;
   }
 
+  createPermissionKeyName(){
+    let membershipId=this.getuserMembershipID();
+    this.permissionListKeyName=`permissions${membershipId}`;
+    return membershipId;
+  }
+
+  setPermissionList(permissionList){
+    let membershipId = this.createPermissionKeyName();
+    localStorage.setItem(`permissions${membershipId}`,this.cryptoService.dataEncrypt(JSON.stringify(permissionList)))
+  }
+
+  getPermissionList(){
+    this.createPermissionKeyName();
+    if(localStorage.getItem(this.permissionListKeyName)){
+      let permissionList = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem(this.permissionListKeyName)));
+      return permissionList;
+    }
+    return null;
+  }
+
+  
 
 
 }

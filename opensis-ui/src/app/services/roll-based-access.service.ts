@@ -32,12 +32,12 @@ export class RollBasedAccessService {
     }
 
     getPermission() {
-        return this.permission;
+        return this.defaultValuesService.getPermissionList();
     }
 
-    setPermission() {
-        this.permission = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')))
-    }
+    // setPermission() {
+    //     this.permission = JSON.parse(this.cryptoService.dataDecrypt(localStorage.getItem('permissions')))
+    // }
 
     updateRolePermission(permission: PermissionGroupListViewModel) {
         permission = this.defaultValuesService.getAllMandatoryVariable(permission);

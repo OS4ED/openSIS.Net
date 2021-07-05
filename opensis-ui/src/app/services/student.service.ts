@@ -48,6 +48,8 @@ export class StudentService {
   private dataAfterSavingGeneralInfo = new BehaviorSubject(0);
   dataAfterSavingGeneralInfoChanged = this.dataAfterSavingGeneralInfo.asObservable();
 
+  private criticalAlertInMedicalInfo = new Subject();
+  criticalAlertStatus = this.criticalAlertInMedicalInfo.asObservable();
 
   studentName: StudentName;
   private isFirstView: boolean = true;
@@ -431,6 +433,10 @@ export class StudentService {
   }
   setDataAfterSavingGeneralInfo(data) {
     this.dataAfterSavingGeneralInfo.next(data);
+  }
+
+  setStudentCriticalInfo(data) {
+    this.criticalAlertInMedicalInfo.next(data);
   }
 
 }
